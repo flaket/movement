@@ -36,8 +36,8 @@
                    :deadlift :pistols :shrimp :behind-leg-squat
                    :jump-onto-box-standing :jump-onto-box-squatting
                    :explosive-flipping :natural-leg-curl])
-; Auxiliry strength
-(def auxiliry [:l-sit :v-up :sitting-leg-lift :swedish-leg-lift
+; Auxiliary strength
+(def auxiliary [:l-sit :v-up :sitting-leg-lift :swedish-leg-lift
                :hanging-leg-lift :gatherings :archups])
 ; Straight arm scapular strength
 (def sass [:swedish-bar-hold-front :swedish-bar-hold-back
@@ -61,13 +61,15 @@
 
 (def mobility (concat hip-mobility shoulder-mobility
                       wrist-mobility ankle-mobility spine-mobility))
-(def strength (concat leg-strength auxiliry sass bas))
+(def strength (concat leg-strength auxiliary sass bas))
 
 (def running [:sprint :interval :5K])
 (def hiking [])
-(def movnat [])
+(def parkour [])
 (def movnat-climbing [])
 (def movnat-sitting [])
+(def movnat-jumping [])
+(def movnat (concat movnat-climbing movnat-sitting))
 (def swimming [])
 (def rock-climbing [])
 (def squash [])
@@ -92,7 +94,9 @@
 (defn home-page []
   [:div
    [:h1 "Movement session"]
-   [:button {:on-click #(do
+   [:button {:type "submit"
+             :class "btn btn-default"
+             :on-click #(do
                          (reset! template [])
                          (generate "Warmup" warmup 1)
                          (generate "Mobility" mobility 2)
@@ -100,43 +104,55 @@
                          (generate "Equilibre" equilibre 1)
                          (generate "Strength" strength 1))}
     "Morning ritual"]
-   [:button {:on-click #(do
+   [:button {:type "submit"
+             :class "btn btn-default"
+             :on-click #(do
                          (reset! template [])
                          (generate "Warmup" warmup 1)
                          (generate "Mobility" mobility 2)
                          (generate "Strength" strength 4))}
     "Strength"]
-   [:button {:on-click #(do
+   [:button {:type "submit"
+             :class "btn btn-default"
+             :on-click #(do
                          (reset! template [])
                          (generate "Warmup" warmup 1)
                          (generate "Mobility" mobility 4)
                          (generate "Prehab" mobility 4))}
     "Mobility/Prehab"]
-   [:button {:on-click #(do
+   [:button {:type "submit"
+             :class "btn btn-default"
+             :on-click #(do
                          (reset! template [])
                          (generate "Warmup" warmup 1)
                          (generate "Mobility" mobility 2)
                          (generate "Locomotion" locomotion 6))}
     "Locomotion"]
-   [:button {:on-click #(do
+   [:button {:type "submit"
+             :class "btn btn-default"
+             :on-click #(do
                          (reset! template [])
                          (generate "Warmup" warmup 1)
                          (generate "Mobility" mobility 1)
                          (generate "BAS" bas 5))}
     "BAS"]
-   [:button {:on-click #(do
+   [:button {:type "submit"
+             :class "btn btn-default"
+             :on-click #(do
                          (reset! template [])
                          (generate "Warmup" warmup 1)
                          (generate "Mobility" mobility 1)
                          (generate "SASS" sass 4))}
     "SASS"]
-   [:button {:on-click #(do
+   [:button {:type "submit"
+             :class "btn btn-default"
+             :on-click #(do
                          (reset! template [])
                          (generate "Warmup" warmup 1)
                          (generate "Mobility" mobility 1)
                          (generate "Leg Strength" leg-strength 3)
-                         (generate "Auxiliry" auxiliry 2))}
-    "Leg/Auxiliry strength"]
+                         (generate "Auxiliry" auxiliary 2))}
+    "Leg/Auxiliary strength"]
    [:div.container
     (for [category @template]
     (list-movements category))]
