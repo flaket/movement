@@ -7,10 +7,8 @@
               [cljsjs.react :as react])
     (:import goog.History))
 
-(enable-console-print!)
-
-(def warmup-all [:joint-mobility :jump-rope :running])
-(def mobility-all [:squat-routine :shoulder-rom-stabilisation
+(def warmup [:joint-mobility :jump-rope :running])
+(def mobility [:squat-routine :shoulder-rom-stabilisation
                    :scapula-mobilisation :wrist-prep :ankle-prep
                    :movnat-routine :bridge-rotation
                    :locked-knees-deadlift])
@@ -46,7 +44,7 @@
           :tick-tock :back-lever-negative :front-lever-negative
           :muscle-up :false-grip-hang :false-grip-pull-up :muscle-up-negative
           :muscle-up-l-sit :rope-climb])
-(def strength-all (concat leg-strength auxiliry sass bas))
+(def strength (concat leg-strength auxiliry sass bas))
 (def running [:sprint :interval :5K])
 (def hiking [])
 (def movnat [])
@@ -57,23 +55,38 @@
 (def squash [])
 (def football [])
 
-(defn create-template [n1 n2 n3]
-  (let [a (take n1 (shuffle warmup-all))
-        b (take n2 (shuffle mobility-all))
-        c (take n3 (shuffle strength-all))]
-    (do
-      (println a)
-      (println b)
-      (println c))))
 
-(create-template 1 3 1)
 
 ;; -------------------------
 ;; Views
 
+(defn basic-template [template]
+  [:div.container
+   [:h3 "Warmup"]
+   [:div.row
+    [:table.table.table-striped
+     [:tbody
+      (for [i (take (second template) (shuffle (first template)))]
+        [:tr
+         [:td (name i)]])]]]
+   [:h3 "Mobility"]
+   [:div.row
+    [:table.table.table-striped
+     [:tbody
+      (for [i (take (get template 3) (shuffle (get template 2)))]
+        [:tr
+         [:td (name i)]])]]]
+   [:h3 "Strength"]
+   [:div.row
+    [:table.table.table-striped
+     [:tbody
+      (for [i (take (get template 5) (shuffle (get template 4)))]
+        [:tr
+         [:td (name i)]])]]]])
+
 (defn home-page []
-  [:div [:h2 "Welcome to movement"]
-   [:div [:a {:href "#/about"} "go to about page"]]])
+  [:div [:h1 "Movement session"]
+   [basic-template [warmup 1 mobility 3 strength 2]]])
 
 (defn about-page []
   [:div [:h2 "About movement"]
