@@ -7,28 +7,42 @@
               [cljsjs.react :as react])
     (:import goog.History))
 
+;; -------------------------
+;; Movements in categories
+; Warmup
 (def warmup [:joint-mobility :jump-rope :running])
-(def mobility [:squat-routine :shoulder-rom-stabilisation
-                   :scapula-mobilisation :wrist-prep :ankle-prep
-                   :movnat-routine :bridge-rotation
-                   :locked-knees-deadlift])
+
+; Mobility
+(def hip-mobility [:squat-routine :movnat-routine])
+(def shoulder-mobility [:shoulder-rom-stabilisation :scapula-mobilisation])
+(def wrist-mobility [:wrist-prep])
+(def ankle-mobility [:ankle-prep])
+(def spine-mobility [:bridge-rotation :locked-knees-deadlift])
+
+; Hanging
 (def hanging [:passive-hang :active-hang :side-to-side-swing
               :arching-active-hang :front-stationary-swing
               :one-arm-passive :one-arm-active :shawerma
               :swing-grip-routine :figure-8])
+; Locomotion
 (def locomotion [:swing-to-handstand :handstand-walk :bridge-walk
                  :duck-walk :horse-walk :lizard-crawl :ostrich-walk])
+; Equilibre
 (def equilibre [:gatherings :wall-walk :wall-kick :handstand-walk
                 :handstand-push-up :air-baby :qdr])
+; Leg strength
 (def leg-strength [:basic-squat :back-squat :front-squat :overhead-squat
                    :basic-lunge :back-lunge :front-lunge :overhead-lunge
-                   :deadlift :pistols :shrimp :behind-leg
+                   :deadlift :pistols :shrimp :behind-leg-squat
                    :jump-onto-box-standing :jump-onto-box-squatting
                    :explosive-flipping :natural-leg-curl])
+; Auxiliry strength
 (def auxiliry [:l-sit :v-up :sitting-leg-lift :swedish-leg-lift
                :hanging-leg-lift :gatherings :archups])
+; Straight arm scapular strength
 (def sass [:swedish-bar-hold-front :swedish-bar-hold-back
            :back-lever :front-lever :side-lever :planche :handstand])
+; Bent arm strength
 (def bas [:push-up-basic :push-up-russian :push-up-wide
           :push-up-diamond :push-up-hindu :push-up-lateral :push-up-bridge
           :push-up-archer :push-up-one-arm :push-up-one-leg-one-arm
@@ -44,7 +58,11 @@
           :tick-tock :back-lever-negative :front-lever-negative
           :muscle-up :false-grip-hang :false-grip-pull-up :muscle-up-negative
           :muscle-up-l-sit :rope-climb])
+
+(def mobility (concat hip-mobility shoulder-mobility
+                      wrist-mobility ankle-mobility spine-mobility))
 (def strength (concat leg-strength auxiliry sass bas))
+
 (def running [:sprint :interval :5K])
 (def hiking [])
 (def movnat [])
@@ -55,55 +73,84 @@
 (def squash [])
 (def football [])
 
+(def template (atom []))
 
+(defn generate [name category n]
+  (swap! template conj {:name name
+                        :category category
+                        :movements n}))
 
-;; -------------------------
-;; Views
-
-(defn basic-template [template]
-  [:div.container
-   [:h3 "Warmup"]
-   [:div.row
-    [:table.table.table-striped
-     [:tbody
-      (for [i (take (second template) (shuffle (first template)))]
-        [:tr
-         [:td (name i)]])]]]
-   [:h3 "Mobility"]
-   [:div.row
-    [:table.table.table-striped
-     [:tbody
-      (for [i (take (get template 3) (shuffle (get template 2)))]
-        [:tr
-         [:td (name i)]])]]]
-   [:h3 "Strength"]
-   [:div.row
-    [:table.table.table-striped
-     [:tbody
-      (for [i (take (get template 5) (shuffle (get template 4)))]
-        [:tr
-         [:td (name i)]])]]]])
+(defn list-movements [category]
+  [:div.row
+   [:h3 (:name category)]
+   [:table.table.table-striped
+    [:tbody]
+    (for [i (take (:movements category) (shuffle (:category category)))]
+      [:tr
+       [:td (name i)]])]])
 
 (defn home-page []
-  [:div [:h1 "Movement session"]
-   [basic-template [warmup 1 mobility 3 strength 2]]])
-
-(defn about-page []
-  [:div [:h2 "About movement"]
-   [:div [:a {:href "#/"} "go to the home page"]]])
+  [:div
+   [:h1 "Movement session"]
+   [:button {:on-click #(do
+                         (reset! template [])
+                         (generate "Warmup" warmup 1)
+                         (generate "Mobility" mobility 2)
+                         (generate "Hanging" hanging 1)
+                         (generate "Equilibre" equilibre 1)
+                         (generate "Strength" strength 1))}
+    "Morning ritual"]
+   [:button {:on-click #(do
+                         (reset! template [])
+                         (generate "Warmup" warmup 1)
+                         (generate "Mobility" mobility 2)
+                         (generate "Strength" strength 4))}
+    "Strength"]
+   [:button {:on-click #(do
+                         (reset! template [])
+                         (generate "Warmup" warmup 1)
+                         (generate "Mobility" mobility 4)
+                         (generate "Prehab" mobility 4))}
+    "Mobility/Prehab"]
+   [:button {:on-click #(do
+                         (reset! template [])
+                         (generate "Warmup" warmup 1)
+                         (generate "Mobility" mobility 2)
+                         (generate "Locomotion" locomotion 6))}
+    "Locomotion"]
+   [:button {:on-click #(do
+                         (reset! template [])
+                         (generate "Warmup" warmup 1)
+                         (generate "Mobility" mobility 1)
+                         (generate "BAS" bas 5))}
+    "BAS"]
+   [:button {:on-click #(do
+                         (reset! template [])
+                         (generate "Warmup" warmup 1)
+                         (generate "Mobility" mobility 1)
+                         (generate "SASS" sass 4))}
+    "SASS"]
+   [:button {:on-click #(do
+                         (reset! template [])
+                         (generate "Warmup" warmup 1)
+                         (generate "Mobility" mobility 1)
+                         (generate "Leg Strength" leg-strength 3)
+                         (generate "Auxiliry" auxiliry 2))}
+    "Leg/Auxiliry strength"]
+   [:div.container
+    (for [category @template]
+    (list-movements category))]
+   [:p "@move.com"]])
 
 (defn current-page []
   [:div [(session/get :current-page)]])
 
 ;; -------------------------
-;; Routes
+;; Client side routes
 (secretary/set-config! :prefix "#")
 
 (secretary/defroute "/" []
   (session/put! :current-page #'home-page))
-
-(secretary/defroute "/about" []
-  (session/put! :current-page #'about-page))
 
 ;; -------------------------
 ;; History
