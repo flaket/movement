@@ -6,20 +6,21 @@
 (def warmup [:joint-mobility :jump-rope :running])
 
 ; Mobility
-(def hip-mobility [:squat-routine :movnat-routine])
+(def hip-mobility [:squat-routine :squat-routine-2.0 :movnat-routine])
 (def shoulder-mobility [:shoulder-rom-stabilisation :scapula-mobilisation])
 (def wrist-mobility [:wrist-prep])
 (def ankle-mobility [:ankle-prep])
-(def spine-mobility [:bridge-rotation :locked-knees-deadlift])
+(def spine-mobility [:bridge-rotation :locked-knees-rounded-back-deadlift])
 
 ; Hanging
-(def hanging [:passive-hang :active-hang :side-to-side-swing
+(def hanging [:passive-hang :active-hang :false-grip-hang :side-to-side-swing
               :arching-active-hang :front-stationary-swing
               :one-arm-passive :one-arm-active :shawerma
               :swing-grip-routine :figure-8])
 ; Locomotion
-(def locomotion [:swing-to-handstand :handstand-walk :bridge-walk
-                 :duck-walk :horse-walk :lizard-crawl :ostrich-walk])
+(def locomotion [:swing-to-handstand :cart-wheel :handstand-walk :bridge-walk
+                 :duck-walk :horse-walk :lizard-crawl :ostrich-walk :bear-walk
+                 :crab-walk])
 ; Equilibre
 (def equilibre [:gatherings :wall-walk :wall-kick :handstand-walk
                 :handstand-push-up :air-baby :qdr])
@@ -30,7 +31,7 @@
                    :jump-onto-box-standing :jump-onto-box-squatting
                    :explosive-flipping :natural-leg-curl])
 ; Auxiliary strength
-(def auxiliary [:l-sit :v-up :sitting-leg-lift :swedish-leg-lift
+(def auxiliary [:l-sit :straddle :v-up :sitting-leg-lift :swedish-leg-lift
                 :hanging-leg-lift :gatherings :archups])
 ; Straight arm scapular strength
 (def sass [:swedish-bar-hold-front :swedish-bar-hold-back
@@ -42,23 +43,16 @@
           :dips-basic :dips-russian :dips-single-bar :dips-korean :dips-ring
           :dips-ring-wide :dips-ring-archer
           :handstand-push-up-head-wall :handstand-push-up-wall :handstand-push-up-free
-          :planche-push-up :pull-up-basic :pull-up-rings :pull-up-rings-wide
+          :push-up-planche :pull-up-basic :pull-up-wide :pull-up-rings :pull-up-rings-wide
           :pull-up-chest :pull-up-waist :pull-up-weighted :pull-up-scapula
-          :one-arm-pull-up-forearm :one-arm-pull-up-bicep :one-arm-ring-negative
-          :archer-pull-up :one-arm-pull-up-band :one-arm-pull-up-shoulder
+          :one-arm-pull-up-forearm :one-arm-pull-up-bicep :one-arm-negative
+          :archer-pull-up :one-arm-pull-up-shoulder
           :one-arm-pull-up :row-basic :row-wide :front-lever-row
           :german-hang-pull :pull-over :front-lever-pull :back-lever-pull
           :tick-tock :back-lever-negative :front-lever-negative
-          :muscle-up :false-grip-hang :false-grip-pull-up :muscle-up-negative
+          :muscle-up :false-grip-pull-up :muscle-up-negative
           :muscle-up-l-sit :rope-climb])
 
-(def mobility (concat hip-mobility shoulder-mobility
-                      wrist-mobility ankle-mobility spine-mobility))
-(def strength (concat leg-strength auxiliary sass bas))
-
-(def running [:sprint :interval :5K])
-(def hiking [])
-(def parkour [])
 (def movnat-sitting [:split-stand-to-split-sit :walking-split-squat :side-shuffle
                      :stepping-under :stepping-over :hinged-walk :split-squat
                      :squat-to-medium-kneeling :squat-to-kneeling :kneeling-to-tall-kneeling
@@ -90,10 +84,19 @@
                      :log-shouldering :shoulder-carry-squat :hands-free-shoulder-carry-squat
                      :shoulder-carry-switch :clean :jerk :push-press])
 (def movnat-throwing [:chest-throw :rotational-throw :front-swing-throw :overhead-throw])
+
+(def floreio [])
+
+(def running [:sprint :interval :5K])
+(def hiking [:hiking])
+(def parkour [])
+(def swimming [:swimming])
+(def rock-climbing [:bouldering :rock-climbing])
+(def ball-sport [:squash :football])
+
+(def mobility (concat hip-mobility shoulder-mobility
+                      wrist-mobility ankle-mobility spine-mobility))
+(def strength (concat leg-strength auxiliary sass bas))
 (def movnat (concat movnat-sitting movnat-balancing movnat-crawling movnat-jumping movnat-climbing
                     movnat-lifting movnat-throwing))
 (def movnat-warmup (concat movnat-sitting movnat-balancing movnat-crawling))
-(def swimming [])
-(def rock-climbing [])
-(def squash [])
-(def football [])

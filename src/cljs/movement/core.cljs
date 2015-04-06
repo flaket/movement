@@ -91,7 +91,7 @@
                          (generate "Warmup" warmup 1)
                          (generate "Mobility" mobility 1)
                          (generate "Leg Strength" leg-strength 3)
-                         (generate "Auxiliry" auxiliary 2))}
+                         (generate "Auxiliary" auxiliary 2))}
     "Leg/Auxiliary strength"]
    [:button {:type "input"
              :class "btn btn-default"
