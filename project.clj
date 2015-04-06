@@ -46,8 +46,7 @@
                                         :output-dir    "resources/public/js/out"
                                         :asset-path   "js/out"
                                         :optimizations :none
-                                        :pretty-print  true
-                                        :source-map true}}}}
+                                        :pretty-print  true}}}}
 
   :profiles {:dev {:repl-options {:init-ns movement.repl
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
@@ -74,8 +73,8 @@
                    :env {:dev? true}
 
                    :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
-                                              :compiler {   :main "movement.dev"
-                                                         :source-map true}}
+                                              :compiler {
+                                                         :main "movement.dev"}}
 }
 }}
 
