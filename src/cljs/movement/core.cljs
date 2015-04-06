@@ -104,7 +104,7 @@
    [:div.container
     (for [category @template]
     (list-movements category))]
-   [:p "movementsession@gmail.com"]])
+   [:p "andreas.flakstad@gmail.com"]])
 
 (defn current-page []
   [:div [(session/get :current-page)]])
