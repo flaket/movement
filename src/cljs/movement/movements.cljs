@@ -72,7 +72,7 @@
 (def movnat-balancing [:tip-toe-balancing :balancing-walk :balancing-split-squat
                        :balancing-shuffle :cross-reverse :pivot-reverse
                        :split-squat-pivot-reverse :balancing-tripod-transition
-                       :balancing–foot-hand-crawl])
+                       :balancing-foot-hand-crawl])
 (def movnat-crawling [:inverted-crawl :knee-elbow-crawl :knee-hand-crawl :foot-elbow-crawl
                       :foot-hand-crawl :push-pull-crawl :rocking :rotational-rocking
                       :bent-sit-to-lateral-half-kneeling :shoulder-crawl :hip-thrust-crawl
