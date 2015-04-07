@@ -21,11 +21,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="core.cljs" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/cljs/movement/core.cljs">
+      <file leaf-file-name="movements.cljs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/cljs/movement/movements.cljs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.2811296">
-              <caret line="142" column="21" selection-start-line="142" selection-start-column="21" selection-end-line="142" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.57766366">
+              <caret line="25" column="45" selection-start-line="25" selection-start-column="45" selection-end-line="25" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -44,10 +44,10 @@
         <option value="$PROJECT_DIR$/src/clj/movement/server.clj" />
         <option value="$PROJECT_DIR$/src/clj/movement/handler.clj" />
         <option value="$PROJECT_DIR$/project.clj" />
-        <option value="$PROJECT_DIR$/src/cljs/movement/movements.cljs" />
         <option value="$PROJECT_DIR$/resources/public/css/site.css" />
         <option value="$PROJECT_DIR$/resources/templates/index.html" />
         <option value="$PROJECT_DIR$/src/cljs/movement/core.cljs" />
+        <option value="$PROJECT_DIR$/src/cljs/movement/movements.cljs" />
       </list>
     </option>
   </component>
@@ -88,7 +88,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -217,8 +217,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -475,7 +475,6 @@
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="100" y="100" width="1080" height="600" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -483,23 +482,24 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Leiningen" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1484375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="REPL" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3140625" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32921812" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="100" y="100" width="1080" height="600" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -533,22 +533,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="16" column="35" selection-start-line="16" selection-start-column="35" selection-end-line="16" selection-end-column="35" />
-          <folding>
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def hanging ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def locomotion ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def equilibre ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def leg-strength ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def auxiliary ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def sass ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def bas ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-sitting ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-balancing ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-crawling ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-climbing ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-lifting ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def mobility ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat ...)" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -556,22 +541,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="74" column="31" selection-start-line="74" selection-start-column="31" selection-end-line="74" selection-end-column="31" />
-          <folding>
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def hanging ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def locomotion ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def equilibre ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def leg-strength ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def auxiliary ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def sass ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def bas ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-sitting ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-balancing ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-crawling ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-climbing ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-lifting ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def mobility ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat ...)" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -579,7 +549,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="104" column="25" selection-start-line="104" selection-start-column="25" selection-end-line="104" selection-end-column="25" />
-          <folding />
+          <folding>
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(ns movement.core ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(def default-buttons ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn generate ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn button-selected! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn prep-name ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn list-movements ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn home-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn current-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(secretary/defroute ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn hook-browser-navigation! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn mount-root ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn init! ...)" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -587,7 +570,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="78" column="27" selection-start-line="78" selection-start-column="27" selection-end-line="78" selection-end-column="27" />
-          <folding />
+          <folding>
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(ns movement.core ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(def default-buttons ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn generate ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn button-selected! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn prep-name ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn list-movements ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn home-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn current-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(secretary/defroute ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn hook-browser-navigation! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn mount-root ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn init! ...)" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -595,7 +591,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="78" column="27" selection-start-line="78" selection-start-column="27" selection-end-line="78" selection-end-column="27" />
-          <folding />
+          <folding>
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(ns movement.core ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(def default-buttons ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn generate ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn button-selected! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn prep-name ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn list-movements ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn home-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn current-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(secretary/defroute ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn hook-browser-navigation! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn mount-root ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn init! ...)" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -603,7 +612,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="39" column="15" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
-          <folding />
+          <folding>
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(ns movement.core ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(def default-buttons ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn generate ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn button-selected! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn prep-name ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn list-movements ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn home-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn current-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(secretary/defroute ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn hook-browser-navigation! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn mount-root ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn init! ...)" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -611,7 +633,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="100" column="23" selection-start-line="100" selection-start-column="23" selection-end-line="100" selection-end-column="23" />
-          <folding />
+          <folding>
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(ns movement.core ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(def default-buttons ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn generate ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn button-selected! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn prep-name ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn list-movements ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn home-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn current-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(secretary/defroute ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn hook-browser-navigation! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn mount-root ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn init! ...)" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -619,7 +654,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="100" column="23" selection-start-line="100" selection-start-column="23" selection-end-line="100" selection-end-column="23" />
-          <folding />
+          <folding>
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(ns movement.core ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(def default-buttons ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn generate ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn button-selected! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn prep-name ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn list-movements ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn home-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn current-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(secretary/defroute ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn hook-browser-navigation! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn mount-root ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn init! ...)" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -627,7 +675,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="92" column="44" selection-start-line="92" selection-start-column="44" selection-end-line="92" selection-end-column="44" />
-          <folding />
+          <folding>
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(ns movement.core ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(def default-buttons ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn generate ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn button-selected! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn prep-name ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn list-movements ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn home-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn current-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(secretary/defroute ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn hook-browser-navigation! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn mount-root ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn init! ...)" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -653,29 +714,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cljs/movement/movements.cljs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="35" selection-start-line="16" selection-start-column="35" selection-end-line="16" selection-end-column="35" />
-          <folding>
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def hanging ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def locomotion ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def equilibre ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def leg-strength ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def auxiliary ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def sass ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def bas ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-sitting ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-balancing ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-crawling ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-climbing ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat-lifting ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def mobility ...)" />
-            <marker date="1428318831000" expanded="true" signature="-1:-1" placeholder="(def movnat ...)" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/public/images/natural-movement.jpg">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -685,24 +723,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -710,13 +730,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2632979">
           <caret line="11" column="47" selection-start-line="11" selection-start-column="47" selection-end-line="11" selection-end-column="47" />
-          <folding>
-            <marker date="1428396339000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1428396339000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1428396339000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1428396339000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1428396339000" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -724,29 +738,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1419841842000" expanded="true" signature="-1:-1" placeholder="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -754,16 +746,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.13863929">
           <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
-          <folding>
-            <marker date="1428396312000" expanded="true" signature="-1:-1" placeholder="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cljs/movement/core.cljs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.2811296">
-          <caret line="142" column="21" selection-start-line="142" selection-start-column="21" selection-end-line="142" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.48523748">
+          <caret line="21" column="40" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
+          <folding>
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(ns movement.core ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(def default-buttons ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn generate ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn button-selected! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn prep-name ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn list-movements ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn home-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn current-page ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(secretary/defroute ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn hook-browser-navigation! ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn mount-root ...)" />
+            <marker date="1428398218000" expanded="true" signature="-1:-1" placeholder="(defn init! ...)" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cljs/movement/movements.cljs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.57766366">
+          <caret line="25" column="45" selection-start-line="25" selection-start-column="45" selection-end-line="25" selection-end-column="45" />
           <folding />
         </state>
       </provider>
