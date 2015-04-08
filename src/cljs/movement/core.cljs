@@ -134,7 +134,12 @@
     [:div.container
      [:ul
       (for [category @template]
-        (list-movements category))]]]])
+        (list-movements category))]]]
+   [:div.footer
+    [:div.container
+     [:em "If you have suggestions for a new session template, some sorely missing movements
+     or general improvements (such as adding users and allowing you to add your own
+     templates): let your wishes be known by sending an email to movementsession@gmail.com"]]]])
 
 (defn current-page []
   [:div [(session/get :current-page)]])
