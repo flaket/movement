@@ -6,11 +6,13 @@
 (def warmup [:joint-mobility :jump-rope :running])
 
 ; Mobility
-(def hip-mobility [:squat-routine :squat-routine-2.0 :movnat-routine])
-(def shoulder-mobility [:shoulder-rom-stabilisation :scapula-mobilisation])
-(def wrist-mobility [:wrist-prep])
-(def ankle-mobility [:ankle-prep])
-(def spine-mobility [:bridge-rotation :locked-knees-rounded-back-deadlift])
+(def hip-mobility [:squat-routine :squat-routine-2.0 :movnat-sitting-routine])
+(def shoulder-mobility [:shoulder-rom-stabilisation-routine :scapula-mobilisation-routine])
+(def wrist-mobility [:wrist-routine])
+(def ankle-mobility [:ankle-routine])
+(def spine-mobility [:slide-into-low-bridge-and-wall-rotation :rotate-into-low-bridge
+                     :rotate-into-high-bridge :high-bridge-hold
+                     :locked-knees-rounded-back-deadlift])
 
 ; Hanging
 (def hanging [:passive-hang :active-hang :false-grip-hang :side-to-side-swing
@@ -18,30 +20,30 @@
               :one-arm-passive :one-arm-active :shawerma
               :swing-grip-routine :figure-8])
 ; Locomotion
-(def locomotion [:swing-to-handstand :cart-wheel :handstand-walk :bridge-walk
+(def locomotion [:kick-to-handstand :cart-wheel :handstand-walk :bridge-walk
                  :duck-walk :horse-walk :lizard-crawl :ostrich-walk :bear-walk
-                 :crab-walk])
+                 :crab-walk :inchworm])
 ; Equilibre
-(def equilibre [:gatherings :wall-walk :wall-kick :handstand-walk
+(def equilibre [:headstand-leg-lift :wall-walk :wall-kick :handstand-walk
                 :handstand-push-up :air-baby :qdr])
 ; Leg strength
 (def leg-strength [:basic-squat :back-squat :front-squat :overhead-squat
                    :basic-lunge :back-lunge :front-lunge :overhead-lunge
-                   :deadlift :pistols :shrimp :behind-leg-squat
-                   :jump-onto-box-standing :jump-onto-box-squatting
-                   :explosive-flipping :natural-leg-curl])
+                   :deadlift :pistol :shrimp :behind-leg-squat
+                   :jump-onto-box-from-standing :jump-onto-box-from-squatting
+                   :front-flip :back-flip :natural-leg-curl])
 ; Auxiliary strength
-(def auxiliary [:l-sit :straddle :v-up :sitting-leg-lift :swedish-leg-lift
-                :hanging-leg-lift :gatherings :archups])
+(def auxiliary [:l-sit :l-straddle :v-up :sitting-leg-lift :swedish-leg-lift
+                :hanging-leg-lift :headstand-leg-lift :archup])
 ; Straight arm scapular strength
-(def sass [:swedish-bar-hold-front :swedish-bar-hold-back
+(def sass [:swedish-bar-front-support :swedish-bar-hold-back
            :back-lever :front-lever :side-lever :planche :handstand])
 ; Bent arm strength
 (def bas [:push-up-basic :push-up-russian :push-up-wide
           :push-up-diamond :push-up-hindu :push-up-lateral :push-up-bridge
           :push-up-archer :push-up-one-arm :push-up-one-leg-one-arm
-          :dips-basic :dips-russian :dips-single-bar :dips-korean :dips-ring
-          :dips-ring-wide :dips-ring-archer
+          :dip-basic :dip-russian :dip-single-bar :dip-korean :dip-ring
+          :dip-ring-wide :dip-ring-archer
           :handstand-push-up-head-wall :handstand-push-up-wall :handstand-push-up-free
           :push-up-planche :pull-up-basic :pull-up-wide :pull-up-rings :pull-up-rings-wide
           :pull-up-chest :pull-up-waist :pull-up-weighted :pull-up-scapula
@@ -50,7 +52,7 @@
           :one-arm-pull-up :row-basic :row-wide :front-lever-row
           :german-hang-pull :pull-over :front-lever-pull :back-lever-pull
           :tick-tock :back-lever-negative :front-lever-negative
-          :muscle-up :false-grip-pull-up :muscle-up-negative
+          :muscle-up :pull-up-false-grip :muscle-up-negative
           :muscle-up-l-sit :rope-climb])
 
 (def movnat-sitting [:split-stand-to-split-sit :walking-split-squat :side-shuffle
