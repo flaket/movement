@@ -37,7 +37,8 @@
                 :hanging-leg-lift :headstand-leg-lift :archup])
 ; Straight arm scapular strength
 (def sass [:swedish-bar-front-support :swedish-bar-hold-back
-           :back-lever :front-lever :side-lever :planche :handstand])
+           :back-lever :front-lever :side-lever :planche :handstand-work
+           :active-hanging-work])
 ; Bent arm strength
 (def bas [:push-up-basic :push-up-russian :push-up-wide
           :push-up-diamond :push-up-hindu :push-up-lateral :push-up-bridge

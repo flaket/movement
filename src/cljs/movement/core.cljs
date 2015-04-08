@@ -24,10 +24,10 @@
 (def template (atom default-template))
 (def buttons (atom default-buttons))
 
-(defn generate [name category n]
+(defn generate! [name category n]
   (swap! template conj {:name name
-                        :category category
-                        :movements n}))
+                        :movements category
+                        :n n}))
 
 (defn button-selected! [button]
   (swap! buttons assoc button "button button-primary"))
@@ -37,9 +37,15 @@
 
 (defn list-movements [category]
   [:div.row
-   [:h3 {:style {:color "gray"}} (:name category)]
-   (for [i (take (:movements category) (shuffle (:category category)))]
+   [:h3 (:name category)]
+   (for [i (take (:n category) (shuffle (:movements category)))]
      [:li (prep-name i)])])
+
+(defn update! [button]
+  (do
+    (reset! template [])
+    (reset! buttons default-buttons)
+    (button-selected! button)))
 
 (defn home-page []
   [:div
@@ -50,85 +56,69 @@
      [:button {:type     "button"
                :class    (:ritual @buttons)
                :on-click #(do
-                           (reset! template [])
-                           (reset! buttons default-buttons)
-                           (button-selected! :ritual)
-                           (generate "Warmup" warmup 1)
-                           (generate "Mobility" mobility 2)
-                           (generate "Hanging" hanging 1)
-                           (generate "Equilibre" equilibre 1)
-                           (generate "Strength" strength 1))}
+                           (update! :ritual)
+                           (generate! "Warmup" warmup 1)
+                           (generate! "Mobility" mobility 2)
+                           (generate! "Hanging" hanging 1)
+                           (generate! "Equilibre" equilibre 1)
+                           (generate! "Strength" strength 1))}
       "Morning ritual"]
      [:button {:type     "button"
                :class    (:strength @buttons)
                :on-click #(do
-                           (reset! template [])
-                           (reset! buttons default-buttons)
-                           (button-selected! :strength)
-                           (generate "Warmup" warmup 1)
-                           (generate "Mobility" mobility 2)
-                           (generate "Strength" strength 4))}
+                           (update! :strength)
+                           (generate! "Warmup" warmup 1)
+                           (generate! "Mobility" mobility 2)
+                           (generate! "Strength" strength 4))}
       "Strength"]
      [:button {:type     "button"
                :class    (:mobility @buttons)
                :on-click #(do
-                           (reset! template [])
-                           (reset! buttons default-buttons)
-                           (button-selected! :mobility)
-                           (generate "Warmup" warmup 1)
-                           (generate "Mobility" mobility 4)
-                           (generate "Prehab" mobility 4))}
+                           (update! :mobility)
+                           (generate! "Warmup" warmup 1)
+                           (generate! "Mobility" mobility 4)
+                           (generate! "Prehab" mobility 4))}
       "Mobility/Prehab"]
      [:button {:type     "button"
                :class    (:locomotion @buttons)
                :on-click #(do
-                           (reset! template [])
-                           (reset! buttons default-buttons)
-                           (button-selected! :locomotion)
-                           (generate "Warmup" warmup 1)
-                           (generate "Mobility" mobility 2)
-                           (generate "Locomotion" locomotion 6))}
+                           (update! :locomotion)
+                           (generate! "Warmup" warmup 1)
+                           (generate! "Mobility" mobility 2)
+                           (generate! "Locomotion" locomotion 6))}
       "Locomotion"]
      [:button {:type     "button"
                :class    (:bas @buttons)
                :on-click #(do
-                           (reset! template [])
-                           (reset! buttons default-buttons)
-                           (button-selected! :bas)
-                           (generate "Warmup" warmup 1)
-                           (generate "Mobility" mobility 1)
-                           (generate "BAS" bas 5))}
+                           (update! :bas)
+                           (generate! "Warmup" warmup 1)
+                           (generate! "Mobility" mobility 1)
+                           (generate! "Bent Arm Strength" bas 5))}
       "BAS"]
      [:button {:type     "button"
                :class    (:sass @buttons)
                :on-click #(do
-                           (reset! template [])
-                           (reset! buttons default-buttons)
-                           (button-selected! :sass)
-                           (generate "Warmup" warmup 1)
-                           (generate "Mobility" mobility 1)
-                           (generate "SASS" sass 4))}
+                           (update! :sass)
+                           (generate! "Warmup" warmup 1)
+                           (generate! "Mobility" mobility 1)
+                           (generate! "Straight Arm Scapular Strength" sass 4))}
       "SASS"]
      [:button {:type     "button"
                :class    (:leg @buttons)
                :on-click #(do
-                           (reset! template [])
-                           (reset! buttons default-buttons)
-                           (button-selected! :leg)
-                           (generate "Warmup" warmup 1)
-                           (generate "Mobility" mobility 1)
-                           (generate "Leg Strength" leg-strength 3)
-                           (generate "Auxiliary" auxiliary 2))}
+                           (update! :leg)
+                           (generate! "Warmup" warmup 1)
+                           (generate! "Mobility" mobility 1)
+                           (generate! "Leg Strength" leg-strength 3)
+                           (generate! "Auxiliary" auxiliary 2))}
       "Leg/Auxiliary strength"]
      [:button {:type     "button"
                :class    (:movnat @buttons)
                :on-click #(do
-                           (reset! template [])
-                           (reset! buttons default-buttons)
-                           (button-selected! :movnat)
-                           (generate "Warmup Mobility (3 rounds)" movnat-warmup 3)
-                           (generate "Skill" movnat 1)
-                           (generate "Combo (4 rounds)" movnat 4))}
+                           (update! :movnat)
+                           (generate! "Warmup Mobility (3 rounds)" movnat-warmup 3)
+                           (generate! "Skill" movnat 1)
+                           (generate! "Combo (4 rounds)" movnat 4))}
       "MovNat"]]]
    [:div {:class "section movements"}
     [:div.container

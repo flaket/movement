@@ -9,3 +9,7 @@ body {
 div.footer {
   font-size: 1.3rem;
 }
+
+h3 {
+  color: gray
+}
