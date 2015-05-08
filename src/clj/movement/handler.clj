@@ -15,5 +15,6 @@
 
 (def app
   (let [handler (wrap-frame-options (wrap-defaults routes site-defaults)
-                                    {:allow-from "http://movementsession.com"})]
+                                    {:allow-from (or "http://movementsession.com"
+                                                     "http://www.movementsession.com")})]
     (if (env :dev?) (wrap-reload (wrap-exceptions handler)) handler)))
