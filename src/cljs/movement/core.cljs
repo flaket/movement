@@ -64,12 +64,18 @@
 (defonce m-counter (atom 0))
 (defonce c-counter (atom 0))
 
-(defn add-category! [text category]
-  (let [id (swap! c-counter inc)]
-    (swap! template assoc id {:id id :title text
-                              :category category :movements (atom (sorted-map))})))
+(defn add-movement! [text category-id]
+  (let [category (get @template category-id)
+        id (swap! (:m-counter category) inc)]
+    (swap! (:movements category) assoc id {:id id :title text})))
 
-(defn add-movement! [text]
+(defn add-category! [title category]
+  (let [id (swap! c-counter inc)]
+    (swap! template assoc id {:id id :title title
+                              :category category :m-counter (atom 0)
+                              :movements (atom (sorted-map))})))
+
+(defn add-mmovement! [text]
   (let [id (swap! m-counter inc)]
     (swap! movements assoc id {:id id :title text :done false})))
 
@@ -82,8 +88,6 @@
 (defn refresh-movement! [id] (update-movement! id (prep-name (first (take 1 (shuffle strength))))))
 
 (defn mmap [m f a] (->> m (f a) (into (empty m))))
-(defn complete-all [v] (swap! movements mmap map #(assoc-in % [1 :done] v)))
-(defn clear-done [] (swap! movements mmap remove #(get-in % [1 :done])))
 
 (defn movement-input [{:keys [title on-save on-stop]}]
   (let [val (atom title)
@@ -122,23 +126,20 @@
   (fn [{:keys [id category title movements]}]
     [:div
      [:label title]
-     (let [items (vals movements)]
+     (let [items (vals @movements)]
+       [:p (str items)]
        (when (-> items count pos?)
          [:div
-          [:section#main
-           [:ul#todo-list
-            (for [movement items]
+          [:section
+           [:ul
+            [:li "!!"]
+            #_(for [movement items]
               ^{:key (:id movement)} [movement-item movement])]]])
-       [movement-input {:id          "new-todo"
+       [movement-input {:id          "new-movement"
                         :placeholder "Add movement.."
-                        :on-save     add-movement!}])]))
+                        :on-save     #(add-movement! %1 id)}])]))
 
-(defn temp []
-  [:div
-   (for [part @ttemplate]
-     [:div
-      [:div.row [:h3 (:name part)]]
-      (list-movements part)])])
+(print @template)
 
 (defn home-page []
   [:div
@@ -167,12 +168,15 @@
                          wu (take wu-n (shuffle warmup))
                          mob (take mob-n (shuffle mobility))
                          st (take st-n (shuffle strength))]
+                    (reset! template (sorted-map))
+                    (reset! c-counter 0)
                     (add-category! "Warmup" warmup)
-                    (add-category! "Mobility" mobility)
+                    (add-movement! "Push up" 1)
+                    #_(dotimes [n wu-n] (add-movement! (prep-name (nth wu n)) (ffirst @template)))
+                    (add-category! "Mobility" warmup)
+                    #_(dotimes [n mob-n] (add-movement! (prep-name (nth mob n)) (second @template)))
                     (add-category! "Strength" strength)
-                    (dotimes [n wu-n] (add-movement! (prep-name (nth wu n))))
-                    (dotimes [n mob-n] (add-movement! (prep-name (nth mob n))))
-                    (dotimes [n st-n] (add-movement! (prep-name (nth st n))))
+                    #_(dotimes [n st-n] (add-movement! (prep-name (nth st n)) (nth @template 2)))
 
                     #_(update! :strength)
                     #_(generate! "Warmup" warmup 1)
@@ -247,29 +251,12 @@
        "Maya"]]]]
    [:div {:class "section movements"}
     [:div.container
-     ;----
-
-     ;-----
-     (let [categories [vals @template]]
+     (let [categories (vals @template)]
        [:section
         (when (-> categories count pos?)
           [:div
            (for [c categories]
              ^{:key (:id c)} [category-item c])])])
-
-     #_(let [items (vals @movements)]
-       [:section#todoapp
-        [:header#header
-         [:h1 "Movements"]
-        (when (-> items count pos?)
-          [:div
-           [:section#main
-            [:ul#todo-list
-             (for [todo items]
-               ^{:key (:id todo)} [movement-item todo])]]])
-         [movement-input {:id          "new-todo"
-                          :placeholder "Add movement.."
-                          :on-save     add-movement!}]]])
      ]]
    [:div.footer
     [:div.container
