@@ -2,22 +2,61 @@
 
 ;; -------------------------
 ;; Movements in categories
+; movnat
+(def movnat-sitting [:split-stand-to-split-sit :walking-split-squat :side-shuffle
+                     :stepping-under :stepping-over :hinged-walk :split-squat
+                     :squat-to-medium-kneeling :squat-to-kneeling :kneeling-to-tall-kneeling
+                     :kneeling-to-tall-half-kneeling :kneeling-to-lateral-half-kneeling
+                     :split-knee-walk :tall-half-kneeling-to-tall-split-kneeling
+                     :deep-squat :deep-knee-bend :deep-squat-to-deep-knee-bend
+                     :deep-squat-narrow-base :tall-half-kneeling-to-kneeling
+                     :tall-split-kneeling-to-bent-sit :deep-knee-bend-to-kneeling
+                     :stepping-up :backward-stepping-down :extended-stepping-up
+                     :forward-stepping-down])
+(def movnat-balancing [:tip-toe-balancing :balancing-walk :balancing-split-squat
+                       :balancing-shuffle :cross-reverse :pivot-reverse
+                       :split-squat-pivot-reverse :balancing-tripod-transition
+                       :balancing-foot-hand-crawl])
+(def movnat-crawling [:inverted-crawl :knee-elbow-crawl :knee-hand-crawl :foot-elbow-crawl
+                      :foot-hand-crawl :push-pull-crawl :rocking :rotational-rocking
+                      :bent-sit-to-lateral-half-kneeling :shoulder-crawl :hip-thrust-crawl
+                      :sit-to-backward-roll :lying-to-forward-roll :forward-roll :tripod-transition
+                      :backward-sprawl :forward-sprawl-to-push-up])
+(def movnat-jumping [:leg-swing-jump :broad-jump :split-jump :vertical-jump :depth-jump :lateral-side-jump])
+(def movnat-climbing [:tuck-swing :tap-swing :side-swing :side-swing-traverse :side-swing-hang-hold
+                      :side-swing-power-traverse :pull-up :pull-up-reach :pull-up-hold :one-arm-dead-hang
+                      :jumping-pull-up :hanging-side-foot-lift :hanging-leg-hook-over
+                      :hanging-knee-tuck :hanging-knee-to-bar :hanging-front-foot-lift
+                      :front-swing-traverse :front-power-traverse :elbow-pull-up :dead-hang
+                      :sliding-swing-up :elbow-pop-up :hand-swing :swing-pop-up :tuck-pop-up
+                      :muscle-up :roll-up])
+(def movnat-lifting [:dead-lift :lapping :waist-carry :chest-carry :hand-carry :shoulder-carry
+                     :log-shouldering :shoulder-carry-squat :hands-free-shoulder-carry-squat
+                     :shoulder-carry-switch :clean :jerk :push-press])
+(def movnat-throwing [:chest-throw :rotational-throw :front-swing-throw :overhead-throw])
+(def movnat-running [:run-100-m :run-200-m :run-400-m :sprint-50-m])
+
 ; Warmup
 (def warmup [:joint-mobility :jump-rope :running])
 
 ; Mobility
-(def hip-mobility [:squat-routine :squat-routine-2.0 :movnat-sitting-routine])
-(def shoulder-mobility [:shoulder-rom-stabilisation-routine :scapula-mobilisation-routine])
-(def wrist-mobility [:wrist-routine])
-(def ankle-mobility [:ankle-routine])
-(def spine-mobility [:slide-into-low-bridge-and-wall-rotation :rotate-into-low-bridge
-                     :rotate-into-high-bridge :high-bridge-hold
-                     :locked-knees-rounded-back-deadlift])
+(def hip-mobility (concat movnat-sitting [:dynamic-squat-stretch :floor-hip-rotations :squat-hip-rotations
+                                          :toes-stretch :dynamic-toes-stretch :static-squat
+                                          :dynamic-squats :knee-push-aways :sky-reaches :buddha-prayers
+                                          :squat-bows]))
+(def shoulder-mobility [:external-rotation :lateral-raise :hands-overhead-band-rotations-and-flyes
+                        :hands-side-band-rotations-and-flyes :hands-down-band-rotations-and-flyes
+                        :scapula-push-up :overhead-straight-arm-pulldown :whippet :cuban-rotations
+                        :shoulder-dislocations])
+(def wrist-mobility [:wrist-prep-routine])
+(def ankle-mobility [:ankle-prep-routine])
+(def spine-mobility [:slide-into-low-bridge :rotate-into-low-bridge
+                     :wall-rotations :rotate-into-high-bridge :high-bridge-hold
+                     :jefferson-curl])
 
 ; Hanging
 (def hanging [:passive-hang :active-hang :false-grip-hang :side-to-side-swing
-              :arching-active-hang :front-stationary-swing
-              :one-arm-passive :one-arm-active :shawerma
+              :arching-active-hang :front-stationary-swing :one-arm-passive :one-arm-active
               :swing-grip-routine :figure-8])
 ; Locomotion
 (def locomotion [:kick-to-handstand :cart-wheel :handstand-walk :bridge-walk
@@ -56,37 +95,16 @@
           :muscle-up :pull-up-false-grip :muscle-up-negative
           :muscle-up-l-sit :rope-climb])
 
-(def movnat-sitting [:split-stand-to-split-sit :walking-split-squat :side-shuffle
-                     :stepping-under :stepping-over :hinged-walk :split-squat
-                     :squat-to-medium-kneeling :squat-to-kneeling :kneeling-to-tall-kneeling
-                     :kneeling-to-tall-half-kneeling :kneeling-to-lateral-half-kneeling
-                     :split-knee-walk :tall-half-kneeling-to-tall-split-kneeling
-                     :deep-squat :deep-knee-bend :deep-squat-to-deep-knee-bend
-                     :deep-squat-narrow-base :tall-half-kneeling-to-kneeling
-                     :tall-split-kneeling-to-bent-sit :deep-knee-bend-to-kneeling
-                     :stepping-up :backward-stepping-down :extended-stepping-up
-                     :forward-stepping-down])
-(def movnat-balancing [:tip-toe-balancing :balancing-walk :balancing-split-squat
-                       :balancing-shuffle :cross-reverse :pivot-reverse
-                       :split-squat-pivot-reverse :balancing-tripod-transition
-                       :balancing-foot-hand-crawl])
-(def movnat-crawling [:inverted-crawl :knee-elbow-crawl :knee-hand-crawl :foot-elbow-crawl
-                      :foot-hand-crawl :push-pull-crawl :rocking :rotational-rocking
-                      :bent-sit-to-lateral-half-kneeling :shoulder-crawl :hip-thrust-crawl
-                      :sit-to-backward-roll :lying-to-forward-roll :forward-roll :tripod-transition
-                      :backward-sprawl :forward-sprawl-to-push-up])
-(def movnat-jumping [:leg-swing-jump :broad-jump :split-jump :vertical-jump :depth-jump :lateral-side-jump])
-(def movnat-climbing [:tuck-swing :tap-swing :side-swing :side-swing-traverse :side-swing-hang-hold
-                      :side-swing-power-traverse :pull-up :pull-up-reach :pull-up-hold :one-arm-dead-hang
-                      :jumping-pull-up :hanging-side-foot-lift :hanging-leg-hook-over
-                      :hanging-knee-tuck :hanging-knee-to-bar :hanging-front-foot-lift
-                      :front-swing-traverse :front-power-traverse :elbow-pull-up :dead-hang
-                      :sliding-swing-up :elbow-pop-up :hand-swing :swing-pop-up :tuck-pop-up
-                      :muscle-up :roll-up])
-(def movnat-lifting [:dead-lift :lapping :waist-carry :chest-carry :hand-carry :shoulder-carry
-                     :log-shouldering :shoulder-carry-squat :hands-free-shoulder-carry-squat
-                     :shoulder-carry-switch :clean :jerk :push-press])
-(def movnat-throwing [:chest-throw :rotational-throw :front-swing-throw :overhead-throw])
+
+
+; Maya
+(def m-styrke [:push-up :lunge :knebøy :knebøy-med-vekt :markløft :vekt-press-over-hodet
+               :balanse-trepunkts-overgang :hodestående])
+(def m-oppvarming [:hånd-fot-kravle-20m :invertert-kravle-20m :ta-i-gulvet-med-strake-bein-20-reps :strikk-hengsle-armene
+                   :strikk-dra-fra-hverandre :rotere-hode-skuldre-hofter-og-ankler
+                   :stående-til-sittende :gående-lunges :gå-over :gå-under
+                   :knebøy-til-knesittende :høy-bro-5-reps :lav-bro-5-reps :jefferson-curl :høy-bro-hold-30s])
+(def m-kombinasjon (concat m-styrke m-oppvarming))
 
 (def floreio [])
 
@@ -101,6 +119,6 @@
                       wrist-mobility ankle-mobility spine-mobility))
 (def strength (concat leg-strength auxiliary sass bas))
 (def movnat (concat movnat-sitting movnat-balancing movnat-crawling movnat-jumping movnat-climbing
-                    movnat-lifting movnat-throwing))
+                    movnat-lifting movnat-throwing movnat-running))
 (def movnat-warmup (concat movnat-sitting movnat-balancing movnat-crawling))
 

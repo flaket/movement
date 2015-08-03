@@ -1,6 +1,6 @@
 (defproject movement "0.1.0-SNAPSHOT"
   :description "Generating your next movement session."
-  :url "http://movement-session.herokuapp.com"
+  :url "http://www.movementsession.com"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
