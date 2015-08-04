@@ -6,9 +6,11 @@ pom.xml.asc
 *.log
 *.jar
 *.class
-/.idea
+.idea/*
 /.lein-*
 /.nrepl-port
 /resources/public/js
 /out
+figwheel_server.log
+movement.iml
 /.repl
