@@ -57,7 +57,7 @@
 (defn add-movement! [title category-id]
   (let [id (swap! m-counter inc)]
     (swap! session assoc-in [:movements id] {:id id :title title :category-ref category-id
-                                             :text "Tight core, retract shoulders, neutral head."
+                                             :text ".."
                                              :animation ". . . . ."})))
 
 (defn update! [kw id title] (swap! session assoc-in [kw id :title] title))
@@ -96,96 +96,99 @@
 (defn movement-item []
   (let [editing (atom false)]
     (fn [{:keys [id title category-ref text animation]}]
-      [:div.row {:class (str (if @editing "editing"))}
-       [:label.three.columns {:on-double-click #(reset! editing true)} title]
-       [:label.three.columns text]
-       [:label.three.columns animation]
-       [:button.one.column.button.button-primary
-        {:on-click #(refresh! id (:category (get (:categories @session) category-ref)))}]
-       [:button.one.column.destroy {:on-click #(delete! :movements id)}]
-       (when @editing
-         [movement-edit {:class   "edit" :title title
-                         :on-save #(update! :movements id %)
-                         :on-stop #(reset! editing false)}])])))
+      [:li.m
+       [:div.row.view {:class (str (if @editing "editing"))}
+        [:label.three.columns {:on-double-click #(reset! editing true)} title]
+        [:span.three.columns text]
+        [:span.three.columns animation]
+        [:button.one.column.refresh
+         {:on-click #(refresh! id (:category (get (:categories @session) category-ref)))}]
+        [:button.one.column.destroy {:on-click #(delete! :movements id)}]
+        (when @editing
+          [movement-edit {:class   "edit" :title title
+                          :on-save #(update! :movements id %)
+                          :on-stop #(reset! editing false)}])]])))
 
 (defn category-item []
   (fn [{:keys [id title]} movements]
-    [:div
+    [:div#category
      [:h3 title]
      (when (-> movements count pos?)
-       (for [m movements]
-         ^{:key (:id m)} [movement-item m]))
+       [:ul#movement-list
+        (for [m movements]
+          ^{:key (:id m)} [movement-item m])])
      [movement-input {:id          "new-movement"
                       :placeholder "Add movement.."
                       :on-save     #(add-movement! %1 id)}]]))
 
 (defn home-page []
   [:div
-   [:div.section.buttons
+   [:section#templates
     [:div.container
-     [:h1 "Movement Session"]
-     [:p "Select a template and be inspired by randomly generated movements."]
-     [:div.row
-      [:div.three.columns
-       {:type     "button"
-        :class    (:ritual @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :ritual)
-                    (add-title! "Morning Ritual")
-                    (let [date (js/Date.)]
-                      (add-timestamp! (str (.getDate date) "/" (+ 1 (.getMonth date)))))
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 5] (add-movement! (prep-name (nth (take 5 (shuffle mobility)) n)) 2))
-                    (add-category! "Hanging" hanging)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle hanging)) n)) 3))
-                    (add-category! "Equilibre" equilibre)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle equilibre)) n)) 4))
-                    (add-category! "Strength" strength)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle strength)) n)) 5)))}
-       "Morning ritual"]
-      [:div.three.columns
-       {:type     "button"
-        :class    (:strength @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :strength)
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "Strength" strength)
-                    (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle strength)) n)) 3)))
-        }
-       "Strength"]
-      [:div.three.columns
-       {:type     "button"
-        :class    (:mobility @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :mobility)
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "Prehab" mobility)
-                    (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle mobility)) n)) 3)))}
-       "Mobility/Prehab"]
-      [:div.three.columns
-       {:type     "button"
-        :class    (:locomotion @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :locomotion)
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "Locomotion" locomotion)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle locomotion)) n)) 3)))}
-       "Locomotion"]]
+     [:header#header
+      [:h1 "Movement Session"]
+      [:p "Select a template and be inspired by randomly generated movements."]
+      [:div.row
+       [:div.three.columns
+        {:type     "button"
+         :class    (:ritual @buttons)
+         :on-click #(do
+                     (reset-session!)
+                     (set-button-selected! :ritual)
+                     (add-title! "Morning Ritual")
+                     (let [date (js/Date.)]
+                       (add-timestamp! (str (.getDate date) "/" (+ 1 (.getMonth date)))))
+                     (add-category! "Warmup" warmup)
+                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
+                     (add-category! "Mobility" mobility)
+                     (dotimes [n 5] (add-movement! (prep-name (nth (take 5 (shuffle mobility)) n)) 2))
+                     (add-category! "Hanging" hanging)
+                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle hanging)) n)) 3))
+                     (add-category! "Equilibre" equilibre)
+                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle equilibre)) n)) 4))
+                     (add-category! "Strength" strength)
+                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle strength)) n)) 5)))}
+        "Morning ritual"]
+       [:div.three.columns
+        {:type     "button"
+         :class    (:strength @buttons)
+         :on-click #(do
+                     (reset-session!)
+                     (set-button-selected! :strength)
+                     (add-category! "Warmup" warmup)
+                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
+                     (add-category! "Mobility" mobility)
+                     (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
+                     (add-category! "Strength" strength)
+                     (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle strength)) n)) 3)))
+         }
+        "Strength"]
+       [:div.three.columns
+        {:type     "button"
+         :class    (:mobility @buttons)
+         :on-click #(do
+                     (reset-session!)
+                     (set-button-selected! :mobility)
+                     (add-category! "Warmup" warmup)
+                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
+                     (add-category! "Mobility" mobility)
+                     (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
+                     (add-category! "Prehab" mobility)
+                     (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle mobility)) n)) 3)))}
+        "Mobility/Prehab"]
+       [:div.three.columns
+        {:type     "button"
+         :class    (:locomotion @buttons)
+         :on-click #(do
+                     (reset-session!)
+                     (set-button-selected! :locomotion)
+                     (add-category! "Warmup" warmup)
+                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
+                     (add-category! "Mobility" mobility)
+                     (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
+                     (add-category! "Locomotion" locomotion)
+                     (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle locomotion)) n)) 3)))}
+        "Locomotion"]]]
      [:div.row
       [:div.three.columns
        {:type     "button"
@@ -255,21 +258,20 @@
                     (add-category! "Kombinasjon (3 runder hurtig)" m-kombinasjon)
                     (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle m-kombinasjon)) n)) 3)))}
        "Maya"]]]]
-   [:div.section.movements
+   [:section#session
     [:div.container
      (let [session @session
            categories (vals (:categories session))
            movements (vals (:movements session))]
        (when (-> categories count pos?)
-         [:div.row
-          [:h2 (str (:title session) " - " (:date session))]
-          (for [c categories]
-            ^{:key (:id c)} [category-item
-                             c
-                             (filter
-                               #(= (:id c) (:category-ref %))
-                               movements)])]))]]
-   [:div.footer
+         [:h2 (str (:title session) " - " (:date session))]
+         (for [c categories]
+           ^{:key (:id c)} [category-item
+                            c
+                            (filter
+                              #(= (:id c) (:category-ref %))
+                              movements)])))]]
+   [:footer#info
     [:div.container
      [:em "If you have suggestions for a new session template, some sorely missing movements
      or general improvements (such as adding users and allowing you to add your own
@@ -277,8 +279,21 @@
 
 (defn user-page []
   [:div
-   [:div.container
-    [:p "this will be the user page"]]])
+   [:div#sortable
+    [:div [:div "1"]]
+    [:div [:div "2"]]
+    [:div [:div "3"]]]])
+
+;-------------
+(defn home-page-did-mount []
+  (js/$ (fn []
+          (.sortable (js/$ "#sortable"))
+          (.disableSelection (js/$ "sortable"))
+          )))
+
+(defn home-component []
+  (reagent/create-class {:reagent-render home-page
+                         :component-did-mount home-page-did-mount}))
 
 ;-------------
 (defn current-page []
@@ -308,10 +323,10 @@
 ;; -------------------------
 ;; Initialize app
 (defn mount-root []
+  #_(reagent/render-component [home-component]
+                            (.getElementById js/document "app"))
   (reagent/render [current-page] (.getElementById js/document "app")))
 
 (defn init! []
   (hook-browser-navigation!)
   (mount-root))
-
-
