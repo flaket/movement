@@ -96,7 +96,7 @@
 (defn movement-item []
   (let [editing (atom false)]
     (fn [{:keys [id title category-ref text animation]}]
-      [:li.m
+      [:li
        [:div.row.view {:class (str (if @editing "editing"))}
         [:label.three.columns {:on-double-click #(reset! editing true)} title]
         [:span.three.columns text]
@@ -127,7 +127,6 @@
     [:div.container
      [:header#header
       [:h1 "Movement Session"]
-      [:p "Select a template and be inspired by randomly generated movements."]
       [:div.row
        [:div.three.columns
         {:type     "button"
