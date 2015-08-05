@@ -13,3 +13,5 @@ div.footer {
 h3 {
   color: gray
 }
+
+#draggable { width: 150px; height: 150px; padding: 0.5em; }

@@ -14,7 +14,6 @@
 
 (enable-console-print!)
 
-(def default-template [])
 (def default-buttons {:ritual     "button"
                       :strength   "button"
                       :mobility   "button"
@@ -25,14 +24,7 @@
                       :movnat     "button"
                       :maya       "button"})
 
-(def ttemplate (atom default-template))
-
 (def buttons (atom default-buttons))
-
-(defn generate! [name category n]
-  (swap! ttemplate conj {:name      name
-                        :category  category
-                        :movements (vec (take n (shuffle category)))}))
 
 (defn button-selected! [button]
   (swap! buttons assoc button "button button-primary"))
@@ -52,13 +44,21 @@
 (defonce m-counter (atom 0))
 (defonce c-counter (atom 0))
 
+(defn add-title! [title]
+  (swap! session assoc :title title))
+
+(defn add-timestamp! [t]
+  (swap! session assoc :date t))
+
 (defn add-category! [title category]
   (let [id (swap! c-counter inc)]
     (swap! session assoc-in [:categories id] {:id id :title title :category category})))
 
-(defn add-movement! [text category-id]
+(defn add-movement! [title category-id]
   (let [id (swap! m-counter inc)]
-    (swap! session assoc-in [:movements id] {:id id :title text :category-ref category-id})))
+    (swap! session assoc-in [:movements id] {:id id :title title :category-ref category-id
+                                             :text "Tight core, retract shoulders, neutral head."
+                                             :animation ". . . . ."})))
 
 (defn update! [kw id title] (swap! session assoc-in [kw id :title] title))
 
@@ -95,9 +95,11 @@
 
 (defn movement-item []
   (let [editing (atom false)]
-    (fn [{:keys [id title category-ref]}]
+    (fn [{:keys [id title category-ref text animation]}]
       [:div.row {:class (str (if @editing "editing"))}
        [:label.three.columns {:on-double-click #(reset! editing true)} title]
+       [:label.three.columns text]
+       [:label.three.columns animation]
        [:button.one.column.button.button-primary
         {:on-click #(refresh! id (:category (get (:categories @session) category-ref)))}]
        [:button.one.column.destroy {:on-click #(delete! :movements id)}]
@@ -107,7 +109,7 @@
                          :on-stop #(reset! editing false)}])])))
 
 (defn category-item []
-  (fn [{:keys [id category title]} movements]
+  (fn [{:keys [id title]} movements]
     [:div
      [:h3 title]
      (when (-> movements count pos?)
@@ -130,6 +132,9 @@
         :on-click #(do
                     (reset-session!)
                     (set-button-selected! :ritual)
+                    (add-title! "Morning Ritual")
+                    (let [date (js/Date.)]
+                      (add-timestamp! (str (.getDate date) "/" (+ 1 (.getMonth date)))))
                     (add-category! "Warmup" warmup)
                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
                     (add-category! "Mobility" mobility)
@@ -257,6 +262,7 @@
            movements (vals (:movements session))]
        (when (-> categories count pos?)
          [:div.row
+          [:h2 (str (:title session) " - " (:date session))]
           (for [c categories]
             ^{:key (:id c)} [category-item
                              c
@@ -275,7 +281,6 @@
     [:p "this will be the user page"]]])
 
 ;-------------
-
 (defn current-page []
   [:div [(session/get :current-page)]])
 
