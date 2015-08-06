@@ -47,9 +47,6 @@
 (defn add-title! [title]
   (swap! session assoc :title title))
 
-(defn add-timestamp! [t]
-  (swap! session assoc :date t))
-
 (defn add-category! [title category]
   (let [id (swap! c-counter inc)]
     (swap! session assoc-in [:categories id] {:id id :title title :category category})))
@@ -57,14 +54,16 @@
 (defn add-movement! [title category-id]
   (let [id (swap! m-counter inc)]
     (swap! session assoc-in [:movements id] {:id id :title title :category-ref category-id
-                                             :text ".."
-                                             :animation ". . . . ."})))
+                                             :text "" :animation ""})))
 
 (defn update! [kw id title] (swap! session assoc-in [kw id :title] title))
 
 (defn delete! [kw id] (swap! session update-in [kw] dissoc id))
 
 (defn refresh! [id category] (update! :movements id (prep-name (first (take 1 (shuffle category))))))
+
+(defn handler-fn [func]
+  (fn [] func nil))  ;; force return nil
 
 (defn reset-session! []
   (do
@@ -74,7 +73,7 @@
     (reset! c-counter 0)
     (reset! m-counter 0)))
 
-(defn movement-input [{:keys [title on-save on-stop]}]
+(defn text-input [{:keys [title on-save on-stop]}]
   (let [val (atom title)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -90,36 +89,41 @@
                                      27 (stop)
                                      nil)})])))
 
-(def movement-edit (with-meta movement-input
+(def text-edit (with-meta text-input
                               {:component-did-mount #(.focus (reagent/dom-node %))}))
 
 (defn movement-item []
   (let [editing (atom false)]
     (fn [{:keys [id title category-ref text animation]}]
       [:li
-       [:div.row.view {:class (str (if @editing "editing"))}
-        [:label.three.columns {:on-double-click #(reset! editing true)} title]
-        [:span.three.columns text]
-        [:span.three.columns animation]
-        [:button.one.column.refresh
+       [:div.view {:class (str (if @editing "editing"))}
+        [:label {:on-double-click #(handler-fn (reset! editing true))} title]
+        [:span text]
+        [:span animation]
+        [:button.refresh
          {:on-click #(refresh! id (:category (get (:categories @session) category-ref)))}]
-        [:button.one.column.destroy {:on-click #(delete! :movements id)}]
+        [:button.destroy {:on-click #(delete! :movements id)}]
         (when @editing
-          [movement-edit {:class   "edit" :title title
-                          :on-save #(update! :movements id %)
-                          :on-stop #(reset! editing false)}])]])))
+          [text-edit {:class   "edit" :title title
+                      :on-save #(handler-fn (update! :movements id %))
+                      :on-stop #(handler-fn (reset! editing false))}])]])))
 
 (defn category-item []
-  (fn [{:keys [id title]} movements]
-    [:div#category
-     [:h3 title]
-     (when (-> movements count pos?)
-       [:ul#movement-list
-        (for [m movements]
-          ^{:key (:id m)} [movement-item m])])
-     [movement-input {:id          "new-movement"
-                      :placeholder "Add movement.."
-                      :on-save     #(add-movement! %1 id)}]]))
+  (let [editing (atom false)]
+    (fn [{:keys [id title]} movements]
+      [:div#category
+       [:h3 {:on-double-click #(handler-fn (reset! editing true))} title]
+       (when @editing
+         [text-edit {:class   "edit" :title title
+                     :on-save #(handler-fn (update! :categories id %))
+                     :on-stop #(handler-fn (reset! editing false))}])
+       (when (-> movements count pos?)
+         [:ul#movement-list
+          (for [m movements]
+            ^{:key (:id m)} [movement-item m])])
+       [text-input {:id          "new-movement"
+                        :placeholder "Add movement.."
+                        :on-save     #(add-movement! %1 id)}]])))
 
 (defn home-page []
   [:div
@@ -134,9 +138,9 @@
          :on-click #(do
                      (reset-session!)
                      (set-button-selected! :ritual)
-                     (add-title! "Morning Ritual")
+
                      (let [date (js/Date.)]
-                       (add-timestamp! (str (.getDate date) "/" (+ 1 (.getMonth date)))))
+                       (add-title! (str "Morning Ritual " (.getDate date) "/" (+ 1 (.getMonth date)))))
                      (add-category! "Warmup" warmup)
                      (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
                      (add-category! "Mobility" mobility)
@@ -261,15 +265,22 @@
     [:div.container
      (let [session @session
            categories (vals (:categories session))
-           movements (vals (:movements session))]
+           movements (vals (:movements session))
+           title (:title session)
+           editing-title (atom false)]
        (when (-> categories count pos?)
-         [:h2 (str (:title session) " - " (:date session))]
-         (for [c categories]
-           ^{:key (:id c)} [category-item
-                            c
-                            (filter
-                              #(= (:id c) (:category-ref %))
-                              movements)])))]]
+         [:div
+          [:h2 #_{:on-double-click #(reset! editing-title true)} title]
+          #_(when @editing-title
+            [text-edit {:class   "edit" :title title
+                        :on-save #(add-title! %)
+                        :on-stop #(reset! editing-title false)}])
+          (for [c categories]
+            ^{:key (:id c)} [category-item
+                             c
+                             (filter
+                               #(= (:id c) (:category-ref %))
+                               movements)])]))]]
    [:footer#info
     [:div.container
      [:em "If you have suggestions for a new session template, some sorely missing movements
@@ -278,25 +289,32 @@
 
 (defn user-page []
   [:div
+   [:section#nav
+    [:div
+     {:type     "button"
+      :class    "button"
+      :on-click #()}
+     "Home"]
+    [:div
+     {:type     "button"
+      :class    "button"
+      :on-click #()}
+     "User"]]
    [:div#sortable
     [:div [:div "1"]]
     [:div [:div "2"]]
     [:div [:div "3"]]]])
 
-;-------------
-(defn home-page-did-mount []
-  (js/$ (fn []
-          (.sortable (js/$ "#sortable"))
-          (.disableSelection (js/$ "sortable"))
-          )))
+(def user-page-with-callback
+  (with-meta user-page
+             {:component-did-mount
+              (fn [this]
+                (js/$ (fn []
+                        (.sortable (js/$ "#sortable"))
+                        (.disableSelection (js/$ "sortable"))
+                        )))}))
 
-(defn home-component []
-  (reagent/create-class {:reagent-render home-page
-                         :component-did-mount home-page-did-mount}))
-
-;-------------
-(defn current-page []
-  [:div [(session/get :current-page)]])
+#_(session/put! :current-page #'home-page)
 
 ;; -------------------------
 ;; Client side routes
@@ -306,7 +324,11 @@
                     (session/put! :current-page #'home-page))
 
 (secretary/defroute "/user" []
-                    (session/put! :current-page #'user-page))
+                    (session/put! :current-page #'user-page-with-callback))
+
+;------------
+(defn current-page []
+  [:div [(session/get :current-page)]])
 
 ;; -------------------------
 ;; History
@@ -322,8 +344,6 @@
 ;; -------------------------
 ;; Initialize app
 (defn mount-root []
-  #_(reagent/render-component [home-component]
-                            (.getElementById js/document "app"))
   (reagent/render [current-page] (.getElementById js/document "app")))
 
 (defn init! []
