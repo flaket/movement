@@ -1,18 +1,34 @@
 (ns movement.core
   (:require [reagent.core :as reagent :refer [atom]]
             [reagent.session :as session]
-            [secretary.core :as secretary :include-macros true]
+            [secretary.core :as secretary :include-macros true :refer [dispatch!]]
             [goog.events :as events]
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
             [clojure.string :as str]
-            [movement.movements :refer [warmup mobility hanging equilibre strength
+            [movement.user :refer [user-page]]
+            [movement.generator :refer [generator-page]]
+            [movement.movements :refer [all warmup mobility hanging equilibre strength
                                         locomotion bas sass leg-strength auxiliary
                                         movnat movnat-warmup
                                         m-styrke m-oppvarming m-kombinasjon]])
   (:import goog.History))
 
+;; The core namespace is the client entry point.
+;; The global state of the application is handled with the reagent.session utility namespace.
+;; The generator namespace houses the main application for generating movement sessions.
+;; The user namespace displays the user specific information.
+;; The movements namespace temporarily houses lists of exercises.
+
 (enable-console-print!)
+
+(defonce movement-session (atom {}))
+(defonce m-counter (atom 0))
+(defonce c-counter (atom 0))
+
+(swap! movement-session assoc :categories (sorted-map))
+(swap! movement-session assoc :movements (sorted-map))
+
 
 (def default-buttons {:ritual     "button"
                       :strength   "button"
@@ -37,28 +53,21 @@
     (reset! buttons default-buttons)
     (button-selected! button)))
 
-(defonce session (atom {}))
-(swap! session assoc :categories (sorted-map))
-(swap! session assoc :movements (sorted-map))
-
-(defonce m-counter (atom 0))
-(defonce c-counter (atom 0))
-
 (defn add-title! [title]
-  (swap! session assoc :title title))
+  (swap! movement-session assoc :title title))
 
 (defn add-category! [title category]
   (let [id (swap! c-counter inc)]
-    (swap! session assoc-in [:categories id] {:id id :title title :category category})))
+    (swap! movement-session assoc-in [:categories id] {:id id :title title :category category})))
 
 (defn add-movement! [title category-id]
   (let [id (swap! m-counter inc)]
-    (swap! session assoc-in [:movements id] {:id id :title title :category-ref category-id
-                                             :text "" :animation ""})))
+    (swap! movement-session assoc-in [:movements id] {:id id :title title :category-ref category-id
+                                             :comment "" :animation ""})))
 
-(defn update! [kw id title] (swap! session assoc-in [kw id :title] title))
+(defn update! [kw id title] (swap! movement-session assoc-in [kw id :title] title))
 
-(defn delete! [kw id] (swap! session update-in [kw] dissoc id))
+(defn delete! [kw id] (swap! movement-session update-in [kw] dissoc id))
 
 (defn refresh! [id category] (update! :movements id (prep-name (first (take 1 (shuffle category))))))
 
@@ -67,11 +76,17 @@
 
 (defn reset-session! []
   (do
-    (reset! session {})
-    (swap! session assoc :categories (sorted-map))
-    (swap! session assoc :movements (sorted-map))
+    (reset! movement-session {})
     (reset! c-counter 0)
-    (reset! m-counter 0)))
+    (reset! m-counter 0)
+    (swap! movement-session assoc :categories (sorted-map))
+    (swap! movement-session assoc :movements (sorted-map))))
+
+(defn auto-complete-did-mount []
+  (js/$ (fn []
+          (let [available-tags (map prep-name all)]
+            (.autocomplete (js/$ "#tags")
+                           (clj->js {:source available-tags}))))))
 
 (defn text-input [{:keys [title on-save on-stop]}]
   (let [val (atom title)
@@ -81,28 +96,31 @@
                (if-not (empty? v) (on-save v))
                (stop))]
     (fn [props]
-      [:input (merge props
-                     {:type "text" :value @val :on-blur save
+      [:input#tags (merge props
+                     {:type "text"
+                      :value @val
+                      :on-blur save
                       :on-change #(reset! val (-> % .-target .-value))
                       :on-key-down #(case (.-which %)
                                      13 (save)
                                      27 (stop)
                                      nil)})])))
 
-(def text-edit (with-meta text-input
-                              {:component-did-mount #(.focus (reagent/dom-node %))}))
+(def text-edit
+  (with-meta text-input {:component-did-mount #(do (.focus (reagent/dom-node %))
+                                                   (auto-complete-did-mount))}))
 
 (defn movement-item []
   (let [editing (atom false)]
-    (fn [{:keys [id title category-ref text animation]}]
+    (fn [{:keys [id title category-ref comment animation]}]
       [:li
        [:div.view {:class (str (if @editing "editing"))}
         [:label {:on-double-click #(handler-fn (reset! editing true))} title]
-        [:span text]
         [:span animation]
         [:button.refresh
-         {:on-click #(refresh! id (:category (get (:categories @session) category-ref)))}]
+         {:on-click #(refresh! id (:category (get (:categories @movement-session) category-ref)))}]
         [:button.destroy {:on-click #(delete! :movements id)}]
+        [:span comment]
         (when @editing
           [text-edit {:class   "edit" :title title
                       :on-save #(handler-fn (update! :movements id %))
@@ -121,9 +139,9 @@
          [:ul#movement-list
           (for [m movements]
             ^{:key (:id m)} [movement-item m])])
-       [text-input {:id          "new-movement"
-                        :placeholder "Add movement.."
-                        :on-save     #(add-movement! %1 id)}]])))
+       [text-edit {:id          "new-movement"
+                    :placeholder "Add movement.."
+                    :on-save     #(add-movement! %1 id)}]])))
 
 (defn home-page []
   [:div
@@ -263,7 +281,7 @@
        "Maya"]]]]
    [:section#session
     [:div.container
-     (let [session @session
+     (let [session @movement-session
            categories (vals (:categories session))
            movements (vals (:movements session))
            title (:title session)
@@ -272,63 +290,38 @@
          [:div
           [:h2 #_{:on-double-click #(reset! editing-title true)} title]
           #_(when @editing-title
-            [text-edit {:class   "edit" :title title
-                        :on-save #(add-title! %)
-                        :on-stop #(reset! editing-title false)}])
+              [text-edit {:class   "edit" :title title
+                          :on-save #(add-title! %)
+                          :on-stop #(reset! editing-title false)}])
           (for [c categories]
             ^{:key (:id c)} [category-item
                              c
                              (filter
                                #(= (:id c) (:category-ref %))
-                               movements)])]))]]
+                               movements)])
+          [:button.button {:type     "submit"
+                           :on-click #(.log js/console (print session) #_(clj->js session))}
+           "Log this movement session"]
+          [:button.button {:on-click #()} "Make PDF"]
+          [:button.button {:on-click #(dispatch! "/user")} "User page"]
+          ]))]]
    [:footer#info
     [:div.container
      [:em "If you have suggestions for a new session template, some sorely missing movements
      or general improvements (such as adding users and allowing you to add your own
      templates): let your wishes be known by sending an email to movementsession@gmail.com"]]]])
 
-(defn user-page []
-  [:div
-   [:section#nav
-    [:div
-     {:type     "button"
-      :class    "button"
-      :on-click #()}
-     "Home"]
-    [:div
-     {:type     "button"
-      :class    "button"
-      :on-click #()}
-     "User"]]
-   [:div#sortable
-    [:div [:div "1"]]
-    [:div [:div "2"]]
-    [:div [:div "3"]]]])
-
-(def user-page-with-callback
-  (with-meta user-page
-             {:component-did-mount
-              (fn [this]
-                (js/$ (fn []
-                        (.sortable (js/$ "#sortable"))
-                        (.disableSelection (js/$ "sortable"))
-                        )))}))
-
-#_(session/put! :current-page #'home-page)
-
 ;; -------------------------
 ;; Client side routes
-(secretary/set-config! :prefix "#")
-
 (secretary/defroute "/" []
-                    (session/put! :current-page #'home-page))
+                    (session/put! :current-page home-page))
 
 (secretary/defroute "/user" []
-                    (session/put! :current-page #'user-page-with-callback))
+                    (session/put! :current-page user-page))
 
-;------------
-(defn current-page []
-  [:div [(session/get :current-page)]])
+;---------------------------
+(defn page []
+  [(session/get :current-page)])
 
 ;; -------------------------
 ;; History
@@ -344,8 +337,10 @@
 ;; -------------------------
 ;; Initialize app
 (defn mount-root []
-  (reagent/render [current-page] (.getElementById js/document "app")))
+  (reagent/render-component [page] (.getElementById js/document "app")))
 
 (defn init! []
   (hook-browser-navigation!)
+  (secretary/set-config! :prefix "#")
+  (session/put! :current-page home-page)
   (mount-root))

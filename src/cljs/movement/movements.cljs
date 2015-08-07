@@ -95,8 +95,6 @@
           :muscle-up :pull-up-false-grip :muscle-up-negative
           :muscle-up-l-sit :rope-climb])
 
-
-
 ; Maya
 (def m-styrke [:push-up :lunge :knebøy :knebøy-med-vekt :markløft :vekt-press-over-hodet
                :balanse-trepunkts-overgang :hodestående])
@@ -106,14 +104,8 @@
                    :knebøy-til-knesittende :høy-bro-5-reps :lav-bro-5-reps :jefferson-curl :høy-bro-hold-30s])
 (def m-kombinasjon (concat m-styrke m-oppvarming))
 
-(def floreio [])
 
-(def running [:sprint :interval :5K])
-(def hiking [:hiking])
-(def parkour [])
-(def swimming [:swimming])
-(def rock-climbing [:bouldering :rock-climbing])
-(def ball-sport [:squash :football])
+;----
 
 (def mobility (concat hip-mobility shoulder-mobility
                       wrist-mobility ankle-mobility spine-mobility))
@@ -122,3 +114,4 @@
                     movnat-lifting movnat-throwing movnat-running))
 (def movnat-warmup (concat movnat-sitting movnat-balancing movnat-crawling))
 
+(def all (concat warmup mobility strength movnat))
