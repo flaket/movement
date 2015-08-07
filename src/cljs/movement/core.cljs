@@ -300,8 +300,8 @@
                                #(= (:id c) (:category-ref %))
                                movements)])
           [:button.button {:type     "submit"
-                           :on-click #(.log js/console (print session) #_(clj->js session))}
-           "Log this movement session"]
+                           :on-click #(session/put! :logged-sessions session)}
+           "Log this movement session!"]
           [:button.button {:on-click #()} "Make PDF"]
           [:button.button {:on-click #(dispatch! "/user")} "User page"]
           ]))]]
