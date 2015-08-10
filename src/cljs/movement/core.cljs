@@ -7,6 +7,7 @@
             [cljsjs.react :as react]
             [clojure.string :as str]
             [movement.user :refer [user-page]]
+            [movement.template :refer [template-page]]
             [movement.generator :refer [generator-page]]
             [movement.movements :refer [all warmup mobility hanging equilibre strength
                                         locomotion bas sass leg-strength auxiliary
@@ -62,8 +63,11 @@
 
 (defn add-movement! [title category-id]
   (let [id (swap! m-counter inc)]
-    (swap! movement-session assoc-in [:movements id] {:id id :title title :category-ref category-id
-                                             :comment "" :animation ""})))
+    (swap! movement-session assoc-in [:movements id]
+           {:id id :title title
+            :category-ref category-id
+            :reps nil :sets nil
+            :comment "" :animation nil})))
 
 (defn update! [kw id title] (swap! movement-session assoc-in [kw id :title] title))
 
@@ -87,6 +91,11 @@
           (let [available-tags (map prep-name all)]
             (.autocomplete (js/$ "#tags")
                            (clj->js {:source available-tags}))))))
+
+(defn sortable-did-mount []
+  (js/$ (fn []
+          (do (.sortable (js/$ "#sortable"))
+              (.disableSelection (js/$ "#sortable"))))))
 
 (defn text-input [{:keys [title on-save on-stop]}]
   (let [val (atom title)
@@ -129,8 +138,8 @@
 (defn category-item []
   (let [editing (atom false)]
     (fn [{:keys [id title]} movements]
-      [:div#category
-       [:h3 {:on-double-click #(handler-fn (reset! editing true))} title]
+      [:div#sortable
+       [:h4 {:on-double-click #(handler-fn (reset! editing true))} title]
        (when @editing
          [text-edit {:class   "edit" :title title
                      :on-save #(handler-fn (update! :categories id %))
@@ -150,9 +159,10 @@
      [:header#header
       [:h1 "Movement Session"]]]
     [:section#nav
-     [:button.button {:on-click #(dispatch! "/")} "Movement Session Generator"]
-     [:button.button {:on-click #(dispatch! "/user")} "User"]
-     [:button.button {:on-click #(dispatch! "/")} "Template Creator"]]
+     [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
+     [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
+     [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
+     [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
     [:section#templates
      [:div.row
       [:div.three.columns
@@ -181,6 +191,8 @@
         :on-click #(do
                     (reset-session!)
                     (set-button-selected! :strength)
+                    (let [date (js/Date.)]
+                      (add-title! (str "Strength " (.getDate date) "/" (+ 1 (.getMonth date)))))
                     (add-category! "Warmup" warmup)
                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
                     (add-category! "Mobility" mobility)
@@ -195,6 +207,8 @@
         :on-click #(do
                     (reset-session!)
                     (set-button-selected! :mobility)
+                    (let [date (js/Date.)]
+                      (add-title! (str "Mobility/Prehab " (.getDate date) "/" (+ 1 (.getMonth date)))))
                     (add-category! "Warmup" warmup)
                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
                     (add-category! "Mobility" mobility)
@@ -208,6 +222,8 @@
         :on-click #(do
                     (reset-session!)
                     (set-button-selected! :locomotion)
+                    (let [date (js/Date.)]
+                      (add-title! (str "Locomotion " (.getDate date) "/" (+ 1 (.getMonth date)))))
                     (add-category! "Warmup" warmup)
                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
                     (add-category! "Mobility" mobility)
@@ -222,11 +238,13 @@
         :on-click #(do
                     (reset-session!)
                     (set-button-selected! :bas)
+                    (let [date (js/Date.)]
+                      (add-title! (str "Bent Arm Strength " (.getDate date) "/" (+ 1 (.getMonth date)))))
                     (add-category! "Warmup" warmup)
                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
                     (add-category! "Mobility" mobility)
                     (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "Bent Arm Strength" bas)
+                    (add-category! "BAS" bas)
                     (dotimes [n 5] (add-movement! (prep-name (nth (take 5 (shuffle bas)) n)) 3)))}
        "BAS"]
       [:div.three.columns
@@ -235,11 +253,13 @@
         :on-click #(do
                     (reset-session!)
                     (set-button-selected! :sass)
+                    (let [date (js/Date.)]
+                      (add-title! (str "Straigth Arm Scapular Strength " (.getDate date) "/" (+ 1 (.getMonth date)))))
                     (add-category! "Warmup" warmup)
                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
                     (add-category! "Mobility" mobility)
                     (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "Straight Arm Scapular Strength" sass)
+                    (add-category! "SASS" sass)
                     (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle sass)) n)) 3)))}
        "SASS"]
       [:div.three.columns
@@ -248,6 +268,8 @@
         :on-click #(do
                     (reset-session!)
                     (set-button-selected! :leg)
+                    (let [date (js/Date.)]
+                      (add-title! (str "Leg Strength " (.getDate date) "/" (+ 1 (.getMonth date)))))
                     (add-category! "Warmup" warmup)
                     (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
                     (add-category! "Mobility" mobility)
@@ -263,6 +285,8 @@
         :on-click #(do
                     (reset-session!)
                     (set-button-selected! :movnat)
+                    (let [date (js/Date.)]
+                      (add-title! (str "MovNat " (.getDate date) "/" (+ 1 (.getMonth date)))))
                     (add-category! "Warmup Mobility (3 rounds)" movnat-warmup)
                     (dotimes [n 3] (add-movement! (prep-name (nth (take 3 (shuffle movnat-warmup)) n)) 1))
                     (add-category! "Skill (30 reps)" movnat)
@@ -277,6 +301,8 @@
        :on-click #(do
                    (reset-session!)
                    (set-button-selected! :maya)
+                   (let [date (js/Date.)]
+                     (add-title! (str "Maya " (.getDate date) "/" (+ 1 (.getMonth date)))))
                    (add-category! "Oppvarming/Bevegelighet (2 runder rolig)" m-oppvarming)
                    (dotimes [n 3] (add-movement! (prep-name (nth (take 3 (shuffle m-oppvarming)) n)) 1))
                    (add-category! "Styrke/Ferdighet (30 reps)" m-styrke)
@@ -293,7 +319,7 @@
             editing-title (atom false)]
         (when (-> categories count pos?)
           [:div
-           [:h2 #_{:on-double-click #(reset! editing-title true)} title]
+           [:h3 #_{:on-double-click #(reset! editing-title true)} title]
            #_(when @editing-title
                [text-edit {:class   "edit" :title title
                            :on-save #(add-title! %)
@@ -305,8 +331,10 @@
                                 #(= (:id c) (:category-ref %))
                                 movements)])
            [:button.button {:type     "submit"
-                            :on-click #(let [log (session/get :logged-sessions)
-                                             new-sessions (conj log movement-session)]
+                            :on-click #(let [timestamp (.getTime (js/Date.))
+                                             s (assoc movement-session :timestamp timestamp)
+                                             log (session/get :logged-sessions)
+                                             new-sessions (conj log s)]
                                         (session/put! :logged-sessions new-sessions))}
             "Log this movement session!"]
            [:button.button {:on-click #()} "Make PDF"]
@@ -317,13 +345,20 @@
      or general improvements (such as adding users and allowing you to add your own
      templates): let your wishes be known by sending an email to movementsession@gmail.com"]]]]])
 
+(defn home-component []
+  (reagent/create-class {:reagent-render home-page
+                         :component-did-mount sortable-did-mount}))
+
 ;; -------------------------
 ;; Client side routes
 (secretary/defroute "/" []
-                    (session/put! :current-page home-page))
+                    (session/put! :current-page home-component))
 
 (secretary/defroute "/user" []
                     (session/put! :current-page user-page))
+
+(secretary/defroute "/template" []
+                    (session/put! :current-page template-page))
 
 ;---------------------------
 (defn page []
@@ -348,6 +383,6 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (session/put! :current-page home-page)
+  (session/put! :current-page template-page)
   (session/put! :logged-sessions [])
   (mount-root))
