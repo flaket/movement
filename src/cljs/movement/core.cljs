@@ -108,7 +108,8 @@
       [:input#tags (merge props
                      {:type "text"
                       :value @val
-                      :on-blur save
+                      :on-blur #(do (reset! val (-> % .-target .-value))
+                                    (save))
                       :on-change #(reset! val (-> % .-target .-value))
                       :on-key-down #(case (.-which %)
                                      13 (save)
@@ -124,7 +125,8 @@
     (fn [{:keys [id title category-ref comment animation]}]
       [:li
        [:div.view {:class (str (if @editing "editing"))}
-        [:label {:on-double-click #(handler-fn (reset! editing true))} title]
+        [:label {:style {:display (if @editing "none" "")}
+                 :on-double-click #(handler-fn (reset! editing true))} title]
         [:span animation]
         [:button.refresh
          {:on-click #(refresh! id (:category (get (:categories @movement-session) category-ref)))}]
@@ -345,6 +347,33 @@
      or general improvements (such as adding users and allowing you to add your own
      templates): let your wishes be known by sending an email to movementsession@gmail.com"]]]]])
 
+(defn movement-page []
+  [:div
+   [:div.container
+    [:section#header
+     [:header#header
+      [:h1 "Movement Session"]]]
+    [:section#nav
+     [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
+     [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
+     [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
+     [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
+    [:section#dragula
+     [:div "1"]
+     [:div "2"]
+     [:div "3"]
+     [:div "4"]]]])
+
+(defn dragula-did-mount []
+  ; var container = React.findDOMNode(this);
+  ; dragula([container]);
+  (fn []
+       (js/dragula [(js/$ "#dragula")])))
+
+(defn movement-component []
+  (reagent/create-class {:reagent-render movement-page
+                         :component-did-mount dragula-did-mount}))
+
 (defn home-component []
   (reagent/create-class {:reagent-render home-page
                          :component-did-mount sortable-did-mount}))
@@ -359,6 +388,9 @@
 
 (secretary/defroute "/template" []
                     (session/put! :current-page template-page))
+
+(secretary/defroute "/movements" []
+                    (session/put! :current-page movement-component))
 
 ;---------------------------
 (defn page []
@@ -383,6 +415,6 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (session/put! :current-page template-page)
+  (session/put! :current-page movement-component)
   (session/put! :logged-sessions [])
   (mount-root))
