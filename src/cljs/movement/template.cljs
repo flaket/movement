@@ -1,6 +1,7 @@
 (ns movement.template
  (:require [reagent.core :refer [atom]]
            [reagent.session :as session]
+           [reagent-forms.core :refer [bind-fields]]
            [secretary.core :include-macros true :refer [dispatch!]]))
 
 (def counter (atom 0))
@@ -43,17 +44,60 @@
      [:div m
       [slider :m m 0 10]]]))
 
-(defn template-page []
+(defn row [label input]
+  [:div.row
+   [:div.col-md-2 [:label label]]
+   [:div.col-md-5 input]])
+
+(def form-template
   [:div
-   [:div.container
-    [:section#header
-     [:h1 "Movement Session"]]
-    [:section#nav
-     [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
-     [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
-     [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
-     [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
-    [:section#template
-     [:div "Template Creator."]
-     [title-component]
-     [:div "The session starts off with "]]]])
+   (row "first name"
+        [:input.form-control {:field :text :id :first-name}])
+   (row "last name"
+        [:input.form-control {:field :text :id :last-name}])
+   (row "age"
+        [:input.form-control {:field :numeric :id :age}])
+   (row "email"
+        [:input.form-control {:field :email :id :email}])
+   (row "comments"
+        [:textarea.form-control {:field :textarea :id :comments}])])
+
+(defn form-page []
+  (let [doc (atom {:first-name "John" :last-name "Doe" :age 35
+                   :email "john@doe.com" :comments "hello"})]
+    (fn []
+      [:div
+       [:div.container
+        [:section#header
+         [:h1 "Movement Session"]]
+        [:section#nav
+         [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
+         [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
+         [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
+         [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
+        [:section#template
+         [:div.page-header [:h1 "Reagent Form"]]
+         [bind-fields
+          form-template
+          doc
+          ; Optional event functions follow.
+          ; These will be triggered whenever the doc is updated
+          ; and are executed in the order they are listed.
+          ; Events must take 3 params: id, value, document.
+          ;#()
+          ]
+         [:label (str @doc)]]]])))
+
+(defn ttemplate-page []
+  (let [doc (atom {})]
+    (fn []
+      [:div
+       [:div.container
+        [:section#header
+         [:h1 "Movement Session"]]
+        [:section#nav
+         [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
+         [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
+         [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
+         [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
+        [:section#template]]])))

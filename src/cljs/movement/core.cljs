@@ -7,7 +7,7 @@
             [cljsjs.react :as react]
             [clojure.string :as str]
             [movement.user :refer [user-page]]
-            [movement.template :refer [template-page]]
+            [movement.template :refer [form-page]]
             [movement.generator :refer [generator-page]]
             [movement.movements :refer [all warmup mobility hanging equilibre strength
                                         locomotion bas sass leg-strength auxiliary
@@ -92,7 +92,7 @@
             (.autocomplete (js/$ "#tags")
                            (clj->js {:source available-tags}))))))
 
-(defn sortable-did-mount []
+#_(defn sortable-did-mount []
   (js/$ (fn []
           (do (.sortable (js/$ "#sortable"))
               (.disableSelection (js/$ "#sortable"))))))
@@ -139,9 +139,10 @@
 
 (defn category-item []
   (let [editing (atom false)]
-    (fn [{:keys [id title]} movements]
-      [:div#sortable
-       [:h4 {:on-double-click #(handler-fn (reset! editing true))} title]
+    (fn [{:keys [id title category]} movements]
+      [:div
+       [:h4 {:style {:display (if @editing "none" "")}
+             :on-double-click #(handler-fn (reset! editing true))} title]
        (when @editing
          [text-edit {:class   "edit" :title title
                      :on-save #(handler-fn (update! :categories id %))
@@ -150,9 +151,42 @@
          [:ul#movement-list
           (for [m movements]
             ^{:key (:id m)} [movement-item m])])
-       [text-edit {:id          "new-movement"
+       [:button.button {:type     "submit"
+                        :on-click #(add-movement!
+                                    (prep-name (first (take 1 (shuffle category))))
+                                    id)} "+"]
+       #_[text-edit {:id          "new-movement"
                     :placeholder "Add movement.."
                     :on-save     #(add-movement! %1 id)}]])))
+
+(defn log-session []
+  (let [timestamp (.getTime (js/Date.))
+         s (assoc movement-session :timestamp timestamp)
+         log (session/get :logged-sessions)
+         new-sessions (conj log s)]
+    (session/put! :logged-sessions new-sessions)))
+
+(defn session-item []
+  (let [editing (atom false)]
+    (fn [{:keys [categories movements title]}]
+      [:div
+       [:h3 {:on-double-click #(handler-fn (reset! editing true))} title]
+       (when @editing
+         [text-edit {:class   "edit" :title title
+                     :on-save #(handler-fn (add-title! %))
+                     :on-stop #(handler-fn (reset! editing false))}])
+       (when (-> categories count pos?)
+         [:div
+          (for [c categories]
+            ^{:key (:id c)} [category-item
+                             c
+                             (filter
+                               #(= (:id c) (:category-ref %))
+                               movements)])])
+       [:button.button {:type     "submit"
+                        :on-click log-session}
+        "Log this movement session!"]
+       [:button.button {:on-click #()} "Make PDF"]])))
 
 (defn home-page []
   [:div
@@ -313,34 +347,13 @@
                    (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle m-kombinasjon)) n)) 3)))}
       "Maya"]]
     [:section#session
-     [:div
-      (let [movement-session @movement-session
-            categories (vals (:categories movement-session))
-            movements (vals (:movements movement-session))
-            title (:title movement-session)
-            editing-title (atom false)]
-        (when (-> categories count pos?)
-          [:div
-           [:h3 #_{:on-double-click #(reset! editing-title true)} title]
-           #_(when @editing-title
-               [text-edit {:class   "edit" :title title
-                           :on-save #(add-title! %)
-                           :on-stop #(reset! editing-title false)}])
-           (for [c categories]
-             ^{:key (:id c)} [category-item
-                              c
-                              (filter
-                                #(= (:id c) (:category-ref %))
-                                movements)])
-           [:button.button {:type     "submit"
-                            :on-click #(let [timestamp (.getTime (js/Date.))
-                                             s (assoc movement-session :timestamp timestamp)
-                                             log (session/get :logged-sessions)
-                                             new-sessions (conj log s)]
-                                        (session/put! :logged-sessions new-sessions))}
-            "Log this movement session!"]
-           [:button.button {:on-click #()} "Make PDF"]
-           ]))]]
+     (let [movement-session @movement-session
+           c (vals (:categories movement-session))
+           m (vals (:movements movement-session))
+           t (:title movement-session)
+           session-data {:categories c :movements m :title t}]
+       (when (pos? (count c))
+         [session-item session-data]))]
     [:footer#info
      [:div
       [:em "If you have suggestions for a new session template, some sorely missing movements
@@ -364,33 +377,33 @@
      [:div "3"]
      [:div "4"]]]])
 
-(defn dragula-did-mount []
+#_(defn dragula-did-mount []
   ; var container = React.findDOMNode(this);
   ; dragula([container]);
   (fn []
        (js/dragula [(js/$ "#dragula")])))
 
-(defn movement-component []
+#_(defn movement-component []
   (reagent/create-class {:reagent-render movement-page
                          :component-did-mount dragula-did-mount}))
 
-(defn home-component []
+#_(defn home-component []
   (reagent/create-class {:reagent-render home-page
                          :component-did-mount sortable-did-mount}))
 
 ;; -------------------------
 ;; Client side routes
 (secretary/defroute "/" []
-                    (session/put! :current-page home-component))
+                    (session/put! :current-page home-page))
 
 (secretary/defroute "/user" []
                     (session/put! :current-page user-page))
 
 (secretary/defroute "/template" []
-                    (session/put! :current-page template-page))
+                    (session/put! :current-page form-page))
 
 (secretary/defroute "/movements" []
-                    (session/put! :current-page movement-component))
+                    (session/put! :current-page movement-page))
 
 ;---------------------------
 (defn page []
@@ -415,6 +428,6 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (session/put! :current-page movement-component)
+  (session/put! :current-page home-page)
   (session/put! :logged-sessions [])
   (mount-root))
