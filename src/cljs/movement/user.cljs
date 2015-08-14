@@ -1,7 +1,8 @@
 (ns movement.user
  (:require [reagent.core :refer [atom]]
            [reagent.session :as session]
-           [secretary.core :include-macros true :refer [dispatch!]]))
+           [secretary.core :include-macros true :refer [dispatch!]]
+           [movement.nav :refer [nav]]))
 
 (defn movement [{:keys [title]}]
   [:li
@@ -25,13 +26,7 @@
 (defn user-page []
   [:div
    [:div.container
-    [:section#header
-     [:h1 "Movement Session"]]
-    [:section#nav
-     [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
-     [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
-     [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
-     [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
+    (nav)
     [:section#log
      (let [logged-sessions (session/get :logged-sessions)]
        [:div

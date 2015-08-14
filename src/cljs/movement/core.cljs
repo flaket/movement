@@ -6,6 +6,7 @@
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
             [clojure.string :as str]
+            [movement.nav :refer [nav]]
             [movement.user :refer [user-page]]
             [movement.template :refer [form-page]]
             [movement.generator :refer [generator-page]]
@@ -212,14 +213,7 @@
 (defn home-page []
   [:div
    [:div.container
-    [:section#header
-     [:header#header
-      [:h1 "Movement Session"]]]
-    [:section#nav
-     [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
-     [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
-     [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
-     [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
+    (nav)
     [:section#templates
      [:div.row
       [:div.three.columns
@@ -384,14 +378,7 @@
 (defn movement-page []
   [:div
    [:div.container
-    [:section#header
-     [:header#header
-      [:h1 "Movement Session"]]]
-    [:section#nav
-     [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
-     [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
-     [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
-     [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
+    (nav)
     [:section#dragula
      [:div "1"]
      [:div "2"]

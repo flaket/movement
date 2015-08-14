@@ -2,7 +2,8 @@
  (:require [reagent.core :refer [atom]]
            [reagent.session :as session]
            [reagent-forms.core :refer [bind-fields]]
-           [secretary.core :include-macros true :refer [dispatch!]]))
+           [secretary.core :include-macros true :refer [dispatch!]]
+           [movement.nav :refer [nav]]))
 
 (def counter (atom 0))
 (def include-date (atom true))
@@ -68,13 +69,7 @@
     (fn []
       [:div
        [:div.container
-        [:section#header
-         [:h1 "Movement Session"]]
-        [:section#nav
-         [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
-         [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
-         [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
-         [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
+        (nav)
         [:section#template
          [:div.page-header [:h1 "Reagent Form"]]
          [bind-fields
