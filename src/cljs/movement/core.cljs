@@ -174,8 +174,8 @@
 (defn log-session []
   (let [log (session/get :logged-sessions)
         timestamp (.getTime (js/Date.))
-        s (swap! movement-session assoc :timestamp timestamp)
-        new-sessions (conj log s)]
+        s (swap! movement-session assoc :timestamp)
+        new-sessions (conj log movement-session)]
     (session/put! :logged-sessions new-sessions)))
 
 (defn session-component []
@@ -393,22 +393,33 @@
     [:section
      [:div "movementsession@gmail.com"]]]])
 
+(defn template-component []
+  [:div
+   [:div.container
+    [:section
+     [:div.row
+      [:label.three.columns "The title of the session is "]
+      [:input.four.columns
+       {:type "text" :placeholder "title " :on-click #()}]
+      [:input.one.column {:type "checkbox"} " Include the date?"]]
+     [:div.row]]]])
+
 ;; -------------------------
 ;; Client side routes
 (secretary/defroute "/" []
-                    (session/put! :current-page home-component))
+                    (session/put! :current-page #'home-component))
 
 (secretary/defroute "/user" []
-                    (session/put! :current-page user-component))
+                    (session/put! :current-page #'user-component))
 
 (secretary/defroute "/template" []
-                    (session/put! :current-page form-component))
+                    (session/put! :current-page #'template-component))
 
 (secretary/defroute "/movements" []
-                    (session/put! :current-page movement-detail-component))
+                    (session/put! :current-page #'movement-detail-component))
 
 (secretary/defroute "/about" []
-                    (session/put! :current-page about-component))
+                    (session/put! :current-page #'about-component))
 
 ;---------------------------
 (defn page []
@@ -433,6 +444,6 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (session/put! :current-page home-component)
+  (session/put! :current-page #'home-component)
   (session/put! :logged-sessions [])
   (mount-root))

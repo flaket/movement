@@ -5,52 +5,65 @@
            [secretary.core :include-macros true :refer [dispatch!]]
            [movement.nav :refer [nav-component]]))
 
-(def counter (atom 0))
-(def include-date (atom true))
 
-(defn count-component []
+(defn form-component []
+  [:div
+   [:div.container
+    [:section
+     [:div
+      [:label "Title:"]
+      [:input {:type "text"
+               :on-click #()}]]
+     [:div]]]])
+
+;--------------------
+
+#_(def counter (atom 0))
+#_(def include-date (atom true))
+
+#_(defn count-component []
   [:div
    "The value is: "
    @counter "."
    [:input {:type "button" :value "Click!"
             :on-click #(swap! counter inc)}]])
 
-(defn input [value]
+#_(defn input [value]
   [:input {:type "text" :value @value
            :on-change #(reset! value (-> % .-target .-value))}])
 
-(defn btn [val]
+#_(defn btn [val]
   [:input {:type     "button" :value val
            :on-click #(reset! include-date (if @include-date false true))}])
 
-(defn title-component []
+#_(defn title-component []
   (let [val (atom "My Favourite Movements")]
     (fn []
       [:div "The title of sessions created with this template is: " [input val]
        " and it " [btn (if @include-date "should" "should not")]
        " include the date in the title."])))
 
-(def data (atom {:m 4 :category :strength}))
+#_(def data (atom {:m 4 :category :strength}))
 
-(defn slider [param value min max]
+#_(defn slider [param value min max]
   [:input {:type      "range" :value value
            :min min :max max
            :style     {:width "100%"}
            :on-change (fn [e]
                         (swap! data assoc param (.-target.value e)))}])
 
-(defn slider-component []
+#_(defn slider-component []
   (let [{:keys [m category]} @data]
     [:div
      [:div m
       [slider :m m 0 10]]]))
 
-(defn row [label input]
+#_(defn row [label input]
   [:div.row
    [:div.col-md-2 [:label label]]
    [:div.col-md-5 input]])
 
-(def form-template
+#_(def form-template
   [:div
    (row "first name"
         [:input.form-control {:field :text :id :first-name}])
@@ -63,7 +76,7 @@
    (row "comments"
         [:textarea.form-control {:field :textarea :id :comments}])])
 
-(defn form-component []
+#_(defn form-component []
   (let [doc (atom {:first-name "John" :last-name "Doe" :age 35
                    :email "john@doe.com" :comments "hello"})]
     (fn []
