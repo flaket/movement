@@ -122,8 +122,6 @@
   (with-meta text-input-component {:component-did-mount #(do (.focus (reagent/dom-node %))
                                                    (auto-complete-did-mount))}))
 
-(defn increase [kw] nil)
-
 (defn movement-component []
   (let [editing (atom false)
         show-buttons (atom false)]
@@ -134,10 +132,12 @@
         [:div.row
          (when @show-buttons
            [:div.two.columns
-            [:button "#"]
-            [:button "X"]
-            [:button "!"]
-            [:button "^"]])
+            [:button.refresh
+             {:on-click #(refresh! id (:category (get (:categories @movement-session) category-ref)))}]
+            [:button.textedit
+             {:on-click #(handler-fn (reset! editing true))}]
+            [:button.destroy
+             {:on-click #(delete! :movements id)}]])
          [:label.four.columns {:style {:display (if @editing "none" "")}}
           title]
          (when @editing
@@ -145,13 +145,7 @@
             [text-edit-component {:class   "edit" :title title
                                   :on-save #(handler-fn (update! :movements id %))
                                   :on-stop #(handler-fn (reset! editing false))}]])
-         [:span.four.columns animation]
-         [:button.refresh
-          {:on-click #(refresh! id (:category (get (:categories @movement-session) category-ref)))}]
-         [:button.textedit
-          {:on-click #(handler-fn (reset! editing true))}]
-         [:button.destroy
-          {:on-click #(delete! :movements id)}]]
+         [:span.four.columns animation]]
         [:div.row
          [:span.four.columns {:style {:font-size "small"}} comment]]
         ]])))
@@ -161,10 +155,8 @@
     (fn [{:keys [id title category]} movements]
       [:div
        [:div.row
-        [:h4.ten.columns {:style {:display (if @editing "none" "")}} title]
-        [:button.one.column
-         {:type     "submit"
-          :on-click #(handler-fn (reset! editing true))} "!"]
+        [:h4.ten.columns {:style {:display (if @editing "none" "")}
+                          :on-click #(handler-fn (reset! editing true))} title]
         (when @editing
           [:h4.ten.columns
            [text-edit-component {:class   "edit" :title title
@@ -174,14 +166,16 @@
          [:ul#movement-list
           (for [m movements]
             ^{:key (:id m)} [movement-component m])])
-       [:button.button {:type     "submit"
-                        :on-click #(add-movement!
-                                    (prep-name (first (take 1 (shuffle category))))
-                                    id)} "+"]])))
+       [:button {:type     "submit"
+                 :on-click #(add-movement!
+                             (prep-name (first (take 1 (shuffle category))))
+                             id)} "+"]])))
 
 (defn log-session []
   (let [log (session/get :logged-sessions)
-        new-sessions (conj log movement-session)]
+        timestamp (.getTime (js/Date.))
+        s (swap! movement-session assoc :timestamp timestamp)
+        new-sessions (conj log s)]
     (session/put! :logged-sessions new-sessions)))
 
 (defn session-component []
@@ -190,14 +184,13 @@
     (fn [{:keys [categories movements title]}]
       [:div
        [:div.row
-        [:h3.ten.columns {:style {:display (if @editing "none" "")}} title]
+        [:h3.ten.columns {:style {:display (if @editing "none" "")}
+                          :on-click #(handler-fn (reset! editing true))} title]
         (when @editing
           [:h3.ten.columns [text-edit-component {:class   "edit" :title title
                                         :on-save #(handler-fn (add-title! %))
                                         :on-stop #(handler-fn (reset! editing false))}]])
-        [:div.one.colum
-         [:button {:type     "submit"
-                                         :on-click #(handler-fn (reset! editing true))} "!"]]]
+        [:label.one.colum "date"]]
        [:div.row
         [:div.eight.columns
          [:div (:description @movement-session)]]
@@ -208,7 +201,7 @@
                        :on-stop #(handler-fn (reset! adding-description false))}]])
         [:div.one.colum
          [:button {:type     "submit"
-                          :on-click #(handler-fn (reset! adding-description true))} "Edit description text"]]]
+                          :on-click #(handler-fn (reset! adding-description true))} "!"]]]
        (when (-> categories count pos?)
          [:div
           (for [c categories]

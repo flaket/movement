@@ -26,7 +26,7 @@
 (defn user-component []
   [:div
    [:div.container
-    (nav)
+    (nav-component)
     [:section#log
      (let [logged-sessions (session/get :logged-sessions)]
        [:div
