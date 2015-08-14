@@ -6,10 +6,10 @@
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
             [clojure.string :as str]
-            [movement.nav :refer [nav]]
-            [movement.user :refer [user-page]]
-            [movement.template :refer [form-page]]
-            [movement.generator :refer [generator-page]]
+            [movement.nav :refer [nav-component]]
+            [movement.user :refer [user-component]]
+            [movement.template :refer [form-component]]
+            [movement.generator :refer [generator-component]]
             [movement.movements :refer [all warmup mobility hanging equilibre strength
                                         locomotion bas sass leg-strength auxiliary
                                         movnat movnat-warmup
@@ -68,8 +68,7 @@
     (swap! movement-session assoc-in [:movements id]
            {:id id :title title
             :category-ref category-id
-            :reps nil :sets nil
-            :comment "" :animation nil})))
+            :comment "optional user comment.." :animation "animation will run here."})))
 
 (defn update! [kw id title] (swap! movement-session assoc-in [kw id :title] title))
 
@@ -78,7 +77,9 @@
 (defn refresh! [id category] (update! :movements id (prep-name (first (take 1 (shuffle category))))))
 
 (defn handler-fn [func]
-  (fn [] func nil))  ;; force return nil
+  "Wrapper function to force component handler functions to return nil.
+  This is a React requirement."
+  (fn [] func nil))
 
 (defn reset-session! []
   (do
@@ -89,17 +90,16 @@
     (swap! movement-session assoc :movements (sorted-map))))
 
 (defn auto-complete-did-mount []
+  "Attaches the jQuery autocomplete functionality to DOM elements."
   (js/$ (fn []
           (let [available-tags (map prep-name all)]
             (.autocomplete (js/$ "#tags")
                            (clj->js {:source available-tags}))))))
 
-#_(defn sortable-did-mount []
-  (js/$ (fn []
-          (do (.sortable (js/$ "#sortable"))
-              (.disableSelection (js/$ "#sortable"))))))
+;--------------------
+; Components (views)
 
-(defn text-input [{:keys [title on-save on-stop]}]
+(defn text-input-component [{:keys [title on-save on-stop]}]
   (let [val (atom title)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -118,89 +118,101 @@
                                      27 (stop)
                                      nil)})])))
 
-(def text-edit
-  (with-meta text-input {:component-did-mount #(do (.focus (reagent/dom-node %))
+(def text-edit-component
+  (with-meta text-input-component {:component-did-mount #(do (.focus (reagent/dom-node %))
                                                    (auto-complete-did-mount))}))
 
-(defn movement-item []
-  (let [editing (atom false)]
+(defn increase [kw] nil)
+
+(defn movement-component []
+  (let [editing (atom false)
+        show-buttons (atom false)]
     (fn [{:keys [id title category-ref comment animation]}]
       [:li
-       [:div.view {:class (str (if @editing "editing"))}
-        [:label {:style {:display (if @editing "none" "")}} title]
-        [:span animation]
-        [:button.refresh
-         {:on-click #(refresh! id (:category (get (:categories @movement-session) category-ref)))}]
-        [:button.textedit
-         {:on-click #(handler-fn (reset! editing true))}]
-        [:button.destroy
-         {:on-click #(delete! :movements id)}]
-        [:span comment]
-        (when @editing
-          [text-edit {:class   "edit" :title title
-                      :on-save #(handler-fn (update! :movements id %))
-                      :on-stop #(handler-fn (reset! editing false))}])]])))
+       [:div.view {:class (str (if @editing "editing"))
+                   :on-click #(handler-fn (reset! show-buttons (not @show-buttons)))}
+        [:div.row
+         (when @show-buttons
+           [:div.two.columns
+            [:button "#"]
+            [:button "X"]
+            [:button "!"]
+            [:button "^"]])
+         [:label.four.columns {:style {:display (if @editing "none" "")}}
+          title]
+         (when @editing
+           [:label.four.columns
+            [text-edit-component {:class   "edit" :title title
+                                  :on-save #(handler-fn (update! :movements id %))
+                                  :on-stop #(handler-fn (reset! editing false))}]])
+         [:span.four.columns animation]
+         [:button.refresh
+          {:on-click #(refresh! id (:category (get (:categories @movement-session) category-ref)))}]
+         [:button.textedit
+          {:on-click #(handler-fn (reset! editing true))}]
+         [:button.destroy
+          {:on-click #(delete! :movements id)}]]
+        [:div.row
+         [:span.four.columns {:style {:font-size "small"}} comment]]
+        ]])))
 
-(defn category-item []
+(defn category-component []
   (let [editing (atom false)]
     (fn [{:keys [id title category]} movements]
       [:div
-       [:h4 {:style {:display (if @editing "none" "")}} title]
-       [:button.button {:type "submit"
-                        :on-click #(handler-fn (reset! editing true))} "!"]
-       (when @editing
-         [text-edit {:class   "edit" :title title
-                     :on-save #(handler-fn (update! :categories id %))
-                     :on-stop #(handler-fn (reset! editing false))}])
+       [:div.row
+        [:h4.ten.columns {:style {:display (if @editing "none" "")}} title]
+        [:button.one.column
+         {:type     "submit"
+          :on-click #(handler-fn (reset! editing true))} "!"]
+        (when @editing
+          [:h4.ten.columns
+           [text-edit-component {:class   "edit" :title title
+                                 :on-save #(handler-fn (update! :categories id %))
+                                 :on-stop #(handler-fn (reset! editing false))}]])]
        (when (-> movements count pos?)
          [:ul#movement-list
           (for [m movements]
-            ^{:key (:id m)} [movement-item m])])
+            ^{:key (:id m)} [movement-component m])])
        [:button.button {:type     "submit"
                         :on-click #(add-movement!
                                     (prep-name (first (take 1 (shuffle category))))
-                                    id)} "+"]
-       #_[text-edit {:id          "new-movement"
-                    :placeholder "Add movement.."
-                    :on-save     #(add-movement! %1 id)}]])))
+                                    id)} "+"]])))
 
 (defn log-session []
-  (let [timestamp (.getTime (js/Date.))
-         s (assoc movement-session :timestamp timestamp)
-         log (session/get :logged-sessions)
-         new-sessions (conj log s)]
+  (let [log (session/get :logged-sessions)
+        new-sessions (conj log movement-session)]
     (session/put! :logged-sessions new-sessions)))
 
-(defn session-item []
+(defn session-component []
   (let [editing (atom false)
         adding-description (atom false)]
     (fn [{:keys [categories movements title]}]
       [:div
        [:div.row
-        [:div.eight.columns
-         [:h3 {:style {:display (if @editing "none" "")}} title]]
+        [:h3.ten.columns {:style {:display (if @editing "none" "")}} title]
         (when @editing
-          [:div.six.columns [text-edit {:class   "edit" :title title
+          [:h3.ten.columns [text-edit-component {:class   "edit" :title title
                                         :on-save #(handler-fn (add-title! %))
                                         :on-stop #(handler-fn (reset! editing false))}]])
         [:div.one.colum
-         [:button.button {:type     "submit"
+         [:button {:type     "submit"
                                          :on-click #(handler-fn (reset! editing true))} "!"]]]
        [:div.row
         [:div.eight.columns
          [:div (:description @movement-session)]]
         (when @adding-description
           [:div.eight.columns
-           [text-edit {:class   "edit" :title (:description @movement-session)
+           [text-edit-component {:class   "edit" :title (:description @movement-session)
                        :on-save #(handler-fn (swap! movement-session assoc :description %))
                        :on-stop #(handler-fn (reset! adding-description false))}]])
         [:div.one.colum
-         [:button.button {:type     "submit"
+         [:button {:type     "submit"
                           :on-click #(handler-fn (reset! adding-description true))} "Edit description text"]]]
        (when (-> categories count pos?)
          [:div
           (for [c categories]
-            ^{:key (:id c)} [category-item
+            ^{:key (:id c)} [category-component
                              c
                              (filter
                                #(= (:id c) (:category-ref %))
@@ -210,10 +222,10 @@
         "Log this movement session!"]
        [:button.button {:on-click #()} "Make PDF"]])))
 
-(defn home-page []
+(defn home-component []
   [:div
    [:div.container
-    (nav)
+    (nav-component)
     [:section#templates
      [:div.row
       [:div.three.columns
@@ -368,50 +380,42 @@
            t (:title movement-session)
            session-data {:categories c :movements m :title t}]
        (when (pos? (count c))
-         [session-item session-data]))]
+         [session-component session-data]))]
     [:footer#info
-     [:div
-      [:em "If you have suggestions for a new session template, some sorely missing movements
-     or general improvements (such as adding users and allowing you to add your own
-     templates): let your wishes be known by sending an email to movementsession@gmail.com"]]]]])
+     [:button.button {:on-click #(dispatch! "/about")} "About"]]]])
 
-(defn movement-page []
+(defn movement-detail-component []
   [:div
    [:div.container
-    (nav)
-    [:section#dragula
-     [:div "1"]
-     [:div "2"]
-     [:div "3"]
-     [:div "4"]]]])
+    (nav-component)
+    [:section
+     [:div "This section will allow users to discover the movements in the database,
+     view the animations more clearly, add their own comments to the movements
+     and mark the subjective difficulty level of the movements."]]]])
 
-#_(defn dragula-did-mount []
-  ; var container = React.findDOMNode(this);
-  ; dragula([container]);
-  (fn []
-       (js/dragula [(js/$ "#dragula")])))
-
-#_(defn movement-component []
-  (reagent/create-class {:reagent-render movement-page
-                         :component-did-mount dragula-did-mount}))
-
-#_(defn home-component []
-  (reagent/create-class {:reagent-render home-page
-                         :component-did-mount sortable-did-mount}))
+(defn about-component []
+  [:div
+   [:div.container
+    (nav-component)
+    [:section
+     [:div "movementsession@gmail.com"]]]])
 
 ;; -------------------------
 ;; Client side routes
 (secretary/defroute "/" []
-                    (session/put! :current-page home-page))
+                    (session/put! :current-page home-component))
 
 (secretary/defroute "/user" []
-                    (session/put! :current-page user-page))
+                    (session/put! :current-page user-component))
 
 (secretary/defroute "/template" []
-                    (session/put! :current-page form-page))
+                    (session/put! :current-page form-component))
 
 (secretary/defroute "/movements" []
-                    (session/put! :current-page movement-page))
+                    (session/put! :current-page movement-detail-component))
+
+(secretary/defroute "/about" []
+                    (session/put! :current-page about-component))
 
 ;---------------------------
 (defn page []
@@ -436,6 +440,6 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (session/put! :current-page home-page)
+  (session/put! :current-page home-component)
   (session/put! :logged-sessions [])
   (mount-root))

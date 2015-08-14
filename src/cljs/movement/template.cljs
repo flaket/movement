@@ -3,7 +3,7 @@
            [reagent.session :as session]
            [reagent-forms.core :refer [bind-fields]]
            [secretary.core :include-macros true :refer [dispatch!]]
-           [movement.nav :refer [nav]]))
+           [movement.nav :refer [nav-component]]))
 
 (def counter (atom 0))
 (def include-date (atom true))
@@ -63,13 +63,13 @@
    (row "comments"
         [:textarea.form-control {:field :textarea :id :comments}])])
 
-(defn form-page []
+(defn form-component []
   (let [doc (atom {:first-name "John" :last-name "Doe" :age 35
                    :email "john@doe.com" :comments "hello"})]
     (fn []
       [:div
        [:div.container
-        (nav)
+        (nav-component)
         [:section#template
          [:div.page-header [:h1 "Reagent Form"]]
          [bind-fields

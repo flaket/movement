@@ -2,5 +2,5 @@
 
 ;; movement.generator
 
-(defn generator-page []
+(defn generator-component []
   [:div "!"])

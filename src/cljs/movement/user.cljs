@@ -2,7 +2,7 @@
  (:require [reagent.core :refer [atom]]
            [reagent.session :as session]
            [secretary.core :include-macros true :refer [dispatch!]]
-           [movement.nav :refer [nav]]))
+           [movement.nav :refer [nav-component]]))
 
 (defn movement [{:keys [title]}]
   [:li
@@ -23,7 +23,7 @@
                         [category c
                          (filter #(= (:id c) (:category-ref %)) (vals movements))])]])
 
-(defn user-page []
+(defn user-component []
   [:div
    [:div.container
     (nav)
