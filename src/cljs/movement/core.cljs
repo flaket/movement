@@ -29,6 +29,7 @@
 
 (swap! movement-session assoc :categories (sorted-map))
 (swap! movement-session assoc :movements (sorted-map))
+(swap! movement-session assoc :description "")
 
 
 (def default-buttons {:ritual     "button"
@@ -125,12 +126,14 @@
     (fn [{:keys [id title category-ref comment animation]}]
       [:li
        [:div.view {:class (str (if @editing "editing"))}
-        [:label {:style {:display (if @editing "none" "")}
-                 :on-double-click #(handler-fn (reset! editing true))} title]
+        [:label {:style {:display (if @editing "none" "")}} title]
         [:span animation]
         [:button.refresh
          {:on-click #(refresh! id (:category (get (:categories @movement-session) category-ref)))}]
-        [:button.destroy {:on-click #(delete! :movements id)}]
+        [:button.textedit
+         {:on-click #(handler-fn (reset! editing true))}]
+        [:button.destroy
+         {:on-click #(delete! :movements id)}]
         [:span comment]
         (when @editing
           [text-edit {:class   "edit" :title title
@@ -141,8 +144,9 @@
   (let [editing (atom false)]
     (fn [{:keys [id title category]} movements]
       [:div
-       [:h4 {:style {:display (if @editing "none" "")}
-             :on-double-click #(handler-fn (reset! editing true))} title]
+       [:h4 {:style {:display (if @editing "none" "")}} title]
+       [:button.button {:type "submit"
+                        :on-click #(handler-fn (reset! editing true))} "!"]
        (when @editing
          [text-edit {:class   "edit" :title title
                      :on-save #(handler-fn (update! :categories id %))
@@ -167,14 +171,31 @@
     (session/put! :logged-sessions new-sessions)))
 
 (defn session-item []
-  (let [editing (atom false)]
+  (let [editing (atom false)
+        adding-description (atom false)]
     (fn [{:keys [categories movements title]}]
       [:div
-       [:h3 {:on-double-click #(handler-fn (reset! editing true))} title]
-       (when @editing
-         [text-edit {:class   "edit" :title title
-                     :on-save #(handler-fn (add-title! %))
-                     :on-stop #(handler-fn (reset! editing false))}])
+       [:div.row
+        [:div.eight.columns
+         [:h3 {:style {:display (if @editing "none" "")}} title]]
+        (when @editing
+          [:div.six.columns [text-edit {:class   "edit" :title title
+                                        :on-save #(handler-fn (add-title! %))
+                                        :on-stop #(handler-fn (reset! editing false))}]])
+        [:div.one.colum
+         [:button.button {:type     "submit"
+                                         :on-click #(handler-fn (reset! editing true))} "!"]]]
+       [:div.row
+        [:div.eight.columns
+         [:div (:description @movement-session)]]
+        (when @adding-description
+          [:div.eight.columns
+           [text-edit {:class   "edit" :title (:description @movement-session)
+                       :on-save #(handler-fn (swap! movement-session assoc :description %))
+                       :on-stop #(handler-fn (reset! adding-description false))}]])
+        [:div.one.colum
+         [:button.button {:type     "submit"
+                          :on-click #(handler-fn (reset! adding-description true))} "Edit description text"]]]
        (when (-> categories count pos?)
          [:div
           (for [c categories]

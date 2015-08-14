@@ -87,17 +87,3 @@
           ;#()
           ]
          [:label (str @doc)]]]])))
-
-(defn ttemplate-page []
-  (let [doc (atom {})]
-    (fn []
-      [:div
-       [:div.container
-        [:section#header
-         [:h1 "Movement Session"]]
-        [:section#nav
-         [:button.button {:on-click #(dispatch! "/")} "Session Generator"]
-         [:button.button {:on-click #(dispatch! "/user")} "User Profile"]
-         [:button.button {:on-click #(dispatch! "/template")} "Template Creator"]
-         [:button.button {:on-click #(dispatch! "/movements")} "Movement Explorer"]]
-        [:section#template]]])))
