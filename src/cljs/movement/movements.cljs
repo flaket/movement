@@ -115,3 +115,48 @@
 (def movnat-warmup (concat movnat-sitting movnat-balancing movnat-crawling))
 
 (def all (concat warmup mobility strength movnat))
+
+(defonce morning-ritual-template
+         {:title "Morning Ritual"
+          :parts [{:title "Warmup" :category warmup :n 1}
+                  {:title "Mobility" :category mobility :n 5}
+                  {:title "Hanging" :category hanging :n 1}
+                  {:title "Equilibre" :category equilibre :n 1}
+                  {:title "Strength" :category strength :n 1}]})
+(defonce strength-template
+         {:title "Strength"
+          :parts [{:title "Warmup" :category warmup :n 1}
+                  {:title "Mobility" :category mobility :n 6}
+                  {:title "Strength" :category strength :n 4}]})
+(defonce mobility-template {:title "Mobility/Prehab"
+                            :parts [{:title "Warmup" :category warmup :n 1}
+                                    {:title "Mobility" :category mobility :n 6}
+                                    {:title "Prehab" :category mobility :n 4}]})
+(defonce locomotion-template {:title "Locomotion"
+                              :parts [{:title "Warmup" :category warmup :n 1}
+                                      {:title "Mobility" :category mobility :n 6}
+                                      {:title "Locomotion (4-6 rounds)"
+                                       :category locomotion :n 6}]})
+(defonce bas-template {:title "Bent Arm Strength"
+                       :parts [{:title "Warmup" :category warmup :n 1}
+                               {:title "Mobility" :category mobility :n 6}
+                               {:title "BAS" :category bas :n 4}]})
+(defonce sass-template {:title "Straight Arm Scapular Strength"
+                        :parts [{:title "Warmup" :category warmup :n 1}
+                                {:title "Mobility" :category mobility :n 6}
+                                {:title "SASS" :category sass :n 4}]})
+(defonce leg-strength-template {:title "Leg Strength"
+                                :parts [{:title "Warmup" :category warmup :n 1}
+                                        {:title "Mobility" :category mobility :n 4}
+                                        {:title "Leg Strength" :category leg-strength :n 3}
+                                        {:title "Auxiliary" :category auxiliary :n 2}]})
+(defonce movnat-template {:title "MovNat"
+                          :parts [{:title "Warmup Mobility (3 rounds)" :category movnat-warmup :n 4}
+                                  {:title "Skill (30 reps)" :category movnat :n 1}
+                                  {:title "Combo (4 rounds)" :category movnat :n 5}]})
+(defonce maya-template {:title "Maya"
+                        :parts [{:title "Oppvarming/Bevegelighet (2 runder rolig)"
+                                 :category m-oppvarming :n 3}
+                                {:title "Styrke/Ferdighet (30 reps)" :category m-styrke :n 1}
+                                {:title "Kombinasjon (3 runder hurtig)" :category m-kombinasjon
+                                 :n 4}]})

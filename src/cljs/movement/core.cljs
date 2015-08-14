@@ -10,10 +10,10 @@
             [movement.user :refer [user-component]]
             [movement.template :refer [form-component]]
             [movement.generator :refer [generator-component]]
-            [movement.movements :refer [all warmup mobility hanging equilibre strength
-                                        locomotion bas sass leg-strength auxiliary
-                                        movnat movnat-warmup
-                                        m-styrke m-oppvarming m-kombinasjon]])
+            [movement.movements :refer [morning-ritual-template strength-template
+                                        mobility-template locomotion-template bas-template
+                                        sass-template leg-strength-template movnat-template
+                                        maya-template all]])
   (:import goog.History))
 
 ;; The core namespace is the client entry point.
@@ -32,29 +32,8 @@
 (swap! movement-session assoc :movements (sorted-map))
 (swap! movement-session assoc :description "")
 
-
-(def default-buttons {:ritual     "button"
-                      :strength   "button"
-                      :mobility   "button"
-                      :locomotion "button"
-                      :bas        "button"
-                      :sass       "button"
-                      :leg        "button"
-                      :movnat     "button"
-                      :maya       "button"})
-
-(def buttons (atom default-buttons))
-
-(defn button-selected! [button]
-  (swap! buttons assoc button "button button-primary"))
-
 (defn prep-name [kw]
   (str/replace (str/capitalize (name kw)) "-" " "))
-
-(defn set-button-selected! [button]
-  (do
-    (reset! buttons default-buttons)
-    (button-selected! button)))
 
 (defn add-title! [title]
   (swap! movement-session assoc :title title))
@@ -215,157 +194,43 @@
         "Log this movement session!"]
        [:button.button {:on-click #()} "Make PDF"]])))
 
+(defn add-part! [{:keys [title category n]} category-ref]
+  (add-category! title category)
+  (dotimes [i n]
+    (add-movement!
+      (prep-name (nth (take n (shuffle category)) i))
+      category-ref)))
+
+(defn create-new-session! [kw {:keys [title parts]}]
+  (let [count (atom 0)]
+    (do
+      (reset-session!)
+      (add-title! title)
+      (doseq [p parts] (add-part! p (swap! count inc))))))
+
+(defn template-component []
+  (let [date (js/Date.)
+        day (.getDate date)
+        month (+ 1 (.getMonth date))]
+    (fn [kw template]
+      [:div {:on-click #(create-new-session! kw template)}
+       (:title template)])))
+
 (defn home-component []
   [:div
    [:div.container
     (nav-component)
     [:section#templates
-     [:div.row
-      [:div.three.columns
-       {:type     "button"
-        :class    (:ritual @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :ritual)
-
-                    (let [date (js/Date.)]
-                      (add-title! (str "Morning Ritual " (.getDate date) "/" (+ 1 (.getMonth date)))))
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 5] (add-movement! (prep-name (nth (take 5 (shuffle mobility)) n)) 2))
-                    (add-category! "Hanging" hanging)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle hanging)) n)) 3))
-                    (add-category! "Equilibre" equilibre)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle equilibre)) n)) 4))
-                    (add-category! "Strength" strength)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle strength)) n)) 5)))}
-       "Morning ritual"]
-      [:div.three.columns
-       {:type     "button"
-        :class    (:strength @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :strength)
-                    (let [date (js/Date.)]
-                      (add-title! (str "Strength " (.getDate date) "/" (+ 1 (.getMonth date)))))
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "Strength" strength)
-                    (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle strength)) n)) 3)))
-        }
-       "Strength"]
-      [:div.three.columns
-       {:type     "button"
-        :class    (:mobility @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :mobility)
-                    (let [date (js/Date.)]
-                      (add-title! (str "Mobility/Prehab " (.getDate date) "/" (+ 1 (.getMonth date)))))
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "Prehab" mobility)
-                    (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle mobility)) n)) 3)))}
-       "Mobility/Prehab"]
-      [:div.three.columns
-       {:type     "button"
-        :class    (:locomotion @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :locomotion)
-                    (let [date (js/Date.)]
-                      (add-title! (str "Locomotion " (.getDate date) "/" (+ 1 (.getMonth date)))))
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "Locomotion" locomotion)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle locomotion)) n)) 3)))}
-       "Locomotion"]]
-     [:div.row
-      [:div.three.columns
-       {:type     "button"
-        :class    (:bas @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :bas)
-                    (let [date (js/Date.)]
-                      (add-title! (str "Bent Arm Strength " (.getDate date) "/" (+ 1 (.getMonth date)))))
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "BAS" bas)
-                    (dotimes [n 5] (add-movement! (prep-name (nth (take 5 (shuffle bas)) n)) 3)))}
-       "BAS"]
-      [:div.three.columns
-       {:type     "button"
-        :class    (:sass @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :sass)
-                    (let [date (js/Date.)]
-                      (add-title! (str "Straigth Arm Scapular Strength " (.getDate date) "/" (+ 1 (.getMonth date)))))
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "SASS" sass)
-                    (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle sass)) n)) 3)))}
-       "SASS"]
-      [:div.three.columns
-       {:type     "button"
-        :class    (:leg @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :leg)
-                    (let [date (js/Date.)]
-                      (add-title! (str "Leg Strength " (.getDate date) "/" (+ 1 (.getMonth date)))))
-                    (add-category! "Warmup" warmup)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle warmup)) n)) 1))
-                    (add-category! "Mobility" mobility)
-                    (dotimes [n 6] (add-movement! (prep-name (nth (take 6 (shuffle mobility)) n)) 2))
-                    (add-category! "Leg Strength" leg-strength)
-                    (dotimes [n 3] (add-movement! (prep-name (nth (take 3 (shuffle leg-strength)) n)) 3))
-                    (add-category! "Auxiliary" auxiliary)
-                    (dotimes [n 2] (add-movement! (prep-name (nth (take 2 (shuffle auxiliary)) n)) 4)))}
-       "Leg strength"]
-      [:div.three.columns
-       {:type     "button"
-        :class    (:movnat @buttons)
-        :on-click #(do
-                    (reset-session!)
-                    (set-button-selected! :movnat)
-                    (let [date (js/Date.)]
-                      (add-title! (str "MovNat " (.getDate date) "/" (+ 1 (.getMonth date)))))
-                    (add-category! "Warmup Mobility (3 rounds)" movnat-warmup)
-                    (dotimes [n 3] (add-movement! (prep-name (nth (take 3 (shuffle movnat-warmup)) n)) 1))
-                    (add-category! "Skill (30 reps)" movnat)
-                    (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle movnat)) n)) 2))
-                    (add-category! "Combo (4 rounds)" movnat)
-                    (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle movnat)) n)) 3)))}
-       "MovNat"]]]
-    [:div.row
-     [:div.three.columns
-      {:type     "button"
-       :class    (:maya @buttons)
-       :on-click #(do
-                   (reset-session!)
-                   (set-button-selected! :maya)
-                   (let [date (js/Date.)]
-                     (add-title! (str "Maya " (.getDate date) "/" (+ 1 (.getMonth date)))))
-                   (add-category! "Oppvarming/Bevegelighet (2 runder rolig)" m-oppvarming)
-                   (dotimes [n 3] (add-movement! (prep-name (nth (take 3 (shuffle m-oppvarming)) n)) 1))
-                   (add-category! "Styrke/Ferdighet (30 reps)" m-styrke)
-                   (dotimes [n 1] (add-movement! (prep-name (nth (take 1 (shuffle m-styrke)) n)) 2))
-                   (add-category! "Kombinasjon (3 runder hurtig)" m-kombinasjon)
-                   (dotimes [n 4] (add-movement! (prep-name (nth (take 4 (shuffle m-kombinasjon)) n)) 3)))}
-      "Maya"]]
+     [:div
+      [template-component :ritual morning-ritual-template]
+      [template-component :strength strength-template]
+      [template-component :mobility mobility-template]
+      [template-component :locomotion locomotion-template]
+      [template-component :bas bas-template]
+      [template-component :sass sass-template]
+      [template-component :leg leg-strength-template]
+      [template-component :movnat movnat-template]
+      [template-component :maya maya-template]]]
     [:section#session
      (let [movement-session @movement-session
            c (vals (:categories movement-session))
@@ -374,7 +239,7 @@
            session-data {:categories c :movements m :title t}]
        (when (pos? (count c))
          [session-component session-data]))]
-    [:footer#info
+    #_[:footer#info
      [:button.button {:on-click #(dispatch! "/about")} "About"]]]])
 
 (defn movement-detail-component []
@@ -393,9 +258,10 @@
     [:section
      [:div "movementsession@gmail.com"]]]])
 
-(defn template-component []
+(defn template-creator-component []
   [:div
    [:div.container
+    (nav-component)
     [:section
      [:div.row
       [:label.three.columns "The title of the session is "]
@@ -413,7 +279,7 @@
                     (session/put! :current-page #'user-component))
 
 (secretary/defroute "/template" []
-                    (session/put! :current-page #'template-component))
+                    (session/put! :current-page #'template-creator-component))
 
 (secretary/defroute "/movements" []
                     (session/put! :current-page #'movement-detail-component))
