@@ -13,7 +13,7 @@
             [movement.movements :refer [morning-ritual-template strength-template
                                         mobility-template locomotion-template bas-template
                                         sass-template leg-strength-template movnat-template
-                                        maya-template all]])
+                                        maya-template all-categories all-movements]])
   (:import goog.History))
 
 ;; The core namespace is the client entry point.
@@ -71,7 +71,14 @@
 (defn auto-complete-did-mount []
   "Attaches the jQuery autocomplete functionality to DOM elements."
   (js/$ (fn []
-          (let [available-tags (map prep-name all)]
+          (let [available-tags (map prep-name all-movements)]
+            (.autocomplete (js/$ "#tags")
+                           (clj->js {:source available-tags}))))))
+
+(defn template-auto-complete-did-mount []
+  "Attaches the jQuery autocomplete functionality to DOM elements."
+  (js/$ (fn []
+          (let [available-tags (keys all-categories)]
             (.autocomplete (js/$ "#tags")
                            (clj->js {:source available-tags}))))))
 
@@ -98,8 +105,14 @@
                                      nil)})])))
 
 (def text-edit-component
-  (with-meta text-input-component {:component-did-mount #(do (.focus (reagent/dom-node %))
-                                                   (auto-complete-did-mount))}))
+  (with-meta text-input-component {:component-did-mount
+                                   #(do (.focus (reagent/dom-node %))
+                                        (auto-complete-did-mount))}))
+
+(def template-text-edit-component
+  (with-meta text-input-component {:component-did-mount
+                                   #(do (.focus (reagent/dom-node %))
+                                        (template-auto-complete-did-mount))}))
 
 (defn movement-component []
   (let [editing (atom false)
@@ -258,17 +271,66 @@
     [:section
      [:div "movementsession@gmail.com"]]]])
 
+(def template-state (atom {:title ""
+                           :parts []}))
+
+(defn category-creator-component []
+  (let [buttons (atom [])]
+    (fn [{:keys [title n]} i]
+      [:div
+       [:div.row
+        [:label.five.columns "Part " (inc i) " is called "]
+        [:input.seven.columns {:type "text"}]]
+       [:div.row
+        [:label.ten.columns "It consists of "
+         [:span {:style {:color "red"}} n] " generated movements,"]
+        [:button.one.column
+         {:on-click #(swap! template-state update-in [:parts i :n] inc)} "+"]
+        [:button.one.column
+         {:on-click #(when (> n 0)
+                      (swap! template-state update-in [:parts i :n] dec))} "-"]]
+       #_[:div.row
+        [:label.four.columns "Drawn from the categories: "]
+        [:div.three.columns
+         [template-text-edit-component
+          {:class   "edit" :placeholder "type to find and add category.."
+           :on-save #(handler-fn (swap! buttons conj %))
+           :on-stop #(handler-fn (fn [] nil))}]]
+        [:div.five.columns (for [b @buttons] ^{:key b} [:div.two.columns b])]]
+       [:div.row
+        [:label.four.columns "Additionally, the following exercises should always be included:"]
+        [:div.three.columns
+         [text-edit-component {:class   "edit" :placeholder "type to find and add movement.."
+                               :on-save #(handler-fn (swap! template-state assoc-in [:parts i :extra] %))
+                               :on-stop #(handler-fn (fn [] nil))}]]
+        [:div.five.columns (:extra (get (:parts @template-state) i))]]])))
+
 (defn template-creator-component []
-  [:div
-   [:div.container
-    (nav-component)
-    [:section
-     [:div.row
-      [:label.three.columns "The title of the session is "]
-      [:input.four.columns
-       {:type "text" :placeholder "title " :on-click #()}]
-      [:input.one.column {:type "checkbox"} " Include the date?"]]
-     [:div.row]]]])
+  (let []
+    (fn []
+      [:div
+       [:div.container
+        (nav-component)
+        [:section
+         [:div.row
+          [:label.five.columns "This movement session is called "]
+          [:input.seven.columns
+           {:type "text" :placeholder "My Favourite Movement Session"}]]
+         [:div.row
+          [:label.ten.columns "The session is divided into "
+           [:span {:style {:color "red"}} (count (:parts @template-state))] " parts."]
+          [:button.one.column
+           {:on-click #(swap! template-state update-in [:parts]
+                              conj {:title ""
+                                    :category nil
+                                    :n 0})} "+"]
+          [:button.one.column
+           {:on-click #(when (> (count (:parts @template-state)) 0)
+                        (swap! template-state update-in [:parts] pop))} "-"]]
+         [:div
+          (let [parts (:parts @template-state)]
+            (for [i (range 0 (count parts))]
+              ^{:key i} [category-creator-component (get parts i) i]))]]]])))
 
 ;; -------------------------
 ;; Client side routes

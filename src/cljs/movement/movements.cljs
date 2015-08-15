@@ -114,7 +114,11 @@
                     movnat-lifting movnat-throwing movnat-running))
 (def movnat-warmup (concat movnat-sitting movnat-balancing movnat-crawling))
 
-(def all (concat warmup mobility strength movnat))
+(def all-categories {:hip-mobility      hip-mobility
+                     :shoulder-mobility shoulder-mobility
+                     :wrist-mobility    wrist-mobility
+                     :ankle-mobility ankle-mobility})
+(def all-movements (concat warmup mobility strength movnat))
 
 (defonce morning-ritual-template
          {:title "Morning Ritual"
@@ -160,3 +164,7 @@
                                 {:title "Styrke/Ferdighet (30 reps)" :category m-styrke :n 1}
                                 {:title "Kombinasjon (3 runder hurtig)" :category m-kombinasjon
                                  :n 4}]})
+
+(def all-templates (conj [] morning-ritual-template strength-template mobility-template
+                           locomotion-template bas-template sass-template leg-strength-template
+                           movnat-template maya-template))
