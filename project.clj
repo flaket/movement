@@ -20,7 +20,8 @@
                  [compojure "1.3.2"]
                  [selmer "0.8.2"]
                  [environ "1.0.0"]
-                 [secretary "1.2.2"]]
+                 [secretary "1.2.2"]
+                 [http-kit "2.1.18"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]
