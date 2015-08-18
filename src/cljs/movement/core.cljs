@@ -4,8 +4,12 @@
             [secretary.core :as secretary :include-macros true :refer [dispatch!]]
             [goog.events :as events]
             [goog.history.EventType :as EventType]
+            [goog.net.XhrIo :as xhr]
+            [cljs.core.async :as async :refer [chan close!]]
+            [cljs.reader :refer [read-string]]
             [cljsjs.react :as react]
             [clojure.string :as str]
+
             [movement.nav :refer [nav-component]]
             [movement.user :refer [user-component]]
             [movement.template :refer [form-component]]
@@ -14,6 +18,8 @@
                                         mobility-template locomotion-template bas-template
                                         sass-template leg-strength-template movnat-template
                                         maya-template all-categories all-movements]])
+  (:require-macros
+    [cljs.core.async.macros :refer [go alt!]])
   (:import goog.History))
 
 ;; The core namespace is the client entry point.
@@ -23,6 +29,21 @@
 ;; The movements namespace temporarily houses lists of exercises.
 
 (enable-console-print!)
+
+; The goog.net.XhrIo/send function takes a URL, a callback function, a method name,
+; and an optional request body. When the server responds to the request,
+; it will invoke the callback function on an object from which you can retrieve the status code,
+; headers, and response body sent by the server. With POST there's also a content argument.
+
+(defn GET [url]
+  (let [ch (chan 1)]
+    (xhr/send url
+              (fn [event]
+                (let [res (-> event .-target .getResponseText)]
+                  (go (>! ch res)
+                      (close! ch))))
+              "GET")
+    ch))
 
 (defonce movement-session (atom {}))
 (defonce m-counter (atom 0))
@@ -47,7 +68,7 @@
     (swap! movement-session assoc-in [:movements id]
            {:id id :title title
             :category-ref category-id
-            :comment "optional user comment.." :animation "animation will run here."})))
+            :comment "" :animation ""})))
 
 (defn update! [kw id title] (swap! movement-session assoc-in [kw id :title] title))
 
@@ -229,6 +250,17 @@
       [:div {:on-click #(create-new-session! kw template)}
        (:title template)])))
 
+(defn temp-template-component []
+  (let [date (js/Date.)
+        day (.getDate date)
+        month (+ 1 (.getMonth date))]
+    (fn [kw title]
+      [:div
+       {:on-click #(go
+                    (let [template (read-string (<! (GET "/template")))]
+                      (create-new-session! kw template)))}
+       title])))
+
 (defn home-component []
   [:div
    [:div.container
@@ -236,7 +268,7 @@
     [:section#templates
      [:div
       [template-component :ritual morning-ritual-template]
-      [template-component :strength strength-template]
+      [temp-template-component :strength "Strength"]
       [template-component :mobility mobility-template]
       [template-component :locomotion locomotion-template]
       [template-component :bas bas-template]
@@ -251,9 +283,7 @@
            t (:title movement-session)
            session-data {:categories c :movements m :title t}]
        (when (pos? (count c))
-         [session-component session-data]))]
-    #_[:footer#info
-     [:button.button {:on-click #(dispatch! "/about")} "About"]]]])
+         [session-component session-data]))]]])
 
 (defn movement-detail-component []
   [:div
