@@ -9,6 +9,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-3126" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+                 [com.datomic/datomic-pro "0.9.5201" :exclusions [joda-time]]
                  [ring "1.3.2"]
                  [ring-server "0.4.0"]
                  [ring/ring-defaults "0.1.4"]

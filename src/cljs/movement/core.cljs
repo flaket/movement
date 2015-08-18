@@ -9,15 +9,11 @@
             [cljs.reader :refer [read-string]]
             [cljsjs.react :as react]
             [clojure.string :as str]
-
             [movement.nav :refer [nav-component]]
             [movement.user :refer [user-component]]
             [movement.template :refer [form-component]]
             [movement.generator :refer [generator-component]]
-            [movement.movements :refer [morning-ritual-template strength-template
-                                        mobility-template locomotion-template bas-template
-                                        sass-template leg-strength-template movnat-template
-                                        maya-template all-categories all-movements]])
+            [movement.movements :refer [all-movements]])
   (:require-macros
     [cljs.core.async.macros :refer [go alt!]])
   (:import goog.History))
@@ -30,10 +26,8 @@
 
 (enable-console-print!)
 
-; The goog.net.XhrIo/send function takes a URL, a callback function, a method name,
-; and an optional request body. When the server responds to the request,
-; it will invoke the callback function on an object from which you can retrieve the status code,
-; headers, and response body sent by the server. With POST there's also a content argument.
+; goog.net.XhrIo.send(url, opt_callback, opt_method, opt_content, opt_headers, opt_timeoutInterval)
+; https://developers.google.com/closure/library/docs/xhrio
 
 (defn GET [url]
   (let [ch (chan 1)]
@@ -41,8 +35,7 @@
               (fn [event]
                 (let [res (-> event .-target .getResponseText)]
                   (go (>! ch res)
-                      (close! ch))))
-              "GET")
+                      (close! ch)))))
     ch))
 
 (defonce movement-session (atom {}))
@@ -96,13 +89,6 @@
             (.autocomplete (js/$ "#tags")
                            (clj->js {:source available-tags}))))))
 
-(defn template-auto-complete-did-mount []
-  "Attaches the jQuery autocomplete functionality to DOM elements."
-  (js/$ (fn []
-          (let [available-tags (keys all-categories)]
-            (.autocomplete (js/$ "#tags")
-                           (clj->js {:source available-tags}))))))
-
 ;--------------------
 ; Components (views)
 
@@ -131,9 +117,7 @@
                                         (auto-complete-did-mount))}))
 
 (def template-text-edit-component
-  (with-meta text-input-component {:component-did-mount
-                                   #(do (.focus (reagent/dom-node %))
-                                        (template-auto-complete-did-mount))}))
+  (with-meta text-input-component {:component-did-mount #(.focus (reagent/dom-node %))}))
 
 (defn movement-component []
   (let [editing (atom false)
@@ -235,7 +219,7 @@
       (prep-name (nth (take n (shuffle category)) i))
       category-ref)))
 
-(defn create-new-session! [kw {:keys [title parts]}]
+(defn create-new-session! [{:keys [title parts]}]
   (let [count (atom 0)]
     (do
       (reset-session!)
@@ -243,23 +227,13 @@
       (doseq [p parts] (add-part! p (swap! count inc))))))
 
 (defn template-component []
-  (let [date (js/Date.)
-        day (.getDate date)
-        month (+ 1 (.getMonth date))]
-    (fn [kw template]
-      [:div {:on-click #(create-new-session! kw template)}
-       (:title template)])))
-
-(defn temp-template-component []
-  (let [date (js/Date.)
-        day (.getDate date)
-        month (+ 1 (.getMonth date))]
-    (fn [kw title]
-      [:div
-       {:on-click #(go
-                    (let [template (read-string (<! (GET "/template")))]
-                      (create-new-session! kw template)))}
-       title])))
+  (let []
+    (fn [url]
+      [:div {:on-click
+             #(go
+               (let [template (read-string (<! (GET url)))]
+                 (create-new-session! template)))}
+       url])))
 
 (defn home-component []
   [:div
@@ -267,15 +241,15 @@
     (nav-component)
     [:section#templates
      [:div
-      [template-component :ritual morning-ritual-template]
-      [temp-template-component :strength "Strength"]
-      [template-component :mobility mobility-template]
-      [template-component :locomotion locomotion-template]
-      [template-component :bas bas-template]
-      [template-component :sass sass-template]
-      [template-component :leg leg-strength-template]
-      [template-component :movnat movnat-template]
-      [template-component :maya maya-template]]]
+      [template-component "ritual"]
+      [template-component "strength"]
+      [template-component "mobility"]
+      [template-component "locomotion"]
+      [template-component "bas"]
+      [template-component "sass"]
+      [template-component "leg"]
+      [template-component "movnat"]
+      [template-component "maya"]]]
     [:section#session
      (let [movement-session @movement-session
            c (vals (:categories movement-session))
