@@ -15,8 +15,22 @@
                                         leg-strength-template movnat-template
                                         maya-template]]))
 
-#_(def uri "datomic:pro://localhost:8000/move")
-#_(def conn (d/connect uri))
+(def uri "datomic:dev://localhost:4334/movement")
+(def conn (d/connect uri))
+
+#_(let [db (d/db conn)
+      ; do query
+      ]
+  (d/transact conn [])
+  (generate-response {:status :ok}))
+
+(defn movements []
+  (let [db (d/db conn)
+        movements (d/q '[:find ?m
+                         :where
+                         [?m :movement/id]]
+                       db)]
+    (generate-response movements)))
 
 (defn generate-response [data & [status]]
   {:status (or status 200)
@@ -24,7 +38,8 @@
    :body (pr-str data)})
 
 (defroutes routes
-  (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
+           (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
+           (GET "/movements" [] (movements))
            (GET "/strength" [] (generate-response strength-template))
            (GET "/ritual" [] (generate-response morning-ritual-template))
            (GET "/mobility" [] (generate-response mobility-template))

@@ -1,0 +1,20 @@
+[
+ ;; categories
+ {:db/id #db/id[:db.part/user -200] :category/name "Strength"}
+ {:db/id #db/id[:db.part/user -201] :category/name "Bent Arm Strength"}
+ {:db/id #db/id[:db.part/user -202] :category/name "Warmup"}
+
+ ;; movements
+ {:db/id #db/id[:db.part/user -100] :movement/name "Push up" :movement/category [#db/id[:db.part/user -200]] :movement/animation ""}
+ {:db/id #db/id[:db.part/user -101] :movement/name "Squat" :movement/category [#db/id[:db.part/user -200]] :movement/animation ""}
+ {:db/id #db/id[:db.part/user -102] :movement/name "Pull up" :movement/category [#db/id[:db.part/user -200]] :movement/animation ""}
+ {:db/id #db/id[:db.part/user -103] :movement/name "Jump rope" :movement/category [#db/id[:db.part/user -202]] :movement/animation ""}
+
+ ;; templates
+ {:db/id #db/id[:db.part/user -300] :template/name "My Strength Template" :template/part [#db/id[:db.part/user -400] #db/id[:db.part/user -401]]}
+
+ ;; parts
+ {:db/id #db/id[:db.part/user -400] :part/name "Warmup" :part/category [#db/id[:db.part/user -202]]}
+ {:db/id #db/id[:db.part/user -401] :part/name "Strength" :part/category [#db/id[:db.part/user -200]]}
+
+ ]

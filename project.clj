@@ -40,13 +40,15 @@
 
   :clean-targets ^{:protect false} ["resources/public/js"]
 
+  :repositories {"my.datomic.com" {:url "https://my.datomic.com/repo"
+                                   :creds :gpg}}
   :minify-assets
   {:assets
     {"resources/public/css/site.min.css" "resources/public/css/site.css"}}
 
   :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
                              :compiler     {:output-to     "resources/public/js/app.js"
-                                            :output-dir    "resources/public/js/out"
+                                            :output-dir    "reso urces/public/js/out"
                                             :asset-path    "js/out"
                                             :optimizations :none
                                             :pretty-print true}}}}

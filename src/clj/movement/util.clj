@@ -4,29 +4,25 @@
             [clojure.edn :as edn])
   (:import datomic.Util))
 
-(def uri "datomic:pro://localhost:8000/move")
+(def uri "datomic:dev://localhost:4334/movement")
 
-(defn- read-all [f]
-  (Util/readAll (io.reader f)))
+(d/create-database uri)
 
-(defn- transact-all [conn f]
-  (doseq [txd (read-all f)]
-    (d/transact conn txd))
-  :done)
+(def conn (d/connect uri))
 
-(defn- create-db []
-  (d/create-database uri))
+(def schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn")))))
+(def data-tx (first (Util/readAll (io/reader (io/resource "data/initialdata.edn")))))
+(d/transact conn schema-tx)
+(d/transact conn data-tx)
 
-(defn- get-conn []
-  (d/connect uri))
 
-(defn- load-schema []
-  (transact-all (get-conn) (io/resource "data/schema.edn")))
+(d/q '[:find ?c
+       :where [?c :category/name]]
+     (d/db conn))
 
-(defn- load-data []
-  (transact-all (get-conn) (io/resource "data/initial.edn")))
-
-(defn init-db []
-  (create-db)
-  (load-schema)
-  (load-data))
+(def result
+  (->> (d/q
+         '[:find ?entity
+           :where
+           [?entity :movement/name "Push up"]]
+        (d/db conn))))
