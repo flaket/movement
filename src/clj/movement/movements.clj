@@ -167,3 +167,14 @@
 (def all-templates (conj [] morning-ritual-template strength-template mobility-template
                          locomotion-template bas-template sass-template leg-strength-template
                          movnat-template maya-template))
+
+#_([:handstand-push-up-head-wall :handstand-push-up-wall :handstand-push-up-free
+    :push-up-planche :pull-up-basic :pull-up-wide :pull-up-rings :pull-up-rings-wide
+    :pull-up-chest :pull-up-waist :pull-up-weighted :pull-up-scapula
+    :one-arm-pull-up-forearm :one-arm-pull-up-bicep :one-arm-negative
+    :archer-pull-up :one-arm-pull-up-shoulder
+    :one-arm-pull-up :row-basic :row-wide :front-lever-row
+    :german-hang-pull :pull-over :front-lever-pull :back-lever-pull
+    :tick-tock :back-lever-negative :front-lever-negative
+    :muscle-up :pull-up-false-grip :muscle-up-negative
+    :muscle-up-l-sit :rope-climb])

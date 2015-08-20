@@ -16,13 +16,6 @@
 (d/transact conn data-tx)
 
 
-(d/q '[:find ?c
-       :where [?c :category/name]]
+(d/q '[:find ?c ?name
+       :where [?c :movement/name ?name]]
      (d/db conn))
-
-(def result
-  (->> (d/q
-         '[:find ?entity
-           :where
-           [?entity :movement/name "Push up"]]
-        (d/db conn))))

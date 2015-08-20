@@ -2,7 +2,7 @@
 
  ;; template
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :template/name
+  :db/ident              :template/title
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
@@ -10,6 +10,13 @@
 
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :template/id
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :template/description
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
@@ -64,6 +71,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/unique             :db.unique/identity
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -96,11 +104,92 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/graphic
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :movement/animation
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/reps
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/sets
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/time
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/distance
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ ;; session
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :session/name
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :session/intensity
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ ;; user
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/name
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/email
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/unique             :db.unique/identity
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/templates
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/sessions
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
 
  ]
 
