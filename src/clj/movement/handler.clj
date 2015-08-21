@@ -15,7 +15,7 @@
                                         leg-strength-template movnat-template
                                         maya-template]]))
 
-(def uri "datomic:dev://localhost:4334/movement")
+(def uri "datomic:dev://localhost:4334/movementsession")
 (def conn (d/connect uri))
 
 #_(let [db (d/db conn)
@@ -24,18 +24,18 @@
   (d/transact conn [])
   (generate-response {:status :ok}))
 
-(defn movements []
-  (let [db (d/db conn)
-        movements (d/q '[:find ?m
-                         :where
-                         [?m :movement/id]]
-                       db)]
-    (generate-response movements)))
-
 (defn generate-response [data & [status]]
   {:status (or status 200)
    :headers {"Content-Type" "application/edn"}
    :body (pr-str data)})
+
+(defn movements []
+  (let [db (d/db conn)
+        movements (d/q '[:find ?n
+                         :where
+                         [_ :movement/name ?n]]
+                       db)]
+    (generate-response movements)))
 
 (defroutes routes
            (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))

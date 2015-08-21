@@ -9,13 +9,6 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :template/id
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
   :db/ident              :template/description
   :db/index              true
   :db/valueType          :db.type/string
@@ -38,21 +31,7 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :part/id
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
   :db/ident              :part/category
-  :db/index              true
-  :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/many
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :part/regular-movement
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
@@ -65,6 +44,13 @@
   :db/cardinality        :db.cardinality/one
   :db.install/_attribute :db.part/db}
 
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/regular-movement
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
  ;; category
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :category/name
@@ -74,26 +60,14 @@
   :db/unique             :db.unique/identity
   :db.install/_attribute :db.part/db}
 
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :category/id
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db.install/_attribute :db.part/db}
-
  ;; movement
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :movement/name
+  :db/fulltext           true
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/id
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
+  :db/unique             :db.unique/identity
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -118,21 +92,21 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/reps
+  :db/ident              :movement/rep
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/sets
+  :db/ident              :movement/set
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/time
+  :db/ident              :movement/duration
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
@@ -145,6 +119,23 @@
   :db/cardinality        :db.cardinality/one
   :db.install/_attribute :db.part/db}
 
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/equipment
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
+ ;; equipment
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :equipment/name
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ ;todo: create enum of equipment types?
+
  ;; session
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :session/name
@@ -154,20 +145,34 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :session/intensity
+  :db/ident              :session/timestamp
   :db/index              true
-  :db/valueType          :db.type/long
+  :db/valueType          :db.type/instant
   :db/cardinality        :db.cardinality/one
   :db.install/_attribute :db.part/db}
 
- ;; user
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/name
+  :db/ident              :session/part
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :session/template
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :session/comment
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db.install/_attribute :db.part/db}
 
+ ;; user
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :user/email
   :db/index              true
@@ -177,19 +182,40 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/templates
+  :db/ident              :user/name
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/payment
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/sessions
+  :db/ident              :user/template
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
   :db.install/_attribute :db.part/db}
 
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/session
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
+ ;; payment
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :payment/amount
+  :db/index              true
+  :db/valueType          :db.type/float
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
 
  ]
 

@@ -1,4 +1,8 @@
 [
+ ;; equipment
+ {:db/id #db/id[:db.part/user -5000] :equipment/name "Rings"}
+ {:db/id #db/id[:db.part/user -5001] :equipment/name "Elastic Band"}
+
  ;; categories
  {:db/id #db/id[:db.part/user -2000] :category/name "Strength"}
  {:db/id #db/id[:db.part/user -2001] :category/name "Bent Arm Strength"}
@@ -12,49 +16,55 @@
  {:db/id #db/id[:db.part/user -2009] :category/name "Pull Up"}
  {:db/id #db/id[:db.part/user -2010] :category/name "Pulling"}
  {:db/id #db/id[:db.part/user -2011] :category/name "Pushing"}
+ {:db/id #db/id[:db.part/user -2012] :category/name "Mobility"}
+ {:db/id #db/id[:db.part/user -2013] :category/name "Bodyweight"}
+ {:db/id #db/id[:db.part/user -2014] :category/name "Gymnastic"}
+ {:db/id #db/id[:db.part/user -2015] :category/name "Calisthenic"}
+ {:db/id #db/id[:db.part/user -2016] :category/name "Crossfit"}
 
  ;; movements
- {:db/id #db/id[:db.part/user -100] :movement/name "Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -101] :movement/name "Squat" :movement/category [#db/id[:db.part/user -2000]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -102] :movement/name "Pull Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -103] :movement/name "Jump Rope" :movement/category [#db/id[:db.part/user -2002]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -104] :movement/name "L-Sit" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -105] :movement/name "L-Straddle" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -106] :movement/name "V-Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -107] :movement/name "Leg Lift" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -108] :movement/name "Incline Bench Leg Lift" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -109] :movement/name "Hanging Leg Lift" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -110] :movement/name "Headstand Leg Lift" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2004]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -112] :movement/name "Arch Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2004]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -113] :movement/name "Wall bar front support" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -114] :movement/name "Wall Bar Back Support" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -115] :movement/name "Back lever" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -116] :movement/name "Front Lever" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -117] :movement/name "Side Lever" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -118] :movement/name "Planche" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -119] :movement/name "Russian Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -120] :movement/name "Wide Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -121] :movement/name "Diamond Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -122] :movement/name "Hindu Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -123] :movement/name "Lateral Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -124] :movement/name "Bridge Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -125] :movement/name "Archer Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -126] :movement/name "One Arm Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -127] :movement/name "One Leg One Arm Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -128] :movement/name "Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -129] :movement/name "Russian Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -130] :movement/name "Single Bar Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -131] :movement/name "Korean Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -132] :movement/name "Ring Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -133] :movement/name "Ring Wide Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/graphic "" :movement/animation ""}
- {:db/id #db/id[:db.part/user -134] :movement/name "Ring Archer Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/graphic "" :movement/animation ""}
+ {:db/id #db/id[:db.part/user -100] :movement/name "Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -101] :movement/name "Squat" :movement/category [#db/id[:db.part/user -2000]]}
+ {:db/id #db/id[:db.part/user -102] :movement/name "Pull Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]]}
+ {:db/id #db/id[:db.part/user -103] :movement/name "Jump Rope" :movement/category [#db/id[:db.part/user -2002]]}
+ {:db/id #db/id[:db.part/user -104] :movement/name "L-Sit" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]]}
+ {:db/id #db/id[:db.part/user -105] :movement/name "L-Straddle" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]]}
+ {:db/id #db/id[:db.part/user -106] :movement/name "V-Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]]}
+ {:db/id #db/id[:db.part/user -107] :movement/name "Leg Lift" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]]}
+ {:db/id #db/id[:db.part/user -108] :movement/name "Incline Bench Leg Lift" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]]}
+ {:db/id #db/id[:db.part/user -109] :movement/name "Hanging Leg Lift" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2003]]}
+ {:db/id #db/id[:db.part/user -110] :movement/name "Headstand Leg Lift" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2004]]}
+ {:db/id #db/id[:db.part/user -112] :movement/name "Arch Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2004]]}
+ {:db/id #db/id[:db.part/user -113] :movement/name "Wall bar front support" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]]}
+ {:db/id #db/id[:db.part/user -114] :movement/name "Wall Bar Back Support" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]]}
+ {:db/id #db/id[:db.part/user -115] :movement/name "Back lever" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]]}
+ {:db/id #db/id[:db.part/user -116] :movement/name "Front Lever" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]]}
+ {:db/id #db/id[:db.part/user -117] :movement/name "Side Lever" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]]}
+ {:db/id #db/id[:db.part/user -118] :movement/name "Planche" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2005]]}
+ {:db/id #db/id[:db.part/user -119] :movement/name "Russian Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -120] :movement/name "Wide Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -121] :movement/name "Diamond Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -122] :movement/name "Hindu Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -123] :movement/name "Lateral Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -124] :movement/name "Bridge Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -125] :movement/name "Archer Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -126] :movement/name "One Arm Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -127] :movement/name "One Leg One Arm Push Up" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001] #db/id[:db.part/user -2006] #db/id[:db.part/user -2011]]}
+ {:db/id #db/id[:db.part/user -128] :movement/name "Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]]}
+ {:db/id #db/id[:db.part/user -129] :movement/name "Russian Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]]}
+ {:db/id #db/id[:db.part/user -130] :movement/name "Single Bar Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]]}
+ {:db/id #db/id[:db.part/user -131] :movement/name "Korean Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]]}
+ {:db/id #db/id[:db.part/user -132] :movement/name "Ring Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id #db/id[:db.part/user -133] :movement/name "Ring Wide Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id #db/id[:db.part/user -134] :movement/name "Ring Archer Dip" :movement/category [#db/id[:db.part/user -2000] #db/id[:db.part/user -2001]] :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id #db/id[:db.part/user -135] :movement/name "Elastic Band Shoulder Dislocation" :movement/category [#db/id[:db.part/user -2012]] :movement/equipment [#db/id[:db.part/user -5001]]}
 
  ;; templates
- {:db/id #db/id[:db.part/user -3000] :template/name "My Strength Template" :template/part [#db/id[:db.part/user -4000] #db/id[:db.part/user -4001]]}
+ {:db/id #db/id[:db.part/user -3000] :template/title "Strength" :template/description "This strength session consists of mobility and strength exercises." :template/part [#db/id[:db.part/user -4000] #db/id[:db.part/user -4001]]}
 
  ;; parts
- {:db/id #db/id[:db.part/user -4000] :part/name "Warmup" :part/category [#db/id[:db.part/user -2002]]}
- {:db/id #db/id[:db.part/user -4001] :part/name "Strength" :part/category [#db/id[:db.part/user -2000]]}
+ {:db/id #db/id[:db.part/user -4000] :part/name "Mobility" :part/category [#db/id[:db.part/user -2012]] :part/number-of-movements 5}
+ {:db/id #db/id[:db.part/user -4001] :part/name "Strength" :part/category [#db/id[:db.part/user -2000]] :part/number-of-movements 5}
 
  ]
 
