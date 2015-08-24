@@ -264,7 +264,7 @@
    [:div.container
     (nav-component)
     [:section
-     [:div "This will allow users to discover the movements in the database,
+     [:div "This section allow users to discover the movements in the database,
     view the animations more clearly, add their own comments to the movements
     and mark the subjective difficulty level of the movements."]]]])
 

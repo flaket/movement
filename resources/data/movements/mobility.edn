@@ -1,0 +1,13 @@
+[
+
+ ;; equipment
+ {:db/id #db/id[:db.part/user -5000] :equipment/name "Elastic Band"}
+
+ ;; category
+ {:db/id #db/id[:db.part/user -1] :category/name "Mobility"}
+
+ {:db/id #db/id[:db.part/user -100] :movement/name "Elastic Band Shoulder Dislocation" :movement/category [#db/id[:db.part/user -1]] :movement/equipment [#db/id[:db.part/user -5000]]}
+
+
+
+ ]

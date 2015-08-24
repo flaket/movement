@@ -6,6 +6,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/unique             :db.unique/identity
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -132,6 +133,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/unique             :db.unique/identity
   :db.install/_attribute :db.part/db}
 
  ;todo: create enum of equipment types?

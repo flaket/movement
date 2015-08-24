@@ -48,7 +48,7 @@
 
   :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
                              :compiler     {:output-to     "resources/public/js/app.js"
-                                            :output-dir    "reso urces/public/js/out"
+                                            :output-dir    "resources/public/js/out"
                                             :asset-path    "js/out"
                                             :optimizations :none
                                             :pretty-print true}}}}

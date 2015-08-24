@@ -1,0 +1,16 @@
+[
+
+ ;; equipment
+
+
+ ;; category
+ {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Bodyweight"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Leg Strength"}
+
+ ;; movements
+ {:db/id #db/id[:db.part/user -100] :movement/name "Squat" :movement/category [#db/id[:db.part/user -1]
+                                                                               #db/id[:db.part/user -2]
+                                                                               #db/id[:db.part/user -3]]}
+
+ ]

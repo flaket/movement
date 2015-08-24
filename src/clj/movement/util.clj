@@ -5,31 +5,110 @@
             [clojure.pprint :as pp])
   (:import datomic.Util))
 
-(def uri "datomic:dev://localhost:4334/movement1")
-
+;; Create database and create a connection.
+(def uri "datomic:dev://localhost:4334/movement2")
 (d/create-database uri)
-
 (def conn (d/connect uri))
 
-(def db (d/db conn))
-
+;; Locate data sources.
 (def schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn")))))
-(def data-tx (first (Util/readAll (io/reader (io/resource "data/initialdata.edn")))))
-(d/transact conn schema-tx)
-(d/transact conn data-tx)
+(def pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn")))))
+(def pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn")))))
+(def conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/conditioning.edn")))))
+(def core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn")))))
+(def lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn")))))
+(def mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn")))))
+(def multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn")))))
+(def sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn")))))
+(def template-tx (first (Util/readAll (io/reader (io/resource "data/movements/template.edn")))))
 
-; query for all movement names
+;; Transact data to the database.
+(d/transact conn schema-tx)
+(d/transact conn pulling-tx)
+(d/transact conn pushing-tx)
+(d/transact conn conditioning-tx)
+(d/transact conn core-tx)
+(d/transact conn lowerbody-tx)
+(d/transact conn mobility-tx)
+(d/transact conn multiplane-tx)
+(d/transact conn sass-tx)
+(d/transact conn template-tx)
+
+;; Get the database value.
+(def db (d/db conn))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; get all movements names
+(defn all-movement-names []
+  (d/q '[:find [?name ...]
+         :where [_ :movement/name ?name]]
+       db))
+(count (all-movement-names))
+
+; get all category names + number of movements in category
+(defn all-categories-sorted []
+  (reverse
+    (sort
+      (d/q '[:find (count ?m) ?name
+             :where
+             [?cat :category/name ?name]
+             [?m :movement/category ?cat]]
+           db))))
+(all-categories-sorted)
+
+; get specific category
+(defn get-category [name]
+  (d/q '[:find ?e
+         :in $ ?category
+         :where
+         [?e :category/name ?category]]
+       db
+       name))
+(get-category "Mobility")
+
+; get movements from specific category
+(defn get-movements [category]
+  (d/q '[:find [?name ...]
+         :in $ ?category-name
+         :where
+         [?c :category/name ?category-name]
+         [?e :movement/category ?c]
+         [?e :movement/name ?name]]
+       db
+       category))
+(get-movements "Muscle Up")
+
+; get all template titles
+(defn all-template-titles []
+  (d/q '[:find [?t ...]
+         :where [_ :template/title ?t]]
+       db))
+
+(all-template-titles)
+
+; get specific template
+(defn get-template [title]
+  (d/q '[:find (pull ?e [*])
+         :in $ ?title
+         :where
+         [?e :template/title ?title]]
+       db
+       title))
+(:template/description (ffirst (get-template "Strength")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; query for all equipment names
 (d/q '[:find ?name
-       :where [?c :movement/name ?name]]
+       :where [?c :equipment/name ?name]]
      db)
 
-(pp/pprint *1)
+#_(pp/pprint *1)
 
 ; Looking up unique value with the pull api
 ; The [:ns ""] vector is a "look-up ref". Anywhere in datomic where
 ; an entity is supposed to be provided, a look-up ref can be used instead.
 ; This let's us avoid dealing with entities. The attribute value must be unique.
-(d/pull db '[*] [:category/name "Pushing"])
+(d/pull db '[] [:equipment/name "Rings"])
 
 ; There are three different ways of referring to an entity in datomic.
 ; By it's id
@@ -99,7 +178,7 @@
 ;[(shipping ?zip ?weight) ?cost]
 
 ;;;;; REPL safety and convenience ;;;;;;
-(set! *print-length* 250)
+#_(set! *print-length* 250)
 
 ;;;;; data queries ;;;;;;
 

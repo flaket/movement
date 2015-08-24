@@ -1,0 +1,37 @@
+[
+
+ ;; category
+ {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Bodyweight"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Bent Arm Strength"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Pulling"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Pushing"}
+ {:db/id #db/id[:db.part/user -10] :category/name "Muscle Up"}
+
+ ;; movements
+ {:db/id #db/id[:db.part/user -100] :movement/name "Muscle Up" :movement/category [#db/id[:db.part/user -1]
+                                                                                   #db/id[:db.part/user -2]
+                                                                                   #db/id[:db.part/user -3]
+                                                                                   #db/id[:db.part/user -4]
+                                                                                   #db/id[:db.part/user -5]
+                                                                                   #db/id[:db.part/user -10]]}
+ {:db/id #db/id[:db.part/user -101] :movement/name "Negative Muscle Up" :movement/category [#db/id[:db.part/user -1]
+                                                                                            #db/id[:db.part/user -2]
+                                                                                            #db/id[:db.part/user -3]
+                                                                                            #db/id[:db.part/user -4]
+                                                                                            #db/id[:db.part/user -5]
+                                                                                            #db/id[:db.part/user -10]]}
+ {:db/id #db/id[:db.part/user -102] :movement/name "L-Sit Muscle Up" :movement/category [#db/id[:db.part/user -1]
+                                                                                         #db/id[:db.part/user -2]
+                                                                                         #db/id[:db.part/user -3]
+                                                                                         #db/id[:db.part/user -4]
+                                                                                         #db/id[:db.part/user -5]
+                                                                                         #db/id[:db.part/user -10]]}
+ {:db/id #db/id[:db.part/user -103] :movement/name "Pull Over" :movement/category [#db/id[:db.part/user -1]
+                                                                                   #db/id[:db.part/user -2]
+                                                                                   #db/id[:db.part/user -3]
+                                                                                   #db/id[:db.part/user -4]
+                                                                                   #db/id[:db.part/user -5]]}
+
+
+ ]

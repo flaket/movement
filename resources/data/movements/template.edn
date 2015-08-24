@@ -1,0 +1,14 @@
+[
+
+ ;; category
+ {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Mobility"}
+
+ ;; templates
+ {:db/id #db/id[:db.part/user -100] :template/title "Strength" :template/description "This strength session consists of mobility and strength exercises." :template/part [#db/id[:db.part/user -200] #db/id[:db.part/user -201]]}
+ {:db/id #db/id[:db.part/user -200] :part/name "Mobility" :part/category [#db/id[:db.part/user -2]] :part/number-of-movements 5}
+ {:db/id #db/id[:db.part/user -201] :part/name "Strength" :part/category [#db/id[:db.part/user -1]] :part/number-of-movements 5}
+
+
+
+ ]

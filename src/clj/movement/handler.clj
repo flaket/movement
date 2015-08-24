@@ -15,8 +15,8 @@
                                         leg-strength-template movnat-template
                                         maya-template]]))
 
-(def uri "datomic:dev://localhost:4334/movementsession")
-(def conn (d/connect uri))
+#_(def uri "datomic:dev://localhost:4334/movement2")
+#_(def conn (d/connect uri))
 
 #_(let [db (d/db conn)
       ; do query
@@ -29,7 +29,7 @@
    :headers {"Content-Type" "application/edn"}
    :body (pr-str data)})
 
-(defn movements []
+#_(defn movements []
   (let [db (d/db conn)
         movements (d/q '[:find ?n
                          :where
@@ -39,7 +39,8 @@
 
 (defroutes routes
            (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
-           (GET "/movements" [] (movements))
+           (GET "/raw" [] (render-file "templates/indexraw.html" {:dev (env :dev?)}))
+           #_(GET "/movements" [] (movements))
            (GET "/strength" [] (generate-response strength-template))
            (GET "/ritual" [] (generate-response morning-ritual-template))
            (GET "/mobility" [] (generate-response mobility-template))
