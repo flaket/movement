@@ -12,7 +12,7 @@
 
  {:db/id #db/id[:db.part/user -101] :template/title "Bent Arm Strength" :template/part [#db/id[:db.part/user -202] #db/id[:db.part/user -203]]}
  {:db/id #db/id[:db.part/user -202] :part/name "Mobility" :part/category [#db/id[:db.part/user -2]] :part/number-of-movements 6}
- {:db/id #db/id[:db.part/user -203] :part/name "Strength" :part/category [#db/id[:db.part/user -3]] :part/number-of-movements 4}
+ {:db/id #db/id[:db.part/user -203] :part/name "Bent Arm Strength" :part/category [#db/id[:db.part/user -3]] :part/number-of-movements 4}
 
 
 

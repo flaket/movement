@@ -9,6 +9,7 @@
             [environ.core :refer [env]]
             [datomic.api :as d]
             [clojure.edn :as edn]
+            [clojure.string :as str]
             [movement.movements :refer [strength-template morning-ritual-template
                                         mobility-template locomotion-template
                                         bas-template sass-template
@@ -66,7 +67,8 @@
            (GET "/movements" [] (movements))
            (GET "/movement/:name" [name] (movement name))
            (GET "/templates" [] (get-all-template-titles))
-           (GET "/template/:title" [title] (get-template title))
+           (GET "/template/:title" [title] (get-template (str/replace title "-" " ")))
+
            (GET "/Strength" [] (generate-response strength-template))
            (GET "/Bent-Arm-Strength" [] (generate-response bas-template))
 

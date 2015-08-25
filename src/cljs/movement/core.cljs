@@ -231,13 +231,17 @@
     (fn [url]
       [:div {:on-click
              #(go
-               (let [template (read-string (<! (GET (str/replace url " " "-"))))]
-                 (create-new-session! template)))}
+               (let [template (read-string (<! (GET (str "template/" (str/replace url " " "-")))))
+                     template-title (:template/title template)]
+                 (print template)
+                 (create-new-session! {:title template-title
+                                       :parts [{:title "Mobility" :category all-movements :n 5}
+                                               {:title "Strength" :category all-movements :n 5}]})))}
        url])))
 
 (defn home-component []
   (let [templates (atom [])]
-    (go (reset! templates (read-string (<! (GET "/templates")))))
+    (go (reset! templates (read-string (<! (GET "templates")))))
     (fn []
       [:div
        [:div.container
