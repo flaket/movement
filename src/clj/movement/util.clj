@@ -6,7 +6,7 @@
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement3")
+(def uri "datomic:dev://localhost:4334/movement4")
 (d/create-database uri)
 (def conn (d/connect uri))
 
@@ -94,20 +94,49 @@
     {:title       (:template/title entity)
      :description (:template/description entity)
      :parts       (vec (for [p parts]
-                         {:title    (:part/name p)
-                          :category (let [categories (:part/category p)
-                                          x (for [c categories]
-                                              (d/pull db '[:category/name] (:db/id c)))]
-                                      (vec (map :category/name x)))
-                          :n        (:part/number-of-movements p)}))}))
+                         {:title     (:part/name p)
+                          :n         (:part/number-of-movements p)
+                          :category  (let [categories (:part/category p)
+                                           x (for [c categories]
+                                               (d/pull db '[:category/name] (:db/id c)))]
+                                       (vec (map :category/name x)))
+                          :movements (let [n (:part/number-of-movements p)]
+                                       (d/q '[:find [(sample 2 ?name)]
+                                              :where [_ :movement/name ?name]]
+                                            db))}))}))
 
-(pp/pprint (get-template "Bent Arm Strength"))
+(pp/pprint (get-template "Strength"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; rand n selects exactlty n items with potential for duplicates.
+; sample n returs up to n distinct items.
+(d/q '[:find [(rand 2 ?name) (sample 2 ?name)]
+       :where [_ :movement/name ?name]]
+     db)
+
 ; query for all equipment names
 (d/q '[:find ?name
        :where [?c :equipment/name ?name]]
      db)
+
+; query for exercises using equipment
+(d/q '[:find ?name
+       :in $ ?equipment
+       :where
+       [?e :movement/name ?name]
+       [?e :movement/equipment ?c]
+       [?c :equipment/name ?equipment]]
+     db
+     "Rings")
+
+; all exercises not using the input equipment parameter.
+(d/q '[:find ?name
+       :in $ ?equipment
+       :where [?e :movement/name ?name]
+       (not-join [?e]
+                 [?e :movement/equipment ?c]
+                 [?c :equipment/name ?equipment])]
+     db
+     "Rings")
 
 #_(pp/pprint *1)
 

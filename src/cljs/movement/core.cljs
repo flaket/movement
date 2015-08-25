@@ -213,11 +213,13 @@
        [:button.button {:on-click #()} "Make PDF"]])))
 
 (defn add-part! [{:keys [title category n]} category-ref]
-  (add-category! title category)
-  (dotimes [i n]
-    (add-movement!
-      (prep-name (nth (take n (shuffle category)) i))
-      category-ref)))
+  (let [c (first category)
+        cat (if (= c "Mobility") all-movements all-movements)]
+    (add-category! title cat)
+    (dotimes [i n]
+      (add-movement!
+        (prep-name (nth (take n (shuffle cat)) i))
+        category-ref))))
 
 (defn create-new-session! [{:keys [title parts]}]
   (let [count (atom 0)]
@@ -231,12 +233,9 @@
     (fn [url]
       [:div {:on-click
              #(go
-               (let [template (read-string (<! (GET (str "template/" (str/replace url " " "-")))))
-                     template-title (:template/title template)]
+               (let [template (read-string (<! (GET (str "template/" (str/replace url " " "-")))))]
                  (print template)
-                 (create-new-session! {:title template-title
-                                       :parts [{:title "Mobility" :category all-movements :n 5}
-                                               {:title "Strength" :category all-movements :n 5}]})))}
+                 #_(create-new-session! template)))}
        url])))
 
 (defn home-component []

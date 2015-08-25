@@ -16,8 +16,9 @@
                                         leg-strength-template movnat-template
                                         maya-template]]))
 
-(def uri "datomic:dev://localhost:4334/movement2")
+(def uri "datomic:dev://localhost:4334/movement4")
 (def conn (d/connect uri))
+(def db (d/db conn))
 
 (defn generate-response [data & [status]]
   {:status (or status 200)
@@ -51,15 +52,20 @@
     (generate-response templates)))
 
 (defn get-template [title]
-  (let [db (d/db conn)
-        template (d/q '[:find (pull ?e [*])
-                        :in $ ?title
-                        :where
-                        [?e :template/title ?title]]
-                      db
-                      title)]
-    (generate-response (ffirst template))))
-#_(:template/description (ffirst (get-template "Strength")))
+  (let [entity (d/pull db '[*] [:template/title title])
+        part-entities (vec (flatten (map vals (:template/part entity))))
+        parts (map #(d/pull db '[*] %) part-entities)]
+    {:title       (:template/title entity)
+     :description (:template/description entity)
+     :parts       (vec (for [p parts]
+                         {:title    (:part/name p)
+                          :category (let [categories (:part/category p)
+                                          x (for [c categories]
+                                              (d/pull db '[:category/name] (:db/id c)))]
+                                      (vec (map :category/name x)))
+                          :movements (d/q '[:find [(sample 2 ?name)]
+                                            :where [_ :movement/name ?name]]
+                                          db)}))}))
 
 (defroutes routes
            (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
