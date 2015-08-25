@@ -231,33 +231,29 @@
     (fn [url]
       [:div {:on-click
              #(go
-               (let [template (read-string (<! (GET url)))]
+               (let [template (read-string (<! (GET (str/replace url " " "-"))))]
                  (create-new-session! template)))}
        url])))
 
 (defn home-component []
-  [:div
-   [:div.container
-    (nav-component)
-    [:section#templates
-     [:div
-      [template-component "ritual"]
-      [template-component "strength"]
-      [template-component "mobility"]
-      [template-component "locomotion"]
-      [template-component "bas"]
-      [template-component "sass"]
-      [template-component "leg"]
-      [template-component "movnat"]
-      [template-component "maya"]]]
-    [:section#session
-     (let [movement-session @movement-session
-           c (vals (:categories movement-session))
-           m (vals (:movements movement-session))
-           t (:title movement-session)
-           session-data {:categories c :movements m :title t}]
-       (when (pos? (count c))
-         [session-component session-data]))]]])
+  (let [templates (atom [])]
+    (go (reset! templates (read-string (<! (GET "/templates")))))
+    (fn []
+      [:div
+       [:div.container
+        (nav-component)
+        [:section#templates
+         (doall
+           (for [i @templates]
+             ^{:key i} [template-component i]))]
+        [:section#session
+         (let [movement-session @movement-session
+               c (vals (:categories movement-session))
+               m (vals (:movements movement-session))
+               t (:title movement-session)
+               session-data {:categories c :movements m :title t}]
+           (when (pos? (count c))
+             [session-component session-data]))]]])))
 
 (defn movement-detail-component []
   [:div

@@ -3,11 +3,16 @@
  ;; category
  {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
  {:db/id #db/id[:db.part/user -2] :category/name "Mobility"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Bent Arm Strength"}
 
  ;; templates
  {:db/id #db/id[:db.part/user -100] :template/title "Strength" :template/description "This strength session consists of mobility and strength exercises." :template/part [#db/id[:db.part/user -200] #db/id[:db.part/user -201]]}
  {:db/id #db/id[:db.part/user -200] :part/name "Mobility" :part/category [#db/id[:db.part/user -2]] :part/number-of-movements 5}
  {:db/id #db/id[:db.part/user -201] :part/name "Strength" :part/category [#db/id[:db.part/user -1]] :part/number-of-movements 5}
+
+ {:db/id #db/id[:db.part/user -101] :template/title "Bent Arm Strength" :template/part [#db/id[:db.part/user -202] #db/id[:db.part/user -203]]}
+ {:db/id #db/id[:db.part/user -202] :part/name "Mobility" :part/category [#db/id[:db.part/user -2]] :part/number-of-movements 6}
+ {:db/id #db/id[:db.part/user -203] :part/name "Strength" :part/category [#db/id[:db.part/user -3]] :part/number-of-movements 4}
 
 
 

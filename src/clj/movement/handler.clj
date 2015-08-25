@@ -15,21 +15,15 @@
                                         leg-strength-template movnat-template
                                         maya-template]]))
 
-#_(def uri "datomic:dev://localhost:4334/movement2")
-#_(def conn (d/connect uri))
-
-#_(let [db (d/db conn)
-      ; do query
-      ]
-  (d/transact conn [])
-  (generate-response {:status :ok}))
+(def uri "datomic:dev://localhost:4334/movement2")
+(def conn (d/connect uri))
 
 (defn generate-response [data & [status]]
   {:status (or status 200)
    :headers {"Content-Type" "application/edn"}
    :body (pr-str data)})
 
-#_(defn movements []
+(defn movements []
   (let [db (d/db conn)
         movements (d/q '[:find ?n
                          :where
@@ -37,16 +31,49 @@
                        db)]
     (generate-response movements)))
 
+(defn movement [name]
+  (let [db (d/db conn)
+        movement (d/q '[:find ?e
+                        :in $ ?name
+                        :where
+                        [?e :movement/name ?name]]
+                      db
+                      name)]
+    (generate-response movement)))
+
+(defn get-all-template-titles []
+  (let [db (d/db conn)
+        templates (d/q '[:find [?t ...]
+                         :where
+                         [_ :template/title ?t]]
+                       db)]
+    (generate-response templates)))
+
+(defn get-template [title]
+  (let [db (d/db conn)
+        template (d/q '[:find (pull ?e [*])
+                        :in $ ?title
+                        :where
+                        [?e :template/title ?title]]
+                      db
+                      title)]
+    (generate-response (ffirst template))))
+#_(:template/description (ffirst (get-template "Strength")))
+
 (defroutes routes
            (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
            (GET "/raw" [] (render-file "templates/indexraw.html" {:dev (env :dev?)}))
-           #_(GET "/movements" [] (movements))
-           (GET "/strength" [] (generate-response strength-template))
+           (GET "/movements" [] (movements))
+           (GET "/movement/:name" [name] (movement name))
+           (GET "/templates" [] (get-all-template-titles))
+           (GET "/template/:title" [title] (get-template title))
+           (GET "/Strength" [] (generate-response strength-template))
+           (GET "/Bent-Arm-Strength" [] (generate-response bas-template))
+
+           (GET "/sass" [] (generate-response sass-template))
            (GET "/ritual" [] (generate-response morning-ritual-template))
            (GET "/mobility" [] (generate-response mobility-template))
            (GET "/locomotion" [] (generate-response locomotion-template))
-           (GET "/bas" [] (generate-response bas-template))
-           (GET "/sass" [] (generate-response sass-template))
            (GET "/leg" [] (generate-response leg-strength-template))
            (GET "/movnat" [] (generate-response movnat-template))
            (GET "/maya" [] (generate-response maya-template))
