@@ -6,7 +6,8 @@
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement4")
+(def uri "datomic:dev://localhost:4334/movement")
+#_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
 
@@ -38,13 +39,6 @@
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; get all movements names
-(defn all-movement-names []
-  (d/q '[:find [?name ...]
-         :where [_ :movement/name ?name]]
-       db))
-(count (all-movement-names))
-
 ; get all category names + number of movements in category
 (defn all-categories-sorted []
   (reverse
@@ -66,25 +60,51 @@
        name))
 (get-category "Mobility")
 
-; get movements from specific category
-(defn get-movements [category]
-  (d/q '[:find [?name ...]
-         :in $ ?category-name
-         :where
-         [?c :category/name ?category-name]
-         [?e :movement/category ?c]
-         [?e :movement/name ?name]]
-       db
-       category))
-(get-movements "Muscle Up")
+; get n movements drawn randomly from categories
+(defn get-movements [n categories]
+  (let [movements (for [c categories]
+                    (d/q '[:find (pull ?m [*]) :in $ ?cat
+                           :where  [?c :category/name ?cat] [?m :movement/category ?c] ]
+                         db c))
+        m (->> movements flatten set shuffle (take n))]
+    m))
+(get-movements 2 ["Leg Strength" "Conditioning"])
 
-; get all template titles
-(defn all-template-titles []
-  (d/q '[:find [?t ...]
-         :where [_ :template/title ?t]]
-       db))
+(def title "Strength")
+(def entity (d/pull db '[*] [:template/title title]))
+entity
+(def part-entities (vec (flatten (map vals (:template/part entity)))))
+part-entities
+(def parts (map #(d/pull db '[*] %) part-entities))
+parts
 
-(all-template-titles)
+(def n 2)
+
+
+
+{:title ""
+ :description ""
+ :parts [{:title ""
+          :categories []
+          :movements [{:name ""
+                       :rep nil
+                       :set nil
+                       :duration nil
+                       :distance nil
+                       :graphic ""
+                       :animation ""
+                       :equipment []}]}]}
+
+(d/pull db '[*] [:movement/name "Push Up"])
+
+(for [p parts]
+  (let [categories (:part/category p)
+        x (for [c categories]
+            (d/pull db '[:category/name] (:db/id c)))]
+    (vec (map :category/name x))))
+
+
+
 
 ; get specific template
 (defn get-template [title]
@@ -107,12 +127,6 @@
 
 (pp/pprint (get-template "Strength"))
 
-; rand n selects exactlty n items with potential for duplicates.
-; sample n returs up to n distinct items.
-(d/q '[:find [(rand 2 ?name) (sample 2 ?name)]
-       :where [_ :movement/name ?name]]
-     db)
-
 ; query for all equipment names
 (d/q '[:find ?name
        :where [?c :equipment/name ?name]]
@@ -131,12 +145,15 @@
 ; all exercises not using the input equipment parameter.
 (d/q '[:find ?name
        :in $ ?equipment
-       :where [?e :movement/name ?name]
+       :where
        (not-join [?e]
                  [?e :movement/equipment ?c]
-                 [?c :equipment/name ?equipment])]
+                 [?c :equipment/name ?equipment])
+       [?e :movement/name ?name]]
      db
      "Rings")
+
+
 
 #_(pp/pprint *1)
 

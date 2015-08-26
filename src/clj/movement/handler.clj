@@ -16,34 +16,38 @@
                                         leg-strength-template movnat-template
                                         maya-template]]))
 
-(def uri "datomic:dev://localhost:4334/movement4")
+(def uri "datomic:dev://localhost:4334/movement")
 (def conn (d/connect uri))
 (def db (d/db conn))
 
 (defn generate-response [data & [status]]
-  {:status (or status 200)
+  {:status  (or status 200)
    :headers {"Content-Type" "application/edn"}
-   :body (pr-str data)})
+   :body    (pr-str data)})
 
-(defn movements []
-  (let [db (d/db conn)
-        movements (d/q '[:find ?n
+(defn all-movement-names []
+  "Returns the names of all movements in the database."
+  (let [movements (d/q '[:find ?n
                          :where
                          [_ :movement/name ?n]]
                        db)]
     (generate-response movements)))
 
 (defn movement [name]
-  (let [db (d/db conn)
-        movement (d/q '[:find ?e
-                        :in $ ?name
-                        :where
-                        [?e :movement/name ?name]]
-                      db
-                      name)]
+  "Returns the whole entity of a named movement."
+  (let [movement (d/pull db '[*] [:movement/name name])]
     (generate-response movement)))
 
-(defn get-all-template-titles []
+(defn get-movements [n categories]
+  "Get n random movement entities drawn from param list of categories."
+  (let [movements (for [c categories]
+                    (d/q '[:find (pull ?m [*]) :in $ ?cat
+                           :where [?c :category/name ?cat] [?m :movement/category ?c] ]
+                         db c))
+        m (->> movements flatten set shuffle (take n))]
+    m))
+
+(defn all-template-titles []
   (let [db (d/db conn)
         templates (d/q '[:find [?t ...]
                          :where
@@ -52,41 +56,29 @@
     (generate-response templates)))
 
 (defn get-template [title]
-  (let [entity (d/pull db '[*] [:template/title title])
+  (let [db (d/db conn)
+        entity (d/pull db '[*] [:template/title title])
         part-entities (vec (flatten (map vals (:template/part entity))))
         parts (map #(d/pull db '[*] %) part-entities)]
-    {:title       (:template/title entity)
-     :description (:template/description entity)
-     :parts       (vec (for [p parts]
-                         {:title    (:part/name p)
-                          :category (let [categories (:part/category p)
-                                          x (for [c categories]
-                                              (d/pull db '[:category/name] (:db/id c)))]
-                                      (vec (map :category/name x)))
-                          :movements (d/q '[:find [(sample 2 ?name)]
-                                            :where [_ :movement/name ?name]]
-                                          db)}))}))
+
+    (generate-response {:title       (:template/title entity)
+                        :description (:template/description entity)
+                        :parts       (vec (for [p parts]
+                                            {:title    (:part/name p)
+                                             :category (let [categories (:part/category p)
+                                                             x (for [c categories]
+                                                                 (d/pull db '[:category/name] (:db/id c)))]
+                                                         (vec (map :category/name x)))}))})))
 
 (defroutes routes
            (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
            (GET "/raw" [] (render-file "templates/indexraw.html" {:dev (env :dev?)}))
-           (GET "/movements" [] (movements))
+           (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))
-           (GET "/templates" [] (get-all-template-titles))
+           (GET "/templates" [] (all-template-titles))
            (GET "/template/:title" [title] (get-template (str/replace title "-" " ")))
-
-           (GET "/Strength" [] (generate-response strength-template))
-           (GET "/Bent-Arm-Strength" [] (generate-response bas-template))
-
-           (GET "/sass" [] (generate-response sass-template))
-           (GET "/ritual" [] (generate-response morning-ritual-template))
-           (GET "/mobility" [] (generate-response mobility-template))
-           (GET "/locomotion" [] (generate-response locomotion-template))
-           (GET "/leg" [] (generate-response leg-strength-template))
-           (GET "/movnat" [] (generate-response movnat-template))
-           (GET "/maya" [] (generate-response maya-template))
            (resources "/")
-  (not-found "Not Found"))
+           (not-found "Not Found"))
 
 (def app
   (let [handler (wrap-frame-options
