@@ -15,11 +15,11 @@
     (for [m movements]
       ^{:key (:id m)} [movement m])]])
 
-(defn session [{:keys [title categories movements]}]
+(defn session [{:keys [title parts movements]}]
   [:div
    [:h4 title]
    [:div
-    (for [c (vals categories)] ^{:key (:id c)}
+    (for [c (vals parts)] ^{:key (:id c)}
                         [category c
                          (filter #(= (:id c) (:category-ref %)) (vals movements))])]])
 

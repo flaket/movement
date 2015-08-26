@@ -6,7 +6,7 @@
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement")
+(def uri "datomic:dev://localhost:4334/movement1")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -71,21 +71,58 @@
 (get-movements 2 ["Leg Strength" "Conditioning"])
 
 (def title "Strength")
-(def entity (d/pull db '[*] [:template/title title]))
-entity
-(def part-entities (vec (flatten (map vals (:template/part entity)))))
+(def title-entity (d/pull db '[*] [:template/title title]))
+title-entity
+(def part-entities (map #(d/pull db '[*] %) (flatten (map vals (:template/part title-entity)))))
 part-entities
-(def parts (map #(d/pull db '[*] %) part-entities))
-parts
+(vec (for [p part-entities]
+       (let [name (:part/name p)
+             n (:part/number-of-movements p)
+             c (flatten (map vals (:part/category p)))
+             category-names (apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+             movements (vec (get-movements n [category-names]))]
+         {:title      name
+          :parts [category-names]
+          :movements  movements})))
 
-(def n 2)
+(def category-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:part/category (first part-entities)))))))
+category-entities
 
+(defn create-session [title]
+  (let [title-entity (d/pull db '[*] [:template/title title])
+        description (:template/description title-entity)
+        part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
+        parts (vec (for [p part-entities]
+                     (let [name (:part/name p)
+                           n (:part/number-of-movements p)
+                           c (flatten (map vals (:part/category p)))
+                           category-names (apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                           movements (vec (get-movements n [category-names]))]
+                       {:title      name
+                        :categories [category-names]
+                        :movements  movements})))
+        ]
+    {:title title
+     :description description
+     :parts parts}))
 
+(pp/pprint (create-session "Strength"))
+
+(defn decorate
+  "Map of entity attributes."
+  [id]
+  (let [e (d/entity db id)]
+    (select-keys e (keys e))))
+
+(defn decorate-results
+  "Decorate a set of results."
+  [r]
+  (map #(decorate (first %)) r))
 
 {:title ""
  :description ""
  :parts [{:title ""
-          :categories []
+          :parts []
           :movements [{:name ""
                        :rep nil
                        :set nil
@@ -102,8 +139,6 @@ parts
         x (for [c categories]
             (d/pull db '[:category/name] (:db/id c)))]
     (vec (map :category/name x))))
-
-
 
 
 ; get specific template

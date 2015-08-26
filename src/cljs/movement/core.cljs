@@ -26,10 +26,12 @@
 
 (enable-console-print!)
 
-; goog.net.XhrIo.send(url, opt_callback, opt_method, opt_content, opt_headers, opt_timeoutInterval)
-; https://developers.google.com/closure/library/docs/xhrio
-
-(defn GET [url]
+(defn GET
+  "Issue a get request to a url through a core.async channel.
+  Returns a channel that the result can be read from.
+  goog.net.XhrIo.send(url, opt_callback, opt_method, opt_content, opt_headers, opt_timeoutInterval)
+  https://developers.google.com/closure/library/docs/xhrio"
+  [url]
   (let [ch (chan 1)]
     (xhr/send url
               (fn [event]
@@ -38,56 +40,37 @@
                       (close! ch)))))
     ch))
 
+(defonce templates (atom []))
 (defonce movement-session (atom {}))
-(defonce m-counter (atom 0))
-(defonce c-counter (atom 0))
 
-(swap! movement-session assoc :categories (sorted-map))
-(swap! movement-session assoc :movements (sorted-map))
-(swap! movement-session assoc :description "")
-
-(defn prep-name [kw]
-  (str/replace (str/capitalize (name kw)) "-" " "))
-
-(defn add-title! [title]
-  (swap! movement-session assoc :title title))
-
-(defn add-category! [title category]
-  (let [id (swap! c-counter inc)]
-    (swap! movement-session assoc-in [:categories id] {:id id :title title :category category})))
-
-(defn add-movement! [title category-id]
-  (let [id (swap! m-counter inc)]
-    (swap! movement-session assoc-in [:movements id]
-           {:id id :title title
-            :category-ref category-id
-            :comment "" :animation ""})))
+(go (reset! templates (read-string (<! (GET "templates")))))
 
 (defn update! [kw id title] (swap! movement-session assoc-in [kw id :title] title))
 
 (defn delete! [kw id] (swap! movement-session update-in [kw] dissoc id))
 
-(defn refresh! [id category] (update! :movements id (prep-name (first (take 1 (shuffle category))))))
+(defn refresh! [id category] (update! :movements id (first (take 1 (shuffle category)))))
 
-(defn handler-fn [func]
+(defn handler-fn
   "Wrapper function to force component handler functions to return nil.
   This is a React requirement."
+  [func]
   (fn [] func nil))
 
-(defn reset-session! []
-  (do
-    (reset! movement-session {})
-    (reset! c-counter 0)
-    (reset! m-counter 0)
-    (swap! movement-session assoc :categories (sorted-map))
-    (swap! movement-session assoc :movements (sorted-map))))
-
-(defn auto-complete-did-mount []
+(defn auto-complete-did-mount
   "Attaches the jQuery autocomplete functionality to DOM elements."
+  []
   (js/$ (fn []
-          (let [available-tags (map prep-name all-movements)]
+          (let [available-tags all-movements]
             (.autocomplete (js/$ "#tags")
                            (clj->js {:source available-tags}))))))
+
+(defn log-session []
+  (let [log (session/get :logged-sessions)
+        timestamp (.getTime (js/Date.))
+        s (swap! movement-session assoc :timestamp)
+        new-sessions (conj log movement-session)]
+    (session/put! :logged-sessions new-sessions)))
 
 ;--------------------
 ; Components (views)
@@ -122,34 +105,32 @@
 (defn movement-component []
   (let [editing (atom false)
         show-buttons (atom false)]
-    (fn [{:keys [id title category-ref comment animation]}]
-      [:li
-       [:div.view {:class (str (if @editing "editing"))
-                   :on-click #(handler-fn (reset! show-buttons (not @show-buttons)))}
-        [:div.row
-         (when @show-buttons
-           [:div.two.columns
-            [:button.refresh
-             {:on-click #(refresh! id (:category (get (:categories @movement-session) category-ref)))}]
-            [:button.textedit
-             {:on-click #(handler-fn (reset! editing true))}]
-            [:button.destroy
-             {:on-click #(delete! :movements id)}]])
-         [:label.four.columns {:style {:display (if @editing "none" "")}}
-          title]
-         (when @editing
-           [:label.four.columns
-            [text-edit-component {:class   "edit" :title title
-                                  :on-save #(handler-fn (update! :movements id %))
-                                  :on-stop #(handler-fn (reset! editing false))}]])
-         [:span.four.columns animation]]
-        [:div.row
-         [:span.four.columns {:style {:font-size "small"}} comment]]
-        ]])))
+    (fn [m]
+      (let [;id movement/name category graphic animation equipment rep set distance duration
+            name (:movement/name m)]
+        [:div
+         [:div.view {:class    (str (if @editing "editing"))
+                     :on-click #(handler-fn (reset! show-buttons (not @show-buttons)))}
+          [:div.row
+           (when @show-buttons
+             [:div.two.columns
+              [:button.refresh
+               {:on-click #(#_(refresh! id (:category (get (:parts @movement-session) category-ref))))}]
+              [:button.textedit
+               {:on-click #(#_(handler-fn (reset! editing true)))}]
+              [:button.destroy
+               {:on-click #(#_(delete! :movements id))}]])
+           [:label.four.columns {:style {:display (if @editing "none" "")}} name]
+           (when @editing
+             [:label.four.columns
+              [text-edit-component {:class   "edit" :title name
+                                    :on-save #(#_(handler-fn (update! :movements id %)))
+                                    :on-stop #(#_(handler-fn (reset! editing false)))}]])]
+          ]]))))
 
-(defn category-component []
+(defn part-component []
   (let [editing (atom false)]
-    (fn [{:keys [id title category]} movements]
+    (fn [{:keys [title categories movements]}]
       [:div
        [:div.row
         [:h4.ten.columns {:style {:display (if @editing "none" "")}
@@ -157,40 +138,30 @@
         (when @editing
           [:h4.ten.columns
            [text-edit-component {:class   "edit" :title title
-                                 :on-save #(handler-fn (update! :categories id %))
+                                 :on-save #(#_(handler-fn (update! :parts id %)))
                                  :on-stop #(handler-fn (reset! editing false))}]])]
-       (when (-> movements count pos?)
-         [:ul#movement-list
-          (for [m movements]
-            ^{:key (:id m)} [movement-component m])])
+       [:div#movement-list
+        (for [m movements]
+          ^{:key m} [movement-component m])]
        [:button {:type     "submit"
-                 :on-click #(add-movement!
-                             (prep-name (first (take 1 (shuffle category))))
-                             id)} "+"]])))
-
-(defn log-session []
-  (let [log (session/get :logged-sessions)
-        timestamp (.getTime (js/Date.))
-        s (swap! movement-session assoc :timestamp)
-        new-sessions (conj log movement-session)]
-    (session/put! :logged-sessions new-sessions)))
+                 :on-click #()} "+"]])))
 
 (defn session-component []
   (let [editing (atom false)
         adding-description (atom false)]
-    (fn [{:keys [categories movements title]}]
+    (fn [{:keys [title description parts]}]
       [:div
        [:div.row
         [:h3.ten.columns {:style {:display (if @editing "none" "")}
                           :on-click #(handler-fn (reset! editing true))} title]
         (when @editing
           [:h3.ten.columns [text-edit-component {:class   "edit" :title title
-                                        :on-save #(handler-fn (add-title! %))
-                                        :on-stop #(handler-fn (reset! editing false))}]])
-        [:label.one.colum "date"]]
+                                                 :on-save #(#_(handler-fn (add-title! %)))
+                                                 :on-stop #(handler-fn (reset! editing false))}]])
+        [:label.one.colum (str (.getDay (js/Date.)) "/" (.getMonth (js/Date.)))]]
        [:div.row
         [:div.eight.columns
-         [:div (:description @movement-session)]]
+         [:div description]]
         (when @adding-description
           [:div.eight.columns
            [text-edit-component {:class   "edit" :title (:description @movement-session)
@@ -199,69 +170,41 @@
         [:div.one.colum
          [:button {:type     "submit"
                           :on-click #(handler-fn (reset! adding-description true))} "!"]]]
-       (when (-> categories count pos?)
-         [:div
-          (for [c categories]
-            ^{:key (:id c)} [category-component
-                             c
-                             (filter
-                               #(= (:id c) (:category-ref %))
-                               movements)])])
+       [:div
+        (for [p parts]
+          ^{:key p} [part-component p])]
        [:button.button {:type     "submit"
                         :on-click log-session}
         "Log this movement session!"]
        [:button.button {:on-click #()} "Make PDF"]])))
-
-(defn add-part! [{:keys [title category n]} category-ref]
-  (let [c (first category)
-        cat (if (= c "Mobility") all-movements all-movements)]
-    (add-category! title cat)
-    (dotimes [i n]
-      (add-movement!
-        (prep-name (nth (take n (shuffle cat)) i))
-        category-ref))))
-
-(defn create-new-session! [{:keys [title parts]}]
-  (let [count (atom 0)]
-    (do
-      (reset-session!)
-      (add-title! title)
-      (doseq [p parts] (add-part! p (swap! count inc))))))
 
 (defn template-component []
   (let []
     (fn [url]
       [:div {:on-click
              #(go
-               (let [template (read-string (<! (GET (str "template/" (str/replace url " " "-")))))]
-                 (print template)
-                 #_(create-new-session! template)))}
+               (let [session (read-string (<! (GET (str "template/" (str/replace url " " "-")))))]
+                 (reset! movement-session session)))}
        url])))
 
 (defn home-component []
-  (let [templates (atom [])]
-    (go (reset! templates (read-string (<! (GET "templates")))))
+  (let []
     (fn []
       [:div
        [:div.container
-        (nav-component)
+        [nav-component]
         [:section#templates
          (doall
-           (for [i @templates]
-             ^{:key i} [template-component i]))]
+           (for [t @templates]
+             ^{:key t} [template-component t]))]
         [:section#session
-         (let [movement-session @movement-session
-               c (vals (:categories movement-session))
-               m (vals (:movements movement-session))
-               t (:title movement-session)
-               session-data {:categories c :movements m :title t}]
-           (when (pos? (count c))
-             [session-component session-data]))]]])))
+         (when (not (nil? (:title @movement-session)))
+           [session-component @movement-session])]]])))
 
 (defn movement-detail-component []
   [:div
    [:div.container
-    (nav-component)
+    [nav-component]
     [:section
      [:div "This section allow users to discover the movements in the database,
     view the animations more clearly, add their own comments to the movements
@@ -270,7 +213,7 @@
 (defn about-component []
   [:div
    [:div.container
-    (nav-component)
+    [nav-component]
     [:section
      [:div "movementsession@gmail.com"]]]])
 
@@ -313,7 +256,7 @@
     (fn []
       [:div
        [:div.container
-        (nav-component)
+        [nav-component]
         [:section
          [:div.row
           [:label.five.columns "This movement session is called "]

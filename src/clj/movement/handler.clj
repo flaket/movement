@@ -16,7 +16,7 @@
                                         leg-strength-template movnat-template
                                         maya-template]]))
 
-(def uri "datomic:dev://localhost:4334/movement")
+(def uri "datomic:dev://localhost:4334/movement1")
 (def conn (d/connect uri))
 (def db (d/db conn))
 
@@ -42,7 +42,7 @@
   "Get n random movement entities drawn from param list of categories."
   (let [movements (for [c categories]
                     (d/q '[:find (pull ?m [*]) :in $ ?cat
-                           :where [?c :category/name ?cat] [?m :movement/category ?c] ]
+                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
                          db c))
         m (->> movements flatten set shuffle (take n))]
     m))
@@ -55,20 +55,23 @@
                        db)]
     (generate-response templates)))
 
-(defn get-template [title]
-  (let [db (d/db conn)
-        entity (d/pull db '[*] [:template/title title])
-        part-entities (vec (flatten (map vals (:template/part entity))))
-        parts (map #(d/pull db '[*] %) part-entities)]
-
-    (generate-response {:title       (:template/title entity)
-                        :description (:template/description entity)
-                        :parts       (vec (for [p parts]
-                                            {:title    (:part/name p)
-                                             :category (let [categories (:part/category p)
-                                                             x (for [c categories]
-                                                                 (d/pull db '[:category/name] (:db/id c)))]
-                                                         (vec (map :category/name x)))}))})))
+(defn create-session [title]
+  (let [title-entity (d/pull db '[*] [:template/title title])
+        description (:template/description title-entity)
+        part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
+        parts (vec (for [p part-entities]
+                     (let [name (:part/name p)
+                           n (:part/number-of-movements p)
+                           c (flatten (map vals (:part/category p)))
+                           category-names (apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                           movements (vec (get-movements n [category-names]))]
+                       {:title      name
+                        :categories [category-names]
+                        :movements  movements})))
+        ]
+    (generate-response {:title       title
+                        :description description
+                        :parts       parts})))
 
 (defroutes routes
            (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
@@ -76,7 +79,7 @@
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))
            (GET "/templates" [] (all-template-titles))
-           (GET "/template/:title" [title] (get-template (str/replace title "-" " ")))
+           (GET "/template/:title" [title] (create-session (str/replace title "-" " ")))
            (resources "/")
            (not-found "Not Found"))
 
