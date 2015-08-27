@@ -3,95 +3,67 @@
            [reagent.session :as session]
            [reagent-forms.core :refer [bind-fields]]
            [secretary.core :include-macros true :refer [dispatch!]]
+           [movement.text :refer [text-edit-component]]
            [movement.nav :refer [nav-component]]))
 
 
-(defn form-component []
-  [:div
-   [:div.container
-    [:section
-     [:div
-      [:label "Title:"]
-      [:input {:type "text"
-               :on-click #()}]]
-     [:div]]]])
+(def template-state (atom {:title ""
+                           :parts []}))
 
-;--------------------
+(defn category-creator-component []
+  (let [buttons (atom [])]
+    (fn [{:keys [title n]} i]
+      [:div
+       [:div.row
+        [:label.five.columns "Part " (inc i) " is called "]
+        [:input.seven.columns {:type "text"}]]
+       [:div.row
+        [:label.ten.columns "It consists of "
+         [:span {:style {:color "red"}} n] " generated movements,"]
+        [:button.one.column
+         {:on-click #(swap! template-state update-in [:parts i :n] inc)} "+"]
+        [:button.one.column
+         {:on-click #(when (> n 0)
+                      (swap! template-state update-in [:parts i :n] dec))} "-"]]
+       #_[:div.row
+          [:label.four.columns "Drawn from the categories: "]
+          [:div.three.columns
+           [template-text-edit-component
+            {:class   "edit" :placeholder "type to find and add category.."
+             :on-save #(handler-fn (swap! buttons conj %))
+             :on-stop #(handler-fn (fn [] nil))}]]
+          [:div.five.columns (for [b @buttons] ^{:key b} [:div.two.columns b])]]
+       [:div.row
+        [:label.four.columns "Additionally, the following exercises should always be included:"]
+        [:div.three.columns
+         [text-edit-component {:class   "edit" :placeholder "type to find and add movement.."
+                               :on-save #(do (swap! template-state assoc-in [:parts i :extra] %) nil)
+                               :on-stop #()}]]
+        [:div.five.columns (:extra (get (:parts @template-state) i))]]])))
 
-#_(def counter (atom 0))
-#_(def include-date (atom true))
-
-#_(defn count-component []
-  [:div
-   "The value is: "
-   @counter "."
-   [:input {:type "button" :value "Click!"
-            :on-click #(swap! counter inc)}]])
-
-#_(defn input [value]
-  [:input {:type "text" :value @value
-           :on-change #(reset! value (-> % .-target .-value))}])
-
-#_(defn btn [val]
-  [:input {:type     "button" :value val
-           :on-click #(reset! include-date (if @include-date false true))}])
-
-#_(defn title-component []
-  (let [val (atom "My Favourite Movements")]
-    (fn []
-      [:div "The title of sessions created with this template is: " [input val]
-       " and it " [btn (if @include-date "should" "should not")]
-       " include the date in the title."])))
-
-#_(def data (atom {:m 4 :category :strength}))
-
-#_(defn slider [param value min max]
-  [:input {:type      "range" :value value
-           :min min :max max
-           :style     {:width "100%"}
-           :on-change (fn [e]
-                        (swap! data assoc param (.-target.value e)))}])
-
-#_(defn slider-component []
-  (let [{:keys [m category]} @data]
-    [:div
-     [:div m
-      [slider :m m 0 10]]]))
-
-#_(defn row [label input]
-  [:div.row
-   [:div.col-md-2 [:label label]]
-   [:div.col-md-5 input]])
-
-#_(def form-template
-  [:div
-   (row "first name"
-        [:input.form-control {:field :text :id :first-name}])
-   (row "last name"
-        [:input.form-control {:field :text :id :last-name}])
-   (row "age"
-        [:input.form-control {:field :numeric :id :age}])
-   (row "email"
-        [:input.form-control {:field :email :id :email}])
-   (row "comments"
-        [:textarea.form-control {:field :textarea :id :comments}])])
-
-#_(defn form-component []
-  (let [doc (atom {:first-name "John" :last-name "Doe" :age 35
-                   :email "john@doe.com" :comments "hello"})]
+(defn template-creator-component []
+  (let []
     (fn []
       [:div
        [:div.container
-        (nav-component)
-        [:section#template
-         [:div.page-header [:h1 "Reagent Form"]]
-         [bind-fields
-          form-template
-          doc
-          ; Optional event functions follow.
-          ; These will be triggered whenever the doc is updated
-          ; and are executed in the order they are listed.
-          ; Events must take 3 params: id, value, document.
-          ;#()
-          ]
-         [:label (str @doc)]]]])))
+        [nav-component]
+        [:section
+         [:div.row
+          [:label.five.columns "This movement session is called "]
+          [:input.seven.columns
+           {:type "text" :placeholder "My Favourite Movement Session"}]]
+         [:div.row
+          [:label.ten.columns "The session is divided into "
+           [:span {:style {:color "red"}} (count (:parts @template-state))] " parts."]
+          [:button.one.column
+           {:on-click #(swap! template-state update-in [:parts]
+                              conj {:title ""
+                                    :category nil
+                                    :n 0})} "+"]
+          [:button.one.column
+           {:on-click #(when (> (count (:parts @template-state)) 0)
+                        (swap! template-state update-in [:parts] pop))} "-"]]
+         [:div
+          (let [parts (:parts @template-state)]
+            (for [i (range 0 (count parts))]
+              ^{:key i} [category-creator-component (get parts i) i]))]]]])))

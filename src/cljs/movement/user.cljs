@@ -1,7 +1,6 @@
 (ns movement.user
  (:require [reagent.core :refer [atom]]
            [reagent.session :as session]
-           [secretary.core :include-macros true :refer [dispatch!]]
            [movement.nav :refer [nav-component]]))
 
 (defn movement [{:keys [title]}]
@@ -24,16 +23,18 @@
                          (filter #(= (:id c) (:category-ref %)) (vals movements))])]])
 
 (defn user-component []
-  [:div
-   [:div.container
-    (nav-component)
-    [:section#log
-     (let [logged-sessions (session/get :logged-sessions)]
-       [:div
-        [:h3 (str "# Logged sessions: " (count logged-sessions))]
-        (for [s logged-sessions] ^{:key (:timestamp s)}
-                                 [session s])])]
-    [:section#user
-     [:div
-      [:h3 "This is the user section."]
-      [:h5 "Update personal settings."]]]]])
+  (let []
+    (fn []
+      [:div
+       [:div.container
+        [nav-component]
+        [:section#log
+         (let [logged-sessions (session/get :logged-sessions)]
+           [:div
+            [:h3 (str "# Logged sessions: " (count logged-sessions))]
+            #_(for [s logged-sessions] ^{:key (:timestamp s)}
+                                     [session s])])]
+        [:section#user
+         [:div
+          [:h3 "This is the user section."]
+          [:h5 "Update personal settings."]]]]])))
