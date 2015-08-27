@@ -1,5 +1,5 @@
 (ns movement.text
-  (:require [reagent.core :refer [dom-node]]
+  (:require [reagent.core :refer [dom-node atom]]
             [movement.movements :refer [all-movements]]))
 
 (defn auto-complete-did-mount
@@ -30,6 +30,5 @@
                                           nil)})])))
 
 (def text-edit-component
-  (with-meta text-input-component {:component-did-mount
-                                   #(do (.focus (dom-node %))
-                                        (auto-complete-did-mount))}))
+  (with-meta text-input-component {:component-did-mount #(do (.focus (dom-node %))
+                                                             (auto-complete-did-mount))}))

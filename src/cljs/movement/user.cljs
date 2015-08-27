@@ -29,6 +29,7 @@
        [:div.container
         [nav-component]
         [:section#log
+         (print (session/get :templates))
          (let [logged-sessions (session/get :logged-sessions)]
            [:div
             [:h3 (str "# Logged sessions: " (count logged-sessions))]

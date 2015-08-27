@@ -7,7 +7,7 @@
   (:require-macros
     [cljs.core.async.macros :refer [go]]))
 
-(defonce templates (atom []))
+
 (defonce movement-session (atom {}))
 
 (defn GET
@@ -37,8 +37,9 @@
         new-sessions (conj log movement-session)]
     (session/put! :logged-sessions new-sessions)))
 
-
-(go (reset! templates (read-string (<! (GET "templates")))))
+(go
+  (let [t (read-string (<! (GET "templates")))]
+    (session/put! :templates t)))
 
 (defn update! [kw id title] (swap! movement-session assoc-in [kw id :title] title))
 
