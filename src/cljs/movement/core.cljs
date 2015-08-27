@@ -10,8 +10,7 @@
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
-            [movement.explorer :refer [explorer-component]]
-            [movement.movements :refer [all-movements]])
+            [movement.explorer :refer [explorer-component]])
   (:import goog.History))
 
 ;; The core namespace is the client entry point.

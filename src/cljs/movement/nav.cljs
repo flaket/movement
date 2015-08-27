@@ -1,5 +1,5 @@
 (ns movement.nav
-  (:require [secretary.core :as secretary :include-macros true :refer [dispatch!]]))
+  (:require [secretary.core :include-macros true :refer [dispatch!]]))
 
 (defn nav-component []
   (let []

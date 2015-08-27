@@ -4,16 +4,121 @@
  {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
  {:db/id #db/id[:db.part/user -2] :category/name "Mobility"}
  {:db/id #db/id[:db.part/user -3] :category/name "Bent Arm Strength"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Straight Arm Scapular Strength"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Locomotion"}
+ {:db/id #db/id[:db.part/user -6] :category/name "Leg Strength"}
+ {:db/id #db/id[:db.part/user -7] :category/name "Locomotion"}
+ {:db/id #db/id[:db.part/user -8] :category/name "Core Strength"}
+ {:db/id #db/id[:db.part/user -9] :category/name "Abdominal Strength"}
+ {:db/id #db/id[:db.part/user -10] :category/name "Lower Back Strength"}
 
  ;; templates
- {:db/id #db/id[:db.part/user -100] :template/title "Strength" :template/description "This strength session consists of mobility and strength exercises." :template/part [#db/id[:db.part/user -200] #db/id[:db.part/user -201]]}
- {:db/id #db/id[:db.part/user -200] :part/name "Mobility" :part/category [#db/id[:db.part/user -2]] :part/number-of-movements 5}
- {:db/id #db/id[:db.part/user -201] :part/name "Strength" :part/category [#db/id[:db.part/user -1]] :part/number-of-movements 5}
+ {:db/id                #db/id[:db.part/user]
+  :template/title       "Strength"
+  :template/description "This strength session consists of mobility and strength exercises."
+  :template/part        [#db/id[:db.part/user -200]
+                         #db/id[:db.part/user -201]]}
+ {:db/id                    #db/id[:db.part/user -200]
+  :part/name                "Mobility"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 5}
+ {:db/id                    #db/id[:db.part/user -201]
+  :part/name                "Strength"
+  :part/category            [#db/id[:db.part/user -1]]
+  :part/number-of-movements 5}
 
- {:db/id #db/id[:db.part/user -101] :template/title "Bent Arm Strength" :template/part [#db/id[:db.part/user -202] #db/id[:db.part/user -203]]}
- {:db/id #db/id[:db.part/user -202] :part/name "BAS Mobility" :part/category [#db/id[:db.part/user -2]] :part/number-of-movements 6}
- {:db/id #db/id[:db.part/user -203] :part/name "BAS" :part/category [#db/id[:db.part/user -3]] :part/number-of-movements 4}
+ {:db/id                #db/id[:db.part/user]
+  :template/title       "Bent Arm Strength"
+  :template/description "Wrist and shoulder mobility conditioning followed by bent arm strength movements."
+  :template/part        [#db/id[:db.part/user -202]
+                         #db/id[:db.part/user -203]]}
+ {:db/id                    #db/id[:db.part/user -202]
+  :part/name                "Mobility"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 6}
+ {:db/id                    #db/id[:db.part/user -203]
+  :part/name                "Bent Arm Strength"
+  :part/category            [#db/id[:db.part/user -3]]
+  :part/number-of-movements 4}
 
 
+ {:db/id                #db/id[:db.part/user]
+  :template/title       "Straight Arm Scapular Strength"
+  :template/description "Wrist and shoulder mobility conditioning followed by straight arm scapular strength movements."
+  :template/part        [#db/id[:db.part/user -204]
+                         #db/id[:db.part/user -205]]}
+ {:db/id                    #db/id[:db.part/user -204]
+  :part/name                "Mobility"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 6}
+ {:db/id                    #db/id[:db.part/user -205]
+  :part/name                "Straight Arm Scapular Strength"
+  :part/category            [#db/id[:db.part/user -4]]
+  :part/number-of-movements 4}
+
+ {:db/id                #db/id[:db.part/user]
+  :template/title       "Mobility"
+  :template/description "Time to work on mobility. Go through the movements with little to no rest."
+  :template/part        [#db/id[:db.part/user -206]]}
+ {:db/id                    #db/id[:db.part/user -206]
+  :part/name                "Mobility"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 12}
+
+ {:db/id                #db/id[:db.part/user]
+  :template/title       "Locomotion"
+  :template/description "Warm up with mobility work. Then go through the locomotion movements for 4-6 rounds, with minimal rest."
+  :template/part        [#db/id[:db.part/user -207]
+                         #db/id[:db.part/user -208]]}
+ {:db/id                    #db/id[:db.part/user -207]
+  :part/name                "Mobility"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 6}
+ {:db/id                    #db/id[:db.part/user -208]
+  :part/name                "Locomotion: 4-6 rounds"
+  :part/category            [#db/id[:db.part/user -5]]
+  :part/number-of-movements 6}
+
+ {:db/id                #db/id[:db.part/user]
+  :template/title       "Leg Strength"
+  :template/description ""
+  :template/part        [#db/id[:db.part/user -209]
+                         #db/id[:db.part/user -210]
+                         #db/id[:db.part/user -211]]}
+ {:db/id                    #db/id[:db.part/user -209]
+  :part/name                "Mobility"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 4}
+ {:db/id                    #db/id[:db.part/user -210]
+  :part/name                "Leg Strength"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 3}
+ {:db/id                    #db/id[:db.part/user -211]
+  :part/name                "Auxiliary"
+  :part/category            [#db/id[:db.part/user -8]
+                             #db/id[:db.part/user -9]
+                             #db/id[:db.part/user -10]]
+  :part/number-of-movements 2}
+
+
+ ;; needs update on categories
+ {:db/id                #db/id[:db.part/user]
+  :template/title       "Natural Movement"
+  :template/description ""
+  :template/part        [#db/id[:db.part/user -212]
+                         #db/id[:db.part/user -213]
+                         #db/id[:db.part/user -214]]}
+ {:db/id                    #db/id[:db.part/user -212]
+  :part/name                "Mobility (3 rounds)"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 4}
+ {:db/id                    #db/id[:db.part/user -213]
+  :part/name                "Skill"
+  :part/category            [#db/id[:db.part/user -1]]
+  :part/number-of-movements 1}
+ {:db/id                    #db/id[:db.part/user -214]
+  :part/name                "Combination (4 rounds)"
+  :part/category            [#db/id[:db.part/user -1]]
+  :part/number-of-movements 5}
 
  ]

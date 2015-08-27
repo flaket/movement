@@ -6,38 +6,42 @@
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement1")
+(def uri "datomic:dev://localhost:4334/movement3")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
 
-;; Locate data sources.
-(def schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn")))))
-(def pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn")))))
-(def pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn")))))
-(def conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/conditioning.edn")))))
-(def core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn")))))
-(def lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn")))))
-(def mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn")))))
-(def multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn")))))
-(def sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn")))))
-(def template-tx (first (Util/readAll (io/reader (io/resource "data/movements/template.edn")))))
+(let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
+  (d/transact conn schema-tx))
 
-;; Transact data to the database.
-(d/transact conn schema-tx)
-(d/transact conn pulling-tx)
-(d/transact conn pushing-tx)
-(d/transact conn conditioning-tx)
-(d/transact conn core-tx)
-(d/transact conn lowerbody-tx)
-(d/transact conn mobility-tx)
-(d/transact conn multiplane-tx)
-(d/transact conn sass-tx)
-(d/transact conn template-tx)
+;; Locate data sources.
+(let [
+      pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
+      pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
+      conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
+      core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
+      lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
+      mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
+      multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn"))))
+      sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
+      template-tx (first (Util/readAll (io/reader (io/resource "data/movements/template.edn"))))]
+  (do ;; Transact data to the database.
+    (d/transact conn pulling-tx)
+    (d/transact conn pushing-tx)
+    (d/transact conn conditioning-tx)
+    (d/transact conn core-tx)
+    (d/transact conn lowerbody-tx)
+    (d/transact conn mobility-tx)
+    (d/transact conn multiplane-tx)
+    (d/transact conn sass-tx)
+    (d/transact conn template-tx)))
 
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+#_(
+    )
 
 ; get all category names + number of movements in category
 (defn all-categories-sorted []
@@ -52,13 +56,13 @@
 
 ; get specific category
 (defn get-category [name]
-  (d/q '[:find ?e
+  (d/q '[:find (pull ?e [*])
          :in $ ?category
          :where
          [?e :category/name ?category]]
        db
        name))
-(get-category "Mobility")
+(get-category "Core Strength")
 
 ; get n movements drawn randomly from categories
 (defn get-movements [n categories]
@@ -68,7 +72,7 @@
                          db c))
         m (->> movements flatten set shuffle (take n))]
     m))
-(get-movements 2 ["Leg Strength" "Conditioning"])
+(get-movements 2 ["Core Strength"])
 
 (def title "Strength")
 (def title-entity (d/pull db '[*] [:template/title title]))
@@ -139,28 +143,6 @@ category-entities
         x (for [c categories]
             (d/pull db '[:category/name] (:db/id c)))]
     (vec (map :category/name x))))
-
-
-; get specific template
-(defn get-template [title]
-  (let [entity (d/pull db '[*] [:template/title title])
-        part-entities (vec (flatten (map vals (:template/part entity))))
-        parts (map #(d/pull db '[*] %) part-entities)]
-    {:title       (:template/title entity)
-     :description (:template/description entity)
-     :parts       (vec (for [p parts]
-                         {:title     (:part/name p)
-                          :n         (:part/number-of-movements p)
-                          :category  (let [categories (:part/category p)
-                                           x (for [c categories]
-                                               (d/pull db '[:category/name] (:db/id c)))]
-                                       (vec (map :category/name x)))
-                          :movements (let [n (:part/number-of-movements p)]
-                                       (d/q '[:find [(sample 2 ?name)]
-                                              :where [_ :movement/name ?name]]
-                                            db))}))}))
-
-(pp/pprint (get-template "Strength"))
 
 ; query for all equipment names
 (d/q '[:find ?name

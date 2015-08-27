@@ -8,15 +8,9 @@
             [prone.middleware :refer [wrap-exceptions]]
             [environ.core :refer [env]]
             [datomic.api :as d]
-            [clojure.edn :as edn]
-            [clojure.string :as str]
-            [movement.movements :refer [strength-template morning-ritual-template
-                                        mobility-template locomotion-template
-                                        bas-template sass-template
-                                        leg-strength-template movnat-template
-                                        maya-template]]))
+            [clojure.string :as str]))
 
-(def uri "datomic:dev://localhost:4334/movement1")
+(def uri "datomic:dev://localhost:4334/movement3")
 (def conn (d/connect uri))
 (def db (d/db conn))
 
@@ -67,8 +61,7 @@
                            movements (vec (get-movements n [category-names]))]
                        {:title      name
                         :categories [category-names]
-                        :movements  movements})))
-        ]
+                        :movements  movements})))]
     (generate-response {:title       title
                         :description description
                         :parts       parts})))

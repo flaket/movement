@@ -13,57 +13,79 @@
  {:db/id #db/id[:db.part/user -5] :category/name "Pull Up"}
 
  ;; movements
- {:db/id #db/id[:db.part/user -100] :movement/name "Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                 #db/id[:db.part/user -2]
-                                                                                 #db/id[:db.part/user -3]
-                                                                                 #db/id[:db.part/user -4]
-                                                                                 #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -101] :movement/name "Wide Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                      #db/id[:db.part/user -2]
-                                                                                      #db/id[:db.part/user -3]
-                                                                                      #db/id[:db.part/user -4]
-                                                                                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -102] :movement/name "Chin Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                      #db/id[:db.part/user -2]
-                                                                                      #db/id[:db.part/user -3]
-                                                                                      #db/id[:db.part/user -4]
-                                                                                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -104] :movement/name "Chest Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                       #db/id[:db.part/user -2]
-                                                                                       #db/id[:db.part/user -3]
-                                                                                       #db/id[:db.part/user -4]
-                                                                                       #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -105] :movement/name "Waist Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                       #db/id[:db.part/user -2]
-                                                                                       #db/id[:db.part/user -3]
-                                                                                       #db/id[:db.part/user -4]
-                                                                                       #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -106] :movement/name "Weighted Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                          #db/id[:db.part/user -2]
-                                                                                          #db/id[:db.part/user -3]
-                                                                                          #db/id[:db.part/user -4]
-                                                                                          #db/id[:db.part/user -5]] :movement/equipment [#db/id[:db.part/user -5001]]}
- {:db/id #db/id[:db.part/user -107] :movement/name "Scapula Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                         #db/id[:db.part/user -2]
-                                                                                         #db/id[:db.part/user -3]
-                                                                                         #db/id[:db.part/user -4]
-                                                                                         #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -108] :movement/name "Hold Forearm One Arm Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                                      #db/id[:db.part/user -2]
-                                                                                                      #db/id[:db.part/user -3]
-                                                                                                      #db/id[:db.part/user -4]
-                                                                                                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -109] :movement/name "Hold Bicep One Arm Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                                    #db/id[:db.part/user -2]
-                                                                                                    #db/id[:db.part/user -3]
-                                                                                                    #db/id[:db.part/user -4]
-                                                                                                    #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -110] :movement/name "Negative One Arm Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                                  #db/id[:db.part/user -2]
-                                                                                                  #db/id[:db.part/user -3]
-                                                                                                  #db/id[:db.part/user -4]
-                                                                                                  #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -111] :movement/name "Hold Shoulder One Arm Pull Up" :movement/category [#db/id[:db.part/user -1]
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Wide Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Chin Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Chest Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Waist Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Weighted Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]
+  :movement/equipment [#db/id[:db.part/user -5001]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Scapula Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Hold Forearm One Arm Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Hold Bicep One Arm Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Negative One Arm Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Hold Shoulder One Arm Pull Up" :movement/category [#db/id[:db.part/user -1]
                                                                                                        #db/id[:db.part/user -2]
                                                                                                        #db/id[:db.part/user -3]
                                                                                                        #db/id[:db.part/user -4]

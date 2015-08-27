@@ -1,16 +1,41 @@
 [
 
  ;; equipment
-
+ {:db/id #db/id[:db.part/user -5000] :equipment/name "Weights"}
 
  ;; category
  {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
  {:db/id #db/id[:db.part/user -2] :category/name "Bodyweight"}
  {:db/id #db/id[:db.part/user -3] :category/name "Leg Strength"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Squat"}
 
  ;; movements
- {:db/id #db/id[:db.part/user -100] :movement/name "Squat" :movement/category [#db/id[:db.part/user -1]
-                                                                               #db/id[:db.part/user -2]
-                                                                               #db/id[:db.part/user -3]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Back Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Front Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+
+
+; :overhead-squat :basic-lunge :back-lunge :front-lunge :overhead-lunge :deadlift :pistol :shrimp :behind-leg-squat :jump-onto-box-from-standing :jump-onto-box-from-squatting :front-flip :back-flip :natural-leg-curl
+
+
+
 
  ]

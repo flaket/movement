@@ -6,8 +6,26 @@
  ;; category
  {:db/id #db/id[:db.part/user -1] :category/name "Mobility"}
 
- {:db/id #db/id[:db.part/user -100] :movement/name "Elastic Band Shoulder Dislocation" :movement/category [#db/id[:db.part/user -1]] :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Elastic Band Shoulder Dislocation"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
 
+
+ ; hip mobility
+ ; :dynamic-squat-stretch :floor-hip-rotations :squat-hip-rotations :toes-stretch :dynamic-toes-stretch :static-squat :dynamic-squats :knee-push-aways :sky-reaches :buddha-prayers :squat-bows
+
+ ; shoulder mobility
+ ; :external-rotation :lateral-raise :hands-overhead-band-rotations-and-flyes :hands-side-band-rotations-and-flyes :hands-down-band-rotations-and-flyes :scapula-push-up :overhead-straight-arm-pulldown :whippet] :cuban-rotations :shoulder-dislocations
+
+ ; wrist mobility
+ ; :wrist-prep-routing
+
+ ; ankle mobility
+ ; :ankle-prep-routine
+
+ ; spine mobility
+ ; :slide-into-low-bridge :rotate-into-low-bridge :wall-rotations :rotate-into-high-bridge :high-bridge-hold :jefferson-curl
 
  ]
