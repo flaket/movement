@@ -11,24 +11,37 @@
   (:require-macros
     [cljs.core.async.macros :refer [go]]))
 
+(defn equipment-symbol [equipment-name]
+  "images/sketch-push-up.png")
+
 (defn movement-component []
   (let []
     (fn [{:keys [id category graphic animation equipment rep set distance duration] :as m}]
-      (let [name (:movement/name m)]
+      (let [name (:movement/name m)
+            rep 0
+            set 0
+            graphic "images/sketch-push-up.png"]
         [:div#movement
          [:div.pure-g
-          [:button.pure-u-1-2.refresh
-           {:on-click #()}]
-          [:button.pure-u-1-2.destroy
-           {:on-click #()}]]
+          [:button.pure-u.refresh {:on-click #()}]
+          [:h4.pure-u.title name]
+          [:button.pure-u.destroy {:on-click #()}]]
          [:div.pure-g
-          [:label.pure-u name]]
+          [:img.pure-u {:src graphic :width "250px" :height "250px"}]]
          [:div.pure-g
-          [:label.pure-u graphic]]
-         [:div.pure-g
-          [:label.pure-u-3-24 rep]
-          [:label.pure-u-3-24 set]]]
+          [:div.pure-u
+           [:span "Rep"]
+           [:span rep]]
+          [:img.pure-u {:src (equipment-symbol equipment) :width "30px" :height "30px"}]
+          [:div.pure-u
+           [:span "Set"]
+           [:span set]]]]
         ))))
+
+(defn get-new-movement [categories]
+  (let [categories-prepped (map #(str/replace % " " "-") categories)
+        m (read-string (go (<! (GET (str "movement/one/Mobility")))))]
+    (print m)))
 
 (defn part-component []
   (let []
@@ -72,12 +85,12 @@
 
 (defn template-component []
   (let []
-    (fn [url]
+    (fn [template-name]
       [:div.pure-u-1-3.pure-u-md-1-8
        {:on-click #(go
-                    (let [session (read-string (<! (GET (str "template/" (str/replace url " " "-")))))]
+                    (let [session (read-string (<! (GET (str "template/" (str/replace template-name " " "-")))))]
                       (session/put! :movement-session session)))}
-       url])))
+       template-name])))
 
 (defn generator-component []
   (let []
@@ -88,7 +101,7 @@
 
        [:div#main
         [:div.header
-         [:h1 "Movement Session Generator"]
+         [:h1 "Movement Session"]
 
          [:div.pure-g
           (doall

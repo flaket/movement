@@ -93,6 +93,20 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/description
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/user-description
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :movement/rep
   :db/index              true
   :db/valueType          :db.type/long
