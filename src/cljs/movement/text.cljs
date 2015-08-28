@@ -17,7 +17,7 @@
                (if-not (empty? v) (on-save v))
                (stop))]
     (fn [props]
-      [:input#tags (merge props
+      [:input.pure-u (merge props
                           {:type "text"
                            :value @val
                            :on-blur #(do (reset! val (-> % .-target .-value))

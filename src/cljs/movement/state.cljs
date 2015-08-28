@@ -40,9 +40,3 @@
 (go
   (let [t (read-string (<! (GET "templates")))]
     (session/put! :templates t)))
-
-(defn update! [kw id title] (swap! movement-session assoc-in [kw id :title] title))
-
-(defn delete! [kw id] (swap! movement-session update-in [kw] dissoc id))
-
-(defn refresh! [id category] (update! :movements id (first (take 1 (shuffle category)))))

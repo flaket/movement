@@ -4,7 +4,7 @@
            [reagent-forms.core :refer [bind-fields]]
            [secretary.core :include-macros true :refer [dispatch!]]
            [movement.text :refer [text-edit-component]]
-           [movement.nav :refer [nav-component]]))
+           [movement.menu :refer [menu-component]]))
 
 
 (def template-state (atom {:title ""
@@ -44,10 +44,16 @@
 (defn template-creator-component []
   (let []
     (fn []
-      [:div
-       [:div.container
-        [nav-component]
-        [:section
+
+      [:div#layout {:class (str "" (when (session/get :active?) "active"))}
+
+       [menu-component]
+
+       [:div#main
+        [:div.header
+         [:h1 "Template Creator"]]
+
+        [:div.content
          [:div.row
           [:label.five.columns "This movement session is called "]
           [:input.seven.columns
@@ -57,13 +63,14 @@
            [:span {:style {:color "red"}} (count (:parts @template-state))] " parts."]
           [:button.one.column
            {:on-click #(swap! template-state update-in [:parts]
-                              conj {:title ""
+                              conj {:title    ""
                                     :category nil
-                                    :n 0})} "+"]
+                                    :n        0})} "+"]
           [:button.one.column
            {:on-click #(when (> (count (:parts @template-state)) 0)
-                        (swap! template-state update-in [:parts] pop))} "-"]]
-         [:div
-          (let [parts (:parts @template-state)]
-            (for [i (range 0 (count parts))]
-              ^{:key i} [category-creator-component (get parts i) i]))]]]])))
+                        (swap! template-state update-in [:parts] pop))} "-"]]]
+        [:div
+         (let [parts (:parts @template-state)]
+           (for [i (range 0 (count parts))]
+             ^{:key i} [category-creator-component (get parts i) i]))]
+        ]])))

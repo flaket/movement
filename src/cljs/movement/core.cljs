@@ -5,8 +5,6 @@
             [goog.events :as events]
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
-            [movement.text :refer [text-edit-component]]
-            [movement.nav :refer [nav-component about-component]]
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
@@ -36,9 +34,6 @@
 
 (secretary/defroute "/movements" []
                     (session/put! :current-page #'explorer-component))
-
-(secretary/defroute "/about" []
-                    (session/put! :current-page #'about-component))
 
 ;---------------------------
 (defn page []

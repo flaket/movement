@@ -1,7 +1,7 @@
 (ns movement.user
  (:require [reagent.core :refer [atom]]
            [reagent.session :as session]
-           [movement.nav :refer [nav-component]]))
+           [movement.menu :refer [menu-component]]))
 
 (defn movement [{:keys [title]}]
   [:li
@@ -25,17 +25,21 @@
 (defn user-component []
   (let []
     (fn []
-      [:div
-       [:div.container
-        [nav-component]
-        [:section#log
-         (print (session/get :templates))
+
+      [:div#layout {:class (str "" (when (session/get :active?) "active"))}
+
+       [menu-component]
+
+       [:div#main
+        [:div.header
+         [:h1 "User"]]
+
+        [:div.content
          (let [logged-sessions (session/get :logged-sessions)]
            [:div
-            [:h3 (str "# Logged sessions: " (count logged-sessions))]
+            [:h2 (str "# Logged sessions: " (count logged-sessions))]
             #_(for [s logged-sessions] ^{:key (:timestamp s)}
-                                     [session s])])]
-        [:section#user
+                                       [session s])])
          [:div
           [:h3 "This is the user section."]
           [:h5 "Update personal settings."]]]]])))
