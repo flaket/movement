@@ -23,7 +23,8 @@
                  [selmer "0.8.2"]
                  [environ "1.0.0"]
                  [secretary "1.2.2"]
-                 [com.cemerick/friend "0.2.1"]]
+                 #_[com.cemerick/friend "0.2.1"] ; dependency fucks up figwheel. Explore with lein deps :plugin-tree
+                 ]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]

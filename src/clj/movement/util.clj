@@ -6,7 +6,7 @@
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement3")
+(def uri "datomic:dev://localhost:4334/movement5")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -14,27 +14,32 @@
 (let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
 
-;; Locate data sources.
-(let [
-      pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
-      pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
-      conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
-      core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
-      lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
-      mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
-      multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn"))))
-      sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
-      template-tx (first (Util/readAll (io/reader (io/resource "data/movements/template.edn"))))]
-  (do ;; Transact data to the database.
-    (d/transact conn pulling-tx)
-    (d/transact conn pushing-tx)
-    (d/transact conn conditioning-tx)
-    (d/transact conn core-tx)
-    (d/transact conn lowerbody-tx)
-    (d/transact conn mobility-tx)
-    (d/transact conn multiplane-tx)
-    (d/transact conn sass-tx)
-    (d/transact conn template-tx)))
+(defn add-data-to-database
+  "Read data sources and transact to database."
+  []
+  (let [pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
+        pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
+        conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
+        core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
+        lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
+        mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
+        multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn"))))
+        sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
+        locomotion-tx (first (Util/readAll (io/reader (io/resource "data/movements/locomotion.edn"))))
+        template-tx (first (Util/readAll (io/reader (io/resource "data/movements/template.edn"))))]
+    (do
+      (d/transact conn pulling-tx)
+      (d/transact conn pushing-tx)
+      (d/transact conn conditioning-tx)
+      (d/transact conn core-tx)
+      (d/transact conn lowerbody-tx)
+      (d/transact conn mobility-tx)
+      (d/transact conn multiplane-tx)
+      (d/transact conn sass-tx)
+      (d/transact conn locomotion-tx)
+      (d/transact conn template-tx))))
+
+(add-data-to-database)
 
 ;; Get the database value.
 (def db (d/db conn))
@@ -62,7 +67,13 @@
          [?e :category/name ?category]]
        db
        name))
-(get-category "Core Strength")
+(get-category "Lower Body Strength")
+
+
+(defn generate-response [data & [status]]
+  {:status  (or status 200)
+   :headers {"Content-Type" "application/edn"}
+   :body    (pr-str data)})
 
 ; get n movements drawn randomly from categories
 (defn get-movements [n categories]
@@ -72,7 +83,8 @@
                          db c))
         m (->> movements flatten set shuffle (take n))]
     m))
-(get-movements 2 ["Core Strength"])
+
+(first (get-movements 1 ["Lower Body Strength"]))
 
 (def title "Strength")
 (def title-entity (d/pull db '[*] [:template/title title]))
@@ -100,8 +112,9 @@ category-entities
                      (let [name (:part/name p)
                            n (:part/number-of-movements p)
                            c (flatten (map vals (:part/category p)))
-                           category-names (apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                           movements (vec (get-movements n [category-names]))]
+                           category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                           #_(print (count category-names))
+                           movements (vec (get-movements n category-names))]
                        {:title      name
                         :categories [category-names]
                         :movements  movements})))
@@ -110,7 +123,14 @@ category-entities
      :description description
      :parts parts}))
 
-(pp/pprint (create-session "Strength"))
+(pp/pprint (create-session "Lower Body Strength"))
+
+(def temp-seq '(17592186045481 17592186045482 17592186045483))
+(def temp-seq1 '(17592186045481))
+
+(vec (flatten (map vals (map #(d/pull db '[:category/name] %) temp-seq))))
+
+(apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) temp-seq1))))
 
 (defn decorate
   "Map of entity attributes."

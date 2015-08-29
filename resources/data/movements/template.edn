@@ -6,7 +6,7 @@
  {:db/id #db/id[:db.part/user -3] :category/name "Bent Arm Strength"}
  {:db/id #db/id[:db.part/user -4] :category/name "Straight Arm Scapular Strength"}
  {:db/id #db/id[:db.part/user -5] :category/name "Locomotion"}
- {:db/id #db/id[:db.part/user -6] :category/name "Leg Strength"}
+ {:db/id #db/id[:db.part/user -6] :category/name "Lower Body Strength"}
  {:db/id #db/id[:db.part/user -7] :category/name "Locomotion"}
  {:db/id #db/id[:db.part/user -8] :category/name "Core Strength"}
  {:db/id #db/id[:db.part/user -9] :category/name "Abdominal Strength"}
@@ -80,7 +80,7 @@
   :part/number-of-movements 6}
 
  {:db/id                #db/id[:db.part/user]
-  :template/title       "Leg Strength"
+  :template/title       "Lower Body Strength"
   :template/description ""
   :template/part        [#db/id[:db.part/user -209]
                          #db/id[:db.part/user -210]
@@ -91,7 +91,7 @@
   :part/number-of-movements 4}
  {:db/id                    #db/id[:db.part/user -210]
   :part/name                "Leg Strength"
-  :part/category            [#db/id[:db.part/user -2]]
+  :part/category            [#db/id[:db.part/user -6]]
   :part/number-of-movements 3}
  {:db/id                    #db/id[:db.part/user -211]
   :part/name                "Auxiliary"

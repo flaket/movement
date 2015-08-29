@@ -6,8 +6,9 @@
  ;; category
  {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
  {:db/id #db/id[:db.part/user -2] :category/name "Bodyweight"}
- {:db/id #db/id[:db.part/user -3] :category/name "Leg Strength"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Lower Body Strength"}
  {:db/id #db/id[:db.part/user -4] :category/name "Squat"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Weights"}
 
  ;; movements
  {:db/id #db/id[:db.part/user]
@@ -21,14 +22,16 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
  {:db/id #db/id[:db.part/user]
   :movement/name "Front Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
 

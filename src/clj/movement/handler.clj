@@ -1,5 +1,5 @@
 (ns movement.handler
-  (:require [compojure.core :refer [GET defroutes]]
+  (:require [compojure.core :refer [GET ANY defroutes]]
             [compojure.route :refer [not-found resources]]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
@@ -10,7 +10,7 @@
             [datomic.api :as d]
             [clojure.string :as str]))
 
-(def uri "datomic:dev://localhost:4334/movement3")
+(def uri "datomic:dev://localhost:4334/movement5")
 (def conn (d/connect uri))
 (def db (d/db conn))
 
@@ -57,11 +57,12 @@
                      (let [name (:part/name p)
                            n (:part/number-of-movements p)
                            c (flatten (map vals (:part/category p)))
-                           category-names (apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                           movements (vec (get-movements n [category-names]))]
+                           category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                           movements (vec (get-movements n category-names))]
                        {:title      name
-                        :categories [category-names]
-                        :movements  movements})))]
+                        :categories category-names
+                        :movements movements})))
+        ]
     (generate-response {:title       title
                         :description description
                         :parts       parts})))
@@ -69,10 +70,14 @@
 (defroutes routes
            (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
            (GET "/raw" [] (render-file "templates/indexraw.html" {:dev (env :dev?)}))
+
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))
            (GET "/templates" [] (all-template-titles))
            (GET "/template/:title" [title] (create-session (str/replace title "-" " ")))
+
+           (GET "/user/:id" [id] (generate-response (str "Hello user " id)))
+
            (resources "/")
            (not-found "Not Found"))
 

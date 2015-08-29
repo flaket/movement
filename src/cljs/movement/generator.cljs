@@ -7,7 +7,7 @@
     [cljs.core.async :refer [<! chan close!]]
     [movement.text :refer [text-edit-component]]
     [movement.menu :refer [menu-component]]
-    [movement.state :refer [movement-session handler-fn log-session GET]])
+    [movement.state :refer [movement-session handler-fn log-session GET POST]])
   (:require-macros
     [cljs.core.async.macros :refer [go]]))
 
@@ -39,9 +39,11 @@
         ))))
 
 (defn get-new-movement [categories]
-  (let [categories-prepped (map #(str/replace % " " "-") categories)
-        m (read-string (go (<! (GET (str "movement/one/Mobility")))))]
-    (print m)))
+  (go
+    (let [categories-prepped (mapv #(str/replace % " " "-") categories)
+          m (read-string (<! (POST "singlemovement/" {:categories categories})))]
+      (print categories-prepped)
+      (print m))))
 
 (defn part-component []
   (let []
@@ -54,7 +56,7 @@
           ^{:key m} [movement-component m])]
        [:div.pure-g
         [:button.pure-u {:type     "submit"
-                         :on-click #()} "+"]]])))
+                         :on-click #(get-new-movement categories)} "+"]]])))
 
 (defn session-component []
   (let [adding-description (atom false)]
@@ -88,7 +90,8 @@
     (fn [template-name]
       [:div.pure-u-1-3.pure-u-md-1-8
        {:on-click #(go
-                    (let [session (read-string (<! (GET (str "template/" (str/replace template-name " " "-")))))]
+                    (let [session (read-string
+                                    (<! (GET (str "template/" (str/replace template-name " " "-")))))]
                       (session/put! :movement-session session)))}
        template-name])))
 
