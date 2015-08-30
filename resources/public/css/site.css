@@ -2,29 +2,38 @@
     position: relative;
     margin: 5px;
     padding: 5px;
-    background-color: #bbb;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #ddddd1;
+    background-color: #eeeee1;
+    box-shadow: 0px 0px 10px rgba(200,200,150,0.5);
+    border-radius: 25px;
+
 }
 
 .title {
-position: relative;
-    top: 5px;
-    left: 5px;
+    position: relative;
+    padding: 0px;
+    margin: 25px 0 0 15px;
 }
 
+.title span {
+    text-align: center;
+}
 
 .graphic {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin: 0;
     width: 250px;
     height: 250px;
-
+    padding: 0px;
+    margin: 10px;
 }
 
 .icon {
-    width: 30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
 }
 
 .refresh {
@@ -34,8 +43,8 @@ position: relative;
 	width: 25px;
 	height: 25px;
 	margin: auto 0;
-	font-size: 32px;
-	color: #55AA55;
+	font-size: 24px;
+	color: #99CC99;
 	cursor: pointer;
 	-webkit-transition: all 0.2s;
 	transition: all 0.2s;
@@ -50,18 +59,18 @@ position: relative;
 }
 
 .refresh:after {
-	content: '#';
+	content: "∴";
 }
 
 .destroy {
 	position: absolute;
-	top: 5px;
+	top: 10px;
    	right: 5px;
 	width: 25px;
 	height: 25px;
 	margin: auto 0;
-	font-size: 32px;
-	color: #AA5555;
+	font-size: 24px;
+	color: #CC9999;
 	cursor: pointer;
 	-webkit-transition: all 0.2s;
 	transition: all 0.2s;
@@ -77,4 +86,36 @@ position: relative;
 
 .destroy:after {
 	content: '✖';
+}
+
+.sw {
+    position: relative;
+
+}
+
+.rep-text {
+    position: absolute;
+    bottom: 35px;
+    left: 10px;
+}
+
+.rep {
+    position: absolute;
+    margin: 15px 0 0 15px;
+}
+
+.se {
+    position: relative;
+}
+
+.set-text {
+    position: absolute;
+    right: 10px;
+    bottom: 35px;
+}
+
+.set {
+position: absolute;
+    top: 10px;
+    right: 15px;
 }

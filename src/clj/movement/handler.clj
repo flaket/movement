@@ -76,6 +76,7 @@
            (GET "/templates" [] (all-template-titles))
            (GET "/template/:title" [title] (create-session (str/replace title "-" " ")))
 
+           (GET "/singlemovement/:category" [category] (generate-response (get-movements 1 [(str/replace category "-" " ")])))
            (GET "/user/:id" [id] (generate-response (str "Hello user " id)))
 
            (resources "/")

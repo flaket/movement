@@ -14,37 +14,14 @@
 (defn equipment-symbol [equipment-name]
   "images/sketch-push-up.png")
 
-(defn movement1-component []
-  (let []
-    (fn [{:keys [id category graphic animation equipment rep set distance duration] :as m}]
-      (let [name (:movement/name m)
-            rep 0
-            set 0
-            graphic "images/sketch-push-up.png"]
-        [:div.pure-u.movement
-         [:div.pure-g
-          [:div.pure-u-1-5.refresh {:on-click #()}]
-          [:div.pure-u-3-5.title name]
-          [:div.pure-u-1-5.destroy {:on-click #()}]]
-         [:div.pure-g
-          [:img.pure-u {:src graphic :width "250px" :height "250px"}]]
-         [:div.pure-g
-          [:div.pure-u-1-3
-           [:div.pure-g
-            [:span.pure-u-1-2 "Rep"]
-            [:span.pure-u-1-2 rep]]]
-          [:img.pure-u-1-3 {:src (equipment-symbol equipment) :width "30px" :height "30px"}]
-          [:div.pure-u-1-3
-           [:span "Set"]
-           [:span set]]]]
-        ))))
+
 
 (defn movement-component []
   (let []
     (fn [{:keys [id category graphic animation equipment rep set distance duration] :as m}]
       (let [name (:movement/name m)
-            rep 0
-            set 0
+            rep 10
+            set 3
             graphic "images/sketch-push-up.png"]
         [:div.pure-u.movement
 
@@ -52,8 +29,8 @@
           [:div.pure-u-1-2.refresh {:on-click #()}]
           [:div.pure-u-1-2.destroy {:on-click #()}]]
 
-         [:div.pure-g
-          [:span.pure-u.title name]]
+         [:div.pure-g.title
+          [:span.pure-u name]]
 
          [:div.pure-g
           [:img.pure-u.graphic.pure-img-responsive {:src graphic}]]
@@ -61,46 +38,43 @@
 
          [:div.pure-g
 
-          [:div.pure-u-1-3
+          [:div.pure-u-1-4.sw
            [:div.pure-g
             [:span.pure-u.rep-text "Rep"]]
            [:div.pure-g
             [:span.pure-u.rep rep]]]
 
-          [:div.pure-u-1-3
+          [:div.pure-u-1-2
            [:div.pure-g
             [:img.pure-u.icon {:src (equipment-symbol equipment)}]
             [:img.pure-u.icon {:src (equipment-symbol equipment)}]
             ]]
 
-          [:div.pure-u-1-3
+          [:div.pure-u-1-4.se
            [:div.pure-g
-            [:span.pure-u.rep-text "Set"]]
+            [:span.pure-u.set-text "Set"]]
            [:div.pure-g
-            [:span.pure-u.rep set]]]]
-
+            [:span.pure-u.set set]]]]
 
          ]))))
 
-(defn get-new-movement [categories]
-  (go
-    (let [categories-prepped (mapv #(str/replace % " " "-") categories)
-          m (read-string (<! (POST "singlemovement/" {:categories categories})))]
-      (print categories-prepped)
-      (print m))))
+(defn positions
+  "Finds the positions of elements in a collection."
+  [pred coll]
+  (keep-indexed
+    (fn [idx x]
+      (when (pred x)
+        idx))
+    coll))
 
-(defn part1-component []
-  (let []
-    (fn [{:keys [title categories movements]}]
-      [:div
-       [:div.pure-g
-        [:h2.pure-u title]]
-       [:div.pure-g
-        (for [m movements]
-          ^{:key m} [movement-component m])]
-       [:div.pure-g
-        [:button.pure-u {:type     "submit"
-                         :on-click #(get-new-movement categories)} "+"]]])))
+(defn get-new-movement [part-title]
+  (go
+    (let [parts (session/get-in [:movement-session :parts])
+          position-in-parts (first (positions #{part-title} (map :title parts)))
+          categories (:categories (first (filter #(= part-title (:title %)) parts)))
+          categories-prepped (mapv #(str/replace % " " "-") categories)
+          m (first (read-string (<! (GET (str "singlemovement/" (first categories-prepped))))))]
+      (session/update-in! [:movement-session :parts position-in-parts :movements] conj m))))
 
 (defn part-component []
   (let []
@@ -109,35 +83,10 @@
        [:h2 title]
        [:div.pure-g
         (for [m movements]
-          ^{:key m} [movement-component m])]
+          ^{:key (str m (rand-int 10000))} [movement-component m])]
        [:button {:type     "submit"
-                 :on-click #(get-new-movement categories)} "+"]])))
+                 :on-click #(get-new-movement title)} "+"]])))
 
-(defn session1-component []
-  (let [adding-description (atom false)]
-    (fn [{:keys [title description parts]}]
-      [:div#session
-       [:div.pure-g
-        [:h1.pure-u title]
-        [:label.pure-u (str (.getDay (js/Date.)) "/" (.getMonth (js/Date.)))]]
-       [:div.pure-g
-        [:div.pure-u
-         [:div description]]
-        (when @adding-description
-          [:div.pure-g
-           [text-edit-component {:class   "edit" :title description
-                                 :on-save #(handler-fn (session/assoc-in! [:movement-session :description] %))
-                                 :on-stop #(handler-fn (reset! adding-description false))}]])
-        [:div.pure-u
-         [:button {:type     "submit"
-                          :on-click #(handler-fn (reset! adding-description true))} "!"]]]
-       (for [p parts]
-         ^{:key p} [part-component p])
-       [:div.pure-g
-        [:button.pure-u {:type     "submit"
-                         :on-click log-session}
-         "Log this movement session!"]
-        [:button.pure-u {:on-click #()} "Make PDF"]]])))
 
 (defn session-component []
   (let [adding-description (atom false)]

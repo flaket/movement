@@ -5,7 +5,6 @@ html, button, input, select, textarea,
 
 body {
     background-color: #fffff4;
-    color: #777;
 }
 
 .pure-img-responsive {
@@ -213,9 +212,9 @@ small screens.
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 
 /*
-Hides the menu at `1000em`, but modify this based on your app's needs.
+Hides the menu at `48em`, but modify this based on your app's needs.
 */
-@media (min-width: 1000em) {
+@media (min-width: 48em) {
 
     .header,
     .content {
