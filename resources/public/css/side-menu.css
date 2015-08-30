@@ -4,6 +4,7 @@ html, button, input, select, textarea,
 }
 
 body {
+    background-color: #fffff4;
     color: #777;
 }
 
@@ -46,7 +47,7 @@ The content `<div>` is where all your content goes.
 .content {
     margin: 0 auto;
     padding: 0 2em;
-    max-width: 800px;
+    max-width: 1200px;
     margin-bottom: 50px;
     line-height: 1.6em;
 }
@@ -55,20 +56,22 @@ The content `<div>` is where all your content goes.
      margin: 0;
      color: #333;
      text-align: center;
-     padding: 2.5em 2em 0;
-     border-bottom: 1px solid #eee;
+     padding: 2.5em 2em 1em;
+     border-bottom: 2px solid #eee;
  }
-    .header h1 {
+
+.header h1 {
         margin: 0.2em 0;
         font-size: 3em;
         font-weight: 300;
-    }
-     .header h2 {
+}
+
+.header h2 {
         font-weight: 300;
         color: #ccc;
         padding: 0;
         margin-top: 0;
-    }
+}
 
 .content-subhead {
     margin: 50px 0 20px 0;
@@ -92,6 +95,7 @@ appears on the left side of the page.
     bottom: 0;
     z-index: 1000; /* so the menu or its navicon stays above all content */
     background: #111;
+    opacity: 0.75;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -247,8 +251,9 @@ Hides the menu at `1000em`, but modify this based on your app's needs.
         * Make the window large again.
     */
     #layout.active {
-        position: relative;
+        /*position: relative;
         left: 150px;
+        */
     }
 }
 
