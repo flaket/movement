@@ -32,11 +32,20 @@
           categories-prepped (mapv #(str/replace % " " "-") categories)]
       (doseq [c categories-prepped]
         (swap! movements conj (first (read-string (<! (GET (str "singlemovement/" c)))))))
-      (session/update-in! [:movement-session :parts position-in-parts :movements] conj (first (shuffle @movements))))))
+      (session/update-in! [:movement-session :parts position-in-parts :movements]
+                          conj (first (shuffle @movements))))))
+
+(defn remove-movement [m part-title]
+  (go
+    (let [parts (session/get-in [:movement-session :parts])
+          position-in-parts (first (positions #{part-title} (map :title parts)))
+          movement-list (session/get-in [:movement-session :parts position-in-parts :movements])
+          movement-list (remove #{m} movement-list)]
+      (session/assoc-in! [:movement-session :parts position-in-parts :movements] movement-list))))
 
 (defn movement-component []
   (let []
-    (fn [{:keys [id category graphic animation equipment rep set distance duration] :as m}]
+    (fn [{:keys [id category graphic animation equipment rep set distance duration] :as m} part-title]
       (let [name (:movement/name m)
             rep 10
             set 3
@@ -45,7 +54,7 @@
 
          [:div.pure-g
           [:div.pure-u-1-2.refresh {:on-click #()}]
-          [:div.pure-u-1-2.destroy {:on-click #()}]]
+          [:div.pure-u-1-2.destroy {:on-click #(remove-movement m part-title)}]]
 
          [:div.pure-g.title
           [:span.pure-u name]]
@@ -83,7 +92,7 @@
        [:h2 title]
        [:div.pure-g
         (for [m movements]
-          ^{:key (str m (rand-int 10000))} [movement-component m])]
+          ^{:key (str m (rand-int 10000))} [movement-component m title])]
        [:button {:type     "submit"
                  :on-click #(get-new-movement title)} "+"]])))
 
