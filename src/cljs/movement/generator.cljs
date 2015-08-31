@@ -14,7 +14,25 @@
 (defn equipment-symbol [equipment-name]
   "images/sketch-push-up.png")
 
+(defn positions
+  "Finds the positions of elements in a collection."
+  [pred coll]
+  (keep-indexed
+    (fn [idx x]
+      (when (pred x)
+        idx))
+    coll))
 
+(defn get-new-movement [part-title]
+  (go
+    (let [movements (atom [])
+          parts (session/get-in [:movement-session :parts])
+          position-in-parts (first (positions #{part-title} (map :title parts)))
+          categories (:categories (first (filter #(= part-title (:title %)) parts)))
+          categories-prepped (mapv #(str/replace % " " "-") categories)]
+      (doseq [c categories-prepped]
+        (swap! movements conj (first (read-string (<! (GET (str "singlemovement/" c)))))))
+      (session/update-in! [:movement-session :parts position-in-parts :movements] conj (first (shuffle @movements))))))
 
 (defn movement-component []
   (let []
@@ -58,24 +76,6 @@
 
          ]))))
 
-(defn positions
-  "Finds the positions of elements in a collection."
-  [pred coll]
-  (keep-indexed
-    (fn [idx x]
-      (when (pred x)
-        idx))
-    coll))
-
-(defn get-new-movement [part-title]
-  (go
-    (let [parts (session/get-in [:movement-session :parts])
-          position-in-parts (first (positions #{part-title} (map :title parts)))
-          categories (:categories (first (filter #(= part-title (:title %)) parts)))
-          categories-prepped (mapv #(str/replace % " " "-") categories)
-          m (first (read-string (<! (GET (str "singlemovement/" (first categories-prepped))))))]
-      (session/update-in! [:movement-session :parts position-in-parts :movements] conj m))))
-
 (defn part-component []
   (let []
     (fn [{:keys [title categories movements]}]
@@ -106,7 +106,7 @@
          ^{:key p} [part-component p])
        [:div.pure-g
         [:button.pure-u-1-3 {:type     "submit"
-                         :on-click log-session}
+                             :on-click log-session}
          "Log this movement session"]
         [:button.pure-u-1-3 {:on-click #()} "Share"]
         [:button.pure-u-1-3 {:on-click #()} "Make PDF"]]])))

@@ -16,14 +16,10 @@
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Run"
   :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -3]]
-  :movement/distance 0
-  :movement/duration 0}
+                      #db/id[:db.part/user -3]]}
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Sprint"
   :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -3]]
-  :movement/distance 0
-  :movement/duration 0}
+                      #db/id[:db.part/user -3]]}
 
  ]
