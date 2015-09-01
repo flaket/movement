@@ -6,6 +6,8 @@
  {:db/id #db/id[:db.part/user -3] :category/name "Bent Arm Strength"}
  {:db/id #db/id[:db.part/user -4] :category/name "Pulling"}
  {:db/id #db/id[:db.part/user -5] :category/name "Pushing"}
+ {:db/id #db/id[:db.part/user -6] :category/name "Multiplane"}
+ {:db/id #db/id[:db.part/user -7] :category/name "Grip Strength"}
  {:db/id #db/id[:db.part/user -10] :category/name "Muscle Up"}
  {:db/id #db/id[:db.part/user -11] :category/name "Climbing"}
 
@@ -17,7 +19,10 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -10]]}
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]}
  {:db/id #db/id[:db.part/user]
   :movement/name "Negative Muscle Up"
   :movement/category [#db/id[:db.part/user -1]
@@ -25,7 +30,10 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -10]]}
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]}
  {:db/id #db/id[:db.part/user]
   :movement/name "L-Sit Muscle Up"
   :movement/category [#db/id[:db.part/user -1]
@@ -33,14 +41,20 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -10]]}
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]}
  {:db/id #db/id[:db.part/user]
   :movement/name "Pull Over"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -11]]}
 
 
  ]

@@ -1,75 +1,69 @@
 [
  ;; equipment
- {:db/id #db/id[:db.part/user -5000]
+ {:db/id          #db/id[:db.part/user -5000]
   :equipment/name "Bench"}
- {:db/id #db/id[:db.part/user -5001]
+ {:db/id          #db/id[:db.part/user -5001]
   :equipment/name "Wall Bar"}
- {:db/id #db/id[:db.part/user -5002]
+ {:db/id          #db/id[:db.part/user -5002]
   :equipment/name "Stool"}
 
  ;; categories
- {:db/id #db/id[:db.part/user -1]
+ {:db/id         #db/id[:db.part/user -1]
   :category/name "Strength"}
- {:db/id #db/id[:db.part/user -2]
+ {:db/id         #db/id[:db.part/user -2]
   :category/name "Bodyweight"}
- {:db/id #db/id[:db.part/user -3]
+ {:db/id         #db/id[:db.part/user -3]
   :category/name "Core Strength"}
- {:db/id #db/id[:db.part/user -4]
+ {:db/id         #db/id[:db.part/user -4]
   :category/name "Abdominal Strength"}
- {:db/id #db/id[:db.part/user -5]
+ {:db/id         #db/id[:db.part/user -5]
   :category/name "Lower Back Strength"}
 
  ;; movements
- {:db/id #db/id[:db.part/user]
-  :movement/name "L-Sit"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "L-Sit"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "L-Straddle"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "L-Straddle"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "V-Up"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "V-Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Leg Lift"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Incline Bench Leg Lift"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Incline Bench Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Hanging Leg Lift"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Headstand Leg Lift"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Headstand Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Arch Up"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Arch Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Tuck V-Up"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Tuck V-Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]

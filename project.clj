@@ -14,6 +14,7 @@
                  [ring-server "0.4.0"]
                  [ring/ring-defaults "0.1.4"]
                  [ring/ring-headers "0.1.2"]
+                 [ring/ring-anti-forgery "1.0.0"]
                  [cljsjs/react "0.13.1-0"]
                  [reagent "0.5.0"]
                  [reagent-forms "0.5.5"]
@@ -23,7 +24,8 @@
                  [selmer "0.8.2"]
                  [environ "1.0.0"]
                  [secretary "1.2.2"]
-                 #_[com.cemerick/friend "0.2.1"] ; dependency fucks up figwheel. Explore with lein deps :plugin-tree
+                 [org.clojure/core.cache "0.6.4"]
+                 [com.cemerick/friend "0.2.1"] ; dependency fucks up figwheel. Explore with lein deps :plugin-tree
                  ]
 
   :plugins [[lein-cljsbuild "1.0.4"]

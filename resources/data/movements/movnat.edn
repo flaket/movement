@@ -20,26 +20,21 @@
  ;:split-squat-pivot-reverse :balancing-tripod-transition
  ;:balancing-foot-hand-crawl
 
- ; movnat-crawling :inverted-crawl :knee-elbow-crawl :knee-hand-crawl :foot-elbow-crawl
- ;:foot-hand-crawl :push-pull-crawl :rocking :rotational-rocking
- ;:bent-sit-to-lateral-half-kneeling :shoulder-crawl :hip-thrust-crawl
+ ;:rocking :rotational-rocking
+ ;:bent-sit-to-lateral-half-kneeling
  ;:sit-to-backward-roll :lying-to-forward-roll :forward-roll :tripod-transition
  ;:backward-sprawl :forward-sprawl-to-push-up
+
+
  ;movnat-jumping :leg-swing-jump :broad-jump :split-jump :vertical-jump :depth-jump :lateral-side-jump]
- ;movnat-climbing
- ; :tuck-swing :tap-swing :side-swing :side-swing-traverse :side-swing-hang-hold
- ;:side-swing-power-traverse :pull-up :pull-up-reach :pull-up-hold :one-arm-dead-hang
- ;:jumping-pull-up :hanging-side-foot-lift :hanging-leg-hook-over
- ;:hanging-knee-tuck :hanging-knee-to-bar :hanging-front-foot-lift
- ;:front-swing-traverse :front-power-traverse :elbow-pull-up :dead-hang
- ;:sliding-swing-up :elbow-pop-up :hand-swing :swing-pop-up :tuck-pop-up
- ;:muscle-up :roll-up
+
+
  ;movnat-lifting
- ; :dead-lift :lapping :waist-carry :chest-carry :hand-carry :shoulder-carry
+ ; :lapping :waist-carry :chest-carry :hand-carry :shoulder-carry
  ;:log-shouldering :shoulder-carry-squat :hands-free-shoulder-carry-squat
  ;:shoulder-carry-switch :clean :jerk :push-press
+
  ;movnat-throwing [:chest-throw :rotational-throw :front-swing-throw :overhead-throw]
- ;movnat-running [:run-100-m :run-200-m :run-400-m :sprint-50-m]
 
 
  ]

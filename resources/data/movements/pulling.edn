@@ -11,120 +11,209 @@
  {:db/id #db/id[:db.part/user -3] :category/name "Pulling"}
  {:db/id #db/id[:db.part/user -4] :category/name "Bodyweight"}
  {:db/id #db/id[:db.part/user -5] :category/name "Pull Up"}
+ {:db/id #db/id[:db.part/user -6] :category/name "Hanging"}
+ {:db/id #db/id[:db.part/user -7] :category/name "Climbing"}
+ {:db/id #db/id[:db.part/user -8] :category/name "Grip Strength"}
 
  ;; movements
- {:db/id #db/id[:db.part/user]
-  :movement/name "Pull Up"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Pull Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Wide Pull Up"
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Wide Pull Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Chin Up"
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Pull Up Reach"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Chest Pull Up"
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Pull Up Hold"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Waist Pull Up"
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Chin Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Weighted Pull Up"
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Chest Pull Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Waist Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Weighted Pull Up"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -3]
+                       #db/id[:db.part/user -4]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]
+                       #db/id[:db.part/user -8]]
   :movement/equipment [#db/id[:db.part/user -5001]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Scapula Pull Up"
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Scapula Pull Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Hold Forearm One Arm Pull Up"
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hold Forearm One Arm Pull Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Hold Bicep One Arm Pull Up"
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hold Bicep One Arm Pull Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Negative One Arm Pull Up"
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Negative One Arm Pull Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user]
-  :movement/name "Hold Shoulder One Arm Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                                       #db/id[:db.part/user -2]
-                                                                                                       #db/id[:db.part/user -3]
-                                                                                                       #db/id[:db.part/user -4]
-                                                                                                       #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -112] :movement/name "One Arm Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                         #db/id[:db.part/user -2]
-                                                                                         #db/id[:db.part/user -3]
-                                                                                         #db/id[:db.part/user -4]
-                                                                                         #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -113] :movement/name "Archer Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                        #db/id[:db.part/user -2]
-                                                                                        #db/id[:db.part/user -3]
-                                                                                        #db/id[:db.part/user -4]
-                                                                                        #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -114] :movement/name "Row" :movement/category [#db/id[:db.part/user -1]
-                                                                             #db/id[:db.part/user -2]
-                                                                             #db/id[:db.part/user -3]
-                                                                             #db/id[:db.part/user -4]]}
- {:db/id #db/id[:db.part/user -115] :movement/name "False Grip Pull Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                            #db/id[:db.part/user -2]
-                                                                                            #db/id[:db.part/user -3]
-                                                                                            #db/id[:db.part/user -4]
-                                                                                            #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -116] :movement/name "Rope Climb" :movement/category [#db/id[:db.part/user -1]
-                                                                                    #db/id[:db.part/user -2]
-                                                                                    #db/id[:db.part/user -3]
-                                                                                    #db/id[:db.part/user -4]] :movement/equipment [#db/id[:db.part/user -5002]]}
- {:db/id #db/id[:db.part/user -117] :movement/name "Front Lever Row" :movement/category [#db/id[:db.part/user -1]
-                                                                                         #db/id[:db.part/user -2]
-                                                                                         #db/id[:db.part/user -3]
-                                                                                         #db/id[:db.part/user -4]
-                                                                                         #db/id[:db.part/user -5]]}
- {:db/id #db/id[:db.part/user -118] :movement/name "Ring Chin Up" :movement/category [#db/id[:db.part/user -1]
-                                                                                 #db/id[:db.part/user -2]
-                                                                                 #db/id[:db.part/user -3]
-                                                                                 #db/id[:db.part/user -4]
-                                                                                 #db/id[:db.part/user -5]] :movement/equipment [#db/id[:db.part/user -5000]]}
-
-
-
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hold Shoulder One Arm Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "One Arm Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Archer Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Row"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -8]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "False Grip Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Rope Climb"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -3]
+                       #db/id[:db.part/user -4]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]
+                       #db/id[:db.part/user -8]]
+  :movement/equipment [#db/id[:db.part/user -5002]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Front Lever Row"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Ring Chin Up"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -3]
+                       #db/id[:db.part/user -4]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]
+                       #db/id[:db.part/user -8]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  ]

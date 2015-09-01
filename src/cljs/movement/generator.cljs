@@ -12,10 +12,9 @@
     [cljs.core.async.macros :refer [go]]))
 
 (defn equipment-symbol [equipment-name]
-  "images/sketch-push-up.png")
+  "images/squat.png")
 
 (defn positions
-  "Finds the positions of elements in a collection."
   [pred coll]
   (keep-indexed
     (fn [idx x]
@@ -23,7 +22,7 @@
         idx))
     coll))
 
-(defn get-new-movement [part-title]
+(defn add-movement [part-title]
   (go
     (let [movements (atom [])
           parts (session/get-in [:movement-session :parts])
@@ -70,7 +69,7 @@
       (let [name (:movement/name m)
             rep 10
             set 3
-            graphic "images/sketch-push-up.png"]
+            graphic "images/squat.png"]
         [:div.pure-u.movement
 
          [:div.pure-g
@@ -112,7 +111,7 @@
       [:div
        [:h2 title]
        [:button {:type     "submit"
-                 :on-click #(get-new-movement title)} "+"]
+                 :on-click #(add-movement title)} "+"]
        [:div.pure-g
         (for [m movements]
           ^{:key (str m (rand-int 100000))} [movement-component m title])]])))
