@@ -12,8 +12,18 @@
  {:db/id #db/id[:db.part/user -9] :category/name "Abdominal Strength"}
  {:db/id #db/id[:db.part/user -10] :category/name "Lower Back Strength"}
 
+ {:db/id #db/id[:db.part/user -1000]
+  :user/email "admin"
+  :user/template [#db/id[:db.part/user -100]
+                  #db/id[:db.part/user -101]
+                  #db/id[:db.part/user -102]
+                  #db/id[:db.part/user -103]
+                  #db/id[:db.part/user -104]
+                  #db/id[:db.part/user -105]
+                  #db/id[:db.part/user -106]]}
+
  ;; templates
- {:db/id                #db/id[:db.part/user]
+ {:db/id                #db/id[:db.part/user -100]
   :template/title       "Strength"
   :template/description "This strength session consists of mobility and strength exercises."
   :template/part        [#db/id[:db.part/user -200]
@@ -27,7 +37,7 @@
   :part/category            [#db/id[:db.part/user -1]]
   :part/number-of-movements 5}
 
- {:db/id                #db/id[:db.part/user]
+ {:db/id                #db/id[:db.part/user -101]
   :template/title       "Bent Arm Strength"
   :template/description "Wrist and shoulder mobility conditioning followed by bent arm strength movements."
   :template/part        [#db/id[:db.part/user -202]
@@ -42,7 +52,7 @@
   :part/number-of-movements 4}
 
 
- {:db/id                #db/id[:db.part/user]
+ {:db/id                #db/id[:db.part/user -102]
   :template/title       "Straight Arm Scapular Strength"
   :template/description "Wrist and shoulder mobility conditioning followed by straight arm scapular strength movements."
   :template/part        [#db/id[:db.part/user -204]
@@ -56,7 +66,7 @@
   :part/category            [#db/id[:db.part/user -4]]
   :part/number-of-movements 4}
 
- {:db/id                #db/id[:db.part/user]
+ {:db/id                #db/id[:db.part/user -103]
   :template/title       "Mobility"
   :template/description "Time to work on mobility. Go through the movements with little to no rest."
   :template/part        [#db/id[:db.part/user -206]]}
@@ -65,7 +75,7 @@
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 12}
 
- {:db/id                #db/id[:db.part/user]
+ {:db/id                #db/id[:db.part/user -104]
   :template/title       "Locomotion"
   :template/description "Warm up with mobility work. Then go through the locomotion movements for 4-6 rounds, with minimal rest."
   :template/part        [#db/id[:db.part/user -207]
@@ -79,7 +89,7 @@
   :part/category            [#db/id[:db.part/user -5]]
   :part/number-of-movements 6}
 
- {:db/id                #db/id[:db.part/user]
+ {:db/id                #db/id[:db.part/user -105]
   :template/title       "Lower Body Strength"
   :template/description ""
   :template/part        [#db/id[:db.part/user -209]
@@ -102,7 +112,7 @@
 
 
  ;; needs update on categories
- {:db/id                #db/id[:db.part/user]
+ {:db/id                #db/id[:db.part/user -106]
   :template/title       "Natural Movement"
   :template/description ""
   :template/part        [#db/id[:db.part/user -212]

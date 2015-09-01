@@ -16,17 +16,39 @@
                              [credentials :as creds])))
 
 ;; temp in-memory user "database"
-(def users
-  {"root" {:username "root"
-           :password (creds/hash-bcrypt "pw")
+(def users1
+  {"admin" {:username "admin"
+           :password (creds/hash-bcrypt "adminpassword")
            :roles #{::admin}}
    "jane" {:username "jane"
            :password (creds/hash-bcrypt "pw")
            :roles #{::user}}})
 
-(def uri "datomic:dev://localhost:4334/movement5")
+(derive ::admin ::user)
+
+(def uri "datomic:dev://localhost:4334/movement7")
 (def conn (d/connect uri))
 (def db (d/db conn))
+
+(defn get-user-creds
+  "Queries the database for user info."
+  [creds]
+  (let [users (d/q '[:find ?email ?pw ?r
+                     :in $
+                     :where
+                     [?e :user/email ?email]
+                     [?e :user/password ?pw]
+                     [?e :user/role ?r]]
+                   db)
+        users (map #(zipmap [:username :password :roles] %) users)
+        users (map #(assoc % :roles (read-string (:roles %))) users)
+        users (zipmap (map #(:username %) users) users)]
+    users))
+
+(defn verify-credentials
+  [creds]
+  (let [valid-user (creds/bcrypt-credential-fn get-user-creds creds)]
+    valid-user))
 
 (selmer.parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 
@@ -84,7 +106,8 @@
                         :parts       parts})))
 
 (defroutes routes
-           (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
+           (GET "/" []
+             (friend/authorize #{::user} (render-file "templates/index.html" {:dev (env :dev?)})))
            (GET "/raw" [] (render-file "templates/indexraw.html" {:dev (env :dev?)}))
 
            (GET "/admin" request
@@ -108,7 +131,9 @@
 (def app
   (let [handler (wrap-frame-options
                   (wrap-defaults
-                    (friend/authenticate routes {:credential-fn (partial creds/bcrypt-credential-fn users)
+                    (friend/authenticate routes {:credential-fn #_(partial creds/bcrypt-credential-fn get-user-creds)
+                                                 #_(verify-credentials)
+                                                 (partial creds/bcrypt-credential-fn users1)
                                                  :workflows     [(workflows/interactive-form)]})
                     site-defaults)
                   {:allow-from (or "http://movementsession.com"

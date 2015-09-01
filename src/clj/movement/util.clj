@@ -2,11 +2,13 @@
   (:require [datomic.api :as d]
             [clojure.java.io :as io]
             [clojure.edn :as edn]
-            [clojure.pprint :as pp])
+            [clojure.pprint :as pp]
+            (cemerick.friend [workflows :as workflows]
+                             [credentials :as creds]))
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement5")
+(def uri "datomic:dev://localhost:4334/movement7")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -41,12 +43,36 @@
 
 (add-data-to-database)
 
+(def user-data [{:db/id         #db/id[:db.part/user]
+                 :user/email    "admin"
+                 :user/password (creds/hash-bcrypt "adminpassword")
+                 :user/role     "#{:movement/admin}"}
+                {:db/id         #db/id[:db.part/user]
+                 :user/email    "jane"
+                 :user/password (creds/hash-bcrypt "pw")
+                 :user/role     "#{:movement/user}"}])
+
+(d/transact conn user-data)
+
+
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#_(
-    )
+(let [users (d/q '[:find ?email ?pw ?r
+                   :in $
+                   :where
+                   [?e :user/email ?email]
+                   [?e :user/password ?pw]
+                   [?e :user/role ?r]
+                   ]
+                 db)
+      users (map #(zipmap [:username :password :roles] %) users)
+      users (map #(assoc % :roles (read-string (:roles %))) users)
+      users (zipmap (map #(:username %) users) users)]
+  users)
+
+
 
 ; get all category names + number of movements in category
 (defn all-categories-sorted []
@@ -143,18 +169,6 @@ category-entities
   [r]
   (map #(decorate (first %)) r))
 
-{:title ""
- :description ""
- :parts [{:title ""
-          :parts []
-          :movements [{:name ""
-                       :rep nil
-                       :set nil
-                       :duration nil
-                       :distance nil
-                       :graphic ""
-                       :animation ""
-                       :equipment []}]}]}
 
 (d/pull db '[*] [:movement/name "Push Up"])
 

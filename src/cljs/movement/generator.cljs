@@ -12,7 +12,9 @@
     [cljs.core.async.macros :refer [go]]))
 
 (defn equipment-symbol [equipment-name]
-  "images/squat.png")
+  (first (shuffle ["images/squat.png"
+                   "images/push-up.png"
+                   "images/high-bridge.png"])))
 
 (defn positions
   [pred coll]
@@ -69,7 +71,7 @@
       (let [name (:movement/name m)
             rep 10
             set 3
-            graphic "images/squat.png"]
+            graphic (equipment-symbol "")]
         [:div.pure-u.movement
 
          [:div.pure-g
@@ -93,8 +95,7 @@
 
           [:div.pure-u-1-2
            [:div.pure-g
-            [:img.pure-u.icon {:src (equipment-symbol equipment)}]
-            [:img.pure-u.icon {:src (equipment-symbol equipment)}]
+            #_[:img.pure-u.icon {:src (equipment-symbol equipment)}]
             ]]
 
           [:div.pure-u-1-4.se

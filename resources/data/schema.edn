@@ -1,12 +1,70 @@
 [
 
+ ;; user
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/email
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/unique             :db.unique/identity
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/name
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/role
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/password
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/payment
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/template
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/session
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
+ ;; payment
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :payment/amount
+  :db/index              true
+  :db/valueType          :db.type/float
+  :db/cardinality        :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
  ;; template
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :template/title
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
-  :db/unique             :db.unique/identity
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -188,50 +246,7 @@
   :db/cardinality        :db.cardinality/one
   :db.install/_attribute :db.part/db}
 
- ;; user
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/email
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db/unique             :db.unique/identity
-  :db.install/_attribute :db.part/db}
 
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/name
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/payment
-  :db/index              true
-  :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/many
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/template
-  :db/index              true
-  :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/many
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/session
-  :db/index              true
-  :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/many
-  :db.install/_attribute :db.part/db}
-
- ;; payment
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :payment/amount
-  :db/index              true
-  :db/valueType          :db.type/float
-  :db/cardinality        :db.cardinality/one
-  :db.install/_attribute :db.part/db}
 
  ]
 
