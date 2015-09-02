@@ -10,21 +10,7 @@
             [prone.middleware :refer [wrap-exceptions]]
             [environ.core :refer [env]]
             [datomic.api :as d]
-            [clojure.string :as str]
-            [cemerick.friend :as friend]
-            (cemerick.friend [workflows :as workflows]
-                             [credentials :as creds])))
-
-;; temp in-memory user "database"
-(def users1
-  {"admin" {:username "admin"
-           :password (creds/hash-bcrypt "adminpassword")
-           :roles #{::admin}}
-   "jane" {:username "jane"
-           :password (creds/hash-bcrypt "pw")
-           :roles #{::user}}})
-
-(derive ::admin ::user)
+            [clojure.string :as str]))
 
 (def uri "datomic:dev://localhost:4334/movement7")
 (def conn (d/connect uri))
@@ -44,11 +30,6 @@
         users (map #(assoc % :roles (read-string (:roles %))) users)
         users (zipmap (map #(:username %) users) users)]
     users))
-
-(defn verify-credentials
-  [creds]
-  (let [valid-user (creds/bcrypt-credential-fn get-user-creds creds)]
-    valid-user))
 
 (selmer.parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 
@@ -81,25 +62,38 @@
 
 (defn all-template-titles []
   (let [db (d/db conn)
-        templates (d/q '[:find [?t ...]
+        templates (d/q '[:find [?title ...]
+                         :in $ ?email
                          :where
-                         [_ :template/title ?t]]
-                       db)]
+                         [?e :user/email ?email]
+                         [?e :user/template ?t]
+                         [?t :template/title ?title]]
+                       db
+                       "admin")]
     (generate-response templates)))
 
 (defn create-session [title]
-  (let [title-entity (d/pull db '[*] [:template/title title])
+  (let [title-entity (ffirst (d/q '[:find (pull ?t [*])
+                                    :in $ ?title ?email
+                                    :where
+                                    [?e :user/email ?email]
+                                    [?e :user/template ?t]
+                                    [?t :template/title ?title]]
+                                  db
+                                  "Strength"
+                                  "admin"))
         description (:template/description title-entity)
         part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
-        parts (vec (for [p part-entities]
-                     (let [name (:part/name p)
-                           n (:part/number-of-movements p)
-                           c (flatten (map vals (:part/category p)))
-                           category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                           movements (vec (get-movements n category-names))]
-                       {:title      name
-                        :categories category-names
-                        :movements movements})))
+        parts
+        (vec (for [p part-entities]
+               (let [name (:part/name p)
+                     n (:part/number-of-movements p)
+                     c (flatten (map vals (:part/category p)))
+                     category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                     movements (vec (get-movements n category-names))]
+                 {:title      name
+                  :categories category-names
+                  :movements  movements})))
         ]
     (generate-response {:title       title
                         :description description
@@ -107,13 +101,9 @@
 
 (defroutes routes
            (GET "/" []
-             (friend/authorize #{::user} (render-file "templates/index.html" {:dev (env :dev?)})))
+             (render-file "templates/index.html" {:dev (env :dev?)}))
            (GET "/raw" [] (render-file "templates/indexraw.html" {:dev (env :dev?)}))
 
-           (GET "/admin" request
-             (friend/authorize #{::admin} "This page can only be seen by administrators."))
-           (GET "/authorized" request
-             (friend/authorize #{::user} "This page can only be seen by authenticated users."))
            (GET "/login" [] (render-file "templates/login.html" {:dev (env :dev?)}))
 
            (GET "/movements" [] (all-movement-names))
@@ -124,18 +114,12 @@
 
            (GET "/user/:id" [id] (generate-response (str "Hello user " id)))
 
-           (friend/logout (ANY "/logout" request (redirect "/")))
            (resources "/")
            (not-found "Not Found"))
 
 (def app
   (let [handler (wrap-frame-options
-                  (wrap-defaults
-                    (friend/authenticate routes {:credential-fn #_(partial creds/bcrypt-credential-fn get-user-creds)
-                                                 #_(verify-credentials)
-                                                 (partial creds/bcrypt-credential-fn users1)
-                                                 :workflows     [(workflows/interactive-form)]})
-                    site-defaults)
+                  (wrap-defaults routes site-defaults)
                   {:allow-from (or "http://movementsession.com"
                                    "http://www.movementsession.com")})]
     (if (env :dev?) (wrap-reload (wrap-exceptions handler)) handler)))

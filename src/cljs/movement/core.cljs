@@ -5,6 +5,7 @@
             [goog.events :as events]
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
+            [movement.util :refer [GET POST hook-browser-navigation! set-page!]]
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
@@ -24,40 +25,30 @@
 ;; -------------------------
 ;; Client side routes
 (secretary/defroute "/" []
-                    (session/put! :current-page #'generator-component))
+                    (set-page! #'generator-component))
 
 (secretary/defroute "/user" []
-                    (session/put! :current-page #'user-component))
+                    (set-page! #'user-component))
 
 (secretary/defroute "/template" []
-                    (session/put! :current-page #'template-creator-component))
+                    (set-page! #'template-creator-component))
 
 (secretary/defroute "/movements" []
-                    (session/put! :current-page #'explorer-component))
+                    (set-page! #'explorer-component))
 
 ;---------------------------
 (defn page []
   [(session/get :current-page)])
 
-;; -------------------------
-;; History
-;; must be called after routes have been defined
-(defn hook-browser-navigation! []
-  (doto (History.)
-    (events/listen
-      EventType/NAVIGATE
-      (fn [event]
-        (secretary/dispatch! (.-token event))))
-    (.setEnabled true)))
+
 
 ;; -------------------------
-;; Initialize app
-(defn mount-root []
-  (render-component [page] (.getElementById js/document "app")))
-
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (session/put! :current-page #'generator-component)
+  (set-page! #'generator-component)
   (session/put! :logged-sessions [])
-  (mount-root))
+
+  (render-component [page] (.getElementById js/document "app")))
+
+(init!)
