@@ -29,7 +29,7 @@
         idx))
     coll))
 
-(defn add-movement [part-title]
+(defn async-add-movement [part-title]
   (go
     (let [movements (atom [])
           parts (session/get-in [:movement-session :parts])
@@ -41,7 +41,32 @@
       (session/update-in! [:movement-session :parts position-in-parts :movements]
                           conj (first (shuffle @movements))))))
 
-(defn refresh-movement [m part-title]
+(def p (atom []))
+
+(defn add-movement-handler [movement]
+  (print (first movement))
+  (session/update-in! [:movement-session :parts @p :movements]
+                      conj (first movement)))
+
+(defn x [m]
+  (print m))
+
+(defn t [m]
+  (print m))
+
+(defn add-movement [part-title]
+  (let [parts (session/get-in [:movement-session :parts])
+        position-in-parts (first (positions #{part-title} (map :title parts)))
+        categories (:categories (first (filter #(= part-title (:title %)) parts)))]
+    (reset! p position-in-parts)
+    (print categories)
+    (GET1 "singlemovement"
+          {:params        {:categories categories}
+           :handler       add-movement-handler
+           :error-handler #(print "error getting single movement.")})
+    ))
+
+(defn async-refresh-movement [m part-title]
   (go
     (let [movements (atom [])
           parts (session/get-in [:movement-session :parts])
@@ -62,13 +87,36 @@
         (session/assoc-in! [:movement-session :parts position-in-parts :movements]
                             movement-list)))))
 
+(def temp-movements (atom []))
+
+(defn refresh-movement [m part-title]
+  (let [parts (session/get-in [:movement-session :parts])
+        position-in-parts (first (positions #{part-title} (map :title parts)))
+
+        movement-list (vec (session/get-in [:movement-session :parts position-in-parts :movements]))
+
+        ;todo: get categories from the movement, not the part.
+        categories (:categories (first (filter #(= part-title (:title %)) parts)))
+        categories-prepped (mapv #(str/replace % " " "-") categories)]
+
+    (reset! temp-movements [])
+    (doseq [c categories-prepped]
+      (GET1 (str "singlemovement/" c)
+               {:handler       add-movement-handler
+                :error-handler (fn [] (print "error getting single movement."))}))
+
+    (let [position-in-movement-list (first (positions #{m} movement-list))
+          movement-list (assoc movement-list position-in-movement-list (first (shuffle @temp-movements)))]
+
+      (session/assoc-in! [:movement-session :parts position-in-parts :movements]
+                         movement-list))))
+
 (defn remove-movement [m part-title]
-  (go
-    (let [parts (session/get-in [:movement-session :parts])
-          position-in-parts (first (positions #{part-title} (map :title parts)))
-          movement-list (session/get-in [:movement-session :parts position-in-parts :movements])
-          movement-list (remove #{m} movement-list)]
-      (session/assoc-in! [:movement-session :parts position-in-parts :movements] movement-list))))
+  (let [parts (session/get-in [:movement-session :parts])
+        position-in-parts (first (positions #{part-title} (map :title parts)))
+        movement-list (session/get-in [:movement-session :parts position-in-parts :movements])
+        movement-list (remove #{m} movement-list)]
+    (session/assoc-in! [:movement-session :parts position-in-parts :movements] movement-list)))
 
 (defn movement-component []
   (let []
@@ -159,16 +207,13 @@
 (defn add-session-handler [session]
   (session/put! :movement-session session))
 
-(defn add-session-error []
-  (print "error getting session data from server."))
-
 (defn template-component []
   (let []
     (fn [template-name]
       [:div.pure-u-1-3.pure-u-md-1-8
-       {:on-click  #(read-string (GET1 (str "template/" (str/replace template-name " " "-"))
-                                       {:handler       add-session-handler
-                                        :error-handler add-session-error}))}
+       {:on-click #(GET1 (str "template/" (str/replace template-name " " "-"))
+                         {:handler       add-session-handler
+                          :error-handler (fn [] (print "error getting session data from server."))})}
        template-name])))
 
 (defn generator-component []
