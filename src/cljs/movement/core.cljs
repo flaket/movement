@@ -5,7 +5,7 @@
             [goog.events :as events]
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
-            [movement.util :refer [GET POST hook-browser-navigation! set-page!]]
+            [movement.util :refer [hook-browser-navigation! set-page!]]
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]

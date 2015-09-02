@@ -5,6 +5,7 @@
     [clojure.string :as str]
     [cljs.reader :refer [read-string]]
     [cljs.core.async :refer [<! chan close!]]
+    [movement.util :refer [GET1 POST1]]
     [movement.text :refer [text-edit-component]]
     [movement.menu :refer [menu-component]]
     [movement.state :refer [movement-session handler-fn log-session GET POST]])
@@ -14,7 +15,11 @@
 (defn equipment-symbol [equipment-name]
   (first (shuffle ["images/squat.png"
                    "images/push-up.png"
-                   "images/high-bridge.png"])))
+                   "images/high-bridge.png"
+                   "images/frog-stand.png"
+                   "images/broad-jump.png"
+                   "images/elastic-band-overhead-pull-down.png"
+                   "images/pull-up-reach.png"])))
 
 (defn positions
   [pred coll]
@@ -141,7 +146,7 @@
         [:button.pure-u-1-3 {:on-click #()} "Share"]
         [:button.pure-u-1-3 {:on-click #()} "Make PDF"]]])))
 
-(defn template-component []
+(defn async-template-component []
   (let []
     (fn [template-name]
       [:div.pure-u-1-3.pure-u-md-1-8
@@ -149,6 +154,21 @@
                     (let [session (read-string
                                     (<! (GET (str "template/" (str/replace template-name " " "-")))))]
                       (session/put! :movement-session session)))}
+       template-name])))
+
+(defn add-session-handler [session]
+  (session/put! :movement-session session))
+
+(defn add-session-error []
+  (print "error getting session data from server."))
+
+(defn template-component []
+  (let []
+    (fn [template-name]
+      [:div.pure-u-1-3.pure-u-md-1-8
+       {:on-click  #(read-string (GET1 (str "template/" (str/replace template-name " " "-"))
+                                       {:handler       add-session-handler
+                                        :error-handler add-session-error}))}
        template-name])))
 
 (defn generator-component []

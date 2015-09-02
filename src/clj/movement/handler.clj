@@ -80,7 +80,7 @@
                                     [?e :user/template ?t]
                                     [?t :template/title ?title]]
                                   db
-                                  "Strength"
+                                  title
                                   "admin"))
         description (:template/description title-entity)
         part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))

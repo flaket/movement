@@ -26,7 +26,7 @@
                  [secretary "1.2.2"]
                  #_[org.clojure/core.cache "0.6.4"]
 
-                 [cljs-ajax "0.2.6"]]
+                 [cljs-ajax "0.3.14"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]

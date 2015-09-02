@@ -8,11 +8,11 @@
      :include-macros true]
     [ajax.core :as ajax]))
 
-(defn GET [url & [opts]]
-  (ajax/GET (str js/context url) (update-in opts [:params] assoc :timestamp (.getTime (js/Date.)))))
+(defn GET1 [url & [opts]]
+  (ajax/GET url (update-in opts [:params] assoc :timestamp (.getTime (js/Date.)))))
 
-(defn POST [url opts]
-  (ajax/POST (str js/context url) opts))
+(defn POST1 [url opts]
+  (ajax/POST url opts))
 
 (defn hook-browser-navigation! []
   (doto (History.)
