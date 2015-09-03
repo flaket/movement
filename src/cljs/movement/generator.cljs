@@ -29,43 +29,44 @@
         idx))
     coll))
 
-(defn async-add-movement [part-title]
-  (go
-    (let [movements (atom [])
-          parts (session/get-in [:movement-session :parts])
-          position-in-parts (first (positions #{part-title} (map :title parts)))
-          categories (:categories (first (filter #(= part-title (:title %)) parts)))
-          categories-prepped (mapv #(str/replace % " " "-") categories)]
-      (doseq [c categories-prepped]
-        (swap! movements conj (first (read-string (<! (GET (str "singlemovement/" c)))))))
-      (session/update-in! [:movement-session :parts position-in-parts :movements]
-                          conj (first (shuffle @movements))))))
-
-(def p (atom []))
+(def p (atom nil))
 
 (defn add-movement-handler [movement]
-  (print (first movement))
   (session/update-in! [:movement-session :parts @p :movements]
                       conj (first movement)))
-
-(defn x [m]
-  (print m))
-
-(defn t [m]
-  (print m))
 
 (defn add-movement [part-title]
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))
         categories (:categories (first (filter #(= part-title (:title %)) parts)))]
     (reset! p position-in-parts)
-    (print categories)
     (GET1 "singlemovement"
           {:params        {:categories categories}
            :format        :edn
            :handler       add-movement-handler
-           :error-handler #(print "error getting single movement.")})
+           :error-handler #(print "error getting single movement through add.")})
     ))
+
+(def ml (atom []))
+(def p-ml (atom nil))
+
+(defn refresh-movement-handler [movement]
+  (session/assoc-in! [:movement-session :parts @p :movements]
+                     (assoc @ml @p-ml (first movement))))
+
+(defn refresh-movement [m part-title]
+  (let [parts (session/get-in [:movement-session :parts])
+        position-in-parts (first (positions #{part-title} (map :title parts)))
+        ;todo: get categories from the movement, not the part.
+        categories (:categories (first (filter #(= part-title (:title %)) parts)))]
+    (reset! p position-in-parts)
+    (reset! ml (vec (session/get-in [:movement-session :parts @p :movements])))
+    (reset! p-ml (first (positions #{m} @ml)))
+    (GET1 "singlemovement"
+          {:params        {:categories categories}
+           :format        :edn
+           :handler       refresh-movement-handler
+           :error-handler #(print "error getting single movement through refresh.")})))
 
 (defn async-refresh-movement [m part-title]
   (go
@@ -88,29 +89,7 @@
         (session/assoc-in! [:movement-session :parts position-in-parts :movements]
                             movement-list)))))
 
-(def temp-movements (atom []))
 
-(defn refresh-movement [m part-title]
-  (let [parts (session/get-in [:movement-session :parts])
-        position-in-parts (first (positions #{part-title} (map :title parts)))
-
-        movement-list (vec (session/get-in [:movement-session :parts position-in-parts :movements]))
-
-        ;todo: get categories from the movement, not the part.
-        categories (:categories (first (filter #(= part-title (:title %)) parts)))
-        categories-prepped (mapv #(str/replace % " " "-") categories)]
-
-    (reset! temp-movements [])
-    (doseq [c categories-prepped]
-      (GET1 (str "singlemovement/" c)
-               {:handler       add-movement-handler
-                :error-handler (fn [] (print "error getting single movement."))}))
-
-    (let [position-in-movement-list (first (positions #{m} movement-list))
-          movement-list (assoc movement-list position-in-movement-list (first (shuffle @temp-movements)))]
-
-      (session/assoc-in! [:movement-session :parts position-in-parts :movements]
-                         movement-list))))
 
 (defn remove-movement [m part-title]
   (let [parts (session/get-in [:movement-session :parts])
