@@ -62,6 +62,7 @@
     (print categories)
     (GET1 "singlemovement"
           {:params        {:categories categories}
+           :format        :edn
            :handler       add-movement-handler
            :error-handler #(print "error getting single movement.")})
     ))
@@ -170,13 +171,13 @@
         (for [m movements]
           ^{:key (str m (rand-int 100000))} [movement-component m title])]])))
 
-
 (defn session-component []
   (let [adding-description (atom false)]
     (fn [{:keys [title description parts]}]
       [:div#session
        [:div.pure-g
-        [:h1.pure-u.pure-u-md-4-5 title]
+        [:label.pure-u.pure-u-md-1-5]
+        [:h1.pure-u.pure-u-md-3-5 title]
         [:label.pure-u.pure-u-md-1-5 (str (.getDay (js/Date.)) "/" (.getMonth (js/Date.)))]]
        [:div description]
        (when @adding-description

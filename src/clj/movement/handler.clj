@@ -1,5 +1,5 @@
 (ns movement.handler
-  (:require [compojure.core :refer [GET ANY defroutes]]
+  (:require [compojure.core :refer [GET POST ANY defroutes]]
             [compojure.route :refer [not-found resources]]
             [ring.util.response :refer [redirect]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
@@ -12,7 +12,7 @@
             [datomic.api :as d]
             [clojure.string :as str]))
 
-(def uri "datomic:dev://localhost:4334/movement7")
+(def uri "datomic:dev://localhost:4334/movement8")
 (def conn (d/connect uri))
 (def db (d/db conn))
 
@@ -110,7 +110,10 @@
            (GET "/movement/:name" [name] (movement name))
            (GET "/templates" [] (all-template-titles))
            (GET "/template/:title" [title] (create-session (str/replace title "-" " ")))
-           (GET "/singlemovement" [categories] (generate-response (get-movements 1 categories)))
+           (GET "/singlemovement" [categories]
+             (generate-response (get-movements 1
+                                               (if (not (vector? categories)) [categories]
+                                                                              categories))))
 
            (GET "/user/:id" [id] (generate-response (str "Hello user " id)))
 

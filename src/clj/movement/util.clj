@@ -6,7 +6,7 @@
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement7")
+(def uri "datomic:dev://localhost:4334/movement8")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -39,23 +39,21 @@
       (d/transact conn locomotion-tx)
       (d/transact conn template-tx))))
 
-(add-data-to-database)
-
-(def user-data [{:db/id         #db/id[:db.part/user]
-                 :user/email    "admin"
-                 :user/password (creds/hash-bcrypt "adminpassword")
-                 :user/role     "#{:movement/admin}"}
-                {:db/id         #db/id[:db.part/user]
-                 :user/email    "jane"
-                 :user/password (creds/hash-bcrypt "pw")
-                 :user/role     "#{:movement/user}"}])
-
-(d/transact conn user-data)
-
+#_(add-data-to-database)
 
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(d/q '[:find (pull ?m [{:user/template
+                        [:template/title]}])
+       :in $ ?cat
+       :where [?m :user/email ?cat]]
+     db
+     "admin")
+
 (defn get-movements [n categories]
   "Get n random movement entities drawn from param list of categories."
   (let [movements (for [c categories]
@@ -64,6 +62,8 @@
                          db c))
         m (->> movements flatten set shuffle (take n))]
     m))
+
+(first (get-movements 1 [ "Lower Body Strength"]))
 
 (let [title "Strength"
       title-entity (ffirst (d/q '[:find (pull ?t [*])
