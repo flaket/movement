@@ -140,7 +140,12 @@
 (defn template-component []
   (let []
     (fn [template-name]
-      [:div.pure-u-1-3.pure-u-md-1-8
+      [:li {:on-click #(GET (str "template/" (str/replace template-name " " "-"))
+                                   {:handler       add-session-handler
+                                    :error-handler (fn [] (print "error getting session data from server."))})}
+       template-name]
+
+      #_[:div.pure-u-1-3.pure-u-md-1-8
        {:on-click #(GET (str "template/" (str/replace template-name " " "-"))
                          {:handler       add-session-handler
                           :error-handler (fn [] (print "error getting session data from server."))})}
@@ -157,10 +162,16 @@
        [:div#main
         [:div.header
          [:h1 "Movement Session"]
-         [:div.pure-g
-          (doall
-            (for [t (session/get :templates)]
-              ^{:key t} [template-component t]))]]
+         #_[:div.pure-g]
+         [:div "Create a brand new movement session HERE."]
+         [:div "Or generate a new session based on one of your "
+          [:ul.templates
+           [:li
+            [:ul
+             (doall
+               (for [t (session/get :templates)]
+                 ^{:key t} [template-component t]))]
+            "templates"]]]]
         [:div.content
          (when (not (nil? (session/get :movement-session)))
            [session-component (session/get :movement-session)])]]])))
