@@ -1,15 +1,16 @@
 (ns movement.core
   (:require [reagent.core :refer [render-component]]
             [reagent.session :as session]
-            [secretary.core :as secretary :include-macros true :refer [dispatch!]]
+            [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
-            [movement.util :refer [hook-browser-navigation! set-page!]]
+            [movement.util :refer [GET hook-browser-navigation! set-page!]]
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
-            [movement.explorer :refer [explorer-component]])
+            [movement.explorer :refer [explorer-component]]
+            [movement.share :refer [share-component]])
   (:import goog.History))
 
 ;; The core namespace is the client entry point.
@@ -24,23 +25,15 @@
 
 ;; -------------------------
 ;; Client side routes
-(secretary/defroute "/" []
-                    (set-page! #'generator-component))
-
-(secretary/defroute "/user" []
-                    (set-page! #'user-component))
-
-(secretary/defroute "/template" []
-                    (set-page! #'template-creator-component))
-
-(secretary/defroute "/movements" []
-                    (set-page! #'explorer-component))
+(secretary/defroute "/" [] (set-page! #'generator-component))
+(secretary/defroute "/user" [] (set-page! #'user-component))
+(secretary/defroute "/template" [] (set-page! #'template-creator-component))
+(secretary/defroute "/movements" [] (set-page! #'explorer-component))
+(secretary/defroute "/share" [] (set-page! #'share-component))
 
 ;---------------------------
 (defn page []
   [(session/get :current-page)])
-
-
 
 ;; -------------------------
 (defn init! []

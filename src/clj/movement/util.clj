@@ -54,56 +54,7 @@
      db
      "admin")
 
-(defn get-movements [n categories]
-  "Get n random movement entities drawn from param list of categories."
-  (let [movements (for [c categories]
-                    (d/q '[:find (pull ?m [*]) :in $ ?cat
-                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
-                         db c))
-        m (->> movements flatten set shuffle (take n))]
-    m))
-
-(first (get-movements 1 [ "Lower Body Strength"]))
-
-(let [title "Strength"
-      title-entity (ffirst (d/q '[:find (pull ?t [*])
-                                 :in $ ?title ?email
-                                 :where
-                                 [?e :user/email ?email]
-                                 [?e :user/template ?t]
-                                 [?t :template/title ?title]]
-                               db
-                               "Strength"
-                               "admin"))
-      description (:template/description title-entity)
-      part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
-      parts
-      (vec (for [p part-entities]
-             (let [name (:part/name p)
-                   n (:part/number-of-movements p)
-                   c (flatten (map vals (:part/category p)))
-                   category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                   movements (vec (get-movements n category-names))]
-               {:title      name
-                :categories category-names
-                :movements  movements})))
-      ]
-  {:title       title
-      :description description
-      :parts       parts})
-
-
-(ffirst (d/q '[:find (pull ?t [*])
-              :in $ ?title ?email
-              :where
-              [?e :user/email ?email]
-              [?e :user/template ?t]
-              [?t :template/title ?title]]
-            db
-            "Strength"
-            "admin"))
-
-(d/pull db '[*] [:template/title "Strength"])
+(d/pull db '[*] [:movement/name "Push Up"])
 
 (let [users (d/q '[:find ?email ?pw ?r
                    :in $

@@ -3,14 +3,10 @@
     [reagent.session :as session]
     [reagent.core :refer [atom]]
     [clojure.string :as str]
-    [cljs.reader :refer [read-string]]
-    [cljs.core.async :refer [<! chan close!]]
-    [movement.util :refer [GET1 POST1]]
+    [movement.util :refer [GET]]
     [movement.text :refer [text-edit-component]]
     [movement.menu :refer [menu-component]]
-    [movement.state :refer [movement-session handler-fn log-session GET POST]])
-  (:require-macros
-    [cljs.core.async.macros :refer [go]]))
+    [movement.state :refer [movement-session handler-fn log-session]]))
 
 (defn equipment-symbol [equipment-name]
   (first (shuffle ["images/squat.png"
@@ -22,6 +18,7 @@
                    "images/pull-up-reach.png"])))
 
 (defn positions
+  "Finds the integer positions of the elements in the collection, that matches the predicate."
   [pred coll]
   (keep-indexed
     (fn [idx x]
@@ -29,67 +26,31 @@
         idx))
     coll))
 
-(def p (atom nil))
-
-(defn add-movement-handler [movement]
-  (session/update-in! [:movement-session :parts @p :movements]
-                      conj (first movement)))
-
 (defn add-movement [part-title]
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))
         categories (:categories (first (filter #(= part-title (:title %)) parts)))]
-    (reset! p position-in-parts)
-    (GET1 "singlemovement"
+    (GET "singlemovement"
           {:params        {:categories categories}
            :format        :edn
-           :handler       add-movement-handler
+           :handler       #(session/update-in! [:movement-session :parts position-in-parts :movements]
+                                              conj (first %))
            :error-handler #(print "error getting single movement through add.")})
     ))
 
-(def ml (atom []))
-(def p-ml (atom nil))
-
-(defn refresh-movement-handler [movement]
-  (session/assoc-in! [:movement-session :parts @p :movements]
-                     (assoc @ml @p-ml (first movement))))
-
 (defn refresh-movement [m part-title]
   (let [parts (session/get-in [:movement-session :parts])
-        position-in-parts (first (positions #{part-title} (map :title parts)))
+        pos-in-parts (first (positions #{part-title} (map :title parts)))
+        movement-list (vec (session/get-in [:movement-session :parts pos-in-parts :movements]))
+        pos-in-movement-list (first (positions #{m} movement-list))
         ;todo: get categories from the movement, not the part.
         categories (:categories (first (filter #(= part-title (:title %)) parts)))]
-    (reset! p position-in-parts)
-    (reset! ml (vec (session/get-in [:movement-session :parts @p :movements])))
-    (reset! p-ml (first (positions #{m} @ml)))
-    (GET1 "singlemovement"
+    (GET "singlemovement"
           {:params        {:categories categories}
            :format        :edn
-           :handler       refresh-movement-handler
+           :handler       #(session/assoc-in! [:movement-session :parts pos-in-parts :movements]
+                                             (assoc movement-list pos-in-movement-list (first %)))
            :error-handler #(print "error getting single movement through refresh.")})))
-
-(defn async-refresh-movement [m part-title]
-  (go
-    (let [movements (atom [])
-          parts (session/get-in [:movement-session :parts])
-          position-in-parts (first (positions #{part-title} (map :title parts)))
-
-          movement-list (vec (session/get-in [:movement-session :parts position-in-parts :movements]))
-
-          ;todo: get categories from the movement, not the part.
-          categories (:categories (first (filter #(= part-title (:title %)) parts)))
-          categories-prepped (mapv #(str/replace % " " "-") categories)]
-
-      (doseq [c categories-prepped]
-        (swap! movements conj (first (read-string (<! (GET (str "singlemovement/" c)))))))
-
-      (let [position-in-movement-list (first (positions #{m} movement-list))
-            movement-list (assoc movement-list position-in-movement-list (first (shuffle @movements)))]
-
-        (session/assoc-in! [:movement-session :parts position-in-parts :movements]
-                            movement-list)))))
-
-
 
 (defn remove-movement [m part-title]
   (let [parts (session/get-in [:movement-session :parts])
@@ -117,7 +78,6 @@
          [:div.pure-g
           [:img.pure-u.graphic.pure-img-responsive {:src graphic}]]
 
-
          [:div.pure-g
 
           [:div.pure-u-1-4.sw
@@ -128,7 +88,7 @@
 
           [:div.pure-u-1-2
            [:div.pure-g
-            #_[:img.pure-u.icon {:src (equipment-symbol equipment)}]
+            [:img.pure-u.icon {:src (equipment-symbol equipment)}]
             ]]
 
           [:div.pure-u-1-4.se
@@ -174,16 +134,6 @@
         [:button.pure-u-1-3 {:on-click #()} "Share"]
         [:button.pure-u-1-3 {:on-click #()} "Make PDF"]]])))
 
-(defn async-template-component []
-  (let []
-    (fn [template-name]
-      [:div.pure-u-1-3.pure-u-md-1-8
-       {:on-click #(go
-                    (let [session (read-string
-                                    (<! (GET (str "template/" (str/replace template-name " " "-")))))]
-                      (session/put! :movement-session session)))}
-       template-name])))
-
 (defn add-session-handler [session]
   (session/put! :movement-session session))
 
@@ -191,27 +141,26 @@
   (let []
     (fn [template-name]
       [:div.pure-u-1-3.pure-u-md-1-8
-       {:on-click #(GET1 (str "template/" (str/replace template-name " " "-"))
+       {:on-click #(GET (str "template/" (str/replace template-name " " "-"))
                          {:handler       add-session-handler
                           :error-handler (fn [] (print "error getting session data from server."))})}
        template-name])))
+
+(GET "templates" {:handler       #(session/put! :templates %)
+                  :error-handler #(print "error retrieving templates.")})
 
 (defn generator-component []
   (let []
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
-
        [menu-component]
-
        [:div#main
         [:div.header
          [:h1 "Movement Session"]
-
          [:div.pure-g
           (doall
             (for [t (session/get :templates)]
               ^{:key t} [template-component t]))]]
-
         [:div.content
          (when (not (nil? (session/get :movement-session)))
            [session-component (session/get :movement-session)])]]])))

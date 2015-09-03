@@ -10,7 +10,7 @@
 
 (defonce movement-session (atom {}))
 
-(defn GET
+#_(defn GET
   "Issue a http request to a url through a core.async channel.
   Returns a channel that the result can be read from.
   goog.net.XhrIo.send(url, opt_callback, opt_method, opt_content, opt_headers, opt_timeoutInterval)
@@ -24,7 +24,7 @@
                       (close! ch)))))
     ch))
 
-(defn POST
+#_(defn POST
   "Issue a http request to a url through a core.async channel.
   Returns a channel that the result can be read from.
   goog.net.XhrIo.send(url, opt_callback, opt_method, opt_content, opt_headers, opt_timeoutInterval)
@@ -53,6 +53,3 @@
         new-sessions (conj log movement-session)]
     (session/put! :logged-sessions new-sessions)))
 
-(go
-  (let [t (read-string (<! (GET "templates")))]
-    (session/put! :templates t)))
