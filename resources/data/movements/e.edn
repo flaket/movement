@@ -1,0 +1,30 @@
+[
+
+ ;; categories
+ {:db/id #db/id[:db.part/user -1]
+  :category/name "Handstand"}
+ {:db/id #db/id[:db.part/user -2]
+  :category/name "Strength"}
+
+ ;; movements
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Wall Walk"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Kick to Wall Handstand"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Handstand Walk"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Air Baby"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "QDR"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Headstand"
+  :movement/category [#db/id[:db.part/user -1]]}
+
+
+ ]
