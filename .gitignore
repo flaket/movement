@@ -14,3 +14,5 @@ pom.xml.asc
 figwheel_server.log
 movement.iml
 /.repl
+
+figwheel_server.log
