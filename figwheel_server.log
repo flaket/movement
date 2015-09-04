@@ -3423,3 +3423,19 @@ notifying browser that file changed:  /movement/core.js
 [32mSuccessfully compiled "resources/public/js/app.js" in 0.192 seconds.[0m
 notifying browser that file changed:  resources/public/js/out/cljs_deps.js
 notifying browser that file changed:  /movement/core.js
+Figwheel: focusing on build-ids (app)
+[0mCompiling "resources/public/js/app.js" from ["src/cljs" "env/dev/cljs"]...
+[32mSuccessfully compiled "resources/public/js/app.js" in 0.287 seconds.[0m
+notifying browser that file changed:  resources/public/js/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/out/cljs_deps.js
+notifying browser that file changed:  /movement/core.js
+notifying browser that file changed:  /movement/state.js
+notifying browser that file changed:  /movement/generator.js
+notifying browser that file changed:  /movement/explorer.js
+notifying browser that file changed:  /movement/dev.js
+notifying browser that file changed:  /movement/menu.js
+notifying browser that file changed:  /movement/text.js
+notifying browser that file changed:  /movement/user.js
+notifying browser that file changed:  /movement/util.js
+notifying browser that file changed:  /movement/template.js
+notifying browser that file changed:  /movement/share.js
