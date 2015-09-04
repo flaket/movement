@@ -8,6 +8,8 @@ ul.templates {
     display: inline;
     margin: 0;
     padding: 15px 4px 17px 0;
+    position: relative;
+    z-index: 10;
     list-style: none;
     -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
     -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
