@@ -6,7 +6,7 @@
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement8")
+(def uri "datomic:dev://localhost:4334/movementsession3")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -23,9 +23,12 @@
         core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
         lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
         mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
-        multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn"))))
+        climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
         sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
+        crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
         locomotion-tx (first (Util/readAll (io/reader (io/resource "data/movements/locomotion.edn"))))
+        lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
+        e-tx (first (Util/readAll (io/reader (io/resource "data/movements/e.edn"))))
         template-tx (first (Util/readAll (io/reader (io/resource "data/movements/template.edn"))))]
     (do
       (d/transact conn pulling-tx)
@@ -34,8 +37,11 @@
       (d/transact conn core-tx)
       (d/transact conn lowerbody-tx)
       (d/transact conn mobility-tx)
-      (d/transact conn multiplane-tx)
+      (d/transact conn climbing-tx)
       (d/transact conn sass-tx)
+      (d/transact conn crawling-tx)
+      (d/transact conn lifting-tx)
+      (d/transact conn e-tx)
       (d/transact conn locomotion-tx)
       (d/transact conn template-tx))))
 
@@ -93,11 +99,6 @@
 (get-category "Lower Body Strength")
 
 
-(defn generate-response [data & [status]]
-  {:status  (or status 200)
-   :headers {"Content-Type" "application/edn"}
-   :body    (pr-str data)})
-
 ; get n movements drawn randomly from categories
 (defn get-movements [n categories]
   (let [movements (for [c categories]
@@ -107,7 +108,7 @@
         m (->> movements flatten set shuffle (take n))]
     m))
 
-(first (get-movements 1 ["Lower Body Strength"]))
+(first (get-movements 1 ["Climbing"]))
 
 (def title "Strength")
 (def title-entity (d/pull db '[*] [:template/title title]))
@@ -127,33 +128,6 @@ part-entities
 (def category-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:part/category (first part-entities)))))))
 category-entities
 
-(defn create-session [title]
-  (let [title-entity (d/pull db '[*] [:template/title title])
-        description (:template/description title-entity)
-        part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
-        parts (vec (for [p part-entities]
-                     (let [name (:part/name p)
-                           n (:part/number-of-movements p)
-                           c (flatten (map vals (:part/category p)))
-                           category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                           #_(print (count category-names))
-                           movements (vec (get-movements n category-names))]
-                       {:title      name
-                        :categories [category-names]
-                        :movements  movements})))
-        ]
-    {:title title
-     :description description
-     :parts parts}))
-
-(pp/pprint (create-session "Lower Body Strength"))
-
-(def temp-seq '(17592186045481 17592186045482 17592186045483))
-(def temp-seq1 '(17592186045481))
-
-(vec (flatten (map vals (map #(d/pull db '[:category/name] %) temp-seq))))
-
-(apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) temp-seq1))))
 
 (defn decorate
   "Map of entity attributes."

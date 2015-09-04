@@ -29,11 +29,11 @@
   :template/part        [#db/id[:db.part/user -200]
                          #db/id[:db.part/user -201]]}
  {:db/id                    #db/id[:db.part/user -200]
-  :part/name                "Mobility"
+  :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 5}
  {:db/id                    #db/id[:db.part/user -201]
-  :part/name                "Strength"
+  :part/title                "Strength"
   :part/category            [#db/id[:db.part/user -1]]
   :part/number-of-movements 5}
 
@@ -43,11 +43,11 @@
   :template/part        [#db/id[:db.part/user -202]
                          #db/id[:db.part/user -203]]}
  {:db/id                    #db/id[:db.part/user -202]
-  :part/name                "Mobility"
+  :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 6}
  {:db/id                    #db/id[:db.part/user -203]
-  :part/name                "Bent Arm Strength"
+  :part/title                "Bent Arm Strength"
   :part/category            [#db/id[:db.part/user -3]]
   :part/number-of-movements 4}
 
@@ -58,11 +58,11 @@
   :template/part        [#db/id[:db.part/user -204]
                          #db/id[:db.part/user -205]]}
  {:db/id                    #db/id[:db.part/user -204]
-  :part/name                "Mobility"
+  :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 6}
  {:db/id                    #db/id[:db.part/user -205]
-  :part/name                "Straight Arm Scapular Strength"
+  :part/title                "Straight Arm Scapular Strength"
   :part/category            [#db/id[:db.part/user -4]]
   :part/number-of-movements 4}
 
@@ -71,7 +71,7 @@
   :template/description "Time to work on mobility. Go through the movements with little to no rest."
   :template/part        [#db/id[:db.part/user -206]]}
  {:db/id                    #db/id[:db.part/user -206]
-  :part/name                "Mobility"
+  :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 12}
 
@@ -81,11 +81,11 @@
   :template/part        [#db/id[:db.part/user -207]
                          #db/id[:db.part/user -208]]}
  {:db/id                    #db/id[:db.part/user -207]
-  :part/name                "Mobility"
+  :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 6}
  {:db/id                    #db/id[:db.part/user -208]
-  :part/name                "Locomotion: 4-6 rounds"
+  :part/title                "Locomotion: 4-6 rounds"
   :part/category            [#db/id[:db.part/user -5]]
   :part/number-of-movements 6}
 
@@ -96,15 +96,15 @@
                          #db/id[:db.part/user -210]
                          #db/id[:db.part/user -211]]}
  {:db/id                    #db/id[:db.part/user -209]
-  :part/name                "Mobility"
+  :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 4}
  {:db/id                    #db/id[:db.part/user -210]
-  :part/name                "Leg Strength"
+  :part/title                "Leg Strength"
   :part/category            [#db/id[:db.part/user -6]]
   :part/number-of-movements 3}
  {:db/id                    #db/id[:db.part/user -211]
-  :part/name                "Auxiliary"
+  :part/title                "Auxiliary"
   :part/category            [#db/id[:db.part/user -8]
                              #db/id[:db.part/user -9]
                              #db/id[:db.part/user -10]]
@@ -119,15 +119,15 @@
                          #db/id[:db.part/user -213]
                          #db/id[:db.part/user -214]]}
  {:db/id                    #db/id[:db.part/user -212]
-  :part/name                "Mobility (3 rounds)"
+  :part/title                "Mobility (3 rounds)"
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 4}
  {:db/id                    #db/id[:db.part/user -213]
-  :part/name                "Skill"
+  :part/title                "Skill"
   :part/category            [#db/id[:db.part/user -1]]
   :part/number-of-movements 1}
  {:db/id                    #db/id[:db.part/user -214]
-  :part/name                "Combination (4 rounds)"
+  :part/title                "Combination (4 rounds)"
   :part/category            [#db/id[:db.part/user -1]]
   :part/number-of-movements 5}
 

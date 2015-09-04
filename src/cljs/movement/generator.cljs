@@ -26,6 +26,9 @@
         idx))
     coll))
 
+(defn update-session! [nav-list movement]
+  (session/update-in! nav-list conj (first movement)))
+
 (defn add-movement [part-title]
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))

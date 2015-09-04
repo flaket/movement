@@ -12,7 +12,7 @@
             [datomic.api :as d]
             [clojure.string :as str]))
 
-(def uri "datomic:dev://localhost:4334/movement8")
+(def uri "datomic:dev://localhost:4334/movementsession3")
 (def conn (d/connect uri))
 (def db (d/db conn))
 

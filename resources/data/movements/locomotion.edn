@@ -1,7 +1,12 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Locomotion"}
+ {:db/id #db/id[:db.part/user -1] :category/name "Crawling"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Walking"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Rolling"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Acrobatics"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Jumping"}
 
+ ;; crawling
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Inverted Crawl"
   :movement/category [#db/id[:db.part/user -1]]}
@@ -12,28 +17,7 @@
   :movement/name     "Inchworm"
   :movement/category [#db/id[:db.part/user -1]]}
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Ostrich Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Horse Stance Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
   :movement/name     "Lizard Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Duck Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Bridge Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Cartwheel"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Handstand Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Kick to Handstand"
   :movement/category [#db/id[:db.part/user -1]]}
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Knee Elbow Crawl"
@@ -56,5 +40,78 @@
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Hip Thrust Crawl"
   :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Bridge Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+
+
+;; walking
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Ostrich Walk"
+  :movement/category [#db/id[:db.part/user -2]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Horse Stance Walk"
+  :movement/category [#db/id[:db.part/user -2]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Duck Walk"
+  :movement/category [#db/id[:db.part/user -2]]}
+
+
+;; rolling
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Forward Roll"
+  :movement/category [#db/id[:db.part/user -3]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Backward Roll"
+  :movement/category [#db/id[:db.part/user -3]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Backward Roll to Lying"
+  :movement/category [#db/id[:db.part/user -3]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Lying to Forward Roll"
+  :movement/category [#db/id[:db.part/user -3]]}
+
+
+;; acrobatic
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Cartwheel"
+  :movement/category [#db/id[:db.part/user -4]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Handstand Walk"
+  :movement/category [#db/id[:db.part/user -4]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Dynamic Kick to Handstand"
+  :movement/category [#db/id[:db.part/user -4]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Front Flip"
+  :movement/category [#db/id[:db.part/user -4]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Back Flip"
+  :movement/category [#db/id[:db.part/user -4]]}
+
+
+;; jumping
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Leg Swing Jump"
+  :movement/category [#db/id[:db.part/user -5]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Broad Jump"
+  :movement/category [#db/id[:db.part/user -5]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Split Jump"
+  :movement/category [#db/id[:db.part/user -5]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Vertical Jump"
+  :movement/category [#db/id[:db.part/user -5]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Depth Jump"
+  :movement/category [#db/id[:db.part/user -5]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Lateral Jump"
+  :movement/category [#db/id[:db.part/user -5]]}
+
+
+
+
 
  ]
