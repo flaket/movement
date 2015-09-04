@@ -14,3 +14,7 @@ pom.xml.asc
 figwheel_server.log
 movement.iml
 /.repl
+
+.idea/workspace.xml
+
+movement.iml
