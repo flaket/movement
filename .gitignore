@@ -18,3 +18,5 @@ movement.iml
 .idea/workspace.xml
 
 movement.iml
+
+figwheel_server.log

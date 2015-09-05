@@ -1,7 +1,11 @@
 (ns movement.generator
+  (:require-macros [cljs.core.async.macros :refer (go)])
+  (:import [goog.events EventType])
   (:require
     [reagent.session :as session]
     [reagent.core :refer [atom]]
+    [cljs.core.async :refer (<!)]
+    [goog.events :as events]
     [clojure.string :as str]
     [movement.util :refer [GET]]
     [movement.text :refer [text-edit-component]]
@@ -15,7 +19,11 @@
                    "images/frog-stand.png"
                    "images/broad-jump.png"
                    "images/elastic-band-overhead-pull-down.png"
-                   "images/pull-up-reach.png"])))
+                   "images/pull-up-reach.png"
+                   "images/pull-up.png"
+                   "images/stepping-over.png"
+                   "images/side-swing.png"
+                   "images/front-leg-swing.png"])))
 
 (defn positions
   "Finds the integer positions of the elements in the collection, that matches the predicate."
@@ -31,11 +39,11 @@
         position-in-parts (first (positions #{part-title} (map :title parts)))
         categories (:categories (first (filter #(= part-title (:title %)) parts)))]
     (GET "singlemovement"
-          {:params        {:categories categories}
-           :format        :edn
-           :handler       #(session/update-in! [:movement-session :parts position-in-parts :movements]
+         {:params        {:categories categories}
+          :format        :edn
+          :handler       #(session/update-in! [:movement-session :parts position-in-parts :movements]
                                               conj (first %))
-           :error-handler #(print "error getting single movement through add.")})
+          :error-handler #(print "error getting single movement through add.")})
     ))
 
 (defn refresh-movement [m part-title]
@@ -46,11 +54,11 @@
         ;todo: get categories from the movement, not the part.
         categories (:categories (first (filter #(= part-title (:title %)) parts)))]
     (GET "singlemovement"
-          {:params        {:categories categories}
-           :format        :edn
-           :handler       #(session/assoc-in! [:movement-session :parts pos-in-parts :movements]
+         {:params        {:categories categories}
+          :format        :edn
+          :handler       #(session/assoc-in! [:movement-session :parts pos-in-parts :movements]
                                              (assoc movement-list pos-in-movement-list (first %)))
-           :error-handler #(print "error getting single movement through refresh.")})))
+          :error-handler #(print "error getting single movement through refresh.")})))
 
 (defn remove-movement [m part-title]
   (let [parts (session/get-in [:movement-session :parts])
@@ -59,8 +67,11 @@
         movement-list (remove #{m} movement-list)]
     (session/assoc-in! [:movement-session :parts position-in-parts :movements] movement-list)))
 
+
+
 (defn movement-component []
-  (let []
+  (let [rep-text (atom "Rep")
+        set-text (atom "Set")]
     (fn [{:keys [id category graphic animation equipment rep set distance duration] :as m} part-title]
       (let [name (:movement/name m)
             rep 10
@@ -82,7 +93,9 @@
 
           [:div.pure-u-1-4.sw
            [:div.pure-g
-            [:span.pure-u.rep-text "Rep"]]
+            [:span.pure-u.rep-text {:on-click #(if (= @rep-text "Rep")
+                                                (reset! rep-text "Distance")
+                                                (reset! rep-text "Rep"))} @rep-text]]
            [:div.pure-g
             [:span.pure-u.rep rep]]]
 
@@ -93,7 +106,9 @@
 
           [:div.pure-u-1-4.se
            [:div.pure-g
-            [:span.pure-u.set-text "Set"]]
+            [:span.pure-u.set-text {:on-click #(if (= @set-text "Set")
+                                                (reset! set-text "Duration")
+                                                (reset! set-text "Set"))} @set-text]]
            [:div.pure-g
             [:span.pure-u.set set]]]]
 
@@ -141,18 +156,19 @@
   (let []
     (fn [template-name]
       [:li {:on-click #(GET (str "template/" (str/replace template-name " " "-"))
-                                   {:handler       add-session-handler
-                                    :error-handler (fn [] (print "error getting session data from server."))})}
+                            {:handler       add-session-handler
+                             :error-handler (fn [] (print "error getting session data from server."))})}
        template-name]
 
       #_[:div.pure-u-1-3.pure-u-md-1-8
-       {:on-click #(GET (str "template/" (str/replace template-name " " "-"))
-                         {:handler       add-session-handler
-                          :error-handler (fn [] (print "error getting session data from server."))})}
-       template-name])))
+         {:on-click #(GET (str "template/" (str/replace template-name " " "-"))
+                          {:handler       add-session-handler
+                           :error-handler (fn [] (print "error getting session data from server."))})}
+         template-name])))
 
-(GET "templates" {:handler       #(session/put! :templates %)
-                  :error-handler #(print "error retrieving templates.")})
+(defonce getting-templates
+         (GET "templates" {:handler       #(session/put! :templates %)
+                           :error-handler #(print "error retrieving templates.")}))
 
 (defn generator-component []
   (let []

@@ -84,7 +84,7 @@ ul.templates li:hover ul {
 }
 
 .title span {
-    font-size: 80%;
+    font-size: 100%;
 }
 
 .graphic {
@@ -184,4 +184,37 @@ ul.templates li:hover ul {
 position: absolute;
     top: 10px;
     right: 15px;
+}
+
+a {
+  text-decoration: none;
+  color: #09f;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.AdjustableNumber {
+   position: relative;
+}
+
+.AdjustableNumberDragging {
+    color: #46f;
+    border-bottom: 1px dashed #46f;
+}
+
+.AdjustableNumberHovering {
+}
+
+.CursorDragHorizontal {
+    cursor: pointer;
+    cursor: move;
+    cursor: col-resize;
+}
+
+.AdjustableNumberHelp {
+	position: absolute;
+	color: #00f;
+	font: 9px "Helvetica-Neue", "Arial", sans-serif;
 }

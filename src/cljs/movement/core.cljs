@@ -9,17 +9,11 @@
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
+            [movement.draggable :refer [draggable-number-component]]
             [movement.explorer :refer [explorer-component]]
-            [movement.share :refer [share-component]])
+            [movement.share :refer [share-component]]
+            [movement.sparkline :refer [sparklines-page]])
   (:import goog.History))
-
-;; The core namespace is the client entry point.
-;; The global state of the application is handled with the reagent.session utility namespace.
-;; The generator namespace houses the main application for generating movement sessions.
-;; The user namespace displays the user specific information.
-;; The explorer namespace allows users to search and view the movements in the database.
-;; The template namespace allows users to create their own templates.
-;; The movements namespace temporarily houses lists of exercises.
 
 (enable-console-print!)
 
@@ -30,6 +24,8 @@
 (secretary/defroute "/template" [] (set-page! #'template-creator-component))
 (secretary/defroute "/movements" [] (set-page! #'explorer-component))
 (secretary/defroute "/share" [] (set-page! #'share-component))
+(secretary/defroute "/drag" [] (set-page! #'draggable-number-component))
+(secretary/defroute "/sparkline" [] (set-page! #'sparklines-page))
 
 ;---------------------------
 (defn page []
@@ -39,7 +35,7 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (set-page! #'generator-component)
+  (set-page! #'draggable-number-component)
   (session/put! :logged-sessions [])
 
   (render-component [page] (.getElementById js/document "app")))
