@@ -44,9 +44,6 @@
   top: 50%;
   right: 1em;
   margin-top:-4px;
-  background-image: url(http://filamentgroup.com/files/select-arrow.png);
-  background-repeat: no-repeat;
-  background-size: 100%;
   z-index: 2;
   /* This hack make the select behind the arrow clickable in some browsers */
   pointer-events:none;

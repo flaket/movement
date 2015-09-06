@@ -1,5 +1,5 @@
 (ns movement.core
-  (:require [reagent.core :refer [render-component]]
+  (:require [reagent.core :refer [atom render-component]]
             [reagent.session :as session]
             [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
@@ -32,12 +32,15 @@
   [(session/get :current-page)])
 
 ;; -------------------------
+(defn mount-root []
+  (render-component [page] (.getElementById js/document "app")))
+
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
   (set-page! #'generator-component)
   (session/put! :logged-sessions [])
-
-  (render-component [page] (.getElementById js/document "app")))
+  (session/put! :m-counter (atom 0))
+  (mount-root))
 
 (init!)

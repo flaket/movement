@@ -13,6 +13,8 @@
     [movement.draggable :refer [draggable-number-component]]
     [movement.state :refer [movement-session handler-fn log-session]]))
 
+(defonce m-counter (atom 0))
+
 (defn equipment-symbol [equipment-name]
   (first (shuffle ["images/squat.png"
                    "images/push-up.png"
@@ -38,45 +40,52 @@
 (defn add-movement [part-title]
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))
-        categories (:categories (first (filter #(= part-title (:title %)) parts)))]
+        categories (:categories (first (filter #(= part-title (:title %)) parts)))
+        movements (session/get-in [:movement-session :parts position-in-parts :movements])]
     (GET "singlemovement"
          {:params        {:categories categories}
           :format        :edn
-          :handler       #(session/update-in! [:movement-session :parts position-in-parts :movements]
-                                              conj (first %))
-          :error-handler #(print "error getting single movement through add.")})
-    ))
+          :handler       #(let [id (swap! m-counter inc)
+                                new-movement (first %)
+                                new-movement (assoc new-movement :id id)
+                                new-movements (assoc movements id new-movement)]
+                           (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+          :error-handler #(print "error getting single movement through add.")})))
 
 (defn refresh-movement [m part-title]
   (let [parts (session/get-in [:movement-session :parts])
-        pos-in-parts (first (positions #{part-title} (map :title parts)))
-        movement-list (vec (session/get-in [:movement-session :parts pos-in-parts :movements]))
-        pos-in-movement-list (first (positions #{m} movement-list))
-        ;todo: get categories from the movement, not the part.
-        categories (:categories (first (filter #(= part-title (:title %)) parts)))]
+        position-in-parts (first (positions #{part-title} (map :title parts)))
+        categories (:categories (first (filter #(= part-title (:title %)) parts)))
+        movements (session/get-in [:movement-session :parts position-in-parts :movements])]
     (GET "singlemovement"
          {:params        {:categories categories}
           :format        :edn
-          :handler       #(session/assoc-in! [:movement-session :parts pos-in-parts :movements]
-                                             (assoc movement-list pos-in-movement-list (first %)))
+          :handler       #(let [id (:id m)
+                                new-movement (first %)
+                                new-movement (assoc new-movement :id id)
+                                new-movements (assoc movements id new-movement)]
+                           (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
           :error-handler #(print "error getting single movement through refresh.")})))
 
 (defn remove-movement [m part-title]
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))
-        movement-list (session/get-in [:movement-session :parts position-in-parts :movements])
-        movement-list (remove #{m} movement-list)]
-    (session/assoc-in! [:movement-session :parts position-in-parts :movements] movement-list)))
+        movements (session/get-in [:movement-session :parts position-in-parts :movements])
+        movements (dissoc movements (:id m))]
+    (session/assoc-in! [:movement-session :parts position-in-parts :movements] movements)))
 
+(defn set-element-values!
 
+  [class value]
+  (let [elements (array-seq (.getElementsByClassName js/document class))]
+    (doseq [e elements]
+      (set! (.-value e) value))))
 
 (defn movement-component []
   (let [rep-text (atom "Rep")
         set-text (atom "Set")]
     (fn [{:keys [id category graphic animation equipment] :as m} part-title]
       (let [name (:movement/name m)
-            rep 10
-            set 3
             graphic (equipment-symbol "")
             description "movement description"]
         [:div.pure-u.movement
@@ -106,7 +115,7 @@
             (let [txt @rep-text]
               (case txt
                 "Rep" [:div.pure-u.rep {:className " custom-select"}
-                       [:select#rep
+                       [:select.rep-select
                         [:option "-"]
                         [:option "1"]
                         [:option "2"]
@@ -128,7 +137,7 @@
                         [:option "80"]
                         [:option "100"]]]
                 "Distance" [:div.pure-u.rep {:className " custom-select"}
-                             [:select#distance
+                             [:select.distance-select
                               [:option "-"]
                               [:option "10 m"]
                               [:option "20 m"]
@@ -164,7 +173,7 @@
             (let [txt @set-text]
               (case txt
                 "Set" [:div.pure-u.set {:className " custom-select"}
-                                     [:select#set
+                                     [:select.set-select
                                       [:option "-"]
                                       [:option "1"]
                                       [:option "2"]
@@ -177,7 +186,7 @@
                                       [:option "9"]
                                       [:option "10"]]]
                 "Duration" [:div.pure-u.duration {:className " custom-select"}
-                            [:select#duration
+                            [:select.duration-select
                              [:option "-"]
                              [:option "5 s"]
                              [:option "10 s"]
@@ -214,8 +223,9 @@
        [:button {:type     "submit"
                  :on-click #(add-movement title)} "+"]
        [:div.pure-g
-        (for [m movements]
-          ^{:key (str m (rand-int 100000))} [movement-component m title])]])))
+        (doall
+          (for [m (vals movements)]
+            ^{:key (str m (rand-int 100000))} [movement-component m title]))]])))
 
 (defn session-component []
   (let [adding-description (atom false)]
@@ -224,16 +234,16 @@
        [:div.pure-g
         [:label.pure-u.pure-u-md-1-5]
         [:h1.pure-u.pure-u-md-3-5 title]
-        [:label.pure-u.pure-u-md-1-5 (str (.getDay (js/Date.)) "/" (.getMonth (js/Date.)))]]
-       [:div description]
+        [:button.pure-u.pure-u-md-1-5 {:on-click #(set-element-values! "rep" 5)} "Fill in 5 reps"]]
+       [:div {:on-click #(handler-fn (reset! adding-description true))} description]
        (when @adding-description
          [text-edit-component {:class   "edit" :title description
                                :on-save #(handler-fn (session/assoc-in! [:movement-session :description] %))
                                :on-stop #(handler-fn (reset! adding-description false))}])
-       [:button {:type     "submit"
-                 :on-click #(handler-fn (reset! adding-description true))} "!"]
-       (for [p parts]
-         ^{:key p} [part-component p])
+
+       (doall
+         (for [p parts]
+           ^{:key p} [part-component p]))
        [:div.pure-g
         [:button.pure-u-1-3 {:type     "submit"
                              :on-click log-session}
@@ -241,8 +251,18 @@
         [:button.pure-u-1-3 {:on-click #()} "Share"]
         [:button.pure-u-1-3 {:on-click #()} "Make PDF"]]])))
 
+(defn list-to-sorted-map [list-of-movements]
+  (let [movements (atom (sorted-map))]
+    (doseq [m list-of-movements
+            :let [id (swap! m-counter inc)]]
+      (swap! movements assoc id (assoc m :id id)))
+    @movements))
+
 (defn add-session-handler [session]
-  (session/put! :movement-session session))
+  (let [new-parts (mapv #(assoc % :movements (list-to-sorted-map (:movements %)))
+                       (:parts session))
+        new-session (assoc session :parts new-parts)]
+    (session/put! :movement-session new-session)))
 
 (defn template-component []
   (let []
@@ -250,13 +270,7 @@
       [:li {:on-click #(GET (str "template/" (str/replace template-name " " "-"))
                             {:handler       add-session-handler
                              :error-handler (fn [] (print "error getting session data from server."))})}
-       template-name]
-
-      #_[:div.pure-u-1-3.pure-u-md-1-8
-         {:on-click #(GET (str "template/" (str/replace template-name " " "-"))
-                          {:handler       add-session-handler
-                           :error-handler (fn [] (print "error getting session data from server."))})}
-         template-name])))
+       template-name])))
 
 (defonce getting-templates
          (GET "templates" {:handler       #(session/put! :templates %)
