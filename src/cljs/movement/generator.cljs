@@ -10,6 +10,7 @@
     [movement.util :refer [GET]]
     [movement.text :refer [text-edit-component]]
     [movement.menu :refer [menu-component]]
+    [movement.draggable :refer [draggable-number-component]]
     [movement.state :refer [movement-session handler-fn log-session]]))
 
 (defn equipment-symbol [equipment-name]
@@ -72,45 +73,136 @@
 (defn movement-component []
   (let [rep-text (atom "Rep")
         set-text (atom "Set")]
-    (fn [{:keys [id category graphic animation equipment rep set distance duration] :as m} part-title]
+    (fn [{:keys [id category graphic animation equipment] :as m} part-title]
       (let [name (:movement/name m)
             rep 10
             set 3
-            graphic (equipment-symbol "")]
+            graphic (equipment-symbol "")
+            description "movement description"]
         [:div.pure-u.movement
 
          [:div.pure-g
-          [:div.pure-u-1-2.refresh {:on-click #(refresh-movement m part-title)}]
-          [:div.pure-u-1-2.destroy {:on-click #(remove-movement m part-title)}]]
+          [:div.pure-u-1-2.refresh {:on-click #(refresh-movement m part-title)
+                                    :title "Swap with another movement"}]
+          [:div.pure-u-1-2.destroy {:on-click #(remove-movement m part-title)
+                                    :title "Remove movement"}]]
 
          [:div.pure-g.title
           [:span.pure-u name]]
 
          [:div.pure-g
-          [:img.pure-u.graphic.pure-img-responsive {:src graphic}]]
+          [:img.pure-u.graphic.pure-img-responsive {:src graphic :title name
+                                                    :alt name}]]
 
          [:div.pure-g
 
-          [:div.pure-u-1-4.sw
+          [:div.pure-u-1-3.sw
            [:div.pure-g
-            [:span.pure-u.rep-text {:on-click #(if (= @rep-text "Rep")
+            [:label.pure-u.rep-text {:on-click #(if (= @rep-text "Rep")
                                                 (reset! rep-text "Distance")
-                                                (reset! rep-text "Rep"))} @rep-text]]
-           [:div.pure-g
-            [:span.pure-u.rep rep]]]
+                                                (reset! rep-text "Rep"))
+                                     :title "Change between rep and distance"}
+             @rep-text]
+            (let [txt @rep-text]
+              (case txt
+                "Rep" [:div.pure-u.rep {:className " custom-select"}
+                       [:select#rep
+                        [:option "-"]
+                        [:option "1"]
+                        [:option "2"]
+                        [:option "3"]
+                        [:option "4"]
+                        [:option "5"]
+                        [:option "6"]
+                        [:option "7"]
+                        [:option "8"]
+                        [:option "9"]
+                        [:option "10"]
+                        [:option "15"]
+                        [:option "20"]
+                        [:option "25"]
+                        [:option "30"]
+                        [:option "40"]
+                        [:option "50"]
+                        [:option "60"]
+                        [:option "80"]
+                        [:option "100"]]]
+                "Distance" [:div.pure-u.rep {:className " custom-select"}
+                             [:select#distance
+                              [:option "-"]
+                              [:option "10 m"]
+                              [:option "20 m"]
+                              [:option "50 m"]
+                              [:option "100 m"]
+                              [:option "200 m"]
+                              [:option "300 m"]
+                              [:option "400 m"]
+                              [:option "600 m"]
+                              [:option "800 m"]
+                              [:option "1000 m"]
+                              [:option "1.5 km"]
+                              [:option "2 km"]
+                              [:option "3 km"]
+                              [:option "4 km"]
+                              [:option "5 km"]
+                              [:option "10 km"]
+                              [:option "15 km"]
+                              [:option "20 km"]]]))]]
 
-          [:div.pure-u-1-2
-           [:div.pure-g
+          [:div.pure-u-1-3
+           #_[:div.pure-g
             [:img.pure-u.icon {:src (equipment-symbol equipment)}]
             ]]
 
-          [:div.pure-u-1-4.se
+          [:div.pure-u-1-3.se
            [:div.pure-g
-            [:span.pure-u.set-text {:on-click #(if (= @set-text "Set")
-                                                (reset! set-text "Duration")
-                                                (reset! set-text "Set"))} @set-text]]
-           [:div.pure-g
-            [:span.pure-u.set set]]]]
+            [:label.pure-u.set-text {:on-click #(if (= @set-text "Set")
+                                                 (reset! set-text "Duration")
+                                                 (reset! set-text "Set"))
+                                     :title "Change between set and duration"}
+             @set-text]
+            (let [txt @set-text]
+              (case txt
+                "Set" [:div.pure-u.set {:className " custom-select"}
+                                     [:select#set
+                                      [:option "-"]
+                                      [:option "1"]
+                                      [:option "2"]
+                                      [:option "3"]
+                                      [:option "4"]
+                                      [:option "5"]
+                                      [:option "6"]
+                                      [:option "7"]
+                                      [:option "8"]
+                                      [:option "9"]
+                                      [:option "10"]]]
+                "Duration" [:div.pure-u.duration {:className " custom-select"}
+                            [:select#duration
+                             [:option "-"]
+                             [:option "5 s"]
+                             [:option "10 s"]
+                             [:option "15 s"]
+                             [:option "20 s"]
+                             [:option "30 s"]
+                             [:option "45 s"]
+                             [:option "60 s"]
+                             [:option "2 min"]
+                             [:option "3 min"]
+                             [:option "4 min"]
+                             [:option "5 min"]
+                             [:option "6 min"]
+                             [:option "7 min"]
+                             [:option "8 min"]
+                             [:option "9 min"]
+                             [:option "10 min"]
+                             [:option "15 min"]
+                             [:option "20 min"]
+                             [:option "25 min"]
+                             [:option "30 min"]
+                             [:option "45 min"]
+                             [:option "60 min"]
+                             [:option "90 min"]
+                             [:option "120 min"]]]))]]]
 
          ]))))
 

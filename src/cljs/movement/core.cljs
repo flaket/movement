@@ -35,7 +35,7 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (set-page! #'draggable-number-component)
+  (set-page! #'generator-component)
   (session/put! :logged-sessions [])
 
   (render-component [page] (.getElementById js/document "app")))

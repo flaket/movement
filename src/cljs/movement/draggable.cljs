@@ -4,14 +4,15 @@
             [reagent.core :refer [atom]]))
 
 (def draggable (atom {:x 100 :y 100}))
-(def draggable-number (atom {}))
+(def draggable-number1 (atom {}))
 
 (defn get-client-rect [e]
   (let [r (.getBoundingClientRect (.-target e))]
     {:left (.-left r), :top (.-top r)}))
 
 (defn draggable-number-component []
-  (let [min 0
+  (let [draggable-number (atom {})
+        min 0
         max 100
         step 1
         hovering (atom false)
