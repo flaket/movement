@@ -65,6 +65,7 @@ ul.templates li:hover ul {
 }
 
 .movement {
+    width: 220px;
     position: relative;
     margin: 5px;
     padding: 5px;
@@ -79,13 +80,21 @@ ul.templates li:hover ul {
 
 .title {
     position: relative;
+    text-align: center;
+    padding: 0px;
+    margin: 10px 0 0 10px;
+    text-decoration: underline;
+}
+ .title:hover {
+    cursor: pointer;
+ }
+
+ .description {
+    position: relative;
     padding: 0px;
     margin: 5px 0 0 15px;
-}
-
-.title span {
-    font-size: 100%;
-}
+    font-size: 70%;
+ }
 
 .graphic {
     display: block;
@@ -168,6 +177,10 @@ ul.templates li:hover ul {
     left: 10px;
 }
 
+ .rep-text:hover {
+    cursor: pointer;
+ }
+
 .rep {
     position: absolute;
     left: 10px;
@@ -186,6 +199,10 @@ ul.templates li:hover ul {
     right: 10px;
     bottom: 35px;
 }
+
+ .set-text:hover {
+    cursor: pointer;
+ }
 
 .set {
     position: absolute;

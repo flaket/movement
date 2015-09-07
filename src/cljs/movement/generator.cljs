@@ -84,8 +84,7 @@
   [class value]
   (let [elements (array-seq (.getElementsByClassName js/document class))]
     (doseq [e elements]
-      (do (set! (.-value e) value)
-          #_(.onchange e)))))
+      (do (set! (.-value e) value)))))
 
 (defn set-movement-rep-text! [])
 (defn set-movement-set-text! [])
@@ -94,11 +93,12 @@
 
 (defn movement-component []
   (let [rep-text (atom "Rep")
-        set-text (atom "Set")]
+        set-text (atom "Set")
+        description-showing (atom false)]
     (fn [{:keys [id category graphic animation equipment] :as m} part-title]
       (let [name (:movement/name m)
             graphic (equipment-symbol "")
-            description "movement description"]
+            description "..movement description.."]
         [:div.pure-u.movement
 
          [:div.pure-g
@@ -107,8 +107,15 @@
           [:div.pure-u-1-2.destroy {:on-click #(remove-movement m part-title)
                                     :title "Remove movement"}]]
 
-         [:div.pure-g.title
-          [:span.pure-u name]]
+         [:div.pure-g
+          [:span.pure-u.title {:title "Click to view movement description"
+                               :alt name
+                               :on-click #(handler-fn (reset! description-showing (not @description-showing)))}
+           name]]
+
+         (when @description-showing
+           [:div.pure-g
+            [:p.pure-u.pure-u-md-1-1.description description]])
 
          [:div.pure-g
           [:img.pure-u.graphic.pure-img-responsive {:src graphic :title name
@@ -268,14 +275,26 @@
       [:div#session
        [:div.pure-g
         [:label.pure-u.pure-u-md-1-5]
-        [:h1.pure-u.pure-u-md-3-5 title]
-        [:button.pure-u.pure-u-md-1-5 {:on-click #(set-element-values! "rep-select" 5)} "Fill in 5 reps"]]
+        [:h1.pure-u.pure-u-md-3-5 title]]
        [:div {:on-click #(handler-fn (reset! adding-description true))} description]
        (when @adding-description
          [text-edit-component {:class   "edit" :title description
                                :on-save #(handler-fn (session/assoc-in! [:movement-session :description] %))
                                :on-stop #(handler-fn (reset! adding-description false))}])
 
+
+       [:div.pure-g
+        [:label.pure-u.pure-u-md-1-5]
+        [:p.pure-u.pure-u-md-3-5 [:i "Quickly set rep/set scheme for all movements "]
+
+         [:a {:on-click #(do (set-element-values! "rep-select" 10)
+                             (set-element-values! "set-select" 3))} "10/3, "]
+         [:a {:on-click #(do (set-element-values! "rep-select" 5)
+                             (set-element-values! "set-select" 3))} "5/3, "]
+         [:a {:on-click #(do (set-element-values! "rep-select" 10)
+                             (set-element-values! "set-select" 1))} "10/1, "]
+         [:a {:on-click #(do (set-element-values! "rep-select" 5)
+                             (set-element-values! "set-select" 5))} "5/5"]]]
        (doall
          (for [p parts]
            ^{:key p} [part-component p]))
