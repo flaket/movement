@@ -9,7 +9,7 @@
             (.autocomplete (js/$ "#tags")
                            (clj->js {:source available-tags}))))))
 
-(defn text-input-component [{:keys [title on-save on-stop]}]
+(defn text-input-component [{:keys [title on-save on-stop size]}]
   (let [val (atom title)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -17,7 +17,7 @@
                (if-not (empty? v) (on-save v))
                (stop))]
     (fn [props]
-      [:input.pure-u (merge props
+      [:input (merge props
                           {:type "text"
                            :value @val
                            :on-blur #(do (reset! val (-> % .-target .-value))
@@ -26,7 +26,9 @@
                            :on-key-down #(case (.-which %)
                                           13 (save)
                                           27 (stop)
-                                          nil)})])))
+                                          nil)
+                           :size size
+                           :autofocus false})])))
 
 (def text-edit-component
   (with-meta text-input-component {:component-did-mount #(do (.focus (dom-node %))

@@ -23,6 +23,7 @@
   -webkit-appearance: none;
   /* Font size must the 16px or larger to prevent iOS page zoom on focus */
   font-size:1.4em;
+  color: #111;
 }
 
 /* ------------------------------------  */

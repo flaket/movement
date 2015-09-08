@@ -36,7 +36,15 @@
                    "images/sit-up-pike.png"
                    "images/jump-rope.png"
                    "images/pistol-single-leg-squat.png"
-                   "images/hollow-body-rock.png"])))
+                   "images/hollow-body-rock.png"
+                   "images/handstand-walk.png"
+                   "images/handstand-push-up-kip.png"
+                   "images/dip.png"
+                   "images/russian-dip.png"
+                   "images/kick-to-handstand.png"
+                   "images/lying-roll.png"
+                   "images/ring-l-sit.png"
+                   "images/side-leg-swing.png"])))
 
 (defn positions
   "Finds the integer positions of the elements in the collection, that matches the predicate."
@@ -107,11 +115,13 @@
 (defn add-session-handler [session]
   (let [new-parts (mapv #(assoc % :movements (list-to-sorted-map (:movements %)))
                         (:parts session))
-        new-session (assoc session :parts new-parts)]
+        new-session (assoc session :parts new-parts)
+        new-session (assoc new-session :comment [])
+        ]
     (session/put! :movement-session new-session)))
 
 
-;;;;;; Components ;;;;;;;
+;;;;;; Components ;;;;;;
 
 (defn movement-component []
   (let [rep-text (atom "Rep")
@@ -219,15 +229,15 @@
           [:div.pure-u-1-3.se
            [:div.pure-g
             [:p.pure-u.set-text {:on-click #(if (= @set-text "Set")
-                                                 (let [elements (array-seq (.getElementById js/document (str "set-" id)))]
-                                                   (doseq [e elements]
-                                                     (set! (.-selected e) false))
-                                                   (reset! set-text "Duration"))
-                                                 (let [elements (array-seq (.getElementById js/document (str "duration-" id)))]
-                                                   (doseq [e elements]
-                                                     (set! (.-selected e) false))
-                                                   (reset! set-text "Set")))
-                                     :title "Change between set and duration"}
+                             (let [elements (array-seq (.getElementById js/document (str "set-" id)))]
+                               (doseq [e elements]
+                                 (set! (.-selected e) false))
+                               (reset! set-text "Duration"))
+                             (let [elements (array-seq (.getElementById js/document (str "duration-" id)))]
+                               (doseq [e elements]
+                                 (set! (.-selected e) false))
+                               (reset! set-text "Set")))
+                 :title    "Change between set and duration"}
              @set-text]
             (let [txt @set-text]
               (case txt
@@ -293,42 +303,32 @@
             ^{:key (str m (rand-int 100000))} [movement-component m title]))]])))
 
 (defn session-component []
-  (let [adding-description (atom false)]
+  (let [adding-comment (atom false)]
     (fn [{:keys [title description parts]}]
       [:div
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5]
         [:h1.pure-u.pure-u-md-3-5 title]]
-       [:p.subtitle {:on-click #(handler-fn (reset! adding-description true))} description]
-       (when @adding-description
-         [text-edit-component {:class   "edit" :title description
-                               :on-save #(handler-fn (session/assoc-in! [:movement-session :description] %))
-                               :on-stop #(handler-fn (reset! adding-description false))}])
+       [:p.subtitle description]
 
-
-       [:div.pure-g
-        [:div.pure-u.pure-u-md-1-5]
-        [:p.pure-u.pure-u-md-3-5 "Quickly set rep/set scheme for all movements "
-
-         [:a {:on-click #(do (set-element-values! "rep-select" 10)
-                             (set-element-values! "set-select" 3))} "10/3, "]
-         [:a {:on-click #(do (set-element-values! "rep-select" 5)
-                             (set-element-values! "set-select" 3))} "5/3, "]
-         [:a {:on-click #(do (set-element-values! "rep-select" 10)
-                             (set-element-values! "set-select" 1))} "10/1, "]
-         [:a {:on-click #(do (set-element-values! "rep-select" 5)
-                             (set-element-values! "set-select" 5))} "5/5"]]]
        (doall
          (for [p parts]
            ^{:key p} [part-component p]))
        [:div.pure-g
-        [:div.pure-u "Add comments to your session"] ]
+        [:p.pure-u [:a {:on-click #(reset! adding-comment true)} "Add comments to your session"]]]
        [:div.pure-g
-        [:button.pure-u-1-3 {:type     "submit"
-                             :on-click log-session}
-         "Log this movement session"]
-        [:button.pure-u-1-3 {:on-click #()} "Share"]
-        [:button.pure-u-1-3 {:on-click #()} "Make PDF"]]])))
+        (when @adding-comment [text-edit-component {:class       "edit"
+                                                    :on-save     #(handler-fn (session/update-in! [:movement-session :comment] conj %))
+                                                    :on-stop     #(reset! adding-comment false)
+                                                    :size        38}])]
+       (let [comments (session/get-in [:movement-session :comment])]
+         [:div.pure-u
+          (for [c comments]
+            ^{:key c} [:p (str c)])])
+       [:div.pure-g
+        [:button.pure-u-1-2 {:on-click log-session} "Log this movement session"]
+        [:button.pure-u-1-2 {:on-click #()} "Share"]
+        ]])))
 
 (defn template-component []
   (let []
@@ -342,23 +342,36 @@
   (let []
     (fn []
       [:div
-       [:h1 "The Next Movement Session"]
-       [:div "Create a brand new movement session HERE."]
-       [:div "Or generate a new session based on one of your "
-        [:ul.templates
-         [:li
-          [:ul
-           (doall
-             (for [t (session/get :templates)]
-               ^{:key t} [template-component t]))]
-          "templates"]]]])))
+       [:div.pure-g
+        [:div.pure-u [:h2 "Get inspired by a random movement session."]]]
+       [:div.pure-g
+        [:div.pure-u [:h2 "Or generate a new session based on one of your "]
+         [:ul.templates
+          [:li
+           [:ul
+            (doall
+              (for [t (session/get :templates)]
+                ^{:key t} [template-component t]))]
+           "templates"]]]]])))
 
 (defn top-menu-component []
   (let []
     (fn []
-      [:div
-       [:h2
-        "top menu goes here"]])))
+      [:div.pure-g
+       [:p.pure-u-1-4
+        "menu item 1"]
+       [:p.pure-u-1-4
+        "menu item 2"]
+       [:p.pure-u-1-4
+        "menu item 3"]
+       [:p.pure-u.pure-u-md-1-4 "Set rep/set scheme for all movements "
+
+        [:a {:on-click #(do (set-element-values! "rep-select" 10)
+                            (set-element-values! "set-select" 3))} "10/3 "]
+        [:a {:on-click #(do (set-element-values! "rep-select" 10)
+                            (set-element-values! "set-select" 1))} "10/1 "]
+        [:a {:on-click #(do (set-element-values! "rep-select" 5)
+                            (set-element-values! "set-select" 1))} "5/1"]]])))
 
 (defn generator-component []
   (let []
