@@ -7,7 +7,6 @@
   padding:0;
 }
 
-
 /* This is the native select, we're making everything but the text invisible so we can see the button styles in the wrapper */
 .custom-select select {
   width:100%;
@@ -23,56 +22,8 @@
   appearance: none;
   -webkit-appearance: none;
   /* Font size must the 16px or larger to prevent iOS page zoom on focus */
-  font-size:1em;
-  /* General select styles: change as needed */
-  /*font-family: helvetica, sans-serif;
-  font-weight: bold;
-  color: #444;
-  padding: .6em 1.9em .5em .8em;
-  padding: 0;
-  line-height:1.3;*/
+  font-size:1.4em;
 }
-
-
-/* Custom arrow sits on top of the select - could be an image, SVG, icon font, etc. or the arrow could just baked into the bg image on the select. Note this si a 2x image so it will look bad in browsers that don't support background-size. In production, you'd handle this resolution switch via media query but this is a demo. */
-
-.custom-select::after {
-  content: "";
-  position: absolute;
-  width: 9px;
-  height: 8px;
-  top: 50%;
-  right: 1em;
-  margin-top:-4px;
-  z-index: 2;
-  /* This hack make the select behind the arrow clickable in some browsers */
-  pointer-events:none;
-}
-
-
-/* Hover style */
-.custom-select:hover {
-  /*border:1px solid #888;*/
-}
-
-/* Focus style */
-.custom-select select:focus {
-  /*outline:none;
-  box-shadow: 0 0 1px 3px rgba(180,222,250, 1);
-  background-color:transparent;
-  color: #222;
-  border:1px solid #aaa;*/
-}
-
-/* Set options to normal weight */
-.custom-select option {
-  font-weight:normal;
-}
-
-
-
-
-
 
 /* ------------------------------------  */
 /* START OF UGLY BROWSER-SPECIFIC HACKS */

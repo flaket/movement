@@ -32,7 +32,7 @@
 
        [:div#main
         [:div.header
-         [:h1 "User"]]
+         [:h2 "User"]]
 
         [:div.content
          (let [logged-sessions (session/get :logged-sessions)]

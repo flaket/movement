@@ -41,6 +41,9 @@
   (set-page! #'generator-component)
   (session/put! :logged-sessions [])
   (session/put! :m-counter (atom 0))
+
+  (.initializeTouchEvents js/React true)
+
   (mount-root))
 
 (init!)

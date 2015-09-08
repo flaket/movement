@@ -30,7 +30,13 @@
                    "images/pull-up.png"
                    "images/stepping-over.png"
                    "images/side-swing.png"
-                   "images/front-leg-swing.png"])))
+                   "images/front-leg-swing.png"
+                   "images/burpee.png"
+                   "images/sit-up.png"
+                   "images/sit-up-pike.png"
+                   "images/jump-rope.png"
+                   "images/pistol-single-leg-squat.png"
+                   "images/hollow-body-rock.png"])))
 
 (defn positions
   "Finds the integer positions of the elements in the collection, that matches the predicate."
@@ -91,6 +97,22 @@
 (defn set-movement-rep! [])
 (defn set-movement-set! [])
 
+(defn list-to-sorted-map [list-of-movements]
+  (let [movements (atom (sorted-map))]
+    (doseq [m list-of-movements
+            :let [id (swap! m-counter inc)]]
+      (swap! movements assoc id (assoc m :id id)))
+    @movements))
+
+(defn add-session-handler [session]
+  (let [new-parts (mapv #(assoc % :movements (list-to-sorted-map (:movements %)))
+                        (:parts session))
+        new-session (assoc session :parts new-parts)]
+    (session/put! :movement-session new-session)))
+
+
+;;;;;; Components ;;;;;;;
+
 (defn movement-component []
   (let [rep-text (atom "Rep")
         set-text (atom "Set")
@@ -99,7 +121,8 @@
       (let [name (:movement/name m)
             graphic (equipment-symbol "")
             description "..movement description.."]
-        [:div.pure-u.movement
+        [:div.pure-u.movement {:id        (str "m-" id)
+                               :className ""}
 
          [:div.pure-g
           [:div.pure-u-1-2.refresh {:on-click #(refresh-movement m part-title)
@@ -108,7 +131,7 @@
                                     :title "Remove movement"}]]
 
          [:div.pure-g
-          [:span.pure-u.title {:title "Click to view movement description"
+          [:h3.pure-u.title {:title "Click to view movement description"
                                :alt name
                                :on-click #(handler-fn (reset! description-showing (not @description-showing)))}
            name]]
@@ -125,7 +148,7 @@
 
           [:div.pure-u-1-3.sw
            [:div.pure-g
-            [:label.pure-u.rep-text {:on-click #(if (= @rep-text "Rep")
+            [:p.pure-u.rep-text {:on-click #(if (= @rep-text "Rep")
                                                  (let [elements (array-seq (.getElementById js/document (str "rep-" id)))]
                                                    (doseq [e elements]
                                                      (set! (.-selected e) false))
@@ -195,7 +218,7 @@
 
           [:div.pure-u-1-3.se
            [:div.pure-g
-            [:label.pure-u.set-text {:on-click #(if (= @set-text "Set")
+            [:p.pure-u.set-text {:on-click #(if (= @set-text "Set")
                                                  (let [elements (array-seq (.getElementById js/document (str "set-" id)))]
                                                    (doseq [e elements]
                                                      (set! (.-selected e) false))
@@ -260,7 +283,7 @@
 (defn part-component []
   (let []
     (fn [{:keys [title categories movements]}]
-      [:div
+      [:div.part
        [:h2 title]
        [:button {:type     "submit"
                  :on-click #(add-movement title)} "+"]
@@ -272,11 +295,11 @@
 (defn session-component []
   (let [adding-description (atom false)]
     (fn [{:keys [title description parts]}]
-      [:div#session
+      [:div
        [:div.pure-g
-        [:label.pure-u.pure-u-md-1-5]
+        [:div.pure-u.pure-u-md-1-5]
         [:h1.pure-u.pure-u-md-3-5 title]]
-       [:div {:on-click #(handler-fn (reset! adding-description true))} description]
+       [:p.subtitle {:on-click #(handler-fn (reset! adding-description true))} description]
        (when @adding-description
          [text-edit-component {:class   "edit" :title description
                                :on-save #(handler-fn (session/assoc-in! [:movement-session :description] %))
@@ -284,8 +307,8 @@
 
 
        [:div.pure-g
-        [:label.pure-u.pure-u-md-1-5]
-        [:p.pure-u.pure-u-md-3-5 [:i "Quickly set rep/set scheme for all movements "]
+        [:div.pure-u.pure-u-md-1-5]
+        [:p.pure-u.pure-u-md-3-5 "Quickly set rep/set scheme for all movements "
 
          [:a {:on-click #(do (set-element-values! "rep-select" 10)
                              (set-element-values! "set-select" 3))} "10/3, "]
@@ -299,24 +322,13 @@
          (for [p parts]
            ^{:key p} [part-component p]))
        [:div.pure-g
+        [:div.pure-u "Add comments to your session"] ]
+       [:div.pure-g
         [:button.pure-u-1-3 {:type     "submit"
                              :on-click log-session}
          "Log this movement session"]
         [:button.pure-u-1-3 {:on-click #()} "Share"]
         [:button.pure-u-1-3 {:on-click #()} "Make PDF"]]])))
-
-(defn list-to-sorted-map [list-of-movements]
-  (let [movements (atom (sorted-map))]
-    (doseq [m list-of-movements
-            :let [id (swap! m-counter inc)]]
-      (swap! movements assoc id (assoc m :id id)))
-    @movements))
-
-(defn add-session-handler [session]
-  (let [new-parts (mapv #(assoc % :movements (list-to-sorted-map (:movements %)))
-                       (:parts session))
-        new-session (assoc session :parts new-parts)]
-    (session/put! :movement-session new-session)))
 
 (defn template-component []
   (let []
@@ -326,24 +338,35 @@
                              :error-handler (fn [] (print "error getting session data from server."))})}
        template-name])))
 
+(defn blank-state-component []
+  (let []
+    (fn []
+      [:div
+       [:h1 "The Next Movement Session"]
+       [:div "Create a brand new movement session HERE."]
+       [:div "Or generate a new session based on one of your "
+        [:ul.templates
+         [:li
+          [:ul
+           (doall
+             (for [t (session/get :templates)]
+               ^{:key t} [template-component t]))]
+          "templates"]]]])))
+
+(defn top-menu-component []
+  (let []
+    (fn []
+      [:div
+       [:h2
+        "top menu goes here"]])))
+
 (defn generator-component []
   (let []
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
-       [:div#main
-        [:div.header
-         [:h1 "Movement Session"]
-         #_[:div.pure-g]
-         [:div "Create a brand new movement session HERE."]
-         [:div "Or generate a new session based on one of your "
-          [:ul.templates
-           [:li
-            [:ul
-             (doall
-               (for [t (session/get :templates)]
-                 ^{:key t} [template-component t]))]
-            "templates"]]]]
-        [:div.content
-         (when (not (nil? (session/get :movement-session)))
-           [session-component (session/get :movement-session)])]]])))
+       [:div.content
+        [top-menu-component]
+        (if (nil? (session/get :movement-session))
+          [blank-state-component]
+          [session-component (session/get :movement-session)])]])))
