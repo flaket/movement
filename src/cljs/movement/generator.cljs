@@ -124,6 +124,40 @@
   (let [name (first (shuffle (session/get :templates)))]
     (create-session-from-template name)))
 
+(defn store-rep-set-info []
+  ; go through every movement
+  ; look up the select's by id and get the values
+  ; add valyes to movement map
+  (let [parts (session/get-in [:movement-session :parts])]
+    (doseq [p parts]
+      (let [position-in-parts (first (positions #{(:title p)} (map :title parts)))
+            new-movements (mapv (fn [[_ m]]
+                                 (if-let [
+                                       rep-selector (.getElementById js/document (str "rep-" (:id m)))
+                                          ;set-selector (.getElementById js/document (str "set-" (:id m)))
+                                          ;distance-selector (.getElementById js/document (str "distance-" id))
+                                          ;duration-selector (.getElementById js/document (str "duration-" id))
+                                          ]
+                                   (try
+                                     (when (not (= "-" (.-value rep-selector)))
+                                       (assoc m :rep (.-value rep-selector)))
+                                     (catch js/Object e (str "caught exception: " (.log js/console e))))
+                                   #_(try
+                                     (when (not (= "-" (.-value set-selector)))
+                                       (assoc m :set (.-value set-selector)))
+                                     (catch js/Object e (str "caught exception: " (.log js/console e))))
+                                   #_(try
+                                     (when (not (= "-" (.-value distance-selector)))
+                                       (assoc m :distance (.-value distance-selector)))
+                                     (catch js/Object e (str "caught exception: " (.log js/console e))))
+                                   #_(try
+                                     (when (not (= "-" (.-value duration-selector)))
+                                       (assoc m :duration (.-value duration-selector)))
+                                     (catch js/Object e (str "caught exception: " (.log js/console e))))))
+                               (:movements p))]
+        (session/assoc-in! [:logging-session :parts position-in-parts :movements] new-movements)))
+    (print (session/get :logging-session))))
+
 
 ;;;;;; Components ;;;;;;
 
@@ -301,7 +335,7 @@
        [:h2 title]
        [:div.pure-g
         [:p.pure-u-1-2 [:a {:on-click #(add-movement title)} "Add movement"]]
-        [:p.pure-u-1-2 [:a {:style    {:float "right"}
+        [:p.pure-u-1-2 #_[:a {:style    {:float "right"}
                             :on-click #(add-movement title)} "Find movement"]]]
        [:div.pure-g
         (doall
@@ -333,7 +367,7 @@
             ^{:key c} [:p (str c)])])
        [:div.pure-g
         [:h3.pure-u-1-3 [:a {:on-click log-session} "Log this movement session"]]
-        [:h3.pure-u-1-2 [:a {:on-click #()} "Share"]]
+        [:h3.pure-u-1-2 [:a {:on-click store-rep-set-info} "Share"]]
         ]])))
 
 
