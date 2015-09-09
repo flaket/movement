@@ -59,7 +59,7 @@ h3:hover { cursor: pointer; }
 
 h1, h2, p.subtitle { text-align: center; }
 
-.part { margin-bottom: 3rem; }
+.part { margin-bottom: 4rem; }
 
 p, ol, ul { font-size: 1.2rem; }
 
@@ -75,6 +75,15 @@ a { color: #111;
     padding-bottom: 1px; }
 
 a:hover { cursor: pointer; }
+
+.blank-state { margin-top: 3rem;
+               text-align: center;}
+
+.random-button { margin-top: 3rem;
+
+                }
+
+.template-button { margin-top: 3rem; }
 
 /* Each movement card */
 .movement {

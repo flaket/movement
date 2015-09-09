@@ -1,17 +1,13 @@
 (ns movement.generator
-  (:require-macros [cljs.core.async.macros :refer (go)]
-                   [cljs.core :refer [this-as]])
   (:import [goog.events EventType])
   (:require
     [reagent.session :as session]
     [reagent.core :refer [atom]]
-    [cljs.core.async :refer (<!)]
     [goog.events :as events]
     [clojure.string :as str]
     [movement.util :refer [GET]]
     [movement.text :refer [text-edit-component]]
     [movement.menu :refer [menu-component]]
-    [movement.draggable :refer [draggable-number-component]]
     [movement.state :refer [movement-session handler-fn log-session]]))
 
 (defonce m-counter (atom 0))
@@ -92,14 +88,13 @@
         movements (dissoc movements (:id m))]
     (session/assoc-in! [:movement-session :parts position-in-parts :movements] movements)))
 
-(defonce rep-atom (atom "-"))
-
 (defn set-element-values!
   [class value]
   (let [elements (array-seq (.getElementsByClassName js/document class))]
     (doseq [e elements]
       (do (set! (.-value e) value)))))
 
+(defonce rep-atom (atom "-"))
 (defn set-movement-rep-text! [])
 (defn set-movement-set-text! [])
 (defn set-movement-rep! [])
@@ -119,6 +114,15 @@
         new-session (assoc new-session :comment [])
         ]
     (session/put! :movement-session new-session)))
+
+(defn create-session-from-template [template-name]
+  (GET (str "template/" (str/replace template-name " " "-"))
+       {:handler       add-session-handler
+        :error-handler (fn [] (print "error getting session data from server."))}))
+
+(defn pick-random-template []
+  (let [name (first (shuffle (session/get :templates)))]
+    (create-session-from-template name)))
 
 
 ;;;;;; Components ;;;;;;
@@ -295,8 +299,10 @@
     (fn [{:keys [title categories movements]}]
       [:div.part
        [:h2 title]
-       [:button {:type     "submit"
-                 :on-click #(add-movement title)} "+"]
+       [:div.pure-g
+        [:p.pure-u-1-2 [:a {:on-click #(add-movement title)} "Add movement"]]
+        [:p.pure-u-1-2 [:a {:style {:float "right"}
+                            :on-click #(add-movement title)} "Find movement"]]]
        [:div.pure-g
         (doall
           (for [m (vals movements)]
@@ -326,26 +332,28 @@
           (for [c comments]
             ^{:key c} [:p (str c)])])
        [:div.pure-g
-        [:button.pure-u-1-2 {:on-click log-session} "Log this movement session"]
-        [:button.pure-u-1-2 {:on-click #()} "Share"]
+        [:h3.pure-u-1-3 [:a {:on-click log-session} "Log this movement session"]]
+        [:h3.pure-u-1-2 [:a {:on-click #()} "Share"]]
         ]])))
+
 
 (defn template-component []
   (let []
-    (fn [template-name]
-      [:li {:on-click #(GET (str "template/" (str/replace template-name " " "-"))
-                            {:handler       add-session-handler
-                             :error-handler (fn [] (print "error getting session data from server."))})}
-       template-name])))
+    (fn [name]
+      [:li {:on-click #(create-session-from-template name)}
+       name])))
+
 
 (defn blank-state-component []
   (let []
     (fn []
-      [:div
+      [:div.blank-state
        [:div.pure-g
-        [:div.pure-u [:h2 "Get inspired by a random movement session."]]]
-       [:div.pure-g
-        [:div.pure-u [:h2 "Or generate a new session based on one of your "]
+        [:h1.pure-u "Let's create your next Movement Session"]]
+       [:div.pure-g.random-button
+        [:h3.pure-u [:a {:on-click pick-random-template} "Get inspired by a random movement session."]]]
+       [:div.pure-g.template-button
+        [:h3.pure-u [:a "Or generate a new session based on one of your "]
          [:ul.templates
           [:li
            [:ul
@@ -358,20 +366,26 @@
   (let []
     (fn []
       [:div.pure-g
-       [:p.pure-u-1-4
-        "menu item 1"]
-       [:p.pure-u-1-4
-        "menu item 2"]
-       [:p.pure-u-1-4
-        "menu item 3"]
-       [:p.pure-u.pure-u-md-1-4 "Set rep/set scheme for all movements "
+       [:h3.pure-u-1-3
+        [:a {:on-click pick-random-template} "New random session"]]
+       [:h3.pure-u-1-3
+        [:a "Select " [:ul.templates
+                       [:li
+                        [:ul
+                         (doall
+                           (for [t (session/get :templates)]
+                             ^{:key t} [template-component t]))]
+                        "template"]]]]
+       [:h3.pure-u.pure-u-md-1-4 "Set rep/set scheme for all movements "
 
         [:a {:on-click #(do (set-element-values! "rep-select" 10)
-                            (set-element-values! "set-select" 3))} "10/3 "]
+                            (set-element-values! "set-select" 3))} "10*3 "]
         [:a {:on-click #(do (set-element-values! "rep-select" 10)
-                            (set-element-values! "set-select" 1))} "10/1 "]
+                            (set-element-values! "set-select" 1))} "10*1 "]
         [:a {:on-click #(do (set-element-values! "rep-select" 5)
-                            (set-element-values! "set-select" 1))} "5/1"]]])))
+                            (set-element-values! "set-select" 1))} "5*1 "]
+        [:a {:on-click #(do (set-element-values! "rep-select" 5)
+                            (set-element-values! "set-select" 3))} "5*3"]]])))
 
 (defn generator-component []
   (let []
