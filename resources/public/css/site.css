@@ -79,17 +79,15 @@ a:hover { cursor: pointer; }
 .blank-state { margin-top: 3rem;
                text-align: center;}
 
-.random-button { margin-top: 3rem;
-
-                }
+.random-button { margin-top: 3rem; }
 
 .template-button { margin-top: 3rem; }
 
 /* Each movement card */
 .movement {
-    width: 220px;
+    width: 180px;
     position: relative;
-    margin: 5px;
+    margin: 0px 5px 0px 0px;
     padding: 5px;
     border-style: solid;
     border-width: 2px;
@@ -111,8 +109,8 @@ a:hover { cursor: pointer; }
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     padding: 0px;
     margin: 5px 10px 50px 10px;
 }
@@ -176,7 +174,6 @@ a:hover { cursor: pointer; }
 
 .sw {
     position: relative;
-
 }
 
 .rep-text {
@@ -194,7 +191,7 @@ a:hover { cursor: pointer; }
 .rep {
     position: absolute;
     left: 10px;
-    bottom: 10px;
+    bottom: 20px;
 }
 
 .se {
@@ -215,13 +212,14 @@ color: #68f;
 
 .set {
     position: absolute;
-    right: -40px;
-    bottom: 10px;
+    left: 35px;
+    bottom: 20px;
 }
 
 .duration {
     position: absolute;
-    bottom: 10px;
+    right: 5px;
+    bottom: 20px;
 }
 
 ul.templates {

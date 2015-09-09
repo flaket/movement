@@ -140,14 +140,14 @@
 
          [:div.pure-g
           [:div.pure-u-1-2.refresh {:on-click #(refresh-movement m part-title)
-                                    :title "Swap with another movement"}]
+                                    :title    "Swap with another movement"}]
           [:div.pure-u-1-2.destroy {:on-click #(remove-movement m part-title)
-                                    :title "Remove movement"}]]
+                                    :title    "Remove movement"}]]
 
          [:div.pure-g
-          [:h3.pure-u.title {:title "Click to view movement description"
-                               :alt name
-                               :on-click #(handler-fn (reset! description-showing (not @description-showing)))}
+          [:h3.pure-u.title {:title    "Click to view movement description"
+                             :alt      name
+                             :on-click #(handler-fn (reset! description-showing (not @description-showing)))}
            name]]
 
          (when @description-showing
@@ -163,23 +163,23 @@
           [:div.pure-u-1-3.sw
            [:div.pure-g
             [:p.pure-u.rep-text {:on-click #(if (= @rep-text "Rep")
-                                                 (let [elements (array-seq (.getElementById js/document (str "rep-" id)))]
-                                                   (doseq [e elements]
-                                                     (set! (.-selected e) false))
-                                                   (reset! rep-text "Distance"))
-                                                 (let [elements (array-seq (.getElementById js/document (str "distance-" id)))]
-                                                   (doseq [e elements]
-                                                     (set! (.-selected e) false))
-                                                   (reset! rep-text "Rep")))
-                                     :title    "Change between rep and distance"}
+                                             (let [elements (array-seq (.getElementById js/document (str "rep-" id)))]
+                                               (doseq [e elements]
+                                                 (set! (.-selected e) false))
+                                               (reset! rep-text "Distance"))
+                                             (let [elements (array-seq (.getElementById js/document (str "distance-" id)))]
+                                               (doseq [e elements]
+                                                 (set! (.-selected e) false))
+                                               (reset! rep-text "Rep")))
+                                 :title    "Change between rep and distance"}
              @rep-text]
             (let [txt @rep-text]
               (case txt
                 "Rep" [:div.pure-u.rep {:className " custom-select"}
                        [:select {:className "rep-select"
-                                 :id (str "rep-" id)
+                                 :id        (str "rep-" id)
                                  :on-change #(let [x (.-value (.getElementById js/document (str "rep-" id)))]
-                                                         (print x))}
+                                              (print x))}
                         [:option "-"]
                         [:option 1]
                         [:option 2]
@@ -201,69 +201,69 @@
                         [:option 80]
                         [:option 100]]]
                 "Distance" [:div.pure-u.rep {:className " custom-select"}
-                             [:select {:className "distance-select"
-                                       :id (str "distance-" id)
-                                       :on-change #(let [x (.-value (.getElementById js/document (str "distance-" id)))]
-                                                    (print x))}
-                              [:option "-"]
-                              [:option "10 m"]
-                              [:option "20 m"]
-                              [:option "50 m"]
-                              [:option "100 m"]
-                              [:option "200 m"]
-                              [:option "300 m"]
-                              [:option "400 m"]
-                              [:option "600 m"]
-                              [:option "800 m"]
-                              [:option "1000 m"]
-                              [:option "1.5 km"]
-                              [:option "2 km"]
-                              [:option "3 km"]
-                              [:option "4 km"]
-                              [:option "5 km"]
-                              [:option "10 km"]
-                              [:option "15 km"]
-                              [:option "20 km"]]]))]]
+                            [:select {:className "distance-select"
+                                      :id        (str "distance-" id)
+                                      :on-change #(let [x (.-value (.getElementById js/document (str "distance-" id)))]
+                                                   (print x))}
+                             [:option "-"]
+                             [:option "10 m"]
+                             [:option "20 m"]
+                             [:option "50 m"]
+                             [:option "100 m"]
+                             [:option "200 m"]
+                             [:option "300 m"]
+                             [:option "400 m"]
+                             [:option "600 m"]
+                             [:option "800 m"]
+                             [:option "1000 m"]
+                             [:option "1.5 km"]
+                             [:option "2 km"]
+                             [:option "3 km"]
+                             [:option "4 km"]
+                             [:option "5 km"]
+                             [:option "10 km"]
+                             [:option "15 km"]
+                             [:option "20 km"]]]))]]
 
           [:div.pure-u-1-3
            #_[:div.pure-g
-            [:img.pure-u.icon {:src (equipment-symbol equipment)}]
-            ]]
+              [:img.pure-u.icon {:src (equipment-symbol equipment)}]
+              ]]
 
           [:div.pure-u-1-3.se
            [:div.pure-g
             [:p.pure-u.set-text {:on-click #(if (= @set-text "Set")
-                             (let [elements (array-seq (.getElementById js/document (str "set-" id)))]
-                               (doseq [e elements]
-                                 (set! (.-selected e) false))
-                               (reset! set-text "Duration"))
-                             (let [elements (array-seq (.getElementById js/document (str "duration-" id)))]
-                               (doseq [e elements]
-                                 (set! (.-selected e) false))
-                               (reset! set-text "Set")))
-                 :title    "Change between set and duration"}
+                                             (let [elements (array-seq (.getElementById js/document (str "set-" id)))]
+                                               (doseq [e elements]
+                                                 (set! (.-selected e) false))
+                                               (reset! set-text "Duration"))
+                                             (let [elements (array-seq (.getElementById js/document (str "duration-" id)))]
+                                               (doseq [e elements]
+                                                 (set! (.-selected e) false))
+                                               (reset! set-text "Set")))
+                                 :title    "Change between set and duration"}
              @set-text]
             (let [txt @set-text]
               (case txt
                 "Set" [:div.pure-u.set {:className " custom-select"}
-                                     [:select {:className "set-select"
-                                               :id (str "set-" id)
-                                               :on-change #(let [x (.-value (.getElementById js/document (str "set-" id)))]
-                                                            (print x))}
-                                      [:option "-"]
-                                      [:option 1]
-                                      [:option 2]
-                                      [:option 3]
-                                      [:option 4]
-                                      [:option 5]
-                                      [:option 6]
-                                      [:option 7]
-                                      [:option 8]
-                                      [:option 9]
-                                      [:option 10]]]
+                       [:select {:className "set-select"
+                                 :id        (str "set-" id)
+                                 :on-change #(let [x (.-value (.getElementById js/document (str "set-" id)))]
+                                              (print x))}
+                        [:option "-"]
+                        [:option 1]
+                        [:option 2]
+                        [:option 3]
+                        [:option 4]
+                        [:option 5]
+                        [:option 6]
+                        [:option 7]
+                        [:option 8]
+                        [:option 9]
+                        [:option 10]]]
                 "Duration" [:div.pure-u.duration {:className " custom-select"}
                             [:select {:className "duration-select"
-                                      :id (str "duration-" id)
+                                      :id        (str "duration-" id)
                                       :on-change #(let [x (.-value (.getElementById js/document (str "duration-" id)))]
                                                    (print x))}
                              [:option "-"]
@@ -301,7 +301,7 @@
        [:h2 title]
        [:div.pure-g
         [:p.pure-u-1-2 [:a {:on-click #(add-movement title)} "Add movement"]]
-        [:p.pure-u-1-2 [:a {:style {:float "right"}
+        [:p.pure-u-1-2 [:a {:style    {:float "right"}
                             :on-click #(add-movement title)} "Find movement"]]]
        [:div.pure-g
         (doall
@@ -323,10 +323,10 @@
        [:div.pure-g
         [:p.pure-u [:a {:on-click #(reset! adding-comment true)} "Add comments to your session"]]]
        [:div.pure-g
-        (when @adding-comment [text-edit-component {:class       "edit"
-                                                    :on-save     #(handler-fn (session/update-in! [:movement-session :comment] conj %))
-                                                    :on-stop     #(reset! adding-comment false)
-                                                    :size        38}])]
+        (when @adding-comment [text-edit-component {:class   "edit"
+                                                    :on-save #(handler-fn (session/update-in! [:movement-session :comment] conj %))
+                                                    :on-stop #(reset! adding-comment false)
+                                                    :size    38}])]
        (let [comments (session/get-in [:movement-session :comment])]
          [:div.pure-u
           (for [c comments]
@@ -393,7 +393,9 @@
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content
-        [top-menu-component]
+
         (if (nil? (session/get :movement-session))
           [blank-state-component]
-          [session-component (session/get :movement-session)])]])))
+          [:div
+           [top-menu-component]
+           [session-component (session/get :movement-session)]])]])))
