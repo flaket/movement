@@ -364,7 +364,8 @@
        (let [comments (session/get-in [:movement-session :comment])]
          [:div.pure-u
           (for [c comments]
-            ^{:key c} [:p (str c)])])
+            ^{:key c} [:div.pure-g.comment
+                       [:p.pure-u (str c)]])])
        [:div.pure-g
         [:h3.pure-u-1-3 [:a {:on-click log-session} "Log this movement session"]]
         [:h3.pure-u-1-2 [:a {:on-click store-rep-set-info} "Share"]]

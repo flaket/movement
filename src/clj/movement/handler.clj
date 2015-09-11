@@ -1,8 +1,12 @@
 (ns movement.handler
-  (:require [compojure.core :refer [GET POST ANY defroutes]]
+  (:require [clojure.java.io :as io]
+            [compojure.core :refer [GET POST ANY defroutes]]
             [compojure.route :refer [not-found resources]]
+            [compojure.response :refer [render]]
             [ring.util.response :refer [redirect]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
+            [ring.middleware.session :refer [wrap-session]]
+            [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring.middleware.x-headers :refer [wrap-frame-options]]
@@ -10,7 +14,13 @@
             [prone.middleware :refer [wrap-exceptions]]
             [environ.core :refer [env]]
             [datomic.api :as d]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+
+            [buddy.auth :refer [authenticated? throw-unauthorized]]
+            [buddy.auth.backends.session :refer [session-backend]]
+            [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
+
+            [buddy.hashers :as hs]))
 
 (def uri "datomic:dev://localhost:4334/movement8")
 (def conn (d/connect uri))
@@ -99,12 +109,86 @@
                         :description description
                         :parts       parts})))
 
+
+;;;;;;;;;;;;;;;;;;;;;;
+
+(def authdata {:admin "pw"
+               :test "pw"})
+
+(defn unauthorized-handler
+  [request metadata]
+  ;; If request is authenticated, raise 403 instead
+  ;; of 401 (because user is authenticated but permission
+  ;; denied is raised).
+  ;; In other cases, redirect to user login.
+  (cond
+    (authenticated? request) (-> (render-file "templates/index.html" {:dev (env :dev?)})
+                                 (assoc :status 403))
+
+    :else (let [current-url (:uri request)]
+            (redirect (format "/login?next=%s" current-url)))))
+
+(def auth-backend
+  (session-backend {:unauthorized-handler unauthorized-handler}))
+
+(defn home
+  [req]
+  (when (not (authenticated? req))
+    (throw-unauthorized {:message "Not authorized"}))
+  (render-file "templates/index.html" {:dev (env :dev?)}))
+
+(defn login [req]
+  (render-file "templates/login.html" {:dev (env :dev?)}))
+
+(defn logout [req]
+  (assoc (redirect "/") :session nil))
+
+(defn login-authenticate
+  "Check request username and password against authdata username and passwords.
+  On successful authentication, set appropriate user into the session and
+  redirect to the value of (:query-params (:next request)).
+  On failed authentication, renders the login page."
+  [request]
+  (let [username (get-in request [:form-params "username"])
+        password (get-in request [:form-params "password"])
+        session (:session request)
+        found-password (get authdata (keyword username))]
+    (if (and found-password (= found-password password))
+      (let [next-url (get-in request [:query-params :next] "/")
+            updated-session (assoc session :identity (keyword username))]
+        (-> (redirect "/")
+            (assoc :session updated-session)))
+      (render-file "templates/login.html" {:dev (env :dev?)}))))
+
+(defn do-login [req]
+  (let [resp (login-authenticate req)]))
+
+;adding users to db
+(defn add-user!
+  [ds user]
+  (hs/encrypt ""))
+
+(defn auth-user
+  [ds credentials]
+  (let [user "find user in db"
+        unauthed [false {:message "Invalid username or password"}]]
+    (if user
+      (if (hs/check (:password credentials) (:password user))
+        [true {:user (dissoc user :password)}]
+        unauthed)
+      unauthed)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defroutes routes
-           (GET "/" []
-             (render-file "templates/index.html" {:dev (env :dev?)}))
+           (resources "/")
+           (GET "/" [] home)
+
            (GET "/raw" [] (render-file "templates/indexraw.html" {:dev (env :dev?)}))
 
-           (GET "/login" [] (render-file "templates/login.html" {:dev (env :dev?)}))
+           (GET "/login" [] login)
+           (POST "/login" [] login-authenticate)
+           (GET "/logout" [] logout)
 
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))
@@ -117,12 +201,17 @@
 
            (GET "/user/:id" [id] (generate-response (str "Hello user " id)))
 
-           (resources "/")
            (not-found "Not Found"))
 
 (def app
-  (let [handler (wrap-frame-options
-                  (wrap-defaults routes site-defaults)
-                  {:allow-from (or "http://movementsession.com"
-                                   "http://www.movementsession.com")})]
-    (if (env :dev?) (wrap-reload (wrap-exceptions handler)) handler)))
+  (let [handler (-> routes
+                    (wrap-authentication auth-backend)
+                    (wrap-authorization auth-backend)
+                    (wrap-params)
+                    (wrap-session)
+                    (wrap-defaults site-defaults)
+                    (wrap-frame-options {:allow-from (or "http://movementsession.com"
+                                                         "http://www.movementsession.com")}))]
+    (if (env :dev?)
+      (wrap-reload (wrap-exceptions handler))
+      handler)))

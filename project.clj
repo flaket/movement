@@ -24,8 +24,8 @@
                  [selmer "0.8.2"]
                  [environ "1.0.0"]
                  [secretary "1.2.2"]
-                 #_[org.clojure/core.cache "0.6.4"]
-
+                 [buddy/buddy-auth "0.6.1"]
+                 [buddy/buddy-hashers "0.6.0"]
                  [cljs-ajax "0.3.14"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
