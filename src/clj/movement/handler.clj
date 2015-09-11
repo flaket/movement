@@ -20,7 +20,7 @@
             [buddy.auth.backends.session :refer [session-backend]]
             [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
 
-            [buddy.hashers :as hs]))
+            [buddy.hashers :as hashers]))
 
 (def uri "datomic:dev://localhost:4334/movement8")
 (def conn (d/connect uri))
@@ -115,8 +115,7 @@
 (def authdata {:admin "pw"
                :test "pw"})
 
-(defn unauthorized-handler
-  [request metadata]
+(defn unauthorized-handler [request metadata]
   ;; If request is authenticated, raise 403 instead
   ;; of 401 (because user is authenticated but permission
   ;; denied is raised).
@@ -131,8 +130,7 @@
 (def auth-backend
   (session-backend {:unauthorized-handler unauthorized-handler}))
 
-(defn home
-  [req]
+(defn home [req]
   (when (not (authenticated? req))
     (throw-unauthorized {:message "Not authorized"}))
   (render-file "templates/index.html" {:dev (env :dev?)}))
@@ -143,45 +141,26 @@
 (defn logout [req]
   (assoc (redirect "/") :session nil))
 
-(defn login-authenticate
-  "Check request username and password against authdata username and passwords.
-  On successful authentication, set appropriate user into the session and
-  redirect to the value of (:query-params (:next request)).
-  On failed authentication, renders the login page."
-  [request]
-  (let [username (get-in request [:form-params "username"])
-        password (get-in request [:form-params "password"])
-        session (:session request)
-        found-password (get authdata (keyword username))]
-    (if (and found-password (= found-password password))
-      (let [next-url (get-in request [:query-params :next] "/")
+(defn find-user [username]
+  (hashers/encrypt "password"))
+
+(defn login-authenticate [req]
+  (let [username (get-in req [:form-params "username"])
+        password (get-in req [:form-params "password"])
+        session (:session req)
+        found-password (find-user username)
+        #_(get authdata (keyword username))]
+    (if (and found-password (hashers/check password found-password))
+      (let [next-url (get-in req [:query-params :next] "/")
             updated-session (assoc session :identity (keyword username))]
         (-> (redirect "/")
             (assoc :session updated-session)))
       (render-file "templates/login.html" {:dev (env :dev?)}))))
 
-(defn do-login [req]
-  (let [resp (login-authenticate req)]))
-
-;adding users to db
-(defn add-user!
-  [ds user]
-  (hs/encrypt ""))
-
-(defn auth-user
-  [ds credentials]
-  (let [user "find user in db"
-        unauthed [false {:message "Invalid username or password"}]]
-    (if user
-      (if (hs/check (:password credentials) (:password user))
-        [true {:user (dissoc user :password)}]
-        unauthed)
-      unauthed)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
-           (resources "/")
+
            (GET "/" [] home)
 
            (GET "/raw" [] (render-file "templates/indexraw.html" {:dev (env :dev?)}))
@@ -200,7 +179,7 @@
                                                                               categories))))
 
            (GET "/user/:id" [id] (generate-response (str "Hello user " id)))
-
+           (resources "/")
            (not-found "Not Found"))
 
 (def app
