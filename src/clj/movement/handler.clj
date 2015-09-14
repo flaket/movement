@@ -25,6 +25,7 @@
 (def uri "datomic:dev://localhost:4334/movement8")
 (def conn (d/connect uri))
 (def db (d/db conn))
+(selmer.parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 
 (defn get-user-creds
   "Queries the database for user info."
@@ -41,7 +42,7 @@
         users (zipmap (map #(:username %) users) users)]
     users))
 
-(selmer.parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
+
 
 (defn generate-response [data & [status]]
   {:status  (or status 200)
@@ -112,9 +113,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(def authdata {:admin "pw"
-               :test "pw"})
-
 (defn unauthorized-handler [request metadata]
   ;; If request is authenticated, raise 403 instead
   ;; of 401 (because user is authenticated but permission
@@ -141,21 +139,28 @@
 (defn logout [req]
   (assoc (redirect "/") :session nil))
 
-(defn find-user [username]
+(defn find-user [username password]
   (hashers/encrypt "password"))
 
-(defn login-authenticate [req]
+(defn login-form-authenticate [req]
   (let [username (get-in req [:form-params "username"])
         password (get-in req [:form-params "password"])
         session (:session req)
-        found-password (find-user username)
-        #_(get authdata (keyword username))]
+        found-password (find-user username password)]
     (if (and found-password (hashers/check password found-password))
       (let [next-url (get-in req [:query-params :next] "/")
             updated-session (assoc session :identity (keyword username))]
         (-> (redirect "/")
             (assoc :session updated-session)))
       (render-file "templates/login.html" {:dev (env :dev?)}))))
+
+(defn login-authenticate [req]
+  (let [username (get-in req [:headers :username])
+        password (get-in req [:headers :password])]))
+
+(defn present-signup [req])
+(defn handle-signup [req])
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -167,7 +172,10 @@
 
            (GET "/login" [] login)
            (POST "/login" [] login-authenticate)
-           (GET "/logout" [] logout)
+           (POST "/logout" [] logout)
+
+           (GET "/signup" [] present-signup)
+           (POST "/signup" [] handle-signup)
 
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))
@@ -179,6 +187,8 @@
                                                                               categories))))
 
            (GET "/user/:id" [id] (generate-response (str "Hello user " id)))
+           (POST "/change-password" [] nil)
+
            (resources "/")
            (not-found "Not Found"))
 

@@ -2,7 +2,11 @@
   (:require
     [reagent.core :refer [atom]]
     [reagent.session :as session]
-    [secretary.core :include-macros true :refer [dispatch!]]))
+    [secretary.core :include-macros true :refer [dispatch!]]
+    [movement.util :refer [GET]]))
+
+(defn log-out! []
+  (dispatch! "/"))
 
 (defn menu-component []
   (let [menu-item-session "Generate session"
@@ -48,4 +52,11 @@
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-movements)
                                (dispatch! "/movements"))}
-             [:a.pure-menu-link menu-item-movements]]]]])])))
+             [:a.pure-menu-link menu-item-movements]]
+            [:li {:className (str "pure-menu-item"
+                                  (when (= menu-item-movements selected)
+                                    " menu-item-divided pure-menu-selected"))
+                  :on-click  #(do
+                               (session/put! :selected-menu-item nil)
+                               (GET "logout" {:handler log-out!}))}
+             [:a.pure-menu-link "Logout"]]]]])])))

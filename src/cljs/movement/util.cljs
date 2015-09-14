@@ -24,3 +24,10 @@
 
 (defn set-page! [page]
   (session/put! :current-page page))
+
+(defn text-input [target & [opts]]
+  [:input (merge
+            {:type "text"
+             :on-change #(reset! target (-> % .-target .-value))
+             :value @target}
+            opts)])

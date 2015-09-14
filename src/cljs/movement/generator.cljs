@@ -378,7 +378,6 @@
       [:li {:on-click #(create-session-from-template name)}
        name])))
 
-
 (defn blank-state-component []
   (let []
     (fn []
