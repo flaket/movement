@@ -42,7 +42,7 @@ x:-o-prefocus, .custom-select::after {
   }
   .custom-select select:focus::-ms-value {
     background: transparent;
-    color: #222;
+    color: #333;
   }
 }
 

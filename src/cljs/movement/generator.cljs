@@ -334,7 +334,7 @@
       [:div.part
        [:h2 title]
        [:div.pure-g
-        [:p.pure-u-1-2 [:a {:on-click #(add-movement title)} "Add movement"]]
+        [:p.pure-u-1-2 [:a.secondary-button {:on-click #(add-movement title)} "+"]]
         [:p.pure-u-1-2 #_[:a {:style    {:float "right"}
                             :on-click #(add-movement title)} "Find movement"]]]
        [:div.pure-g
@@ -355,11 +355,11 @@
          (for [p parts]
            ^{:key p} [part-component p]))
        [:div.pure-g
-        [:p.pure-u [:a {:on-click #(reset! adding-comment true)} "Add comments to your session"]]]
+        [:p.pure-u [:a.secondary-button {:on-click #(handler-fn (reset! adding-comment true))} "Add comments to your session"]]]
        [:div.pure-g
         (when @adding-comment [text-edit-component {:class   "edit"
                                                     :on-save #(handler-fn (session/update-in! [:movement-session :comment] conj %))
-                                                    :on-stop #(reset! adding-comment false)
+                                                    :on-stop #(handler-fn (reset! adding-comment false))
                                                     :size    38}])]
        (let [comments (session/get-in [:movement-session :comment])]
          [:div.pure-u
@@ -367,8 +367,8 @@
             ^{:key c} [:div.pure-g.comment
                        [:p.pure-u (str c)]])])
        [:div.pure-g
-        [:h3.pure-u-1-3 [:a {:on-click log-session} "Log this movement session"]]
-        [:h3.pure-u-1-2 [:a {:on-click store-rep-set-info} "Share"]]
+        [:h3.pure-u [:div.pure-g [:a.pure-u.log-button {:on-click log-session} "Log this movement session"]]]
+        [:h3.pure-u [:div.pure-g [:a.pure-u.secondary-button {:on-click store-rep-set-info} "Share"]]]
         ]])))
 
 
@@ -401,15 +401,17 @@
     (fn []
       [:div.pure-g
        [:h3.pure-u-1-3
-        [:a {:on-click pick-random-template} "New random session"]]
+        [:div.pure-g
+         [:a.pure-u.secondary-button {:on-click pick-random-template} "New random session"]]]
        [:h3.pure-u-1-3
-        [:a "Select " [:ul.templates
-                       [:li
-                        [:ul
-                         (doall
-                           (for [t (session/get :templates)]
-                             ^{:key t} [template-component t]))]
-                        "template"]]]]
+        [:div.pure-g
+         [:a.pure-u.secondary-button "Select "
+          [:ul.templates
+           [:li
+            [:ul
+             (doall
+               (for [t (session/get :templates)]
+                 ^{:key t} [template-component t]))] "template"]]]]]
        [:h3.pure-u.pure-u-md-1-4 "Set rep/set scheme for all movements "
 
         [:a {:on-click #(do (set-element-values! "rep-select" 10)

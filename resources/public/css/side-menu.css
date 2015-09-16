@@ -50,8 +50,7 @@ appears on the left side of the page.
     left: 0;
     bottom: 0;
     z-index: 1000; /* so the menu or its navicon stays above all content */
-    background: #111;
-    opacity: 0.75;
+    background: rgb(37, 42, 58);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -59,9 +58,11 @@ appears on the left side of the page.
     All anchors inside the menu should be styled like this.
     */
     #menu a {
-        color: #ddd;
+        color: #fff;
         border: none;
+        margin-left: 0.5em;
         padding: 0.6em 0 0.6em 0.6em;
+
     }
 
     /*
@@ -71,6 +72,7 @@ appears on the left side of the page.
      #menu .pure-menu ul {
         border: none;
         background: transparent;
+        text-align: left;
     }
 
     /*
@@ -85,7 +87,7 @@ appears on the left side of the page.
         */
         #menu .pure-menu li a:hover,
         #menu .pure-menu li a:focus {
-            background: #333;
+            background: rgb(55, 60, 90);
         }
 
     /*
@@ -105,11 +107,9 @@ appears on the left side of the page.
     /*
     This styles the menu heading.
     */
-    #menu .pure-menu-heading {
-        font-size: 80%;
-        color: #fff;
-        margin: 0;
-    }
+    #menu .pure-menu-heading { border-bottom: none;
+                               font-size:110%;
+                               color: rgb(75, 113, 151); }
 
 /* -- Dynamic Button For Responsive Menu -------------------------------------*/
 

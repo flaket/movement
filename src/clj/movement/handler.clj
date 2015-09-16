@@ -1,4 +1,6 @@
 (ns movement.handler
+  (:import org.apache.commons.codec.binary.Base64
+           java.nio.charset.Charset)
   (:require [clojure.java.io :as io]
             [compojure.core :refer [GET POST ANY defroutes]]
             [compojure.route :refer [not-found resources]]
@@ -26,6 +28,12 @@
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
+(selmer.parser/set-resource-path!  (clojure.java.io/resource "templates"))
+
+(defn generate-response [data & [status]]
+  {:status  (or status 200)
+   :headers {"Content-Type" "application/edn"}
+   :body    (pr-str data)})
 
 (defn get-user-creds
   "Queries the database for user info."
@@ -41,13 +49,6 @@
         users (map #(assoc % :roles (read-string (:roles %))) users)
         users (zipmap (map #(:username %) users) users)]
     users))
-
-
-
-(defn generate-response [data & [status]]
-  {:status  (or status 200)
-   :headers {"Content-Type" "application/edn"}
-   :body    (pr-str data)})
 
 (defn all-movement-names []
   "Returns the names of all movements in the database."
@@ -119,11 +120,11 @@
   ;; denied is raised).
   ;; In other cases, redirect to user login.
   (cond
-    (authenticated? request) (-> (render-file "templates/index.html" {:dev (env :dev?)})
+    (authenticated? request) (-> (render-file "index.html" {:dev (env :dev?)})
                                  (assoc :status 403))
 
     :else (let [current-url (:uri request)]
-            (redirect (format "/login?next=%s" current-url)))))
+            (redirect (format "/landing?next=%s" current-url)))))
 
 (def auth-backend
   (session-backend {:unauthorized-handler unauthorized-handler}))
@@ -131,10 +132,10 @@
 (defn home [req]
   (when (not (authenticated? req))
     (throw-unauthorized {:message "Not authorized"}))
-  (render-file "templates/index.html" {:dev (env :dev?)}))
+  (render-file "app.html" {:dev (env :dev?)}))
 
 (defn login [req]
-  (render-file "templates/login.html" {:dev (env :dev?)}))
+  (render-file "login.html" {:dev (env :dev?)}))
 
 (defn logout [req]
   (assoc (redirect "/") :session nil))
@@ -150,32 +151,54 @@
     (if (and found-password (hashers/check password found-password))
       (let [next-url (get-in req [:query-params :next] "/")
             updated-session (assoc session :identity (keyword username))]
-        (-> (redirect "/")
+        (-> (redirect next-url)
             (assoc :session updated-session)))
-      (render-file "templates/login.html" {:dev (env :dev?)}))))
+      (render-file "login.html" {:dev (env :dev?)}))))
 
-(defn login-authenticate [req]
-  (let [username (get-in req [:headers :username])
-        password (get-in req [:headers :password])]))
 
-(defn present-signup [req])
-(defn handle-signup [req])
+;;;;;;;;;;;;;;
+
+(defn auth [req]
+  (get-in req [:headers "Authorization"]))
+
+(defn decode-auth [encoded]
+  (let [auth (second (.split encoded " "))]
+    (-> (Base64/decodeBase64 auth)
+        (String. (Charset/forName "UTF-8"))
+        (.split ":"))))
+
+(defn login! [req]
+  (let [[username password] (decode-auth (auth req))]
+
+    (if (and (= username "admin")
+             (= password "pw"))
+      ;todo: if creds authenticate, add user to backend session
+      {:result "ok"}
+      {:error "wrong username or password"})))
+
+(defn logout! []
+  ;todo: clear backend session
+  {:result "ok"})
+
+
+(defn handle-signup! [req])
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
 
-           (GET "/" [] home)
-
-           (GET "/raw" [] (render-file "templates/indexraw.html" {:dev (env :dev?)}))
+           (GET "/" [] (render-file "app.html" {:dev (env :dev?)}))
+           (GET "/landing" [] (render-file "index.html" {:dev (env :dev?)}))
 
            (GET "/login" [] login)
-           (POST "/login" [] login-authenticate)
-           (POST "/logout" [] logout)
+           (POST "/login" [] login-form-authenticate)
+           (GET "/logout" [] (render-file "index.html" {:dev (env :dev?)}))
 
-           (GET "/signup" [] present-signup)
-           (POST "/signup" [] handle-signup)
+
+
+           (POST "/signup" [] handle-signup!)
+           (POST "/change-password!" [] nil)
 
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))
@@ -185,12 +208,12 @@
              (generate-response (get-movements 1
                                                (if (not (vector? categories)) [categories]
                                                                               categories))))
-
-           (GET "/user/:id" [id] (generate-response (str "Hello user " id)))
-           (POST "/change-password" [] nil)
-
            (resources "/")
-           (not-found "Not Found"))
+           (not-found "Not Found")
+
+           (GET "/raw" [] (render-file "indexraw.html" {:dev (env :dev?)}))
+
+           )
 
 (def app
   (let [handler (-> routes
