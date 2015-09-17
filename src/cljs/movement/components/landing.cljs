@@ -1,11 +1,13 @@
 (ns movement.components.landing
-  (:require [reagent.core :refer [atom]]))
+  (:require [reagent.core :refer [atom]]
+            [movement.components.header :refer [header]]
+            [movement.components.footer :refer [footer]]))
 
 (defn prolog []
   (let []
     (fn []
       [:section.home-prolog
-       [:a.home-action {:href "/signup"}]
+       [:a.home-action {:href "/signup"} "Sign Up Free"]
        [:div.home-cover]
        [:div.home-top-shelf]
        [:div.home-slogans
@@ -17,7 +19,7 @@
   (let []
     (fn []
       [:section.home-benefits
-       [:h1 "Look under the hood & check the bullet points."]
+       [:h1 "Benefits"]
        [:div.home-potential-bullets
         [:ul
          [:li "1"]
@@ -33,7 +35,7 @@
   (let []
     (fn []
       [:section.home-epilog
-       [:a.home-action {:href "/signup"}]
+       [:a.home-action {:href "/signup"} "Sign Up Free"]
        [:div.home-cover]
        [:div.home-top-shelf]
        [:div.home-slogans
@@ -44,6 +46,8 @@
   (let []
     (fn []
       [:div
+       [header]
        [prolog]
        [benefits]
-       [epilog]])))
+       [epilog]
+       [footer]])))

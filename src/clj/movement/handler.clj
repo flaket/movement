@@ -189,16 +189,17 @@
 (defroutes routes
 
            (GET "/" [] (render-file "app.html" {:dev (env :dev?)}))
-           (GET "/landing" [] (render-file "index.html" {:dev (env :dev?)}))
 
-           (GET "/login" [] login)
-           (POST "/login" [] login-form-authenticate)
-           (GET "/logout" [] (render-file "index.html" {:dev (env :dev?)}))
+           #_(GET "/landing" [] (render-file "index.html" {:dev (env :dev?)}))
+
+           #_(GET "/login" [] login)
+           #_(POST "/login" [] login-form-authenticate)
+           #_(GET "/logout" [] (render-file "index.html" {:dev (env :dev?)}))
 
 
 
-           (POST "/signup" [] handle-signup!)
-           (POST "/change-password!" [] nil)
+           #_(POST "/signup" [] handle-signup!)
+           #_(POST "/change-password!" [] nil)
 
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))

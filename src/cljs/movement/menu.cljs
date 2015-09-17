@@ -27,7 +27,7 @@
                                     " menu-item-divided pure-menu-selected"))
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-session)
-                               (dispatch! "/"))}
+                               (dispatch! "/generator"))}
              [:a.pure-menu-link menu-item-session]]
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-user selected)
@@ -54,4 +54,4 @@
                                   (when (= menu-item-movements selected)
                                     " menu-item-divided pure-menu-selected"))
                   :on-click  #(POST "/logout")}
-             [:a.pure-menu-link menu-item-movements]]]]])])))
+             [:a.pure-menu-link "Log Out"]]]]])])))

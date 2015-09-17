@@ -11,7 +11,7 @@
        [:div.navbar.navbar-default.navbar-fixed-top
         [:div.container-fluid
          [:div.navbar-header
-          [:a#logo.navbar-brand {:href "/"}]]
+          [:a#logo.navbar-brand {:href "/"} "MS"]]
          (if logged-in?
            [:ul.nav.navbar-nav.navbar-right
             [:li [:a {:href "/"} "Back to app"]]]

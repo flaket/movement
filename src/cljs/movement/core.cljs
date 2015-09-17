@@ -11,12 +11,9 @@
             [movement.generator :refer [generator-component]]
             [movement.explorer :refer [explorer-component]]
             [movement.share :refer [share-component]]
-
-
             [movement.components.landing :refer [home]]
-            [movement.components.footer :refer [footer]]
-            [movement.components.header :refer [header]]
-            [movement.components.signup :refer [sign-up]])
+            [movement.components.signup :refer [sign-up]]
+            [movement.styles :refer [insert-styles]])
   (:import goog.History))
 
 (enable-console-print!)
@@ -42,7 +39,7 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (set-page! #'home)
+  (set-page! #'generator-component)
   (session/put! :logged-sessions [])
   (session/put! :m-counter (atom 0))
 

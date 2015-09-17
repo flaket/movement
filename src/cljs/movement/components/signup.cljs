@@ -9,11 +9,11 @@
         email (atom "")
         password (atom "")
         error (atom "")
-        loading? false]
+        loading? (atom false)]
     (fn []
-      [:form.contact-us
+      [:form.sign-up
        [:input {:value email
-                :class (when loading? "disabled")
+                :class (when @loading? "disabled")
                 :type "email"
                 :name "email"
                 :required true
@@ -21,14 +21,14 @@
        [:label {:for "email" :alt "Enter email" :placeholder "Email"}]
        [:input {:value name
                 :required true
-                :class (when loading? "disabled")
+                :class (when @loading? "disabled")
                 :type "text"
                 :name "name"
                 :on-change #()}]
        [:label {:for "name" :alt "Enter name" :placeholder "Name"}]
        [:input {:value password
                 :required true
-                :class (when loading? "disabled")
+                :class (when @loading? "disabled")
                 :type "password"
                 :name "password"
                 :on-change #()}]
@@ -36,7 +36,7 @@
 
        (when-let [e @error]
          [:div.notice e])
-       [:button.btn.btn-primary {:class    (when loading? "disabled")
+       [:button.btn.btn-primary {:class    (when @loading? "disabled")
                                  :on-click #(do (cond
                                                   (not (and (seq name) (seq email) (seq password)))
                                                   (swap! error "All fields are required.")

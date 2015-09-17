@@ -1,11 +1,14 @@
 (ns movement.generator
   (:import [goog.events EventType])
+  (:require-macros
+    [cljs.core.async.macros :refer [go]])
   (:require
+    [cljs.core.async :as async :refer [>! <! put! take! alts! chan sliding-buffer close!]]
     [reagent.session :as session]
     [reagent.core :refer [atom]]
     [goog.events :as events]
     [clojure.string :as str]
-    [movement.util :refer [GET]]
+    [movement.util :refer [GET ajax]]
     [movement.text :refer [text-edit-component]]
     [movement.menu :refer [menu-component]]
     [movement.state :refer [movement-session handler-fn log-session]]))
@@ -56,6 +59,15 @@
         position-in-parts (first (positions #{part-title} (map :title parts)))
         categories (:categories (first (filter #(= part-title (:title %)) parts)))
         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
+
+    #_(go
+      (let [m (<! (ajax "GET" "singlemovement" {:params {:categories categories}}))
+            id (swap! m-counter inc)
+            new-movement (first m)
+            new-movement (assoc new-movement :id id)
+            new-movements (assoc movements id new-movement)]
+        (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements)))
+
     (GET "singlemovement"
          {:params        {:categories categories}
           :format        :edn
