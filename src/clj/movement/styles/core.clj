@@ -14,10 +14,4 @@
                        :padding       "1rem 1rem"
                        :max-width     (px 1000)
                        :margin-bottom (px 50)}]
-
-           #_[:.pure-img-responsive {:max-width "100%"
-                                   :height "auto"}]
-
-
-
            )
