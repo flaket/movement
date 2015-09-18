@@ -20,10 +20,6 @@
                 :padding       "1rem 1rem"
                 :max-width     (px 1000)
                 :margin-bottom (px 50)}]
-
-    #_[:.pure-img-responsive {:max-width "100%"
-                            :height 'auto}]
-
     [:h1 {:font-weight 400
           :margin-top "2rem"
           :margin-bottom "1.5rem"
@@ -83,6 +79,43 @@
                  :background-color "#fff"
                  :box-shadow "0px 0px 1px rgba(50,50,50,0.5)"
                  :border-radius (px 25)}]
+
+    [:.refresh {:position 'relative
+                :left     (px 10)
+                :width    (px 25)
+                :height   (px 25)
+                :margin   "auto 0"
+                :font-size "1.8em"
+                :color "#99cc99"
+                :cursor 'pointer
+                :-webkit-transition "all 0.2s"
+                :transition "all 0.2s"}
+     #_[:&:hover {:text-shadow "0 0 1px #000, 0 0 10px rgba(0,255,0,0.8"
+                :-webkit-transform "scale(1.3)"
+                :-ms-transform "scale(1.3)"
+                :transform "scale(1.3)"}]
+     #_[:&:after {:content "∴"}]]
+
+    #_[:.destroy {:position 'absolute
+                :top (px 10)
+                :right (px 5)
+                :width (px 25)
+                :height (px 25)
+                :margin "auto 0"
+                :font-size "1.5em"
+                :color "#CC9999"
+                :cursor 'pointer
+                  ;:-webkit-transition "all 0.2s"
+                :transition "all 0.2s"}
+     #_[:&:hover {:text-shadow "0 0 1px #000, 0 0 10px rgba(255,0,0,0.8"
+                :-webkit-transform "scale(1.3)"
+                :-ms-transform "scale(1.3)"
+                :transform "scale(1.3)"}]
+     #_[:&:destroy {:content "✖"}]]
+
+
+
+
     [:.description {:position 'relative
                     :padding 0
                     :margin "5px 0 0 15px"
@@ -97,8 +130,22 @@
     [:.icon {:width (px 25)
              :height (px 25)}]
 
+    [:.sw {:position 'relative}]
+    [:.se {:position 'relative}]
 
 
-       ))
+    [:.rep-text {:position 'absolute
+                 :color "#68f"
+                 :border-bottom "1px dashed #13f"}
+     [:&:hover {:cursor 'pointer}]]
+    [:.rep {:position 'absolute}]
+
+
+    [:.set-text {:color "#68f"
+                 :border-bottom "1px dashed #13f"
+                 :position 'absolute}
+     [:&:hover {:cursor 'pointer}]]
+    [:.set {:position 'absolute}]
+    [:.duration {:position 'absolute}]))
 
 (insert-styles base-css)
