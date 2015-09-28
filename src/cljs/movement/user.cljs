@@ -4,15 +4,15 @@
            [movement.menu :refer [menu-component]]
            [movement.util :refer [POST text-input]]))
 
-
 (defn update-password! [pass]
   (let [old-pass (:old-pass @pass)
         new-pass (:new-pass @pass)
         repeat-pass (:repeat-pass @pass)]
-    (POST "/change-password"
-          {:headers {:username (session/get-in [:profile :handle])
-                     :password old-pass}
-           :params {:pass new-pass
+    (POST "/change-password!"
+          {
+           :params {:username (session/get-in [:profile :handle])
+                    :password old-pass
+                    :new-pass new-pass
                     :repeat-pass repeat-pass}
            :handler
                     (fn [_] (reset! pass {}))

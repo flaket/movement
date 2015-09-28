@@ -5,7 +5,7 @@
             [goog.events :as events]
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
-            [movement.util :refer [GET hook-browser-navigation! set-page!]]
+            [movement.util :refer [hook-browser-navigation! set-page!]]
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
@@ -13,6 +13,7 @@
             [movement.share :refer [share-component]]
             [movement.components.landing :refer [home]]
             [movement.components.signup :refer [sign-up]]
+            [movement.components.login :refer [login]]
             [movement.styles :refer [insert-styles]])
   (:import goog.History))
 
@@ -22,6 +23,8 @@
 ;; Client side routes
 (secretary/defroute "/" [] (set-page! #'home))
 (secretary/defroute "/signup" [] (set-page! #'sign-up))
+(secretary/defroute "/login" [] (set-page! #'login))
+
 (secretary/defroute "/generator" [] (set-page! #'generator-component))
 (secretary/defroute "/user" [] (set-page! #'user-component))
 (secretary/defroute "/template" [] (set-page! #'template-creator-component))
@@ -39,12 +42,11 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (set-page! #'generator-component)
+  (set-page! #'home)
   (session/put! :logged-sessions [])
   (session/put! :m-counter (atom 0))
-
   (.initializeTouchEvents js/React true)
-
   (mount-root))
 
 (init!)
+

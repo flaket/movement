@@ -119,7 +119,7 @@
     [:.description {:position 'relative
                     :padding 0
                     :margin "5px 0 0 15px"
-                    :font-size "70%"}]
+                    :font-size "100%"}]
     [:.graphic {:display 'block
                 :margin-left 'auto
                 :margin-right 'auto
@@ -130,8 +130,10 @@
     [:.icon {:width (px 25)
              :height (px 25)}]
 
-    [:.sw {:position 'relative}]
-    [:.se {:position 'relative}]
+    [:.sw {:position 'relative
+           :bottom (px 40)}]
+    [:.se {:position 'relative
+           :bottom (px 40)}]
 
 
     [:.rep-text {:position 'absolute

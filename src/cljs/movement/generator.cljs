@@ -8,7 +8,7 @@
     [reagent.core :refer [atom]]
     [goog.events :as events]
     [clojure.string :as str]
-    [movement.util :refer [GET ajax]]
+    [movement.util :refer [GET]]
     [movement.text :refer [text-edit-component]]
     [movement.menu :refer [menu-component]]
     [movement.state :refer [movement-session handler-fn log-session]]))
@@ -206,7 +206,7 @@
 
          [:div.pure-g
 
-          [:div.pure-u-1-3.sw
+          [:div.pure-u-1-2.sw
            [:div.pure-g
             [:p.pure-u.rep-text {:on-click #(if (= @rep-text "Rep")
                                              (let [elements (array-seq (.getElementById js/document (str "rep-" id)))]
@@ -271,12 +271,8 @@
                              [:option "15 km"]
                              [:option "20 km"]]]))]]
 
-          [:div.pure-u-1-3
-           #_[:div.pure-g
-              [:img.pure-u.icon {:src (equipment-symbol equipment)}]
-              ]]
 
-          [:div.pure-u-1-3.se
+          [:div.pure-u-1-2.se
            [:div.pure-g
             [:p.pure-u.set-text {:on-click #(if (= @set-text "Set")
                                              (let [elements (array-seq (.getElementById js/document (str "set-" id)))]
@@ -441,7 +437,6 @@
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content
-
         (if (nil? (session/get :movement-session))
           [blank-state-component]
           [:div

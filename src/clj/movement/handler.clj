@@ -7,6 +7,7 @@
             [compojure.response :refer [render]]
             [ring.util.response :refer [redirect]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
+            [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.reload :refer [wrap-reload]]
@@ -183,23 +184,26 @@
 
 (defn handle-signup! [req])
 
-
+#_(defn main-app []
+  (html
+    ()))
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
 
-           (GET "/" [] (render-file "app.html" {:dev (env :dev?)}))
+           (GET "/" [] (render-file "app.html" {:dev (env :dev?)
+                                                :csrf-token *anti-forgery-token*}))
 
-           #_(GET "/landing" [] (render-file "index.html" {:dev (env :dev?)}))
+           (POST "/login" [username password] (if (and (= username "adimin") (= password "pw"))
+                                                (generate-response {:result "ok"})
+                                                (generate-response {:error "wrong username or password"})))
 
-           #_(GET "/login" [] login)
-           #_(POST "/login" [] login-form-authenticate)
-           #_(GET "/logout" [] (render-file "index.html" {:dev (env :dev?)}))
+
 
 
 
            #_(POST "/signup" [] handle-signup!)
-           #_(POST "/change-password!" [] nil)
+           (POST "/change-password!" [] (generate-response "ok"))
 
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))

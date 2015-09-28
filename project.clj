@@ -27,7 +27,8 @@
                  [buddy/buddy-auth "0.6.1"]
                  [buddy/buddy-hashers "0.6.0"]
                  [cljs-ajax "0.3.14"]
-                 [garden "1.2.5"]]
+                 [garden "1.2.5" :exclusions [time]]
+                 [prismatic/dommy "1.1.0"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]

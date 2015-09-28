@@ -9,16 +9,19 @@
     [secretary.core :as secretary
      :include-macros true]
     [ajax.core :as cljs-ajax]
-    [cljs.core.async :as async :refer [>! <! put! take! alts! chan sliding-buffer close!]]))
+    [cljs.core.async :as async :refer [>! <! put! take! alts! chan sliding-buffer close!]]
+    [dommy.core :as dommy :refer-macros [sel sel1]]))
 
-(defn get-csrf-token []
-  (aget js/window "CSRFToken"))
+(def csrf-token
+  (dommy/attr (sel1 :#anti-forgery-token) "value"))
 
 (defn GET [url & [opts]]
   (cljs-ajax/GET url opts #_(update-in opts [:params] assoc :timestamp (.getTime (js/Date.)))))
 
 (defn POST [url & [opts]]
-  (cljs-ajax/POST url {:headers {"X-CSRF-Token" (get-csrf-token)}}))
+  (let [base-opts {:headers {"Accept"       "application/edn"
+                             "X-CSRF-Token" csrf-token}}]
+    (cljs-ajax/POST url (merge base-opts opts))))
 
 (defn hook-browser-navigation! []
   (doto (History.)
@@ -38,11 +41,11 @@
              :value @target}
             opts)])
 
-(defn ajax-opts [{:keys [keywords? context headers format csrf-token uri method]
+#_(defn ajax-opts [{:keys [keywords? context headers format csrf-token uri method]
                   :or {keywords? true format :json csrf-token true}
                   :as opts}]
   (let [csrf-header (when (and csrf-token (re-find #"^/" uri))
-                      {:X-CSRFToken (get-csrf-token)})
+                      {:X-CSRFToken csrf-token})
         format-opts {:format          (cljs-ajax/edn-request-format)
                      :response-format (cljs-ajax/edn-response-format {:keywords? keywords? :url uri :method method})
                      :keywords?       keywords?
@@ -53,7 +56,7 @@
         (merge format-opts)
         cljs-ajax/transform-opts)))
 
-(defn ajax [method url & {:as opts}]
+#_(defn ajax [method url & {:as opts}]
   (let [channel (chan)
         base-opts {:method method
                    :uri url
@@ -65,3 +68,8 @@
         ;ajax-opts
         cljs-ajax/ajax-request)
     channel))
+
+(defn timeout [ms]
+  (let [c (chan)]
+    (js/setTimeout (fn [] (close! c)) ms)
+    c))

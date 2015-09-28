@@ -1,7 +1,9 @@
 (ns movement.components.landing
   (:require [reagent.core :refer [atom]]
             [movement.components.header :refer [header]]
-            [movement.components.footer :refer [footer]]))
+            [movement.components.footer :refer [footer]]
+            [movement.components.login :refer [login]]
+            [movement.components.signup :refer [sign-up]]))
 
 (defn prolog []
   (let []
@@ -47,7 +49,10 @@
     (fn []
       [:div
        [header]
+       [login]
        [prolog]
+       [sign-up]
        [benefits]
        [epilog]
+       [sign-up]
        [footer]])))

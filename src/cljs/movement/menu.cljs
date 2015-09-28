@@ -53,5 +53,10 @@
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-movements selected)
                                     " menu-item-divided pure-menu-selected"))
+                  :on-click  #(dispatch! "/login")}
+             [:a.pure-menu-link "Log In"]]
+            [:li {:className (str "pure-menu-item"
+                                  (when (= menu-item-movements selected)
+                                    " menu-item-divided pure-menu-selected"))
                   :on-click  #(POST "/logout")}
              [:a.pure-menu-link "Log Out"]]]]])])))
