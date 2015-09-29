@@ -13,17 +13,17 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring.middleware.x-headers :refer [wrap-frame-options]]
+            [ring.middleware.edn :refer [wrap-edn-params]]
             [selmer.parser :refer [render-file]]
             [prone.middleware :refer [wrap-exceptions]]
             [environ.core :refer [env]]
             [datomic.api :as d]
             [clojure.string :as str]
-
+            [clj-time.core :as time]
+            [buddy.sign.jws :as jws]
             [buddy.auth :refer [authenticated? throw-unauthorized]]
-            [buddy.auth.backends.session :refer [session-backend]]
-            [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
-
-            [buddy.hashers :as hashers]))
+            [buddy.auth.backends.token :refer [jws-backend]]
+            [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]))
 
 (def uri "datomic:dev://localhost:4334/movement8")
 (def conn (d/connect uri))
@@ -115,60 +115,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(defn unauthorized-handler [request metadata]
-  ;; If request is authenticated, raise 403 instead
-  ;; of 401 (because user is authenticated but permission
-  ;; denied is raised).
-  ;; In other cases, redirect to user login.
-  (cond
-    (authenticated? request) (-> (render-file "index.html" {:dev (env :dev?)})
-                                 (assoc :status 403))
-
-    :else (let [current-url (:uri request)]
-            (redirect (format "/landing?next=%s" current-url)))))
-
-(def auth-backend
-  (session-backend {:unauthorized-handler unauthorized-handler}))
-
-(defn home [req]
-  (when (not (authenticated? req))
-    (throw-unauthorized {:message "Not authorized"}))
-  (render-file "app.html" {:dev (env :dev?)}))
-
-(defn login [req]
-  (render-file "login.html" {:dev (env :dev?)}))
-
-(defn logout [req]
-  (assoc (redirect "/") :session nil))
-
-(defn find-user [username password]
-  (hashers/encrypt "password"))
-
-(defn login-form-authenticate [req]
-  (let [username (get-in req [:form-params "username"])
-        password (get-in req [:form-params "password"])
-        session (:session req)
-        found-password (find-user username password)]
-    (if (and found-password (hashers/check password found-password))
-      (let [next-url (get-in req [:query-params :next] "/")
-            updated-session (assoc session :identity (keyword username))]
-        (-> (redirect next-url)
-            (assoc :session updated-session)))
-      (render-file "login.html" {:dev (env :dev?)}))))
-
-
-;;;;;;;;;;;;;;
-
-(defn auth [req]
+#_(defn auth [req]
   (get-in req [:headers "Authorization"]))
 
-(defn decode-auth [encoded]
+#_(defn decode-auth [encoded]
   (let [auth (second (.split encoded " "))]
     (-> (Base64/decodeBase64 auth)
         (String. (Charset/forName "UTF-8"))
         (.split ":"))))
 
-(defn login! [req]
+#_(defn login! [req]
   (let [[username password] (decode-auth (auth req))]
 
     (if (and (= username "admin")
@@ -177,16 +133,39 @@
       {:result "ok"}
       {:error "wrong username or password"})))
 
-(defn logout! []
+#_(defn logout! []
   ;todo: clear backend session
   {:result "ok"})
 
 
-(defn handle-signup! [req])
+;;;;
+(def secret "mysupersecret")
 
-#_(defn main-app []
-  (html
-    ()))
+(defn jws-home
+  [request]
+  (if-not (authenticated? request)
+    (throw-unauthorized)
+    (generate-response {:status "Logged"
+                        :message (str "hello logged user " (:identity request))})))
+
+(def authdata {"admin" "secret"})
+
+(defn jws-login
+  [request]
+  (let [username (get-in request [:params :username])
+        password (get-in request [:params :password])
+        valid? (some-> authdata
+                       (get (keyword username))
+                       (= password))]
+    (if valid?
+      (let [claims {:user (keyword username)
+                    :exp (time/plus (time/now) (time/seconds 3600))}
+            token (jws/sign claims secret {:alg :hs512})]
+        (generate-response {:token token}))
+      (generate-response {:message "wrong auth data"} 400))))
+
+(def jws-auth-backend (jws-backend {:secret secret :options {:alg :hs512}}))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
@@ -194,16 +173,13 @@
            (GET "/" [] (render-file "app.html" {:dev (env :dev?)
                                                 :csrf-token *anti-forgery-token*}))
 
-           (POST "/login" [username password] (if (and (= username "adimin") (= password "pw"))
-                                                (generate-response {:result "ok"})
-                                                (generate-response {:error "wrong username or password"})))
+           (POST "/login" [username password] (generate-response {:from "post"
+                                                                  :usr username
+                                                                  :pw password}))
+           (GET "/login" [username password] (generate-response {:from "get"
+                                                                 :usr username
+                                                                  :pw password}))
 
-
-
-
-
-           #_(POST "/signup" [] handle-signup!)
-           (POST "/change-password!" [] (generate-response "ok"))
 
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))
@@ -222,8 +198,9 @@
 
 (def app
   (let [handler (-> routes
-                    (wrap-authentication auth-backend)
-                    (wrap-authorization auth-backend)
+                    (wrap-authentication jws-auth-backend)
+                    (wrap-authorization jws-auth-backend)
+                    (wrap-edn-params)
                     (wrap-params)
                     (wrap-session)
                     (wrap-defaults site-defaults)

@@ -19,8 +19,7 @@
   (cljs-ajax/GET url opts #_(update-in opts [:params] assoc :timestamp (.getTime (js/Date.)))))
 
 (defn POST [url & [opts]]
-  (let [base-opts {:headers {"Accept"       "application/edn"
-                             "X-CSRF-Token" csrf-token}}]
+  (let [base-opts {:headers {:x-csrf-token csrf-token}}]
     (cljs-ajax/POST url (merge base-opts opts))))
 
 (defn hook-browser-navigation! []
@@ -41,16 +40,11 @@
              :value @target}
             opts)])
 
-#_(defn ajax-opts [{:keys [keywords? context headers format csrf-token uri method]
-                  :or {keywords? true format :json csrf-token true}
+#_(defn ajax-opts [{:keys [keywords? context headers format uri method]
                   :as opts}]
-  (let [csrf-header (when (and csrf-token (re-find #"^/" uri))
-                      {:X-CSRFToken csrf-token})
-        format-opts {:format          (cljs-ajax/edn-request-format)
-                     :response-format (cljs-ajax/edn-response-format {:keywords? keywords? :url uri :method method})
-                     :keywords?       keywords?
-                     :headers         (merge {:Accept "application/edn"}
-                                             csrf-header
+  (let [format-opts {:format          (cljs-ajax/edn-request-format)
+                     :response-format (cljs-ajax/edn-response-format)
+                     :headers         (merge {:x-csrf-token csrf-token}
                                              headers)}]
     (-> opts
         (merge format-opts)
@@ -65,7 +59,7 @@
                    :finally #(close! channel)}]
     (-> base-opts
         (merge opts)
-        ;ajax-opts
+        ajax-opts
         cljs-ajax/ajax-request)
     channel))
 
