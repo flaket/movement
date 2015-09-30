@@ -37,21 +37,6 @@
    :headers {"Content-Type" "application/edn"}
    :body    (pr-str data)})
 
-(defn get-user-creds
-  "Queries the database for user info."
-  [creds]
-  (let [users (d/q '[:find ?email ?pw ?r
-                     :in $
-                     :where
-                     [?e :user/email ?email]
-                     [?e :user/password ?pw]
-                     [?e :user/role ?r]]
-                   db)
-        users (map #(zipmap [:username :password :roles] %) users)
-        users (map #(assoc % :roles (read-string (:roles %))) users)
-        users (zipmap (map #(:username %) users) users)]
-    users))
-
 (defn all-movement-names []
   "Returns the names of all movements in the database."
   (let [movements (d/q '[:find ?n
@@ -114,16 +99,10 @@
                         :parts       parts})))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-(defn add-user [email name password]
-  (let [tx-user-data [{:db/id #db/id[:db.part/user]
-                       :user/email email
-                       :user/name name
-                       :user/password (hashers/encrypt password)}]]
-    (d/transact conn tx-user-data)))
 
-;;;;
 (defn find-user [email]
-  (d/pull db '[*] [:user/email email]))
+  (let [db (d/db conn)]
+    (d/pull db '[*] [:user/email email])))
 
 (defn valid-user? [user password]
   (hashers/check password (:user/password user)))
@@ -141,9 +120,23 @@
                 token (jws/sign claims secret {:alg :hs512})]
             (generate-response {:token token :user (dissoc user :user/password :db/id)}))
           (generate-response {:message "wrong password"} 401)))
-      (generate-response {:message "unknown email"} 401))))
+      (generate-response {:message "unknown email"} 400))))
 
 (def jws-auth-backend (jws-backend {:secret secret :options {:alg :hs512}}))
+;;;;;;
+
+(defn add-user [email password]
+  (let [tx-user-data [{:db/id #db/id[:db.part/user]
+                       :user/email email
+                       :user/password (hashers/encrypt password)}]]
+    (d/transact conn tx-user-data)))
+
+(defn add-user! [email password]
+  (if (nil? (:db/id (find-user email)))
+    (do
+      (add-user email password)
+      (generate-response {:message "user created!"}))
+    (generate-response {:message "this email is already registered"} 400)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -152,12 +145,8 @@
            (GET "/" [] (render-file "app.html" {:dev (env :dev?)
                                                 :csrf-token *anti-forgery-token*}))
 
-           (POST "/login" [username password] (jws-login username password)
-             #_(generate-response {:usr  username :pw password
-                                                                  :auth (if (and (= username "admin")
-                                                                                 (= password "pw"))
-                                                                          :authenticated!
-                                                                          :fail)}))
+           (POST "/login" [username password] (jws-login username password))
+           (POST "/signup" [username password] (add-user! username password))
 
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))

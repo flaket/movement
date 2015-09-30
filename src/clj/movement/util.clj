@@ -45,11 +45,27 @@
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn find-user [email]
+  (let [db (d/db conn)]
+    (d/pull db '[*] [:user/email email])))
 
-(defn add-user [email name password]
+(defn valid-user? [user password]
+  (hashers/check password (:user/password user)))
+
+(defn jws-login
+  [email password]
+  (let [user (find-user email)]
+    (if-not (nil? (:db/id user))
+      (let [valid? (valid-user? user password)]
+        (if valid?
+          (let []
+            {:token "a" :user (dissoc user :user/password :db/id)})
+          {:message "wrong password"}))
+      {:message "unknown email"})))
+
+(defn add-user [email password]
   (let [tx-user-data [{:db/id #db/id[:db.part/user]
                        :user/email email
-                       :user/name name
                        :user/password (hashers/encrypt password)}]]
     (d/transact conn tx-user-data)))
 
@@ -89,7 +105,7 @@
      db
      "admin")
 
-(d/pull db '[*] [:user/email "alice@alice.com"])
+(hashers/check "alice1" (:user/password (d/pull db '[*] [:user/email "alice@alice.com"])))
 
 (let [users (d/q '[:find ?email ?pw ?r
                    :in $
