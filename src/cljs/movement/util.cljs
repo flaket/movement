@@ -22,6 +22,14 @@
   (let [base-opts {:headers {:x-csrf-token csrf-token}}]
     (cljs-ajax/POST url (merge base-opts opts))))
 
+(defn get-templates []
+  (GET "templates" {:handler       #(session/put! :templates %)
+                    :error-handler #(print "error retrieving templates.")}))
+
+(defn get-all-categories []
+  (GET "categories" {:handler       #(session/put! :all-categories %)
+                     :error-handler #(print "error retrieving categories.")}))
+
 (defn hook-browser-navigation! []
   (doto (History.)
     (events/listen

@@ -29,7 +29,6 @@
 (def uri "datomic:dev://localhost:4334/movement9")
 (def conn (d/connect uri))
 (def db (d/db conn))
-(selmer.parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 (selmer.parser/set-resource-path!  (clojure.java.io/resource "templates"))
 
 (defn generate-response [data & [status]]
@@ -44,6 +43,14 @@
                          [_ :movement/name ?n]]
                        db)]
     (generate-response movements)))
+
+(defn all-category-names []
+  "Returns the names of all categories in the database."
+  (let [categories (d/q '[:find [?n ...]
+                          :where
+                         [_ :category/name ?n]]
+                       db)]
+    (generate-response categories)))
 
 (defn movement [name]
   "Returns the whole entity of a named movement."
@@ -148,6 +155,7 @@
            (POST "/login" [username password] (jws-login username password))
            (POST "/signup" [username password] (add-user! username password))
 
+           (GET "/categories" [] (all-category-names))
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement name))
            (GET "/templates" [] (all-template-titles))

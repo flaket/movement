@@ -1,11 +1,13 @@
 (ns movement.text
-  (:require [reagent.core :refer [dom-node atom]]))
+  (:require [reagent.core :refer [dom-node atom]]
+            [reagent.session :as session]))
 
-#_(defn auto-complete-did-mount
+(defn auto-complete-did-mount
   "Attaches the jQuery autocomplete functionality to DOM elements."
   []
   (js/$ (fn []
-          (let [available-tags []]
+          (let [categories (session/get :all-categories)
+                available-tags (vec categories)]
             (.autocomplete (js/$ "#tags")
                            (clj->js {:source available-tags}))))))
 
@@ -32,4 +34,4 @@
 
 (def text-edit-component
   (with-meta text-input-component {:component-did-mount #(do (.focus (dom-node %))
-                                                             #_(auto-complete-did-mount))}))
+                                                             (auto-complete-did-mount))}))

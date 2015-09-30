@@ -42,7 +42,7 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (set-page! #'home)
+  (set-page! #'template-creator-component)
   (session/put! :logged-sessions [])
   (session/put! :m-counter (atom 0))
   (.initializeTouchEvents js/React true)

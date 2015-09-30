@@ -1,7 +1,9 @@
 (ns movement.components.login
   (:require [reagent.core :refer [atom]]
-            [movement.util :refer [GET POST text-input]]
-            [secretary.core :include-macros true :refer [dispatch!]]))
+            [reagent.session :as session]
+            [movement.util :refer [GET POST text-input get-templates get-all-categories]]
+            [secretary.core :include-macros true :refer [dispatch!]]
+            [reagent.session :as session]))
 
 (defn login []
   (let [email (atom "")
@@ -32,9 +34,11 @@
                                                               :params          {:username @email
                                                                                 :password @password}
                                                               :handler         (fn [response] (do (println response)
-                                                                                                  #_(session/put! :user-logged-in? true)
-                                                                                                  #_(get-templates)
-                                                                                                  #_(dispatch! "/generator")))
+                                                                                                  (session/put! :token (:token response))
+                                                                                                  (get-templates)
+                                                                                                  (get-all-categories)
+                                                                                                  (dispatch! "/generator")
+                                                                                                  (print @session/state)))
                                                               :error-handler   (fn [response] (do
                                                                                                 (reset! loading? false)
                                                                                                 (println (str "error! " response))))})))}
