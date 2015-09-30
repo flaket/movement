@@ -14,9 +14,9 @@
     [movement.state :refer [movement-session handler-fn log-session]]))
 
 (defonce m-counter (atom 0))
-(defonce getting-templates
-         (GET "templates" {:handler       #(session/put! :templates %)
-                           :error-handler #(print "error retrieving templates.")}))
+(defn get-templates []
+  (GET "templates" {:handler       #(session/put! :templates %)
+                    :error-handler #(print "error retrieving templates.")}))
 
 (defn equipment-symbol [equipment-name]
   (first (shuffle ["images/squat.png"

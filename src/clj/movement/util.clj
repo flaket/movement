@@ -2,11 +2,12 @@
   (:require [datomic.api :as d]
             [clojure.java.io :as io]
             [clojure.edn :as edn]
-            [clojure.pprint :as pp])
+            [clojure.pprint :as pp]
+            [buddy.hashers :as hashers])
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement8")
+(def uri "datomic:dev://localhost:4334/movement9")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -45,6 +46,40 @@
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn add-user [email name password]
+  (let [tx-user-data [{:db/id #db/id[:db.part/user]
+                       :user/email email
+                       :user/name name
+                       :user/password (hashers/encrypt password)}]]
+    (d/transact conn tx-user-data)))
+
+
+(def tx-user-data [{:db/id #db/id[:db.part/user]
+                    :user/email "admin@movementsession.com"
+                    :user/name "Admin"
+                    :user/password (hashers/encrypt "pw")}
+
+                   {:db/id #db/id[:db.part/user]
+                    :user/email "bob@bob.com"
+                    :user/name "Bob"
+                    :user/password (hashers/encrypt "bob")}
+
+                   {:db/id #db/id[:db.part/user]
+                    :user/email "alice@alice.com"
+                    :user/name "Alice"
+                    :user/password (hashers/encrypt "alice")}])
+
+(d/transact conn tx-user-data)
+
+;;;
+(d/q '[:find ?email ?name ?pw
+       :in $
+       :where
+       [?e :user/email ?email]
+       [?e :user/password ?pw]
+       [?e :user/name ?name]
+       ]
+     db)
 
 
 (d/q '[:find (pull ?m [{:user/template
@@ -54,7 +89,7 @@
      db
      "admin")
 
-(d/pull db '[*] [:movement/name "Push Up"])
+(d/pull db '[*] [:user/email "alice@alice.com"])
 
 (let [users (d/q '[:find ?email ?pw ?r
                    :in $

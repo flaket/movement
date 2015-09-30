@@ -34,6 +34,9 @@
                                                             :response-format :edn
                                                             :params          {:username @email
                                                                               :password @password}
-                                                            :handler         (fn [response] (do (println response) #_(session/put! :user-logged-in? true) #_(dispatch! "/generator")))
+                                                            :handler         (fn [response] (do (println response)
+                                                                                                #_(session/put! :user-logged-in? true)
+                                                                                                #_(get-templates)
+                                                                                                #_(dispatch! "/generator")))
                                                             :error-handler   (fn [response] (println (str "error! " response)))}))}
         (if @loading? "Logging in..." "Log In")]])))

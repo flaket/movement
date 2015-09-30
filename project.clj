@@ -27,7 +27,7 @@
                  [environ "1.0.0"]
                  [secretary "1.2.2"]
                  [buddy/buddy-auth "0.6.1"]
-                 [buddy/buddy-hashers "0.6.0"]
+                 [buddy/buddy-hashers "0.7.0"]
                  [buddy/buddy-sign "0.7.1"]
                  [cljs-ajax "0.3.14"]
                  [garden "1.2.5" :exclusions [time]]
