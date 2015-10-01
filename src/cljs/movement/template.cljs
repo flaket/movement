@@ -5,7 +5,8 @@
            [secretary.core :include-macros true :refer [dispatch!]]
            [movement.menu :refer [menu-component]]
            [movement.util :refer [text-input]]
-           [movement.text :refer [text-input-component text-edit-component]]))
+           [movement.text :refer [text-input-component text-edit-component
+                                  categories-ac-component movements-ac-component]]))
 
 (def template-state (atom {:title ""
                            :parts []}))
@@ -17,6 +18,7 @@
        [:div.pure-g
         [:label.pure-u-1-2 "Part " (inc i) " is called "]
         [:input.pure-u-1-2 {:type      "text"
+                            :placeholder "\"warmup\", \"strength\", \"practice for 3 rounds\", etc.."
                             :on-change #(swap! template-state assoc-in [:parts i :title] (-> % .-target .-value))
                             :value     (get-in @template-state [:parts i :title])}]]
        [:div.pure-g
@@ -30,7 +32,7 @@
        [:div.pure-g
         [:label.pure-u {:for "tags"} "Drawn from the categories: "]
         [:div.pure-u
-         [text-edit-component
+         [categories-ac-component
           {:id "tags"
            :class   "edit" :placeholder "type to find and add category.."
            :on-save #(swap! template-state update-in [:parts i :categories] conj %)}]]]
@@ -39,8 +41,9 @@
        [:div.pure-g
         [:label.pure-u "Additionally, the following exercises should always be included:"]
         [:div.pure-u
-         [text-input-component
-          {:class   "edit" :placeholder "type to find and add movement.."
+         [movements-ac-component
+          {:id "mtags"
+           :class   "edit" :placeholder "type to find and add movement.."
            :on-save #(swap! template-state update-in [:parts i :regular-movements] conj %)}]]]
        [:div.pure-g (for [c (get-in @template-state [:parts i :regular-movements])]
                       ^{:key c} [:div.pure-u {:style {:margin-right "5px"}} c])]])))
@@ -54,10 +57,17 @@
         [:div.pure-g
          [:h1.pure-u "Create a new Template"]]
         [:div.pure-g
-         [:label.pure-u-1-2 "This movement session is called "]
+         [:label.pure-u-1-2 "Session title:"]
          [:input.pure-u-1-2 {:type      "text"
-                  :on-change #(swap! template-state assoc :title (-> % .-target .-value))
-                  :value     (:title @template-state)}]]
+                             :placeholder "A suitable title for your session, e.g. \"Handstand Practice\" or \"Morning Ritual\".
+                             Your session templates must be uniquely named."
+                             :on-change #(swap! template-state assoc :title (-> % .-target .-value))
+                             :value     (:title @template-state)}]]
+        [:div.pure-g
+         [:label.pure-u-1-2 "Description:"]
+         [:input.pure-u-1-2 {:type      "text"
+                             :on-change #(swap! template-state assoc :title (-> % .-target .-value))
+                             :value     (:title @template-state)}]]
         [:div.pure-g
          [:label.pure-u "The session is divided into "
           [:span {:style {:color "red"}} (count (:parts @template-state))] " parts."]

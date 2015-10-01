@@ -4,12 +4,12 @@
 
 (defn auto-complete-did-mount
   "Attaches the jQuery autocomplete functionality to DOM elements."
-  []
+  [id tags]
   (js/$ (fn []
-          (let [categories (session/get :all-categories)
-                available-tags (vec categories)]
-            (.autocomplete (js/$ "#tags")
-                           (clj->js {:source available-tags}))))))
+          (let [                                            ;available-tags (vec (session/get :all-categories))
+                ]
+            (.autocomplete (js/$ id)
+                           (clj->js {:source tags}))))))
 
 (defn text-input-component [{:keys [title on-save on-stop size]}]
   (let [val (atom title)
@@ -34,4 +34,12 @@
 
 (def text-edit-component
   (with-meta text-input-component {:component-did-mount #(do (.focus (dom-node %))
-                                                             (auto-complete-did-mount))}))
+                                                             (auto-complete-did-mount "#tags" nil))}))
+
+(def categories-ac-component
+  (with-meta text-input-component {:component-did-mount #(do #_(.focus (dom-node %))
+                                                             (auto-complete-did-mount "#tags" (vec (session/get :all-categories))))}))
+
+(def movements-ac-component
+  (with-meta text-input-component {:component-did-mount #(let []
+                                                          (auto-complete-did-mount "#mtags" (vec (session/get :all-movements))))}))

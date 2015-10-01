@@ -7,7 +7,7 @@
     [goog.history.EventType :as EventType]
     [reagent.session :as session]
     [secretary.core :as secretary
-     :include-macros true]
+     :include-macros true :refer [dispatch!]]
     [ajax.core :as cljs-ajax]
     [cljs.core.async :as async :refer [>! <! put! take! alts! chan sliding-buffer close!]]
     [dommy.core :as dommy :refer-macros [sel sel1]]))
@@ -29,6 +29,16 @@
 (defn get-all-categories []
   (GET "categories" {:handler       #(session/put! :all-categories %)
                      :error-handler #(print "error retrieving categories.")}))
+
+(defn get-all-movements []
+  (GET "movements" {:handler       #(session/put! :all-movements %)
+                     :error-handler #(print "error retrieving movements.")}))
+
+(defn launch-template-creator []
+  (do (when (nil? (session/get :all-categories)) (get-all-categories))
+      (when (nil? (session/get :templates)) (get-templates))
+      (when (nil? (session/get :all-movements)) (get-all-movements))
+      (dispatch! "/template")))
 
 (defn hook-browser-navigation! []
   (doto (History.)

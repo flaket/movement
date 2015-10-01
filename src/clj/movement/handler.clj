@@ -38,7 +38,7 @@
 
 (defn all-movement-names []
   "Returns the names of all movements in the database."
-  (let [movements (d/q '[:find ?n
+  (let [movements (d/q '[:find [?n ...]
                          :where
                          [_ :movement/name ?n]]
                        db)]
