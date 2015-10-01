@@ -33,18 +33,20 @@
         [:label.pure-u {:for "tags"} "Drawn from the categories: "]
         [:div.pure-u
          [categories-ac-component
-          {:id "tags"
+          {:id      "tags"
            :class   "edit" :placeholder "type to find and add category.."
-           :on-save #(swap! template-state update-in [:parts i :categories] conj %)}]]]
+           :on-save #(when (some #{%} (session/get :all-categories))
+                      (swap! template-state update-in [:parts i :categories] conj %))}]]]
        [:div.pure-g (for [c (get-in @template-state [:parts i :categories])]
                       ^{:key c} [:div.pure-u {:style {:margin-right "5px"}} c])]
        [:div.pure-g
         [:label.pure-u "Additionally, the following exercises should always be included:"]
         [:div.pure-u
          [movements-ac-component
-          {:id "mtags"
+          {:id      "mtags"
            :class   "edit" :placeholder "type to find and add movement.."
-           :on-save #(swap! template-state update-in [:parts i :regular-movements] conj %)}]]]
+           :on-save #(when (some #{%} (session/get :all-movements))
+                      (swap! template-state update-in [:parts i :regular-movements] conj %))}]]]
        [:div.pure-g (for [c (get-in @template-state [:parts i :regular-movements])]
                       ^{:key c} [:div.pure-u {:style {:margin-right "5px"}} c])]])))
 
@@ -66,8 +68,8 @@
         [:div.pure-g
          [:label.pure-u-1-2 "Description:"]
          [:input.pure-u-1-2 {:type      "text"
-                             :on-change #(swap! template-state assoc :title (-> % .-target .-value))
-                             :value     (:title @template-state)}]]
+                             :on-change #(swap! template-state assoc :description (-> % .-target .-value))
+                             :value     (:description @template-state)}]]
         [:div.pure-g
          [:label.pure-u "The session is divided into "
           [:span {:style {:color "red"}} (count (:parts @template-state))] " parts."]

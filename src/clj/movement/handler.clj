@@ -157,7 +157,7 @@
 
            (GET "/categories" [] (all-category-names))
            (GET "/movements" [] (all-movement-names))
-           (GET "/movement/:name" [name] (movement name))
+           (GET "/movement/:name" [name] (movement (str/replace name "-" " ")))
            (GET "/templates" [] (all-template-titles))
            (GET "/template/:title" [title] (create-session (str/replace title "-" " ")))
            (GET "/singlemovement" [categories]

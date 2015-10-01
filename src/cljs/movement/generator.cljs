@@ -9,7 +9,7 @@
     [goog.events :as events]
     [clojure.string :as str]
     [movement.util :refer [GET]]
-    [movement.text :refer [text-edit-component]]
+    [movement.text :refer [text-edit-component movements-ac-component]]
     [movement.menu :refer [menu-component]]
     [movement.state :refer [movement-session handler-fn log-session]]))
 
@@ -68,6 +68,19 @@
     (GET "singlemovement"
          {:params        {:categories categories}
           :format        :edn
+          :handler       #(let [id (swap! m-counter inc)
+                                new-movement (first %)
+                                new-movement (assoc new-movement :id id)
+                                new-movements (assoc movements id new-movement)]
+                           (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+          :error-handler #(print "error getting single movement through add.")})))
+
+(defn add-movement-from-search [part-title movement-name]
+  (let [parts (session/get-in [:movement-session :parts])
+        position-in-parts (first (positions #{part-title} (map :title parts)))
+        movements (session/get-in [:movement-session :parts position-in-parts :movements])]
+    (GET (str "movement/" (str/replace movement-name " " "-"))
+         {:format        :edn
           :handler       #(let [id (swap! m-counter inc)
                                 new-movement (first %)
                                 new-movement (assoc new-movement :id id)
@@ -334,14 +347,19 @@
          ]))))
 
 (defn part-component []
-  (let []
+  (let [show-search-input (atom false)]
     (fn [{:keys [title categories movements]}]
       [:div.part
        [:h2 title]
        [:div.pure-g
         [:p.pure-u-1-2 [:a.secondary-button {:on-click #(add-movement title)} "+"]]
-        [:p.pure-u-1-2 #_[:a {:style    {:float "right"}
-                            :on-click #(add-movement title)} "Find movement"]]]
+        [:p.pure-u-1-2 [:a {:style    {:float "right"}
+                            :on-click #(reset! show-search-input true)} "Find movement"]]
+        #_[movements-ac-component
+         {:id      "mtags"
+          :class   "edit" :placeholder "type to find and add movement.."
+          :on-save #(when (some #{%} (session/get :all-movements))
+                     (add-movement-from-search title %))}]]
        [:div.pure-g
         (doall
           (for [m (vals movements)]
