@@ -5,7 +5,7 @@
             [goog.events :as events]
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
-            [movement.util :refer [hook-browser-navigation! set-page!]]
+            [movement.util :refer [get-all-categories get-all-movements get-templates hook-browser-navigation! set-page!]]
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
@@ -45,6 +45,11 @@
   (set-page! #'template-creator-component)
   (session/put! :logged-sessions [])
   (session/put! :m-counter (atom 0))
+
+  (get-templates)
+  (get-all-categories)
+  (get-all-movements)
+
   (.initializeTouchEvents js/React true)
   (mount-root))
 

@@ -9,7 +9,7 @@
     [goog.events :as events]
     [clojure.string :as str]
     [movement.util :refer [GET]]
-    [movement.text :refer [text-edit-component movements-ac-component]]
+    [movement.text :refer [text-edit-component]]
     [movement.menu :refer [menu-component]]
     [movement.state :refer [movement-session handler-fn log-session]]))
 
@@ -356,10 +356,10 @@
         [:p.pure-u-1-2 [:a {:style    {:float "right"}
                             :on-click #(reset! show-search-input true)} "Find movement"]]
         #_[movements-ac-component
-         {:id      "mtags"
+         {:id      "mmtags"
           :class   "edit" :placeholder "type to find and add movement.."
           :on-save #(when (some #{%} (session/get :all-movements))
-                     (add-movement-from-search title %))}]]
+                     nil #_(add-movement-from-search title %))}]]
        [:div.pure-g
         (doall
           (for [m (vals movements)]

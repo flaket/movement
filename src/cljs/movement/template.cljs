@@ -5,8 +5,7 @@
            [secretary.core :include-macros true :refer [dispatch!]]
            [movement.menu :refer [menu-component]]
            [movement.util :refer [text-input]]
-           [movement.text :refer [text-input-component text-edit-component
-                                  categories-ac-component movements-ac-component]]))
+           [movement.text :refer [text-input-component auto-complete-did-mount]]))
 
 (def template-state (atom {:title ""
                            :parts []}))
@@ -30,23 +29,29 @@
          {:on-click #(when (> n 0)
                       (swap! template-state update-in [:parts i :n] dec))} "-"]]
        [:div.pure-g
-        [:label.pure-u {:for "tags"} "Drawn from the categories: "]
+        [:label.pure-u "Drawn from the categories: "]
         [:div.pure-u
-         [categories-ac-component
-          {:id      "tags"
-           :class   "edit" :placeholder "type to find and add category.."
-           :on-save #(when (some #{%} (session/get :all-categories))
-                      (swap! template-state update-in [:parts i :categories] conj %))}]]]
+         (let [id (str "ctags" i)
+               categories-ac-comp (with-meta text-input-component
+                                            {:component-did-mount #(do (auto-complete-did-mount (str "#" id) (vec (session/get :all-categories)))
+                                                                       (print "ctags ac mounted.."))})]
+           [categories-ac-comp {:id     id
+                               :class   "edit" :placeholder "type to find and add category.."
+                               :on-save #(when (some #{%} (session/get :all-categories))
+                                          (swap! template-state update-in [:parts i :categories] conj %))}])]]
        [:div.pure-g (for [c (get-in @template-state [:parts i :categories])]
                       ^{:key c} [:div.pure-u {:style {:margin-right "5px"}} c])]
        [:div.pure-g
         [:label.pure-u "Additionally, the following exercises should always be included:"]
         [:div.pure-u
-         [movements-ac-component
-          {:id      "mtags"
-           :class   "edit" :placeholder "type to find and add movement.."
-           :on-save #(when (some #{%} (session/get :all-movements))
-                      (swap! template-state update-in [:parts i :regular-movements] conj %))}]]]
+         (let [id (str "mtags" i)
+               movements-ac-comp (with-meta text-input-component
+                                            {:component-did-mount #(do (auto-complete-did-mount (str "#" id) (vec (session/get :all-movements)))
+                                                                       (print "mtags ac mounted.."))})]
+           [movements-ac-comp {:id      (str "mtags" i)
+                               :class   "edit" :placeholder "type to find and add movement.."
+                               :on-save #(when (some #{%} (session/get :all-movements))
+                                          (swap! template-state update-in [:parts i :regular-movements] conj %))}])]]
        [:div.pure-g (for [c (get-in @template-state [:parts i :regular-movements])]
                       ^{:key c} [:div.pure-u {:style {:margin-right "5px"}} c])]])))
 
@@ -61,8 +66,7 @@
         [:div.pure-g
          [:label.pure-u-1-2 "Session title:"]
          [:input.pure-u-1-2 {:type      "text"
-                             :placeholder "A suitable title for your session, e.g. \"Handstand Practice\" or \"Morning Ritual\".
-                             Your session templates must be uniquely named."
+                             :placeholder "A unique title for your session, e.g. \"Handstand Practice\" or \"Morning Ritual\""
                              :on-change #(swap! template-state assoc :title (-> % .-target .-value))
                              :value     (:title @template-state)}]]
         [:div.pure-g

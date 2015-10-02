@@ -31,6 +31,7 @@
                  [buddy/buddy-sign "0.7.1"]
                  [cljs-ajax "0.3.14"]
                  [garden "1.2.5" :exclusions [time]]
+                 #_[garden "1.3.0-SNAPSHOT"]
                  [prismatic/dommy "1.1.0"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]

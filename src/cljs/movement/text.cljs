@@ -5,11 +5,8 @@
 (defn auto-complete-did-mount
   "Attaches the jQuery autocomplete functionality to DOM elements."
   [id tags]
-  (js/$ (fn []
-          (let [                                            ;available-tags (vec (session/get :all-categories))
-                ]
-            (.autocomplete (js/$ id)
-                           (clj->js {:source tags}))))))
+  (js/$
+    (fn [] (.autocomplete (js/$ id) (clj->js {:source tags})))))
 
 (defn text-input-component [{:keys [title on-save on-stop size]}]
   (let [val (atom title)
@@ -32,14 +29,41 @@
                            :size size
                            :autofocus false})])))
 
+(defn text2-input-component [{:keys [title on-save on-stop size]}]
+  (let [val (atom title)
+        stop #(do (reset! val "")
+                  (if on-stop (on-stop)))
+        save #(let [v (-> @val str clojure.string/trim)]
+               (if-not (empty? v) (on-save v))
+               (stop))]
+    (fn []
+      [:input {:type        "text"
+               :value       @val
+               :on-blur     #(do (reset! val (-> % .-target .-value))
+                                 (save))
+               :on-change   #(reset! val (-> % .-target .-value))
+               :on-key-down #(case (.-which %)
+                              13 (save)
+                              27 (stop)
+                              nil)
+               :size        size
+               :autofocus   false}])))
+
 (def text-edit-component
-  (with-meta text-input-component {:component-did-mount #(do (.focus (dom-node %))
-                                                             (auto-complete-did-mount "#tags" nil))}))
+  (with-meta text-input-component {:component-did-mount #(do (.focus (dom-node %)))}))
 
-(def categories-ac-component
-  (with-meta text-input-component {:component-did-mount #(do #_(.focus (dom-node %))
-                                                             (auto-complete-did-mount "#tags" (vec (session/get :all-categories))))}))
+#_(defn autocomplete-wrapper [element]
+  (with-meta element {:component-did-mount #(do (auto-complete-did-mount "#mtags" (vec (session/get :all-movements)))
+                                                (print "mtags ac mounted.."))}))
 
-(def movements-ac-component
-  (with-meta text-input-component {:component-did-mount #(let []
-                                                          (auto-complete-did-mount "#mtags" (vec (session/get :all-movements))))}))
+
+#_(def movements-ac-component
+  (with-meta text-input-component {:component-did-mount #(do (auto-complete-did-mount "#mtags" (vec (session/get :all-movements)))
+                                                             (print "mtags ac mounted.."))}))
+
+
+
+#_(defn categories-ac-component [{:keys [id]}]
+  (let [meta {:component-did-mount #(auto-complete-did-mount id (vec (session/get :all-categories)))}]
+    (fn []
+      (with-meta text-input-component meta))))
