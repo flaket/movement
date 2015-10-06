@@ -61,6 +61,56 @@
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn add-template! [user template]
+  (let [title (:title template)
+        description (:description template)
+        parts (:parts template)
+        part-temp-ids (vec (for [p parts] (d/tempid :db.part/user)))
+
+        tx-data [{:db/id #db/id[:db.part/user]
+                  :user/email user
+                  :user/template [#db/id[:db.part/user -100]]}
+
+                 {:db/id #db/id[:db.part/user -100]
+                  :template/title title
+                  :template/description description
+                  :template/part part-temp-ids}
+
+
+
+                 {:db/id                    #db/id[:db.part/user -200]
+                  :part/name                "Mobility"
+                  :part/category            [#db/id[:db.part/user -2]]
+                  :part/number-of-movements 5}
+                 {:db/id                    #db/id[:db.part/user -201]
+                  :part/name                "Strength"
+                  :part/category            [#db/id[:db.part/user -1]]
+                  :part/number-of-movements 5}]
+
+        temp-data (for [p parts, id part-temp-ids]
+                    {:db/id                    id
+                     :part/name                (:title p)
+                     :part/category            (:categories p)
+                     :part/number-of-movements (:n p)
+                     :part/regular-movement (:regular-movements p)})
+
+        ]
+    (print temp-data)
+    #_(d/transact conn tx-data)))
+
+(defn new-unique-template? [user template-title]
+  (empty? (d/q '[:find [?user ...]
+                 :in $ ?user ?template-title
+                 :where
+                 [?e :user/email ?user]
+                 [?e :user/template ?template]
+                 [?template :template/title ?template-title]]
+               db
+               user
+               template-title)))
+
+
+
 (d/pull db '[*] [:movement/name "Duck Walk"])
 (d/pull db '[*] 17592186045650)
 

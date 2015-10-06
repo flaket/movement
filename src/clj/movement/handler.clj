@@ -105,6 +105,35 @@
                         :description description
                         :parts       parts})))
 
+(defn new-unique-template? [user template-title]
+  (empty? (d/q '[:find [?user ...]
+                 :in $ ?user ?template-title
+                 :where
+                 [?e :user/email ?user]
+                 [?e :user/template ?template]
+                 [?template :template/title ?template-title]]
+               db
+               user
+               template-title)))
+
+(defn add-template! [user template]
+  (let [tx-user-data [{:db/id #db/id[:db.part/user]
+                       :user/email email
+                       :user/password (hashers/encrypt password)}]]
+    (d/transact conn tx-user-data)))
+
+(defn store-new-template [req]
+  (let [template (:params req)
+        user (:user template)]
+    (if (nil? user)
+      (generate-response (str "User email lacking from client data. User not logged in?" " template: " template) 400)
+      (if (new-unique-template? user (:title template))
+        (do
+          ;todo: store new template
+          (generate-response "New template stored successfully."))
+        (generate-response "You already have a template with this title. Choose a unique title for your template." 400)))))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defn find-user [email]
@@ -125,7 +154,7 @@
           (let [claims {:user (keyword email)
                         :exp  (-> 3 hours from-now)}
                 token (jws/sign claims secret {:alg :hs512})]
-            (generate-response {:token token :user (dissoc user :user/password :db/id)}))
+            (generate-response {:token token :user (:user/email (dissoc user :user/password :db/id))}))
           (generate-response {:message "wrong password"} 401)))
       (generate-response {:message "unknown email"} 400))))
 
@@ -154,11 +183,15 @@
 
            (POST "/login" [username password] (jws-login username password))
            (POST "/signup" [username password] (add-user! username password))
+           (POST "/template" req (store-new-template req))
 
            (GET "/categories" [] (all-category-names))
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement (str/replace name "-" " ")))
            (GET "/templates" [] (all-template-titles))
+
+
+
            (GET "/template/:title" [title] (create-session (str/replace title "-" " ")))
            (GET "/singlemovement" [categories]
              (generate-response (get-movements 1

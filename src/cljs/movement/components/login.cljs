@@ -24,22 +24,24 @@
 
        (when-let [e @error]
          [:div.notice e])
-       [:button.btn.btn-primary {:class    (when @loading? "disabled")
-                                 :on-click #(if-not (and (seq @email) (seq @password))
-                                             (reset! error "Both fields are required.")
-                                             (do
-                                               (reset! loading? true)
-                                               (POST "login" {:format          :edn
-                                                              :response-format :edn
-                                                              :params          {:username @email
-                                                                                :password @password}
-                                                              :handler         (fn [response] (do (println response)
-                                                                                                  (session/put! :token (:token response))
-                                                                                                  (get-templates)
-                                                                                                  (get-all-categories)
-                                                                                                  (dispatch! "/generator")
-                                                                                                  (print @session/state)))
-                                                              :error-handler   (fn [response] (do
-                                                                                                (reset! loading? false)
-                                                                                                (println (str "error! " response))))})))}
+       [:button.btn.btn-primary
+        {:class    (when @loading? "disabled")
+         :on-click #(if-not (and (seq @email) (seq @password))
+                     (reset! error "Both fields are required.")
+                     (do
+                       (reset! loading? true)
+                       (POST "login" {:format          :edn
+                                      :response-format :edn
+                                      :params          {:username @email
+                                                        :password @password}
+                                      :handler         (fn [response] (do (println response)
+                                                                          (session/put! :token (:token response))
+                                                                          (session/put! :user (:user response))
+                                                                          (get-templates)
+                                                                          (get-all-categories)
+                                                                          (dispatch! "/generator")
+                                                                          (print (session/get :user))))
+                                      :error-handler   (fn [response] (do
+                                                                        (reset! loading? false)
+                                                                        (println (str "error! " response))))})))}
         (if @loading? "Logging in..." "Log In")]])))

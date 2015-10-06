@@ -4,7 +4,7 @@
            [reagent-forms.core :refer [bind-fields]]
            [secretary.core :include-macros true :refer [dispatch!]]
            [movement.menu :refer [menu-component]]
-           [movement.util :refer [text-input]]
+           [movement.util :refer [text-input POST]]
            [movement.text :refer [text-input-component auto-complete-did-mount]]))
 
 (def template-state (atom {:title ""
@@ -89,4 +89,13 @@
            (for [i (range 0 (count parts))]
              ^{:key i} [part-creator-component (get parts i) i]))]
         [:div.pure-g
-         [:button.pure-u {:on-click #(print @template-state)} "Save"]]]])))
+         [:button.pure-u {:on-click #(do
+                                      (swap! template-state assoc :user (session/get :user))
+                                      (print @template-state)
+                                      (POST "template"
+                                               {:format          :edn
+                                                :response-format :edn
+                                                :params          @template-state
+                                                :handler         (fn [response] (print response))
+                                                :error-handler   (fn [response] (print response))}))}
+          "Save"]]]])))

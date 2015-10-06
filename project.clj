@@ -6,7 +6,7 @@
 
   :source-paths ["src/clj" "src/cljs"]
 
-  :dependencies [[org.clojure/clojure "1.7.0"]
+  :dependencies [[org.clojure/clojure "1.7.0" :exclusions [time]]
                  [org.clojure/clojurescript "0.0-3196" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [com.datomic/datomic-pro "0.9.5201" :exclusions [joda-time]]
@@ -30,7 +30,7 @@
                  [buddy/buddy-hashers "0.7.0"]
                  [buddy/buddy-sign "0.7.1"]
                  [cljs-ajax "0.3.14"]
-                 [garden "1.2.5" :exclusions [time]]
+                 [garden "1.2.5" ]
                  #_[garden "1.3.0-SNAPSHOT"]
                  [prismatic/dommy "1.1.0"]]
 
