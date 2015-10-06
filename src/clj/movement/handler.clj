@@ -26,7 +26,7 @@
             [movement.db]
             [buddy.hashers :as hashers]))
 
-(def uri "datomic:dev://localhost:4334/movement9")
+(def uri "datomic:dev://localhost:4334/movement10")
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/set-resource-path!  (clojure.java.io/resource "templates"))
@@ -75,7 +75,7 @@
                          [?e :user/template ?t]
                          [?t :template/title ?title]]
                        db
-                       "admin")]
+                       "admin@movementsession.com")]
     (generate-response templates)))
 
 (defn create-session [title]
@@ -87,7 +87,7 @@
                                     [?t :template/title ?title]]
                                   db
                                   title
-                                  "admin"))
+                                  "admin@movementsession.com"))
         description (:template/description title-entity)
         part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
         parts

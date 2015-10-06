@@ -1,7 +1,10 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Locomotion"}
+ ;; LOCOMOTION ON ALL FOUR
 
+ {:db/id #db/id[:db.part/user -1] :category/name "Crawling"}
+
+ ;; crawling
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Inverted Crawl"
   :movement/category [#db/id[:db.part/user -1]]}
@@ -12,28 +15,7 @@
   :movement/name     "Inchworm"
   :movement/category [#db/id[:db.part/user -1]]}
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Ostrich Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Horse Stance Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
   :movement/name     "Lizard Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Duck Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Bridge Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Cartwheel"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Handstand Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Kick to Handstand"
   :movement/category [#db/id[:db.part/user -1]]}
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Knee Elbow Crawl"
@@ -55,6 +37,9 @@
   :movement/category [#db/id[:db.part/user -1]]}
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Hip Thrust Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Bridge Crawl"
   :movement/category [#db/id[:db.part/user -1]]}
 
  ]

@@ -7,7 +7,7 @@
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement9")
+(def uri "datomic:dev://localhost:4334/movement10")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -15,53 +15,66 @@
 (let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
 
-(defn add-data-to-database
-  "Read data sources and transact to database."
-  []
-  (let [pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
-        pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
-        conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
-        core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
-        lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
-        mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
-        multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn"))))
-        sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
-        locomotion-tx (first (Util/readAll (io/reader (io/resource "data/movements/locomotion.edn"))))
-        template-tx (first (Util/readAll (io/reader (io/resource "data/movements/template.edn"))))]
-    (do
-      (d/transact conn pulling-tx)
-      (d/transact conn pushing-tx)
-      (d/transact conn conditioning-tx)
-      (d/transact conn core-tx)
-      (d/transact conn lowerbody-tx)
-      (d/transact conn mobility-tx)
-      (d/transact conn multiplane-tx)
-      (d/transact conn sass-tx)
-      (d/transact conn locomotion-tx)
-      (d/transact conn template-tx))))
+(let [
+      climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
+      crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
+      jumping-tx (first (Util/readAll (io/reader (io/resource "data/movements/jumping.edn"))))
+      lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
+      rolling-tx (first (Util/readAll (io/reader (io/resource "data/movements/rolling.edn"))))
+      walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))
 
-#_(add-data-to-database)
+      acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/acrobatics.edn"))))
+      pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
+      pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
+      conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
+      core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
+      lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
+      mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
+      multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn"))))
+      sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
+
+
+      templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))
+
+      ]
+  (do
+    (d/transact conn acrobatics-tx)
+    (d/transact conn pulling-tx)
+    (d/transact conn pushing-tx)
+    (d/transact conn conditioning-tx)
+    (d/transact conn core-tx)
+    (d/transact conn lowerbody-tx)
+    (d/transact conn mobility-tx)
+    (d/transact conn multiplane-tx)
+    (d/transact conn sass-tx)
+
+    (d/transact conn templates-tx)
+
+    (d/transact conn climbing-tx)
+    (d/transact conn crawling-tx)
+    (d/transact conn jumping-tx)
+    (d/transact conn lifting-tx)
+    (d/transact conn rolling-tx)
+    (d/transact conn walking-tx)
+    ))
 
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(d/pull db '[*] [:movement/name "Duck Walk"])
+(d/pull db '[*] 17592186045650)
+
+(count (d/q '[:find [?n ...]
+              :where
+              [_ :movement/name ?n]]
+            db))
+
 (defn find-user [email]
   (let [db (d/db conn)]
     (d/pull db '[*] [:user/email email])))
 
 (defn valid-user? [user password]
   (hashers/check password (:user/password user)))
-
-(defn jws-login
-  [email password]
-  (let [user (find-user email)]
-    (if-not (nil? (:db/id user))
-      (let [valid? (valid-user? user password)]
-        (if valid?
-          (let []
-            {:token "a" :user (dissoc user :user/password :db/id)})
-          {:message "wrong password"}))
-      {:message "unknown email"})))
 
 (defn add-user [email password]
   (let [tx-user-data [{:db/id #db/id[:db.part/user]
@@ -218,7 +231,7 @@ category-entities
   (map #(decorate (first %)) r))
 
 
-(d/pull db '[*] [:movement/name "Push Up"])
+
 
 (for [p parts]
   (let [categories (:part/category p)

@@ -15,6 +15,9 @@
  {:db/id #db/id[:db.part/user -9] :category/name "Grip Strength"}
 
  ;; movements
+
+
+ ;; Back Lever
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Back Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -50,6 +53,8 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
+
+ ;; Front lever
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Front Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -85,6 +90,8 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]}
+
+ ;; Side lever
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Side Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -119,6 +126,8 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -7]
                       #db/id[:db.part/user -9]]}
+
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Negative Back Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -162,6 +171,8 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
+
+ ;; Planche
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Planche"
   :movement/category [#db/id[:db.part/user -1]
@@ -192,6 +203,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -8]]}
+
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Wall Bar Front Support"
   :movement/category  [#db/id[:db.part/user -1]
@@ -204,6 +217,8 @@
                        #db/id[:db.part/user -2]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Ring Support Hold"
   :movement/category  [#db/id[:db.part/user -1]

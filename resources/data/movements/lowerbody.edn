@@ -21,100 +21,36 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Back Squat"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -3]
-                       #db/id[:db.part/user -4]
-                       #db/id[:db.part/user -5]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Front Squat"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -3]
-                       #db/id[:db.part/user -4]
-                       #db/id[:db.part/user -5]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Overhead Squat"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -3]
-                       #db/id[:db.part/user -4]
-                       #db/id[:db.part/user -5]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Lunge"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Back Lunge"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -3]
-                       #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -5]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Front Lunge"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -3]
-                       #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -5]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Overhead Lunge"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -3]
-                       #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -5]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Deadlift"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -3]
-                       #db/id[:db.part/user -5]
-                       #db/id[:db.part/user -8]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Pistol Single Leg Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Shrimp Single Leg Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Extend Behind Single Leg Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Natural Leg Curl"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Jump Onto Box From Standing"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]
-                       #db/id[:db.part/user -3]]
-  :movement/equipment [#db/id[:db.part/user -5001]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Jump Onto Box From Squatting"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]
-                       #db/id[:db.part/user -3]]
-  :movement/equipment [#db/id[:db.part/user -5001]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Front Flip"
-  :movement/category [#db/id[:db.part/user -2]
-                      #db/id[:db.part/user -7]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Back Flip"
-  :movement/category [#db/id[:db.part/user -2]
-                      #db/id[:db.part/user -7]]}
 
  ]

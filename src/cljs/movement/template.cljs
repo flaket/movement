@@ -33,8 +33,7 @@
         [:div.pure-u
          (let [id (str "ctags" i)
                categories-ac-comp (with-meta text-input-component
-                                            {:component-did-mount #(do (auto-complete-did-mount (str "#" id) (vec (session/get :all-categories)))
-                                                                       (print "ctags ac mounted.."))})]
+                                             {:component-did-mount #(auto-complete-did-mount (str "#" id) (vec (session/get :all-categories)))})]
            [categories-ac-comp {:id     id
                                :class   "edit" :placeholder "type to find and add category.."
                                :on-save #(when (some #{%} (session/get :all-categories))
@@ -46,8 +45,7 @@
         [:div.pure-u
          (let [id (str "mtags" i)
                movements-ac-comp (with-meta text-input-component
-                                            {:component-did-mount #(do (auto-complete-did-mount (str "#" id) (vec (session/get :all-movements)))
-                                                                       (print "mtags ac mounted.."))})]
+                                            {:component-did-mount #(auto-complete-did-mount (str "#" id) (vec (session/get :all-movements)))})]
            [movements-ac-comp {:id      (str "mtags" i)
                                :class   "edit" :placeholder "type to find and add movement.."
                                :on-save #(when (some #{%} (session/get :all-movements))
