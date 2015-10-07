@@ -61,42 +61,57 @@
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(create-session (str/replace title "-" " "))
+
+
+(def bobs-template {:title "Bob's Strength Session"
+                    :description "Let's do this!"
+                    :parts [{:title "Warmup"
+                             :categories ["Hip Mobility" "Shoulder Mobility"]
+                             :n 4
+                             :regular-movements []}
+                            {:title "Strength"
+                             :categories ["Strength"]
+                             :n 2
+                             :regular-movements []}]})
+
 (defn add-template! [user template]
   (let [title (:title template)
         description (:description template)
         parts (:parts template)
+        categories (vec (flatten (for [p parts] (for [c (:categories p)] c))))
+        ; regular-movements
         part-temp-ids (vec (for [p parts] (d/tempid :db.part/user)))
-
-        tx-data [{:db/id #db/id[:db.part/user]
-                  :user/email user
-                  :user/template [#db/id[:db.part/user -100]]}
-
-                 {:db/id #db/id[:db.part/user -100]
-                  :template/title title
-                  :template/description description
-                  :template/part part-temp-ids}
-
-
-
-                 {:db/id                    #db/id[:db.part/user -200]
-                  :part/name                "Mobility"
-                  :part/category            [#db/id[:db.part/user -2]]
-                  :part/number-of-movements 5}
-                 {:db/id                    #db/id[:db.part/user -201]
-                  :part/name                "Strength"
-                  :part/category            [#db/id[:db.part/user -1]]
-                  :part/number-of-movements 5}]
-
-        temp-data (for [p parts, id part-temp-ids]
-                    {:db/id                    id
+        category-temp-ids (vec (for [p parts] (for [c (:categories p)] (d/tempid :db.part/user))))
+        ; regular-movement-data
+        flat-category-temp-ids (vec (flatten category-temp-ids))
+        user-template-data [{:db/id         #db/id[:db.part/user]
+                             :user/email    user
+                             :user/template [#db/id[:db.part/user -100]]}
+                            {:db/id                #db/id[:db.part/user -100]
+                             :template/title       title
+                             :template/description description
+                             :template/part        part-temp-ids}]
+        part-data (for [i (range (count parts))
+                          :let [p (get parts i)
+                                cid (get category-temp-ids i)
+                                pid (get part-temp-ids i)]]
+                    {:db/id                    pid
                      :part/name                (:title p)
-                     :part/category            (:categories p)
+                     :part/category            (vec cid)
                      :part/number-of-movements (:n p)
-                     :part/regular-movement (:regular-movements p)})
+                     :part/regular-movement    (:regular-movements p)
+                     })
+        category-data (vec (for [i (range (count categories))
+                                 :let [c (get categories i)
+                                       id (get flat-category-temp-ids i)]]
+                             {:db/id         id
+                              :category/name c}))
 
-        ]
-    (print temp-data)
-    #_(d/transact conn tx-data)))
+        ; regular-movement-data
+        tx-data (concat user-template-data part-data category-data)]
+    #_(print tx-data)
+    (d/transact conn tx-data)))
 
 (defn new-unique-template? [user template-title]
   (empty? (d/q '[:find [?user ...]
@@ -109,15 +124,14 @@
                user
                template-title)))
 
+(defn pull-on-id [id]
+  (d/pull db '[*] id))
 
-
-(d/pull db '[*] [:movement/name "Duck Walk"])
-(d/pull db '[*] 17592186045650)
-
-(count (d/q '[:find [?n ...]
-              :where
-              [_ :movement/name ?n]]
-            db))
+(defn number-of-movements-in-db []
+  (count (d/q '[:find [?n ...]
+                :where
+                [_ :movement/name ?n]]
+              db)))
 
 (defn find-user [email]
   (let [db (d/db conn)]
@@ -127,25 +141,25 @@
   (hashers/check password (:user/password user)))
 
 (defn add-user [email password]
-  (let [tx-user-data [{:db/id #db/id[:db.part/user]
-                       :user/email email
+  (let [tx-user-data [{:db/id         #db/id[:db.part/user]
+                       :user/email    email
                        :user/password (hashers/encrypt password)}]]
     (d/transact conn tx-user-data)))
 
 
-(def tx-user-data [{:db/id #db/id[:db.part/user]
-                    :user/email "admin@movementsession.com"
-                    :user/name "Admin"
+(def tx-user-data [{:db/id         #db/id[:db.part/user]
+                    :user/email    "admin@movementsession.com"
+                    :user/name     "Admin"
                     :user/password (hashers/encrypt "pw")}
 
-                   {:db/id #db/id[:db.part/user]
-                    :user/email "bob@bob.com"
-                    :user/name "Bob"
+                   {:db/id         #db/id[:db.part/user]
+                    :user/email    "bob@bob.com"
+                    :user/name     "Bob"
                     :user/password (hashers/encrypt "bob")}
 
-                   {:db/id #db/id[:db.part/user]
-                    :user/email "alice@alice.com"
-                    :user/name "Alice"
+                   {:db/id         #db/id[:db.part/user]
+                    :user/email    "alice@alice.com"
+                    :user/name     "Alice"
                     :user/password (hashers/encrypt "alice")}])
 
 (d/transact conn tx-user-data)
@@ -166,7 +180,7 @@
        :in $ ?cat
        :where [?m :user/email ?cat]]
      db
-     "admin")
+     "bob@bob.com")
 
 (hashers/check "alice1" (:user/password (d/pull db '[*] [:user/email "alice@alice.com"])))
 
@@ -216,7 +230,7 @@
 (defn get-movements [n categories]
   (let [movements (for [c categories]
                     (d/q '[:find (pull ?m [*]) :in $ ?cat
-                           :where  [?c :category/name ?cat] [?m :movement/category ?c] ]
+                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
                          db c))
         m (->> movements flatten set shuffle (take n))]
     m))
@@ -234,9 +248,9 @@ part-entities
              c (flatten (map vals (:part/category p)))
              category-names (apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
              movements (vec (get-movements n [category-names]))]
-         {:title      name
-          :parts [category-names]
-          :movements  movements})))
+         {:title     name
+          :parts     [category-names]
+          :movements movements})))
 
 (def category-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:part/category (first part-entities)))))))
 category-entities
@@ -256,9 +270,9 @@ category-entities
                         :categories [category-names]
                         :movements  movements})))
         ]
-    {:title title
+    {:title       title
      :description description
-     :parts parts}))
+     :parts       parts}))
 
 (pp/pprint (create-session "Lower Body Strength"))
 

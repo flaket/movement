@@ -75,7 +75,7 @@
                          [?e :user/template ?t]
                          [?t :template/title ?title]]
                        db
-                       "admin@movementsession.com")]
+                       "bob@bob.com")]
     (generate-response templates)))
 
 (defn create-session [title]
@@ -87,7 +87,7 @@
                                     [?t :template/title ?title]]
                                   db
                                   title
-                                  "admin@movementsession.com"))
+                                  "bob@bob.com"))
         description (:template/description title-entity)
         part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
         parts
@@ -116,7 +116,7 @@
                user
                template-title)))
 
-(defn add-template! [user template]
+#_(defn add-template! [user template]
   (let [tx-user-data [{:db/id #db/id[:db.part/user]
                        :user/email email
                        :user/password (hashers/encrypt password)}]]
