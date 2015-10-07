@@ -55,7 +55,7 @@
 (defn movement [name]
   "Returns the whole entity of a named movement."
   (let [movement (d/pull db '[*] [:movement/name name])]
-    (generate-response movement)))
+    movement))
 
 (defn get-movements [n categories]
   "Get n random movement entities drawn from param list of categories."
@@ -97,9 +97,13 @@
                      c (flatten (map vals (:part/category p)))
                      category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
                      movements (vec (get-movements n category-names))]
-                 {:title      name
-                  :categories category-names
-                  :movements  movements})))
+                 (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/regular-movement p)))]
+                   {:title      name
+                    :categories category-names
+                    :movements  (concat regular-movements movements)}
+                   {:title      name
+                    :categories category-names
+                    :movements  movements}))))
         ]
     (generate-response {:title       title
                         :description description

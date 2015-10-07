@@ -61,30 +61,28 @@
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(create-session (str/replace title "-" " "))
-
-
-(def bobs-template {:title "Bob's Strength Session"
+(def bobs-template {:title "Bob's Second Strength Session"
                     :description "Let's do this!"
                     :parts [{:title "Warmup"
                              :categories ["Hip Mobility" "Shoulder Mobility"]
-                             :n 4
-                             :regular-movements []}
+                             :n 1
+                             :regular-movements ["Hip Floor Rotations" "Whippet"]}
                             {:title "Strength"
                              :categories ["Strength"]
-                             :n 2
-                             :regular-movements []}]})
+                             :n 1
+                             :regular-movements ["Back Squat" "Pull Up"]}]})
 
 (defn add-template! [user template]
   (let [title (:title template)
         description (:description template)
         parts (:parts template)
         categories (vec (flatten (for [p parts] (for [c (:categories p)] c))))
-        ; regular-movements
+        regular-movements (vec (flatten (for [p parts] (for [c (:regular-movements p)] c))))
         part-temp-ids (vec (for [p parts] (d/tempid :db.part/user)))
         category-temp-ids (vec (for [p parts] (for [c (:categories p)] (d/tempid :db.part/user))))
-        ; regular-movement-data
+        regular-movement-temp-ids (vec (for [p parts] (for [c (:regular-movements p)] (d/tempid :db.part/user))))
         flat-category-temp-ids (vec (flatten category-temp-ids))
+        flat-regular-movement-temp-ids (vec (flatten regular-movement-temp-ids))
         user-template-data [{:db/id         #db/id[:db.part/user]
                              :user/email    user
                              :user/template [#db/id[:db.part/user -100]]}
@@ -95,22 +93,26 @@
         part-data (for [i (range (count parts))
                           :let [p (get parts i)
                                 cid (get category-temp-ids i)
-                                pid (get part-temp-ids i)]]
+                                pid (get part-temp-ids i)
+                                rid (get regular-movement-temp-ids i)]]
                     {:db/id                    pid
                      :part/name                (:title p)
                      :part/category            (vec cid)
                      :part/number-of-movements (:n p)
-                     :part/regular-movement    (:regular-movements p)
+                     :part/regular-movement    (vec rid)
                      })
         category-data (vec (for [i (range (count categories))
                                  :let [c (get categories i)
                                        id (get flat-category-temp-ids i)]]
                              {:db/id         id
                               :category/name c}))
-
-        ; regular-movement-data
-        tx-data (concat user-template-data part-data category-data)]
-    #_(print tx-data)
+        regular-movement-data (vec (for [i (range (count regular-movements))
+                                         :let [m (get regular-movements i)
+                                               id (get flat-regular-movement-temp-ids i)]]
+                                     {:db/id         id
+                                      :movement/name m}))
+        tx-data (concat user-template-data part-data category-data regular-movement-data)]
+    #_(print regular-movement-data)
     (d/transact conn tx-data)))
 
 (defn new-unique-template? [user template-title]
@@ -255,33 +257,53 @@ part-entities
 (def category-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:part/category (first part-entities)))))))
 category-entities
 
+(defn movement [name]
+  "Returns the whole entity of a named movement."
+  (let [movement (d/pull db '[*] [:movement/name name])]
+    movement))
+
+(defn get-movements [n categories]
+  "Get n random movement entities drawn from param list of categories."
+  (let [movements (for [c categories]
+                    (d/q '[:find (pull ?m [*]) :in $ ?cat
+                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
+                         db c))
+        m (->> movements flatten set shuffle (take n))]
+    m))
+
 (defn create-session [title]
-  (let [title-entity (d/pull db '[*] [:template/title title])
+  (let [title-entity (ffirst (d/q '[:find (pull ?t [*])
+                                    :in $ ?title ?email
+                                    :where
+                                    [?e :user/email ?email]
+                                    [?e :user/template ?t]
+                                    [?t :template/title ?title]]
+                                  db
+                                  title
+                                  "bob@bob.com"))
         description (:template/description title-entity)
         part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
-        parts (vec (for [p part-entities]
-                     (let [name (:part/name p)
-                           n (:part/number-of-movements p)
-                           c (flatten (map vals (:part/category p)))
-                           category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                           #_(print (count category-names))
-                           movements (vec (get-movements n category-names))]
-                       {:title      name
-                        :categories [category-names]
-                        :movements  movements})))
+        parts
+        (vec (for [p part-entities]
+               (let [name (:part/name p)
+                     n (:part/number-of-movements p)
+                     c (flatten (map vals (:part/category p)))
+                     category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                     movements (vec (get-movements n category-names))]
+                 (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/regular-movement p)))]
+                   {:title      name
+                    :categories category-names
+                    :movements  (concat regular-movements movements)}
+                   {:title      name
+                    :categories category-names
+                    :movements  movements}))))
         ]
     {:title       title
-     :description description
-     :parts       parts}))
+        :description description
+        :parts       parts}))
 
-(pp/pprint (create-session "Lower Body Strength"))
+(create-session "Bob's Second Strength Session")
 
-(def temp-seq '(17592186045481 17592186045482 17592186045483))
-(def temp-seq1 '(17592186045481))
-
-(vec (flatten (map vals (map #(d/pull db '[:category/name] %) temp-seq))))
-
-(apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) temp-seq1))))
 
 (defn decorate
   "Map of entity attributes."
@@ -295,28 +317,8 @@ category-entities
   (map #(decorate (first %)) r))
 
 
+;;;;;;;;;;;;
 
-
-(for [p parts]
-  (let [categories (:part/category p)
-        x (for [c categories]
-            (d/pull db '[:category/name] (:db/id c)))]
-    (vec (map :category/name x))))
-
-; query for all equipment names
-(d/q '[:find ?name
-       :where [?c :equipment/name ?name]]
-     db)
-
-; query for exercises using equipment
-(d/q '[:find ?name
-       :in $ ?equipment
-       :where
-       [?e :movement/name ?name]
-       [?e :movement/equipment ?c]
-       [?c :equipment/name ?equipment]]
-     db
-     "Rings")
 
 ; all exercises not using the input equipment parameter.
 (d/q '[:find ?name
