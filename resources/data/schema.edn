@@ -7,6 +7,7 @@
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/unique             :db.unique/identity
+  :db/doc                "User unique email"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -14,6 +15,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "User name"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -21,6 +23,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "User role"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -28,6 +31,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "User password"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -35,6 +39,7 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
+  :db/doc                "A user has several payments"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -42,6 +47,7 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
+  :db/doc                "A user has several templates"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -49,6 +55,7 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
+  :db/doc                "A user has logged movement sessions"
   :db.install/_attribute :db.part/db}
 
  ;; payment
@@ -57,6 +64,7 @@
   :db/index              true
   :db/valueType          :db.type/float
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A single payment"
   :db.install/_attribute :db.part/db}
 
  ;; template
@@ -65,6 +73,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "Template title"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -72,6 +81,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A template might have a description"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -79,14 +89,16 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
+  :db/doc                "A template consists of parts"
   :db.install/_attribute :db.part/db}
 
  ;; part
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :part/name
+  :db/ident              :part/title
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A part has a title and is a component of a template"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -94,6 +106,7 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
+  :db/doc                "A part can have several categories"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -101,22 +114,26 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
+  :db/doc                "The number of movements to be generated for the part"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :part/regular-movement
+  :db/ident              :part/specific-movement
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
+  :db/doc                "Optionally a specific movement can be added to a part"
   :db.install/_attribute :db.part/db}
 
  ;; category
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :category/name
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/unique             :db.unique/identity
+  :db/doc                "A category has a unique name"
   :db.install/_attribute :db.part/db}
 
  ;; movement
@@ -127,6 +144,7 @@
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/unique             :db.unique/identity
+  :db/doc                "A movement has a unique name"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -134,6 +152,7 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
+  :db/doc                "A movement belongs to several categories"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -141,6 +160,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement may have a graphical image"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -148,6 +168,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement may have a graphical animation"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -155,13 +176,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/user-description
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement may have a description"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -169,6 +184,7 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement used in a session may be stored with rep information"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -176,6 +192,7 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement used in a session may be stored with set information"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -183,6 +200,7 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement used in a session may be stored with duration information"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -190,6 +208,7 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement used in a session may be stored with distance information"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -197,6 +216,7 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
+  :db/doc                "A movement may need equipment"
   :db.install/_attribute :db.part/db}
 
  ;; equipment
@@ -206,9 +226,16 @@
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/unique             :db.unique/identity
+  :db/doc                "Equipment has a unique name"
   :db.install/_attribute :db.part/db}
 
- ;todo: create enum of equipment types?
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :equipment/icon
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Equipment has a graphical icon"
+  :db.install/_attribute :db.part/db}
 
  ;; session
  {:db/id                 #db/id[:db.part/db]
@@ -216,6 +243,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A session is stored with a name"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -223,6 +251,15 @@
   :db/index              true
   :db/valueType          :db.type/instant
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A session has a timestamp"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :session/description
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A session might be stored with a description"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -230,13 +267,7 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :session/template
-  :db/index              true
-  :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/one
+  :db/doc                "A session consists of parts"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -244,6 +275,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
+  :db/doc                "A session may have comments"
   :db.install/_attribute :db.part/db}
 
 

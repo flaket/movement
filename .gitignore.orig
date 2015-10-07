@@ -1,0 +1,28 @@
+/target
+/classes
+/checkouts
+pom.xml
+pom.xml.asc
+*.log
+*.jar
+*.class
+.idea/*
+/.lein-*
+/.nrepl-port
+/resources/public/js
+/out
+figwheel_server.log
+movement.iml
+/.repl
+
+<<<<<<< HEAD
+.idea/workspace.xml
+
+movement.iml
+
+figwheel_server.log
+
+.idea/replstate.xml
+=======
+figwheel_server.log
+>>>>>>> master

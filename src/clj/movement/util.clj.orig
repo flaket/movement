@@ -7,7 +7,11 @@
   (:import datomic.Util))
 
 ;; Create database and create a connection.
+<<<<<<< HEAD
 (def uri "datomic:dev://localhost:4334/movement10")
+=======
+(def uri "datomic:dev://localhost:4334/movementsession3")
+>>>>>>> master
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -15,6 +19,7 @@
 (let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
 
+<<<<<<< HEAD
 (let [
       climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
       crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
@@ -57,6 +62,40 @@
     (d/transact conn rolling-tx)
     (d/transact conn walking-tx)
     ))
+=======
+(defn add-data-to-database
+  "Read data sources and transact to database."
+  []
+  (let [pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
+        pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
+        conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
+        core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
+        lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
+        mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
+        climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
+        sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
+        crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
+        locomotion-tx (first (Util/readAll (io/reader (io/resource "data/movements/locomotion.edn"))))
+        lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
+        e-tx (first (Util/readAll (io/reader (io/resource "data/movements/e.edn"))))
+        template-tx (first (Util/readAll (io/reader (io/resource "data/movements/template.edn"))))]
+    (do
+      (d/transact conn pulling-tx)
+      (d/transact conn pushing-tx)
+      (d/transact conn conditioning-tx)
+      (d/transact conn core-tx)
+      (d/transact conn lowerbody-tx)
+      (d/transact conn mobility-tx)
+      (d/transact conn climbing-tx)
+      (d/transact conn sass-tx)
+      (d/transact conn crawling-tx)
+      (d/transact conn lifting-tx)
+      (d/transact conn e-tx)
+      (d/transact conn locomotion-tx)
+      (d/transact conn template-tx))))
+
+#_(add-data-to-database)
+>>>>>>> master
 
 ;; Get the database value.
 (def db (d/db conn))
@@ -251,6 +290,7 @@ part-entities
 (def category-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:part/category (first part-entities)))))))
 category-entities
 
+<<<<<<< HEAD
 (defn movement [name]
   "Returns the whole entity of a named movement."
   (let [movement (d/pull db '[*] [:movement/name name])]
@@ -298,6 +338,8 @@ category-entities
 
 (create-session "Straight Arm Strength")
 
+=======
+>>>>>>> master
 
 (defn decorate
   "Map of entity attributes."
