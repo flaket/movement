@@ -1,45 +1,59 @@
 (ns movement.user
  (:require [reagent.core :refer [atom]]
            [reagent.session :as session]
-           [movement.menu :refer [menu-component]]))
+           [movement.menu :refer [menu-component]]
+           [movement.util :refer [POST text-input]]))
 
-(defn movement [{:keys [title]}]
-  [:li
-   [:label title]])
+(defn update-password! [pass]
+  (let [old-pass (:old-pass @pass)
+        new-pass (:new-pass @pass)
+        repeat-pass (:repeat-pass @pass)]
+    (POST "/change-password!"
+          {
+           :params {:username (session/get-in [:profile :handle])
+                    :password old-pass
+                    :new-pass new-pass
+                    :repeat-pass repeat-pass}
+           :handler
+                    (fn [_] (reset! pass {}))
+           :error-handler
+                    (fn [response]
+                      (swap! pass assoc :error (get-in response [:response :error])))})))
 
-(defn category [{:keys [title]} movements]
-  [:div
-   [:h5 title]
-   [:ul
-    (for [m movements]
-      ^{:key (:id m)} [movement m])]])
-
-(defn session [{:keys [title parts movements]}]
-  [:div
-   [:h4 title]
-   [:div
-    (for [c (vals parts)] ^{:key (:id c)}
-                        [category c
-                         (filter #(= (:id c) (:category-ref %)) (vals movements))])]])
+(defn change-password []
+  (let [pass (atom {})]
+    (fn []
+      [:div
+       [:h2 "Password"]
+       [:input {:type "password"
+                :placeholder "password"
+                :value (:old-pass @pass)
+                :on-change #(swap! pass assoc :old-pass (-> % .-target .-value))}]
+       [:br]
+       [:input {:type "password"
+                :placeholder "new password"
+                :value (:new-pass @pass)
+                :on-change #(swap! pass assoc :new-pass (-> % .-target .-value))}]
+       [:br]
+       [:input {:type "password"
+                :placeholder "confirm password"
+                :value (:repeat-pass @pass)
+                :on-change #(swap! pass assoc :repeat-pass (-> % .-target .-value))}]
+       [:br]
+       (when-let [info (:info @pass)]
+         [:div info])
+       (when-let [error (:error @pass)]
+         [:div.error error])
+       (if (not= (:new-pass @pass) (:repeat-pass @pass))
+         [:div.error "password mismatch"]
+         (when (not-empty (:new-pass @pass))
+           [:span.button {:on-click #(update-password! pass)} "change password"]))])))
 
 (defn user-component []
   (let []
     (fn []
-
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
-
        [menu-component]
-
-       [:div#main
-        [:div.header
-         [:h1 "User"]]
-
-        [:div.content
-         (let [logged-sessions (session/get :logged-sessions)]
-           [:div
-            [:h2 (str "# Logged sessions: " (count logged-sessions))]
-            #_(for [s logged-sessions] ^{:key (:timestamp s)}
-                                       [session s])])
-         [:div
-          [:h3 "This is the user section."]
-          [:h5 "Update personal settings."]]]]])))
+       [:div.content
+        [:div
+         [change-password]]]])))

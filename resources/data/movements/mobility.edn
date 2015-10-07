@@ -11,8 +11,9 @@
  {:db/id #db/id[:db.part/user -4] :category/name "Wrist Mobility"}
  {:db/id #db/id[:db.part/user -5] :category/name "Ankle Mobility"}
  {:db/id #db/id[:db.part/user -6] :category/name "Spine Mobility"}
+ {:db/id #db/id[:db.part/user -7] :category/name "Bridge"}
 
-
+ ;; Hip
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Squat Hip Rotations"
   :movement/category  [#db/id[:db.part/user -1]
@@ -59,20 +60,7 @@
                        #db/id[:db.part/user -2]]}
 
 
- ; movnat
- ; :split-stand-to-split-sit :walking-split-squat :side-shuffle
- ;                     :stepping-under :stepping-over :hinged-walk :split-squat
- ;                     :squat-to-medium-kneeling :squat-to-kneeling :kneeling-to-tall-kneeling
- ;                     :kneeling-to-tall-half-kneeling :kneeling-to-lateral-half-kneeling
- ;                     :split-knee-walk :tall-half-kneeling-to-tall-split-kneeling
- ;                     :deep-squat :deep-knee-bend :deep-squat-to-deep-knee-bend
- ;                     :deep-squat-narrow-base :tall-half-kneeling-to-kneeling
- ;                     :tall-split-kneeling-to-bent-sit :deep-knee-bend-to-kneeling
- ;                     :stepping-up :backward-stepping-down :extended-stepping-up :forward-stepping-down
- ;:bent-sit-to-lateral-half-kneeling
-
-
-
+;; Shoulder
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Elastic Band Shoulder Dislocation"
   :movement/category  [#db/id[:db.part/user -1]
@@ -140,41 +128,58 @@
   :movement/equipment [#db/id[:db.part/user -5001]]}
 
 
+ ; movnat
+ ; :split-stand-to-split-sit :walking-split-squat :side-shuffle
+ ;                     :stepping-under :stepping-over :hinged-walk :split-squat
+ ;                     :squat-to-medium-kneeling :squat-to-kneeling :kneeling-to-tall-kneeling
+ ;                     :kneeling-to-tall-half-kneeling :kneeling-to-lateral-half-kneeling
+ ;                     :split-knee-walk :tall-half-kneeling-to-tall-split-kneeling
+ ;                     :deep-squat :deep-knee-bend :deep-squat-to-deep-knee-bend
+ ;                     :deep-squat-narrow-base :tall-half-kneeling-to-kneeling
+ ;                     :tall-split-kneeling-to-bent-sit :deep-knee-bend-to-kneeling
+ ;                     :stepping-up :backward-stepping-down :extended-stepping-up :forward-stepping-down
+ ;:bent-sit-to-lateral-half-kneeling
 
+ ;; Wrist
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Wrist"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -4]]}
 
 
-
+;; Ankle
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Ankle"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -5]]}
 
 
-
+;; Spine
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Slide Into Low Bridge"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -6]]}
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Rotate Into Low Bridge"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -6]]}
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Wall Rotation"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -6]]}
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Rotate Into High Bridge"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -6]]}
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
  {:db/id              #db/id[:db.part/user]
   :movement/name      "High Bridge Hold"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -6]]}
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Jefferson Curl"
   :movement/category  [#db/id[:db.part/user -1]

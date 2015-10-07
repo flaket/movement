@@ -1,0 +1,226 @@
+[
+
+ ;; categories
+ {:db/id         #db/id[:db.part/user -1]
+  :category/name "Hanging"}
+ {:db/id         #db/id[:db.part/user -2]
+  :category/name "Climbing"}
+ {:db/id         #db/id[:db.part/user -3]
+  :category/name "Strength"}
+ {:db/id         #db/id[:db.part/user -4]
+  :category/name "Abdominal Strength"}
+ {:db/id         #db/id[:db.part/user -5]
+  :category/name "Straight Arm Scapular Strength"}
+ {:db/id         #db/id[:db.part/user -6]
+  :category/name "Bodyweight"}
+ {:db/id         #db/id[:db.part/user -7]
+  :category/name "Grip Strength"}
+ {:db/id         #db/id[:db.part/user -8]
+  :category/name "Bent Arm Strength"}
+ {:db/id         #db/id[:db.part/user -9]
+  :category/name "Multiplane"}
+ {:db/id         #db/id[:db.part/user -10]
+  :category/name "Muscle Up"}
+
+ ;; movements
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Muscle Up"
+  :movement/category [#db/id[:db.part/user -2]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Negative Muscle Up"
+  :movement/category [#db/id[:db.part/user -2]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "L-Sit Muscle Up"
+  :movement/category [#db/id[:db.part/user -2]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Pull Over"
+  :movement/category [#db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -2]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Passive Hang"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Active Hang"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "False Grip Hang"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Side Swing"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Arching Active Hang"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Front Swing"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "One Arm Passive Hang"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "One Arm Active Hang"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Side Swing Grip Change"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Figure 8 Swing"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Tuck Swing"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Tap Swing"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Side Swing Traverse"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Side Swing Hold"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Side Swing Power Traverse"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Front Swing Traverse"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Front Swing Power Traverse"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hanging Side Foot Lift"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hanging Leg Hook Over"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hanging Knee Tuck"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hanging Knee To Bar"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hanging Leg Lift"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]}
+
+<<<<<<< HEAD:resources/data/movements/climbing.edn
+=======
+ ;movnat-climbing
+>>>>>>> master:resources/data/movements/climbing.edn
+
+ ;:jumping-pull-up :elbow-pull-up
+ ;:sliding-swing-up :elbow-pop-up :hand-swing :swing-pop-up :tuck-pop-up
+
+ ]

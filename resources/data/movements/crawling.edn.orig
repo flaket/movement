@@ -1,11 +1,18 @@
 [
 
+<<<<<<< HEAD:resources/data/movements/crawling.edn
+ ;; LOCOMOTION ON ALL FOUR
+
+ {:db/id #db/id[:db.part/user -1] :category/name "Crawling"}
+
+=======
  {:db/id #db/id[:db.part/user -1] :category/name "Crawling"}
  {:db/id #db/id[:db.part/user -2] :category/name "Walking"}
  {:db/id #db/id[:db.part/user -3] :category/name "Rolling"}
  {:db/id #db/id[:db.part/user -4] :category/name "Acrobatics"}
  {:db/id #db/id[:db.part/user -5] :category/name "Jumping"}
 
+>>>>>>> master:resources/data/movements/locomotion.edn
  ;; crawling
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Inverted Crawl"
@@ -43,6 +50,8 @@
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Bridge Crawl"
   :movement/category [#db/id[:db.part/user -1]]}
+<<<<<<< HEAD:resources/data/movements/crawling.edn
+=======
 
 
 ;; walking
@@ -113,5 +122,6 @@
 
 
 
+>>>>>>> master:resources/data/movements/locomotion.edn
 
  ]

@@ -6,33 +6,50 @@
 
   :source-paths ["src/clj" "src/cljs"]
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-3126" :scope "provided"]
+  :dependencies [[org.clojure/clojure "1.7.0" :exclusions [time]]
+                 [org.clojure/clojurescript "0.0-3196" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [com.datomic/datomic-pro "0.9.5201" :exclusions [joda-time]]
+                 [clj-time "0.11.0"]
                  [ring "1.3.2"]
                  [ring-server "0.4.0"]
                  [ring/ring-defaults "0.1.4"]
                  [ring/ring-headers "0.1.2"]
                  [ring/ring-anti-forgery "1.0.0"]
+                 [fogus/ring-edn "0.3.0"]
                  [cljsjs/react "0.13.1-0"]
                  [reagent "0.5.0"]
                  [reagent-forms "0.5.5"]
                  [reagent-utils "0.1.4"]
                  [prone "0.8.1"]
-                 [compojure "1.3.2"]
+                 [compojure "1.3.4"]
                  [selmer "0.8.2"]
                  [environ "1.0.0"]
                  [secretary "1.2.2"]
-                 #_[org.clojure/core.cache "0.6.4"]
-
-                 [cljs-ajax "0.3.14"]]
+                 [buddy/buddy-auth "0.6.1"]
+                 [buddy/buddy-hashers "0.7.0"]
+                 [buddy/buddy-sign "0.7.1"]
+                 [cljs-ajax "0.3.14"]
+                 [garden "1.2.5" ]
+                 #_[garden "1.3.0-SNAPSHOT"]
+                 [prismatic/dommy "1.1.0"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]
             [lein-ring "0.9.1"]
-            [lein-asset-minifier "0.2.2"]]
-
+            [lein-asset-minifier "0.2.2"]
+            [lein-garden "0.2.6"]]
+  :garden {:builds [{;; Optional name of the build:
+                     :id "screen"
+                     ;; Source paths where the stylesheet source code is
+                     :source-paths ["src/clj/movement/styles"]
+                     ;; The var containing your stylesheet:
+                     :stylesheet movement.styles.core/screen
+                     ;; Compiler flags passed to `garden.core/css`:
+                     :compiler {;; Where to save the file:
+                                :output-to "resources/public/css/garden/screen.css"
+                                ;; Compress the output?
+                                :pretty-print? false}}]}
   :ring {:handler movement.handler/app
          :uberwar-name "movement.war"}
 
@@ -42,7 +59,7 @@
 
   :main movement.server
 
-  :clean-targets ^{:protect false} ["resources/public/js"]
+  :clean-targets ^{:protect false} ["resources/public/js" "resources/public/css/garden"]
 
   :repositories {"my.datomic.com" {:url "https://my.datomic.com/repo"
                                    :creds :gpg}}

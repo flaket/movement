@@ -13,7 +13,7 @@
  {:db/id #db/id[:db.part/user -10] :category/name "Lower Back Strength"}
 
  {:db/id #db/id[:db.part/user -1000]
-  :user/email "admin"
+  :user/email "admin@movementsession.com"
   :user/template [#db/id[:db.part/user -100]
                   #db/id[:db.part/user -101]
                   #db/id[:db.part/user -102]

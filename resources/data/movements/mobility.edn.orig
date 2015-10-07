@@ -1,0 +1,207 @@
+[
+
+ ;; equipment
+ {:db/id #db/id[:db.part/user -5000] :equipment/name "Elastic Band"}
+ {:db/id #db/id[:db.part/user -5001] :equipment/name "Weights"}
+
+ ;; category
+ {:db/id #db/id[:db.part/user -1] :category/name "Mobility"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Hip Mobility"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Shoulder Mobility"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Wrist Mobility"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Ankle Mobility"}
+ {:db/id #db/id[:db.part/user -6] :category/name "Spine Mobility"}
+ {:db/id #db/id[:db.part/user -7] :category/name "Bridge"}
+
+ ;; Hip
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Squat Hip Rotations"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Static Squat"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Dynamic Squat"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Knee Push Away"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Dynamic Squat Stretch"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Floor Hip Rotations"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Toes Stretch"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Dynamic Toes Stretch"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Sky Reach"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Buddha Prayer"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Squat Bow"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+
+
+<<<<<<< HEAD
+;; Shoulder
+=======
+ ; movnat
+ ; :split-stand-to-split-sit :walking-split-squat :side-shuffle
+ ;                     :stepping-under :stepping-over :hinged-walk :split-squat
+ ;                     :squat-to-medium-kneeling :squat-to-kneeling :kneeling-to-tall-kneeling
+ ;                     :kneeling-to-tall-half-kneeling :kneeling-to-lateral-half-kneeling
+ ;                     :split-knee-walk :tall-half-kneeling-to-tall-split-kneeling
+ ;                     :deep-squat :deep-knee-bend :deep-squat-to-deep-knee-bend
+ ;                     :deep-squat-narrow-base :tall-half-kneeling-to-kneeling
+ ;                     :tall-split-kneeling-to-bent-sit :deep-knee-bend-to-kneeling
+ ;                     :stepping-up :backward-stepping-down :extended-stepping-up :forward-stepping-down
+ ;:bent-sit-to-lateral-half-kneeling
+
+
+
+>>>>>>> master
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Elastic Band Shoulder Dislocation"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "External Rotation"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Lateral Raise"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Elastic Band Overhead Rotation"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Elastic Band Side Rotation"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Elastic Band Hands Down Rotation"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Elastic Band Overhead Fly"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Elastic Band Side Fly"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Elastic Band Hands Down Fly"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Scapula Push Up"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Overhead Straight Arm Pull Down"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Whippet"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Cuban Rotation"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
+  :movement/equipment [#db/id[:db.part/user -5001]]}
+
+
+ ; movnat
+ ; :split-stand-to-split-sit :walking-split-squat :side-shuffle
+ ;                     :stepping-under :stepping-over :hinged-walk :split-squat
+ ;                     :squat-to-medium-kneeling :squat-to-kneeling :kneeling-to-tall-kneeling
+ ;                     :kneeling-to-tall-half-kneeling :kneeling-to-lateral-half-kneeling
+ ;                     :split-knee-walk :tall-half-kneeling-to-tall-split-kneeling
+ ;                     :deep-squat :deep-knee-bend :deep-squat-to-deep-knee-bend
+ ;                     :deep-squat-narrow-base :tall-half-kneeling-to-kneeling
+ ;                     :tall-split-kneeling-to-bent-sit :deep-knee-bend-to-kneeling
+ ;                     :stepping-up :backward-stepping-down :extended-stepping-up :forward-stepping-down
+ ;:bent-sit-to-lateral-half-kneeling
+
+ ;; Wrist
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Wrist"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -4]]}
+
+
+;; Ankle
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Ankle"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -5]]}
+
+
+;; Spine
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Slide Into Low Bridge"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Rotate Into Low Bridge"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Wall Rotation"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Rotate Into High Bridge"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "High Bridge Hold"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]}
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Jefferson Curl"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -6]]
+  :movement/equipment [#db/id[:db.part/user -5001]]}
+
+
+ ]

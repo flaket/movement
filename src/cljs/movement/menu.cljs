@@ -2,13 +2,14 @@
   (:require
     [reagent.core :refer [atom]]
     [reagent.session :as session]
+    [movement.util :refer [POST launch-template-creator]]
     [secretary.core :include-macros true :refer [dispatch!]]))
 
 (defn menu-component []
-  (let [menu-item-session "Generate session"
+  (let [menu-item-session "Session"
         menu-item-user "User"
-        menu-item-template "Create template"
-        menu-item-movements "View movements"]
+        menu-item-template "Templates"
+        menu-item-movements "Movements"]
     (fn []
       [:div
 
@@ -26,7 +27,7 @@
                                     " menu-item-divided pure-menu-selected"))
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-session)
-                               (dispatch! "/"))}
+                               (dispatch! "/generator"))}
              [:a.pure-menu-link menu-item-session]]
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-user selected)
@@ -40,7 +41,7 @@
                                     " menu-item-divided pure-menu-selected"))
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-template)
-                               (dispatch! "/template"))}
+                               (launch-template-creator))}
              [:a.pure-menu-link menu-item-template]]
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-movements selected)
@@ -48,4 +49,14 @@
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-movements)
                                (dispatch! "/movements"))}
-             [:a.pure-menu-link menu-item-movements]]]]])])))
+             [:a.pure-menu-link menu-item-movements]]
+            [:li {:className (str "pure-menu-item"
+                                  (when (= menu-item-movements selected)
+                                    " menu-item-divided pure-menu-selected"))
+                  :on-click  #(dispatch! "/login")}
+             [:a.pure-menu-link "Log In"]]
+            [:li {:className (str "pure-menu-item"
+                                  (when (= menu-item-movements selected)
+                                    " menu-item-divided pure-menu-selected"))
+                  :on-click  #(POST "/logout")}
+             [:a.pure-menu-link "Log Out"]]]]])])))

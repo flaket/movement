@@ -2,11 +2,12 @@
   (:require [datomic.api :as d]
             [clojure.java.io :as io]
             [clojure.edn :as edn]
-            [clojure.pprint :as pp])
+            [clojure.pprint :as pp]
+            [buddy.hashers :as hashers])
   (:import datomic.Util))
 
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movementsession3")
+(def uri "datomic:dev://localhost:4334/movement10")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -14,43 +15,165 @@
 (let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
 
-(defn add-data-to-database
-  "Read data sources and transact to database."
-  []
-  (let [pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
-        pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
-        conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
-        core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
-        lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
-        mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
-        climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
-        sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
-        crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
-        locomotion-tx (first (Util/readAll (io/reader (io/resource "data/movements/locomotion.edn"))))
-        lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
-        e-tx (first (Util/readAll (io/reader (io/resource "data/movements/e.edn"))))
-        template-tx (first (Util/readAll (io/reader (io/resource "data/movements/template.edn"))))]
-    (do
-      (d/transact conn pulling-tx)
-      (d/transact conn pushing-tx)
-      (d/transact conn conditioning-tx)
-      (d/transact conn core-tx)
-      (d/transact conn lowerbody-tx)
-      (d/transact conn mobility-tx)
-      (d/transact conn climbing-tx)
-      (d/transact conn sass-tx)
-      (d/transact conn crawling-tx)
-      (d/transact conn lifting-tx)
-      (d/transact conn e-tx)
-      (d/transact conn locomotion-tx)
-      (d/transact conn template-tx))))
+(let [
+      climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
+      crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
+      jumping-tx (first (Util/readAll (io/reader (io/resource "data/movements/jumping.edn"))))
+      lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
+      rolling-tx (first (Util/readAll (io/reader (io/resource "data/movements/rolling.edn"))))
+      walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))
 
-#_(add-data-to-database)
+      acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/acrobatics.edn"))))
+      pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
+      pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
+      conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
+      core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
+      lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
+      mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
+      multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn"))))
+      sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
+
+
+      templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))
+
+      ]
+  (do
+    (d/transact conn acrobatics-tx)
+    (d/transact conn pulling-tx)
+    (d/transact conn pushing-tx)
+    (d/transact conn conditioning-tx)
+    (d/transact conn core-tx)
+    (d/transact conn lowerbody-tx)
+    (d/transact conn mobility-tx)
+    (d/transact conn multiplane-tx)
+    (d/transact conn sass-tx)
+
+    (d/transact conn templates-tx)
+
+    (d/transact conn climbing-tx)
+    (d/transact conn crawling-tx)
+    (d/transact conn jumping-tx)
+    (d/transact conn lifting-tx)
+    (d/transact conn rolling-tx)
+    (d/transact conn walking-tx)
+    ))
 
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(def bobs-template {:title "Bob's Second Strength Session"
+                    :description "Let's do this!"
+                    :parts [{:title "Warmup"
+                             :categories ["Hip Mobility" "Shoulder Mobility"]
+                             :n 1
+                             :regular-movements ["Hip Floor Rotations" "Whippet"]}
+                            {:title "Strength"
+                             :categories ["Strength"]
+                             :n 1
+                             :regular-movements ["Back Squat" "Pull Up"]}]})
 
+(defn add-template! [user template]
+  (let [title (:title template)
+        description (:description template)
+        parts (:parts template)
+        categories (vec (flatten (for [p parts] (for [c (:categories p)] c))))
+        regular-movements (vec (flatten (for [p parts] (for [c (:regular-movements p)] c))))
+        part-temp-ids (vec (for [p parts] (d/tempid :db.part/user)))
+        category-temp-ids (vec (for [p parts] (for [c (:categories p)] (d/tempid :db.part/user))))
+        regular-movement-temp-ids (vec (for [p parts] (for [c (:regular-movements p)] (d/tempid :db.part/user))))
+        flat-category-temp-ids (vec (flatten category-temp-ids))
+        flat-regular-movement-temp-ids (vec (flatten regular-movement-temp-ids))
+        user-template-data [{:db/id         #db/id[:db.part/user]
+                             :user/email    user
+                             :user/template [#db/id[:db.part/user -100]]}
+                            {:db/id                #db/id[:db.part/user -100]
+                             :template/title       title
+                             :template/description description
+                             :template/part        part-temp-ids}]
+        part-data (for [i (range (count parts))
+                          :let [p (get parts i)
+                                cid (get category-temp-ids i)
+                                pid (get part-temp-ids i)
+                                rid (get regular-movement-temp-ids i)]]
+                    {:db/id                    pid
+                     :part/name                (:title p)
+                     :part/category            (vec cid)
+                     :part/number-of-movements (:n p)
+                     :part/regular-movement    (vec rid)
+                     })
+        category-data (vec (for [i (range (count categories))
+                                 :let [c (get categories i)
+                                       id (get flat-category-temp-ids i)]]
+                             {:db/id         id
+                              :category/name c}))
+        regular-movement-data (vec (for [i (range (count regular-movements))
+                                         :let [m (get regular-movements i)
+                                               id (get flat-regular-movement-temp-ids i)]]
+                                     {:db/id         id
+                                      :movement/name m}))
+        tx-data (concat user-template-data part-data category-data regular-movement-data)]
+    (d/transact conn tx-data)))
+
+(defn new-unique-template? [user template-title]
+  (empty? (d/q '[:find [?user ...]
+                 :in $ ?user ?template-title
+                 :where
+                 [?e :user/email ?user]
+                 [?e :user/template ?template]
+                 [?template :template/title ?template-title]]
+               db
+               user
+               template-title)))
+
+(defn pull-on-id [id]
+  (d/pull db '[*] id))
+
+(defn number-of-movements-in-db []
+  (count (d/q '[:find [?n ...]
+                :where
+                [_ :movement/name ?n]]
+              db)))
+
+(defn find-user [email]
+  (let [db (d/db conn)]
+    (d/pull db '[*] [:user/email email])))
+
+(defn valid-user? [user password]
+  (hashers/check password (:user/password user)))
+
+(defn add-user [email password]
+  (let [tx-user-data [{:db/id         #db/id[:db.part/user]
+                       :user/email    email
+                       :user/password (hashers/encrypt password)}]]
+    (d/transact conn tx-user-data)))
+
+
+(def tx-user-data [{:db/id         #db/id[:db.part/user]
+                    :user/email    "admin@movementsession.com"
+                    :user/name     "Admin"
+                    :user/password (hashers/encrypt "pw")}
+
+                   {:db/id         #db/id[:db.part/user]
+                    :user/email    "bob@bob.com"
+                    :user/name     "Bob"
+                    :user/password (hashers/encrypt "bob")}
+
+                   {:db/id         #db/id[:db.part/user]
+                    :user/email    "alice@alice.com"
+                    :user/name     "Alice"
+                    :user/password (hashers/encrypt "alice")}])
+
+(d/transact conn tx-user-data)
+
+;;;
+(d/q '[:find ?email ?name ?pw
+       :in $
+       :where
+       [?e :user/email ?email]
+       [?e :user/password ?pw]
+       [?e :user/name ?name]
+       ]
+     db)
 
 
 (d/q '[:find (pull ?m [{:user/template
@@ -58,9 +181,9 @@
        :in $ ?cat
        :where [?m :user/email ?cat]]
      db
-     "admin")
+     "bob@bob.com")
 
-(d/pull db '[*] [:movement/name "Push Up"])
+(hashers/check "alice1" (:user/password (d/pull db '[*] [:user/email "alice@alice.com"])))
 
 (let [users (d/q '[:find ?email ?pw ?r
                    :in $
@@ -103,7 +226,7 @@
 (defn get-movements [n categories]
   (let [movements (for [c categories]
                     (d/q '[:find (pull ?m [*]) :in $ ?cat
-                           :where  [?c :category/name ?cat] [?m :movement/category ?c] ]
+                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
                          db c))
         m (->> movements flatten set shuffle (take n))]
     m))
@@ -121,12 +244,59 @@ part-entities
              c (flatten (map vals (:part/category p)))
              category-names (apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
              movements (vec (get-movements n [category-names]))]
-         {:title      name
-          :parts [category-names]
-          :movements  movements})))
+         {:title     name
+          :parts     [category-names]
+          :movements movements})))
 
 (def category-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:part/category (first part-entities)))))))
 category-entities
+
+(defn movement [name]
+  "Returns the whole entity of a named movement."
+  (let [movement (d/pull db '[*] [:movement/name name])]
+    movement))
+
+(defn get-movements [n categories]
+  "Get n random movement entities drawn from param list of categories."
+  (let [movements (for [c categories]
+                    (d/q '[:find (pull ?m [*]) :in $ ?cat
+                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
+                         db c))
+        m (->> movements flatten set shuffle (take n))]
+    m))
+
+(defn create-session [title]
+  (let [title-entity (ffirst (d/q '[:find (pull ?t [*])
+                                    :in $ ?title ?email
+                                    :where
+                                    [?e :user/email ?email]
+                                    [?e :user/template ?t]
+                                    [?t :template/title ?title]]
+                                  db
+                                  title
+                                  "bob@bob.com"))
+        description (:template/description title-entity)
+        part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
+        parts
+        (vec (for [p part-entities]
+               (let [name (:part/name p)
+                     n (:part/number-of-movements p)
+                     c (flatten (map vals (:part/category p)))
+                     category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                     movements (vec (get-movements n category-names))]
+                 (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/regular-movement p)))]
+                   {:title      name
+                    :categories category-names
+                    :movements  (concat regular-movements movements)}
+                   {:title      name
+                    :categories category-names
+                    :movements  movements}))))
+        ]
+    {:title       title
+        :description description
+        :parts       parts}))
+
+(create-session "Straight Arm Strength")
 
 
 (defn decorate
@@ -141,28 +311,8 @@ category-entities
   (map #(decorate (first %)) r))
 
 
-(d/pull db '[*] [:movement/name "Push Up"])
+;;;;;;;;;;;;
 
-(for [p parts]
-  (let [categories (:part/category p)
-        x (for [c categories]
-            (d/pull db '[:category/name] (:db/id c)))]
-    (vec (map :category/name x))))
-
-; query for all equipment names
-(d/q '[:find ?name
-       :where [?c :equipment/name ?name]]
-     db)
-
-; query for exercises using equipment
-(d/q '[:find ?name
-       :in $ ?equipment
-       :where
-       [?e :movement/name ?name]
-       [?e :movement/equipment ?c]
-       [?c :equipment/name ?equipment]]
-     db
-     "Rings")
 
 ; all exercises not using the input equipment parameter.
 (d/q '[:find ?name

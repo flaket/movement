@@ -1,0 +1,45 @@
+[
+
+ ;; LOCOMOTION ON ALL FOUR
+
+ {:db/id #db/id[:db.part/user -1] :category/name "Crawling"}
+
+ ;; crawling
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Inverted Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Bear Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Inchworm"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Lizard Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Knee Elbow Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Knee Hand Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Foot Elbow Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Army Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Shoulder Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Spiderman Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hip Thrust Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Bridge Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+
+ ]

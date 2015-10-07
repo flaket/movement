@@ -215,7 +215,6 @@
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]}
 
- ;movnat-climbing
 
  ;:jumping-pull-up :elbow-pull-up
  ;:sliding-swing-up :elbow-pop-up :hand-swing :swing-pop-up :tuck-pop-up

@@ -15,4 +15,10 @@ figwheel_server.log
 movement.iml
 /.repl
 
+.idea/workspace.xml
+
+movement.iml
+
 figwheel_server.log
+
+.idea/replstate.xml
