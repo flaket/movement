@@ -112,7 +112,6 @@
                                      {:db/id         id
                                       :movement/name m}))
         tx-data (concat user-template-data part-data category-data regular-movement-data)]
-    #_(print regular-movement-data)
     (d/transact conn tx-data)))
 
 (defn new-unique-template? [user template-title]
@@ -302,7 +301,7 @@ category-entities
         :description description
         :parts       parts}))
 
-(create-session "Bob's Second Strength Session")
+(create-session "Straight Arm Strength")
 
 
 (defn decorate

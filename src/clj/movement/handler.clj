@@ -109,6 +109,8 @@
                         :description description
                         :parts       parts})))
 
+
+
 (defn new-unique-template? [user template-title]
   (empty? (d/q '[:find [?user ...]
                  :in $ ?user ?template-title
@@ -120,20 +122,57 @@
                user
                template-title)))
 
-#_(defn add-template! [user template]
-  (let [tx-user-data [{:db/id #db/id[:db.part/user]
-                       :user/email email
-                       :user/password (hashers/encrypt password)}]]
-    (d/transact conn tx-user-data)))
+(defn add-template! [user template]
+  (let [title (:title template)
+        description (:description template)
+        parts (:parts template)
+        categories (vec (flatten (for [p parts] (for [c (:categories p)] c))))
+        regular-movements (vec (flatten (for [p parts] (for [c (:regular-movements p)] c))))
+        part-temp-ids (vec (for [p parts] (d/tempid :db.part/user)))
+        category-temp-ids (vec (for [p parts] (for [c (:categories p)] (d/tempid :db.part/user))))
+        regular-movement-temp-ids (vec (for [p parts] (for [c (:regular-movements p)] (d/tempid :db.part/user))))
+        flat-category-temp-ids (vec (flatten category-temp-ids))
+        flat-regular-movement-temp-ids (vec (flatten regular-movement-temp-ids))
+        user-template-data [{:db/id         #db/id[:db.part/user]
+                             :user/email    user
+                             :user/template [#db/id[:db.part/user -100]]}
+                            {:db/id                #db/id[:db.part/user -100]
+                             :template/title       title
+                             :template/description description
+                             :template/part        part-temp-ids}]
+        part-data (for [i (range (count parts))
+                        :let [p (get parts i)
+                              cid (get category-temp-ids i)
+                              pid (get part-temp-ids i)
+                              rid (get regular-movement-temp-ids i)]]
+                    {:db/id                    pid
+                     :part/name                (:title p)
+                     :part/category            (vec cid)
+                     :part/number-of-movements (:n p)
+                     :part/regular-movement    (vec rid)
+                     })
+        category-data (vec (for [i (range (count categories))
+                                 :let [c (get categories i)
+                                       id (get flat-category-temp-ids i)]]
+                             {:db/id         id
+                              :category/name c}))
+        regular-movement-data (vec (for [i (range (count regular-movements))
+                                         :let [m (get regular-movements i)
+                                               id (get flat-regular-movement-temp-ids i)]]
+                                     {:db/id         id
+                                      :movement/name m}))
+        tx-data (concat user-template-data part-data category-data regular-movement-data)]
+    (d/transact conn tx-data)))
 
 (defn store-new-template [req]
   (let [template (:params req)
         user (:user template)]
     (if (nil? user)
       (generate-response (str "User email lacking from client data. User not logged in?" " template: " template) 400)
+      ;; todo: thorough check of correct template data on backend as well?
       (if (new-unique-template? user (:title template))
         (do
-          ;todo: store new template
+          (add-template! user template)
           (generate-response "New template stored successfully."))
         (generate-response "You already have a template with this title. Choose a unique title for your template." 400)))))
 
