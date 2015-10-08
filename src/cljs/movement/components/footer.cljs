@@ -1,5 +1,7 @@
 (ns movement.components.footer
-  (:require [reagent.core :refer [atom]]))
+  (:require [reagent.core :refer [atom]]
+            [secretary.core :as secretary
+             :include-macros true :refer [dispatch!]]))
 
 (defn footer []
   (let []
@@ -7,16 +9,13 @@
       [:nav.footer-nav
        [:div
         [:div
-         [:a
-          {:title "MovementSession"
-           :href ""
-           :target "_blank"} "MS"]]
+         [:a {:on-click #(dispatch! "/")} "MS"]]
         [:div
          [:ul
-          [:li [:a {:href "/home"} "Home"]]
-          [:li [:a {:href "/about"} "About"]]
-          [:li [:a {:href "/blog"} "Blog"]]
-          [:li [:a {:href "/contact"} "Contact Us"]]]]
+          [:li [:a {:on-click #(dispatch! "/")} "Home"]]
+          [:li [:a {:on-click #(dispatch! "/about")} "About"]]
+          [:li [:a {:on-click #(dispatch! "/blog")} "Blog"]]
+          [:li [:a {:on-click #(dispatch! "/contact")} "Contact Us"]]]]
         [:div
          [:a.fa.fa-twitter
           {:title "Follow MovementSession on Twitter"

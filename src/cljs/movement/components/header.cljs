@@ -1,32 +1,23 @@
 (ns movement.components.header
   (:require [reagent.core :refer [atom]]
-            [reagent.session :as session]))
+            [reagent.session :as session]
+            [secretary.core :as secretary
+             :include-macros true :refer [dispatch!]]))
 
-(defn inner-header [])
-
-(defn outer-header []
-  (let [logged-in? (session/get :user-logged-in?)]
+(defn header []
+  (let [logged-in? (session/get :user)]
     (fn []
       [:div
        [:div.navbar.navbar-default.navbar-fixed-top
         [:div.container-fluid
          [:div.navbar-header
-          [:a#logo.navbar-brand {:href "/"} "MS"]]
+          [:a#logo.navbar-brand {:on-click #(dispatch! "/")} "MS"]]
          (if logged-in?
            [:ul.nav.navbar-nav.navbar-right
-            [:li [:a {:href "/"} "Back to app"]]]
+            [:li [:a {:on-click #(dispatch! "/generator")} "Back to app"]]]
            [:ul.nav.navbar-nav.navbar-right
             [:li
-             [:a.login.login-link {:href ""
-                                   :title "Log In"}
-              "Log In"]]
+             [:a.login.login-link {:on-click #(dispatch! "/login")} "Log In"]]
             [:li
              [:a.signup-link.btn.btn-success.navbar-btn
-              {:href "/signup"} "Sign Up"]]])]]])))
-
-(defn header []
-  (let [logged-in? (session/get :user-logged-in?)]
-    (fn []
-      (if logged-in?
-        [inner-header]
-        [outer-header]))))
+              {:on-click #(dispatch! "/signup")} "Sign Up"]]])]]])))
