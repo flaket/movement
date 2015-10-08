@@ -227,21 +227,32 @@
            (POST "/login" [username password] (jws-login username password))
            (POST "/signup" [username password] (add-user! username password))
 
-           (POST "/template" req (store-new-template req))
-
-           (GET "/categories" [] (all-category-names))
-           (GET "/movements" [] (all-movement-names))
-           (GET "/movement/:name" [name] (movement (str/replace name "-" " ")))
-
+           (POST "/template" req (if-not (authenticated? req)
+                                   (throw-unauthorized)
+                                   (store-new-template req)))
+           (GET "/categories" req (if-not (authenticated? req)
+                                    (throw-unauthorized)
+                                    (all-category-names)))
+           (GET "/movements" req (if-not (authenticated? req)
+                                   (throw-unauthorized)
+                                   (all-movement-names)))
            (GET "/templates" req (if-not (authenticated? req)
-                                   (do (print "hello") (throw-unauthorized))
+                                   (throw-unauthorized)
                                    (all-template-titles)))
+           (GET "/movement/:name" req (if-not (authenticated? req)
+                                        (throw-unauthorized)
+                                        (movement (str/replace (:name (:params req)) "-" " "))))
+           (GET "/template/:title" req (if-not (authenticated? req)
+                                         (throw-unauthorized)
+                                         (create-session (str/replace (:title (:params req)) "-" " "))))
 
-           (GET "/template/:title" [title] (create-session (str/replace title "-" " ")))
-           (GET "/singlemovement" [categories]
-             (generate-response (get-movements 1
-                                               (if (not (vector? categories)) [categories]
-                                                                              categories))))
+           (GET "/singlemovement" req
+             (let [categories (:categories (:params req))]
+               (if-not (authenticated? req)
+                 (throw-unauthorized)
+                 (generate-response (get-movements 1
+                                                   (if (not (vector? categories)) [categories]
+                                                                                  categories))))))
            (resources "/")
            (not-found "Not Found")
 

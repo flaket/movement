@@ -43,8 +43,6 @@
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
   (set-page! #'home)
-  (session/put! :logged-sessions [])
-  (session/put! :m-counter (atom 0))
 
   (.initializeTouchEvents js/React true)
   (mount-root))

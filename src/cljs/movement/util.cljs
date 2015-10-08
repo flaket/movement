@@ -18,36 +18,32 @@
   (dommy/attr (sel1 :#anti-forgery-token) "value"))
 
 (defn GET [url & [opts]]
-  (cljs-ajax/GET url opts))
+  (let [base-opts {:format          (edn-request-format)
+                   :response-format (edn-response-format)
+                   :interceptors    [(to-interceptor {:name    "Token Interceptor"
+                                                      :request #(assoc-in % [:headers "authorization"]
+                                                                          (str "Token " (session/get :token)))})]}]
+    (cljs-ajax/GET url (merge base-opts opts))))
 
 (defn POST [url & [opts]]
-  (let [base-opts {:headers {:x-csrf-token csrf-token
-                             "authorization" (session/get :token)}}]
+  (let [base-opts {:format          (edn-request-format)
+                   :response-format (edn-response-format)
+                   :interceptors    [(to-interceptor {:name    "Token Interceptor"
+                                                      :request #(assoc-in % [:headers "authorization"]
+                                                                          (str "Token " (session/get :token)))})]
+                   :headers {:x-csrf-token csrf-token}}]
     (cljs-ajax/POST url (merge base-opts opts))))
 
 (defn get-templates []
-  (GET "templates" {:headers {"authorization" (session/get :token)}
-                    :handler       #(session/put! :templates %)
-                    :error-handler #(print "error retrieving templates.")}))
-
-(defn get-templates-1 []
-  (GET "templates" {:format          (edn-request-format)
-                    :response-format (edn-response-format)
-                    :interceptors  [(to-interceptor {:name    "Token Interceptor"
-                                                     :request #(do
-                                                                (assoc-in % [:headers "authorization"] (str "Token " (session/get :token)))
-                                                                #_(assoc-in % [:params :token] (session/get :token)))})]
-                    :handler       #(session/put! :templates %)
+  (GET "templates" {:handler       #(session/put! :templates %)
                     :error-handler #(print "error retrieving templates.")}))
 
 (defn get-all-categories []
-  (GET "categories" {:headers {"authorization" (session/get :token)}
-                     :handler       #(session/put! :all-categories %)
+  (GET "categories" {:handler       #(session/put! :all-categories %)
                      :error-handler #(print "error retrieving categories.")}))
 
 (defn get-all-movements []
-  (GET "movements" {:headers {"authorization" (session/get :token)}
-                    :handler       #(session/put! :all-movements %)
+  (GET "movements" {:handler       #(session/put! :all-movements %)
                     :error-handler #(print "error retrieving movements.")}))
 
 (defn launch-template-creator []
