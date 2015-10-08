@@ -19,20 +19,29 @@
   (cljs-ajax/GET url opts))
 
 (defn POST [url & [opts]]
-  (let [base-opts {:headers {:x-csrf-token csrf-token}}]
+  (let [base-opts {:headers {:x-csrf-token csrf-token
+                             "authorization" (session/get :token)}}]
     (cljs-ajax/POST url (merge base-opts opts))))
 
 (defn get-templates []
-  (GET "templates" {:handler       #(session/put! :templates %)
+  (GET "templates" {:headers {"authorization" (session/get :token)}
+                    :handler       #(session/put! :templates %)
+                    :error-handler #(print "error retrieving templates.")}))
+
+(defn get-templates-1 [t]
+  (GET "templates" {:headers {"authorization" t}
+                    :handler       #(session/put! :templates %)
                     :error-handler #(print "error retrieving templates.")}))
 
 (defn get-all-categories []
-  (GET "categories" {:handler       #(session/put! :all-categories %)
+  (GET "categories" {:headers {"authorization" (session/get :token)}
+                     :handler       #(session/put! :all-categories %)
                      :error-handler #(print "error retrieving categories.")}))
 
 (defn get-all-movements []
-  (GET "movements" {:handler       #(session/put! :all-movements %)
-                     :error-handler #(print "error retrieving movements.")}))
+  (GET "movements" {:headers {"authorization" (session/get :token)}
+                    :handler       #(session/put! :all-movements %)
+                    :error-handler #(print "error retrieving movements.")}))
 
 (defn launch-template-creator []
   (do (when (nil? (session/get :all-categories)) (get-all-categories))

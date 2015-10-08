@@ -46,10 +46,6 @@
   (session/put! :logged-sessions [])
   (session/put! :m-counter (atom 0))
 
-  (get-templates)
-  (get-all-categories)
-  (get-all-movements)
-
   (.initializeTouchEvents js/React true)
   (mount-root))
 

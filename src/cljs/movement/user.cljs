@@ -55,5 +55,6 @@
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content
+        [:h3 (str "Welcome " (session/get :user))]
         [:div
          [change-password]]]])))

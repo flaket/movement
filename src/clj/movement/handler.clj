@@ -198,8 +198,8 @@
                         :exp  (-> 3 hours from-now)}
                 token (jws/sign claims secret {:alg :hs512})]
             (generate-response {:token token :user (:user/email (dissoc user :user/password :db/id))}))
-          (generate-response {:message "wrong password"} 401)))
-      (generate-response {:message "unknown email"} 400))))
+          (generate-response {:message "Wrong email/password combination"} 401)))
+      (generate-response {:message "Unknown email"} 400))))
 
 (def jws-auth-backend (jws-backend {:secret secret :options {:alg :hs512}}))
 ;;;;;;
@@ -214,8 +214,8 @@
   (if (nil? (:db/id (find-user email)))
     (do
       (add-user email password)
-      (generate-response {:message "user created!"}))
-    (generate-response {:message "this email is already registered"} 400)))
+      (generate-response {:message "New user created successfully"}))
+    (generate-response {:message "This email is already registered as a user"} 400)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -226,14 +226,16 @@
 
            (POST "/login" [username password] (jws-login username password))
            (POST "/signup" [username password] (add-user! username password))
+
            (POST "/template" req (store-new-template req))
 
            (GET "/categories" [] (all-category-names))
            (GET "/movements" [] (all-movement-names))
            (GET "/movement/:name" [name] (movement (str/replace name "-" " ")))
-           (GET "/templates" [] (all-template-titles))
 
-
+           (GET "/templates" req (if-not (authenticated? req)
+                                   (do (print "hello") (throw-unauthorized))
+                                   (all-template-titles)))
 
            (GET "/template/:title" [title] (create-session (str/replace title "-" " ")))
            (GET "/singlemovement" [categories]
