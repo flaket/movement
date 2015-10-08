@@ -220,13 +220,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
-
            (GET "/" [] (render-file "app.html" {:dev (env :dev?)
                                                 :csrf-token *anti-forgery-token*}))
-
            (POST "/login" [username password] (jws-login username password))
            (POST "/signup" [username password] (add-user! username password))
-
            (POST "/template" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (store-new-template req)))
@@ -245,20 +242,17 @@
            (GET "/template/:title" req (if-not (authenticated? req)
                                          (throw-unauthorized)
                                          (create-session (str/replace (:title (:params req)) "-" " "))))
-
            (GET "/singlemovement" req
-             (let [categories (:categories (:params req))]
+             (let [categories (vec (vals (:categories (:params req))))]
                (if-not (authenticated? req)
                  (throw-unauthorized)
-                 (generate-response (get-movements 1
-                                                   (if (not (vector? categories)) [categories]
-                                                                                  categories))))))
+                 (generate-response (get-movements 1 categories
+                                                #_(if (not (vector? categories)) [categories]
+                                                                                  categories)
+                                                   )))))
            (resources "/")
            (not-found "Not Found")
-
-           (GET "/raw" [] (render-file "indexraw.html" {:dev (env :dev?)}))
-
-           )
+           (GET "/raw" [] (render-file "indexraw.html" {:dev (env :dev?)})))
 
 (def app
   (let [handler (-> routes

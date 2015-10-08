@@ -59,18 +59,8 @@
         position-in-parts (first (positions #{part-title} (map :title parts)))
         categories (:categories (first (filter #(= part-title (:title %)) parts)))
         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
-
-    #_(go
-      (let [m (<! (ajax "GET" "singlemovement" {:params {:categories categories}}))
-            id (swap! m-counter inc)
-            new-movement (first m)
-            new-movement (assoc new-movement :id id)
-            new-movements (assoc movements id new-movement)]
-        (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements)))
-
     (GET "singlemovement"
          {:params        {:categories categories}
-          :format        :edn
           :handler       #(let [id (swap! m-counter inc)
                                 new-movement (first %)
                                 new-movement (assoc new-movement :id id)
@@ -83,8 +73,7 @@
         position-in-parts (first (positions #{part-title} (map :title parts)))
         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
     (GET (str "movement/" (str/replace movement-name " " "-"))
-         {:format        :edn
-          :handler       #(let [id (swap! m-counter inc)
+         {:handler       #(let [id (swap! m-counter inc)
                                 new-movement (first %)
                                 new-movement (assoc new-movement :id id)
                                 new-movements (assoc movements id new-movement)]
@@ -98,7 +87,6 @@
         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
     (GET "singlemovement"
          {:params        {:categories categories}
-          :format        :edn
           :handler       #(let [id (:id m)
                                 new-movement (first %)
                                 new-movement (assoc new-movement :id id)
