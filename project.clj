@@ -29,7 +29,7 @@
                  [buddy/buddy-auth "0.6.1"]
                  [buddy/buddy-hashers "0.7.0"]
                  [buddy/buddy-sign "0.7.1"]
-                 [cljs-ajax "0.3.14"]
+                 [cljs-ajax "0.5.0"]
                  [garden "1.2.5" ]
                  #_[garden "1.3.0-SNAPSHOT"]
                  [prismatic/dommy "1.1.0"]]

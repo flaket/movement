@@ -3,7 +3,9 @@
             [reagent.session :as session]
             [movement.util :refer [GET POST text-input get-all-movements get-templates get-templates-1 get-all-categories]]
             [secretary.core :include-macros true :refer [dispatch!]]
-            [reagent.session :as session]))
+            [reagent.session :as session]
+
+            [ajax.edn :refer [edn-request-format edn-response-format]]))
 
 (defn login []
   (let [email (atom "")
@@ -30,14 +32,14 @@
                      (reset! error "Both fields are required.")
                      (do
                        (reset! loading? true)
-                       (POST "login" {:format          :edn
-                                      :response-format :edn
+                       (POST "login" {:format          (edn-request-format)
+                                      :response-format (edn-response-format)
                                       :params          {:username @email
                                                         :password @password}
                                       :handler         (fn [response] (do (println response)
                                                                           (session/put! :token (:token response))
                                                                           (session/put! :user (:user response))
-                                                                          (get-templates-1 (:token response))
+                                                                          (get-templates-1)
                                                                           (get-all-categories)
                                                                           (get-all-movements)
                                                                           (dispatch! "/generator")

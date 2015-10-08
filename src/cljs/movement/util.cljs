@@ -8,9 +8,11 @@
     [reagent.session :as session]
     [secretary.core :as secretary
      :include-macros true :refer [dispatch!]]
-    [ajax.core :as cljs-ajax]
-    [cljs.core.async :as async :refer [>! <! put! take! alts! chan sliding-buffer close!]]
-    [dommy.core :as dommy :refer-macros [sel sel1]]))
+    [ajax.core :as cljs-ajax :refer [to-interceptor]]
+    [cljs.core.async :as async :refer [chan close!]]
+    [dommy.core :as dommy :refer-macros [sel1]]
+
+    [ajax.edn :refer [edn-request-format edn-response-format]]))
 
 (def csrf-token
   (dommy/attr (sel1 :#anti-forgery-token) "value"))
@@ -28,8 +30,13 @@
                     :handler       #(session/put! :templates %)
                     :error-handler #(print "error retrieving templates.")}))
 
-(defn get-templates-1 [t]
-  (GET "templates" {:headers {"authorization" t}
+(defn get-templates-1 []
+  (GET "templates" {:format          (edn-request-format)
+                    :response-format (edn-response-format)
+                    :interceptors  [(to-interceptor {:name    "Token Interceptor"
+                                                     :request #(do
+                                                                (assoc-in % [:headers "authorization"] (str "Token " (session/get :token)))
+                                                                #_(assoc-in % [:params :token] (session/get :token)))})]
                     :handler       #(session/put! :templates %)
                     :error-handler #(print "error retrieving templates.")}))
 
