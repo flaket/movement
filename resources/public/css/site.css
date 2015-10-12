@@ -1,3 +1,4 @@
+/*
 @font-face { font-family: ETBembo;
              src: url("../font/ETBembo-RomanLF.ttf"); }
 @font-face { font-family: ETBembo;
@@ -16,16 +17,9 @@ html, button, input, select, textarea,
     Georgia,
     serif; }
 
+*/
 
-
-.primary-button,
-.secondary-button,
-.log-button {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    border-radius: 20px;
-}
+font-family: 'Roboto', sans-serif;
 
 .refresh:hover {
     text-shadow: 0 0 1px #000,

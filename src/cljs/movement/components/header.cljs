@@ -18,10 +18,11 @@
          (if logged-in?
            [:li.pure-menu-item.pure-menu-selected
             [:a.pure-menu-link {:on-click #(dispatch! "/generator")} "Back to app"]]
-           (if @sign-in-pressed?
-             [:li.pure-menu-item.pure-menu-selected
-              [:div.l-box-lrg.pure-u-1.pure-u-md-2-5
-               [:div.pure-form
-                [login]]]]
-             [:li.pure-menu-item
-              [:a.pure-menu-link {:on-click #(reset! sign-in-pressed? true)} "Log In"]]))]]])))
+           [:li.pure-menu-item
+            [:a.pure-menu-link {:on-click #(reset! sign-in-pressed? true)} "Log In"]])]
+        (if @sign-in-pressed?
+          [:div.pure-g
+           [:div.pure-u
+            [:div.pure-form
+             [login]]]]
+          )]])))

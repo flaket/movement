@@ -54,13 +54,15 @@
                       ^{:key c} [:div.pure-u {:style {:margin-right "5px"}} c])]])))
 
 (defn template-creator-component []
-  (let []
+  (let [error (atom "")]
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content
         [:div.pure-g
          [:h1.pure-u "Create a new Template"]]
+        [:div.pure-g
+         [:p.pure-u {:style {:color "red"}} @error]]
         [:div.pure-g
          [:label.pure-u-1-2 "Session title:"]
          [:input.pure-u-1-2 {:type      "text"
@@ -91,11 +93,14 @@
         [:div.pure-g
          [:button.pure-u {:on-click #(do
                                       (swap! template-state assoc :user (session/get :user))
-                                      (print @template-state)
-                                      (POST "template"
-                                               {:format          :edn
-                                                :response-format :edn
-                                                :params          @template-state
-                                                :handler         (fn [response] (print response))
-                                                :error-handler   (fn [response] (print response))}))}
+                                      (let [title (:title @template-state)
+                                            parts (:parts @template-state)]
+                                        (cond
+                                          (nil? title) (reset! error "The template needs a title.")
+                                          (empty? parts) (reset! error "A session must have 1 or more parts.")
+
+                                          :else (POST "template"
+                                                      {:params        @template-state
+                                                       :handler       (fn [response] (print response))
+                                                       :error-handler (fn [response] (reset! error (:response response)))}))))}
           "Save"]]]])))

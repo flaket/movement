@@ -224,8 +224,10 @@
                                                 :csrf-token *anti-forgery-token*}))
            (POST "/login" [username password] (jws-login username password))
            (POST "/signup" [username password] (add-user! username password))
+
            (POST "/template" req (if-not (authenticated? req)
                                    (throw-unauthorized)
+                                   #_(generate-response req)
                                    (store-new-template req)))
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)

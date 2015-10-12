@@ -14,7 +14,7 @@
 (def base-css
   (css
     [:html {:font-size (px 15)}]
-    [:body {:background-color (hsl 55 50 100)
+    [:body {:background-color "#fffff8"
             :color            (hsl 0 0 10)}]
     [:.content {:margin        "0 auto"
                 :padding       "1rem 1rem"
@@ -75,8 +75,9 @@
                  :padding (px 5)
                  :border-style 'solid
                  :border-width (px 1)
-                 :border-color "#fffff4"
-                 :background-color "#fff"
+                 :border-color "#ffffa4"
+                 ;:background-color (hsl 55 30 95)
+                 :background-color (hsl 55 30 95)
                  :box-shadow "0px 0px 1px rgba(50,50,50,0.5)"
                  :border-radius (px 25)}]
 

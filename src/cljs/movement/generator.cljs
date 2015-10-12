@@ -15,7 +15,7 @@
 
 (defonce m-counter (atom 0))
 
-(defn equipment-symbol [equipment-name]
+(defn movement-image [equipment-name]
   (first (shuffle ["images/squat.png"
                    "images/push-up.png"
                    "images/high-bridge.png"
@@ -180,7 +180,7 @@
         description-showing (atom false)]
     (fn [{:keys [id category graphic animation equipment] :as m} part-title]
       (let [name (:movement/name m)
-            graphic (equipment-symbol "")
+            graphic (movement-image "")
             description "..movement description.."]
         [:div.pure-u.movement {:id        (str "m-" id)
                                :className ""}

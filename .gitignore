@@ -22,3 +22,5 @@ movement.iml
 figwheel_server.log
 
 .idea/replstate.xml
+
+*.xml

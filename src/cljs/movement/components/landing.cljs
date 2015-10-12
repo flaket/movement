@@ -43,17 +43,6 @@
           "Log"]
          [:p "Log your sessions and review them later."]]]])))
 
-(defn main []
-  (let []
-    (fn []
-      [:div.ribbon.l-box-lrg.pure-g
-       [:div.l-box-lrg.is-center.pure-u-1.pure-u-md-1-2.pure-u-lg-2-5
-        [:img.pure-img-responsive {:width 300}]]
-       [:div.pure-u-1.pure-u-md-1-2.pure-u-lg-3-5
-        [:h2.content-head.content-head-ribbon "Gekko smekko lekko grekko"]
-        [:p "Whadasdasdadhsjsadhjsafhjsafhjsafhjasfh asf hasjfhas j fhasj fhsajf"]]])))
-
-
 (defn epilog []
   (let []
     (fn []
@@ -78,6 +67,5 @@
        [prolog]
        [:div.content-wrapper
         [benefits]
-        [main]
         [epilog]
         [footer]]])))
