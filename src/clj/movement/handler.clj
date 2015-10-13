@@ -66,7 +66,7 @@
         m (->> movements flatten set shuffle (take n))]
     m))
 
-(defn all-template-titles []
+(defn all-template-titles [email]
   (let [db (d/db conn)
         templates (d/q '[:find [?title ...]
                          :in $ ?email
@@ -75,10 +75,10 @@
                          [?e :user/template ?t]
                          [?t :template/title ?title]]
                        db
-                       "bob@bob.com")]
+                       email)]
     (generate-response templates)))
 
-(defn create-session [title]
+(defn create-session [title user]
   (let [title-entity (ffirst (d/q '[:find (pull ?t [*])
                                     :in $ ?title ?email
                                     :where
@@ -87,7 +87,7 @@
                                     [?t :template/title ?title]]
                                   db
                                   title
-                                  "bob@bob.com"))
+                                  user))
         description (:template/description title-entity)
         part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
         parts
@@ -227,31 +227,29 @@
 
            (POST "/template" req (if-not (authenticated? req)
                                    (throw-unauthorized)
-                                   #_(generate-response req)
                                    (store-new-template req)))
-           (GET "/categories" req (if-not (authenticated? req)
-                                    (throw-unauthorized)
-                                    (all-category-names)))
+           (GET "/template" req (if-not (authenticated? req)
+                                  (throw-unauthorized)
+                                  (let [template-name (:template-name (:params req))
+                                        user (:user (:params req))]
+                                    (create-session template-name user))))
+           (GET "/templates" req (if-not (authenticated? req)
+                                   (throw-unauthorized)
+                                   (all-template-titles (str (:user (:params req))))))
+           (GET "/movement" req (if-not (authenticated? req)
+                                  (throw-unauthorized)
+                                  (movement (:name (:params req)))))
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (all-movement-names)))
-           (GET "/templates" req (if-not (authenticated? req)
-                                   (throw-unauthorized)
-                                   (all-template-titles)))
-           (GET "/movement/:name" req (if-not (authenticated? req)
-                                        (throw-unauthorized)
-                                        (movement (str/replace (:name (:params req)) "-" " "))))
-           (GET "/template/:title" req (if-not (authenticated? req)
-                                         (throw-unauthorized)
-                                         (create-session (str/replace (:title (:params req)) "-" " "))))
            (GET "/singlemovement" req
              (let [categories (vec (vals (:categories (:params req))))]
                (if-not (authenticated? req)
                  (throw-unauthorized)
-                 (generate-response (get-movements 1 categories
-                                                #_(if (not (vector? categories)) [categories]
-                                                                                  categories)
-                                                   )))))
+                 (generate-response (get-movements 1 categories)))))
+           (GET "/categories" req (if-not (authenticated? req)
+                                    (throw-unauthorized)
+                                    (all-category-names)))
            (resources "/")
            (not-found "Not Found")
            (GET "/raw" [] (render-file "indexraw.html" {:dev (env :dev?)})))

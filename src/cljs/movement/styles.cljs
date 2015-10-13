@@ -76,9 +76,8 @@
                  :border-style 'solid
                  :border-width (px 1)
                  :border-color "#ffffa4"
-                 ;:background-color (hsl 55 30 95)
                  :background-color (hsl 55 30 95)
-                 :box-shadow "0px 0px 1px rgba(50,50,50,0.5)"
+                 :box-shadow "0px 0px 2px rgba(50,50,50,0.5)"
                  :border-radius (px 25)}]
 
     [:.refresh {:position 'relative
@@ -132,18 +131,14 @@
              :height (px 25)}]
 
     [:.sw {:position 'relative
-           :bottom (px 40)}]
+           :bottom (px 50)}]
     [:.se {:position 'relative
-           :bottom (px 40)}]
-
-
+           :bottom (px 50)}]
     [:.rep-text {:position 'absolute
                  :color "#68f"
                  :border-bottom "1px dashed #13f"}
      [:&:hover {:cursor 'pointer}]]
     [:.rep {:position 'absolute}]
-
-
     [:.set-text {:color "#68f"
                  :border-bottom "1px dashed #13f"
                  :position 'absolute}

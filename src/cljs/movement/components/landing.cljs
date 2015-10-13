@@ -13,11 +13,11 @@
     (fn []
       [:div.splash-container
        [:div.splash
-        [:h1.splash-head "Plan less, move more"]
-        [:p.splash-subhead "You have a body to move; stop creating static training programs and
+        [:h1.splash-head {:className "animated fadeInDown"} "Plan less, move more"]
+        [:p.splash-subhead {:className "animated fadeInDown"} "You have a body to move; stop creating static training programs and
          let MovementSession inspire you to plan and learn new and challenging ways of moving your body."]
-        [:p
-         [:a.pure-button.pure-button-primary "Get Started"]]]])))
+        [:p {:className "animated fadeInDown"}
+         [:a.pure-button.pure-button-primary "Sign Up Free"]]]])))
 
 (defn benefits []
   (let []
@@ -54,10 +54,7 @@
           [sign-up]]]
         [:div.l-box-lrg.pure-u-1.pure-u-md-3-5
          [:h4 "Contact Us"]
-         [:p "asdasdahjsdhasjhj hajsdhjashd"]
-         [:h4 "More Information"]
-         [:p "12058135 dasfgagf 198274"]
-         ]]])))
+         [:p "support@movementsession.com"]]]])))
 
 (defn home []
   (let []

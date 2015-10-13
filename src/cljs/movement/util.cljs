@@ -8,10 +8,8 @@
     [reagent.session :as session]
     [secretary.core :as secretary
      :include-macros true :refer [dispatch!]]
-    [ajax.core :as cljs-ajax :refer [to-interceptor]]
-    [cljs.core.async :as async :refer [chan close!]]
     [dommy.core :as dommy :refer-macros [sel1]]
-
+    [ajax.core :as cljs-ajax :refer [to-interceptor]]
     [ajax.edn :refer [edn-request-format edn-response-format]]))
 
 (def csrf-token
@@ -35,8 +33,11 @@
     (cljs-ajax/POST url (merge base-opts opts))))
 
 (defn get-templates []
-  (GET "templates" {:handler       #(session/put! :templates %)
-                    :error-handler #(print "error retrieving templates.")}))
+  (if-let [user (session/get :user)]
+    (GET "templates" {:params        {:user user}
+                      :handler       #(session/put! :templates %)
+                      :error-handler #(print "error retrieving templates.")})
+    (print "no user in session.")))
 
 (defn get-all-categories []
   (GET "categories" {:handler       #(session/put! :all-categories %)
@@ -45,12 +46,6 @@
 (defn get-all-movements []
   (GET "movements" {:handler       #(session/put! :all-movements %)
                     :error-handler #(print "error retrieving movements.")}))
-
-(defn launch-template-creator []
-  (do (when (nil? (session/get :all-categories)) (get-all-categories))
-      (when (nil? (session/get :templates)) (get-templates))
-      (when (nil? (session/get :all-movements)) (get-all-movements))
-      (dispatch! "/template")))
 
 (defn hook-browser-navigation! []
   (doto (History.)
@@ -69,8 +64,3 @@
              :on-change #(reset! target (-> % .-target .-value))
              :value @target}
             opts)])
-
-(defn timeout [ms]
-  (let [c (chan)]
-    (js/setTimeout (fn [] (close! c)) ms)
-    c))

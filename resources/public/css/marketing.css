@@ -9,11 +9,14 @@
  * Most of these are inherited from Base, but I want to change a few.
  */
 body {
+    /*
     line-height: 1.7em;
     color: #7f8c8d;
     font-size: 13px;
+*/
 }
 
+/*
 h1,
 h2,
 h3,
@@ -23,6 +26,7 @@ h6,
 label {
     color: #34495e;
 }
+*/
 
 .pure-img-responsive {
     max-width: 100%;
@@ -78,8 +82,9 @@ label {
 }
 
 a.pure-button-primary {
-    background: #fffff8;
-    color: #1f8dd6;
+    background: #1f8dd6;
+    color: #fffff8;
+    margin-top: 10px;
     border-radius: 5px;
     font-size: 120%;
 }
@@ -122,7 +127,7 @@ a.pure-button-primary {
 .home-menu li a:focus {
     background: none;
     border: none;
-    color: #555;
+    color: #666;
 }
 
 
@@ -133,7 +138,6 @@ a.pure-button-primary {
 
 .splash-container {
     ;background: #1f8dd6;
-    ;background: rgb(37, 42, 58);
     background: rgb(37, 42, 58);
     z-index: 1;
     overflow: hidden;
@@ -170,7 +174,7 @@ a.pure-button-primary {
 /* This is the subheading that appears on the blue section */
 .splash-subhead {
     color: #fffff8;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.05em;
     opacity: 0.8;
 }
 

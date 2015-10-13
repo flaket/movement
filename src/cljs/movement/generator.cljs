@@ -72,8 +72,9 @@
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))
         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
-    (GET (str "movement/" (str/replace movement-name " " "-"))
-         {:handler       #(let [id (swap! m-counter inc)
+    (GET "movement/"
+         {:params         {:name movement-name}
+          :handler       #(let [id (swap! m-counter inc)
                                 new-movement (first %)
                                 new-movement (assoc new-movement :id id)
                                 new-movements (assoc movements id new-movement)]
@@ -129,8 +130,10 @@
     (session/put! :movement-session new-session)))
 
 (defn create-session-from-template [template-name]
-  (GET (str "template/" (str/replace template-name " " "-"))
-       {:handler       add-session-handler
+  (GET "template"
+       {:params        {:template-name template-name
+                        :user (session/get :user)}
+        :handler       add-session-handler
         :error-handler (fn [] (print "error getting session data from server."))}))
 
 (defn pick-random-template []
@@ -182,8 +185,7 @@
       (let [name (:movement/name m)
             graphic (movement-image "")
             description "..movement description.."]
-        [:div.pure-u.movement {:id        (str "m-" id)
-                               :className ""}
+        [:div.pure-u.movement {:id        (str "m-" id)}
 
          [:div.pure-g
           [:div.pure-u-1-2.refresh {:on-click #(refresh-movement m part-title)

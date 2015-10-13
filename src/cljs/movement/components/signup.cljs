@@ -33,4 +33,4 @@
                                                                                                 #_(get-templates)
                                                                                                 #_(dispatch! "/generator")))
                                                             :error-handler   (fn [response] (println (str "error! " response)))}))}
-        (if @loading? "Signing up..." "Sign Up")]])))
+        (if @loading? "Signing up..." "Sign Up Free")]])))

@@ -2,7 +2,7 @@
   (:require
     [reagent.core :refer [atom]]
     [reagent.session :as session]
-    [movement.util :refer [POST launch-template-creator]]
+    [movement.util :refer [POST]]
     [secretary.core :include-macros true :refer [dispatch!]]))
 
 (defn menu-component []
@@ -37,7 +37,7 @@
                                     " menu-item-divided pure-menu-selected"))
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-template)
-                               (launch-template-creator))}
+                               (dispatch! "/template"))}
              [:a.pure-menu-link menu-item-template]]
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-movements selected)
