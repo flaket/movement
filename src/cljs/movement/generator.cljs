@@ -180,11 +180,10 @@
 (defn movement-component []
   (let [rep-text (atom "Rep")
         set-text (atom "Set")
-        description-showing (atom false)]
+        info-showing (atom false)]
     (fn [{:keys [id category graphic animation equipment] :as m} part-title]
       (let [name (:movement/name m)
-            graphic (movement-image "")
-            description "..movement description.."]
+            graphic (movement-image "")]
         [:div.pure-u.movement {:id        (str "m-" id)}
 
          [:div.pure-g
@@ -194,150 +193,140 @@
                                     :title    "Remove movement"}]]
 
          [:div.pure-g
-          [:h3.pure-u.title {:title    "Click to view movement description"
-                             :alt      name
-                             :on-click #(handler-fn (reset! description-showing (not @description-showing)))}
-           name]]
-
-         (when @description-showing
-           [:div.pure-g
-            [:p.pure-u.pure-u-md-1-1.description description]])
+          [:h3.pure-u.title name]]
 
          [:div.pure-g
           [:img.pure-u.graphic.pure-img-responsive {:src graphic :title name
                                                     :alt name}]]
 
-         [:div.pure-g
+         [:div.info {:on-click #(reset! info-showing (not @info-showing))} "i"]
+         (when @info-showing
+           [:div
+                              [:div.pure-g
+                               [:p.pure-u.rep-text {:on-click #(if (= @rep-text "Rep")
+                                                                (let [elements (array-seq (.getElementById js/document (str "rep-" id)))]
+                                                                  (doseq [e elements]
+                                                                    (set! (.-selected e) false))
+                                                                  (reset! rep-text "Distance"))
+                                                                (let [elements (array-seq (.getElementById js/document (str "distance-" id)))]
+                                                                  (doseq [e elements]
+                                                                    (set! (.-selected e) false))
+                                                                  (reset! rep-text "Rep")))
+                                                    :title    "Change between rep and distance"}
+                                @rep-text]
+                               (let [txt @rep-text]
+                                 (case txt
+                                   "Rep" [:div.pure-u.rep {:className " custom-select"}
+                                          [:select {:className "rep-select"
+                                                    :id        (str "rep-" id)
+                                                    :on-change #(let [x (.-value (.getElementById js/document (str "rep-" id)))]
+                                                                 (print x))}
+                                           [:option "-"]
+                                           [:option 1]
+                                           [:option 2]
+                                           [:option 3]
+                                           [:option 4]
+                                           [:option 5]
+                                           [:option 6]
+                                           [:option 7]
+                                           [:option 8]
+                                           [:option 9]
+                                           [:option 10]
+                                           [:option 15]
+                                           [:option 20]
+                                           [:option 25]
+                                           [:option 30]
+                                           [:option 40]
+                                           [:option 50]
+                                           [:option 60]
+                                           [:option 80]
+                                           [:option 100]]]
+                                   "Distance" [:div.pure-u.rep {:className " custom-select"}
+                                               [:select {:className "distance-select"
+                                                         :id        (str "distance-" id)
+                                                         :on-change #(let [x (.-value (.getElementById js/document (str "distance-" id)))]
+                                                                      (print x))}
+                                                [:option "-"]
+                                                [:option "10 m"]
+                                                [:option "20 m"]
+                                                [:option "50 m"]
+                                                [:option "100 m"]
+                                                [:option "200 m"]
+                                                [:option "300 m"]
+                                                [:option "400 m"]
+                                                [:option "600 m"]
+                                                [:option "800 m"]
+                                                [:option "1000 m"]
+                                                [:option "1.5 km"]
+                                                [:option "2 km"]
+                                                [:option "3 km"]
+                                                [:option "4 km"]
+                                                [:option "5 km"]
+                                                [:option "10 km"]
+                                                [:option "15 km"]
+                                                [:option "20 km"]]]))]
 
-          [:div.pure-u-1-2.sw
-           [:div.pure-g
-            [:p.pure-u.rep-text {:on-click #(if (= @rep-text "Rep")
-                                             (let [elements (array-seq (.getElementById js/document (str "rep-" id)))]
-                                               (doseq [e elements]
-                                                 (set! (.-selected e) false))
-                                               (reset! rep-text "Distance"))
-                                             (let [elements (array-seq (.getElementById js/document (str "distance-" id)))]
-                                               (doseq [e elements]
-                                                 (set! (.-selected e) false))
-                                               (reset! rep-text "Rep")))
-                                 :title    "Change between rep and distance"}
-             @rep-text]
-            (let [txt @rep-text]
-              (case txt
-                "Rep" [:div.pure-u.rep {:className " custom-select"}
-                       [:select {:className "rep-select"
-                                 :id        (str "rep-" id)
-                                 :on-change #(let [x (.-value (.getElementById js/document (str "rep-" id)))]
-                                              (print x))}
-                        [:option "-"]
-                        [:option 1]
-                        [:option 2]
-                        [:option 3]
-                        [:option 4]
-                        [:option 5]
-                        [:option 6]
-                        [:option 7]
-                        [:option 8]
-                        [:option 9]
-                        [:option 10]
-                        [:option 15]
-                        [:option 20]
-                        [:option 25]
-                        [:option 30]
-                        [:option 40]
-                        [:option 50]
-                        [:option 60]
-                        [:option 80]
-                        [:option 100]]]
-                "Distance" [:div.pure-u.rep {:className " custom-select"}
-                            [:select {:className "distance-select"
-                                      :id        (str "distance-" id)
-                                      :on-change #(let [x (.-value (.getElementById js/document (str "distance-" id)))]
-                                                   (print x))}
-                             [:option "-"]
-                             [:option "10 m"]
-                             [:option "20 m"]
-                             [:option "50 m"]
-                             [:option "100 m"]
-                             [:option "200 m"]
-                             [:option "300 m"]
-                             [:option "400 m"]
-                             [:option "600 m"]
-                             [:option "800 m"]
-                             [:option "1000 m"]
-                             [:option "1.5 km"]
-                             [:option "2 km"]
-                             [:option "3 km"]
-                             [:option "4 km"]
-                             [:option "5 km"]
-                             [:option "10 km"]
-                             [:option "15 km"]
-                             [:option "20 km"]]]))]]
+                              [:div.pure-g
+                               [:p.pure-u.set-text {:on-click #(if (= @set-text "Set")
+                                                                (let [elements (array-seq (.getElementById js/document (str "set-" id)))]
+                                                                  (doseq [e elements]
+                                                                    (set! (.-selected e) false))
+                                                                  (reset! set-text "Duration"))
+                                                                (let [elements (array-seq (.getElementById js/document (str "duration-" id)))]
+                                                                  (doseq [e elements]
+                                                                    (set! (.-selected e) false))
+                                                                  (reset! set-text "Set")))
+                                                    :title    "Change between set and duration"}
+                                @set-text]
 
-
-          [:div.pure-u-1-2.se
-           [:div.pure-g
-            [:p.pure-u.set-text {:on-click #(if (= @set-text "Set")
-                                             (let [elements (array-seq (.getElementById js/document (str "set-" id)))]
-                                               (doseq [e elements]
-                                                 (set! (.-selected e) false))
-                                               (reset! set-text "Duration"))
-                                             (let [elements (array-seq (.getElementById js/document (str "duration-" id)))]
-                                               (doseq [e elements]
-                                                 (set! (.-selected e) false))
-                                               (reset! set-text "Set")))
-                                 :title    "Change between set and duration"}
-             @set-text]
-            (let [txt @set-text]
-              (case txt
-                "Set" [:div.pure-u.set {:className " custom-select"}
-                       [:select {:className "set-select"
-                                 :id        (str "set-" id)
-                                 :on-change #(let [x (.-value (.getElementById js/document (str "set-" id)))]
-                                              (print x))}
-                        [:option "-"]
-                        [:option 1]
-                        [:option 2]
-                        [:option 3]
-                        [:option 4]
-                        [:option 5]
-                        [:option 6]
-                        [:option 7]
-                        [:option 8]
-                        [:option 9]
-                        [:option 10]]]
-                "Duration" [:div.pure-u.duration {:className " custom-select"}
-                            [:select {:className "duration-select"
-                                      :id        (str "duration-" id)
-                                      :on-change #(let [x (.-value (.getElementById js/document (str "duration-" id)))]
-                                                   (print x))}
-                             [:option "-"]
-                             [:option "5 s"]
-                             [:option "10 s"]
-                             [:option "15 s"]
-                             [:option "20 s"]
-                             [:option "30 s"]
-                             [:option "45 s"]
-                             [:option "60 s"]
-                             [:option "2 min"]
-                             [:option "3 min"]
-                             [:option "4 min"]
-                             [:option "5 min"]
-                             [:option "6 min"]
-                             [:option "7 min"]
-                             [:option "8 min"]
-                             [:option "9 min"]
-                             [:option "10 min"]
-                             [:option "15 min"]
-                             [:option "20 min"]
-                             [:option "25 min"]
-                             [:option "30 min"]
-                             [:option "45 min"]
-                             [:option "60 min"]
-                             [:option "90 min"]
-                             [:option "120 min"]]]))]]]
-
-         ]))))
+                               (let [txt @set-text]
+                                 (case txt
+                                   "Set" [:div.pure-u.set {:className " custom-select"}
+                                          [:select {:className "set-select"
+                                                    :id        (str "set-" id)
+                                                    :on-change #(let [x (.-value (.getElementById js/document (str "set-" id)))]
+                                                                 (print x))}
+                                           [:option "-"]
+                                           [:option 1]
+                                           [:option 2]
+                                           [:option 3]
+                                           [:option 4]
+                                           [:option 5]
+                                           [:option 6]
+                                           [:option 7]
+                                           [:option 8]
+                                           [:option 9]
+                                           [:option 10]]]
+                                   "Duration" [:div.pure-u.duration {:className " custom-select"}
+                                               [:select {:className "duration-select"
+                                                         :id        (str "duration-" id)
+                                                         :on-change #(let [x (.-value (.getElementById js/document (str "duration-" id)))]
+                                                                      (print x))}
+                                                [:option "-"]
+                                                [:option "5 s"]
+                                                [:option "10 s"]
+                                                [:option "15 s"]
+                                                [:option "20 s"]
+                                                [:option "30 s"]
+                                                [:option "45 s"]
+                                                [:option "60 s"]
+                                                [:option "2 min"]
+                                                [:option "3 min"]
+                                                [:option "4 min"]
+                                                [:option "5 min"]
+                                                [:option "6 min"]
+                                                [:option "7 min"]
+                                                [:option "8 min"]
+                                                [:option "9 min"]
+                                                [:option "10 min"]
+                                                [:option "15 min"]
+                                                [:option "20 min"]
+                                                [:option "25 min"]
+                                                [:option "30 min"]
+                                                [:option "45 min"]
+                                                [:option "60 min"]
+                                                [:option "90 min"]
+                                                [:option "120 min"]]]))]])]))))
 
 (defn part-component []
   (let [show-search-input (atom false)]
@@ -358,12 +347,19 @@
           (for [m (vals movements)]
             ^{:key (str m (rand-int 100000))} [movement-component m title]))]])))
 
+(defn date-component []
+  (let [date (js/Date.)
+        day (.getDate date)
+        month (.getMonth date)]
+    (fn []
+      [:div (str day "/" month)])))
+
 (defn session-component []
   (let [adding-comment (atom false)]
     (fn [{:keys [title description parts]}]
       [:div
        [:div.pure-g
-        [:div.pure-u.pure-u-md-1-5]
+        [:div.pure-u.pure-u-md-1-5 [date-component]]
         [:h1.pure-u.pure-u-md-3-5 title]]
        [:p.subtitle description]
 

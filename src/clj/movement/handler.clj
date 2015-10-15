@@ -49,7 +49,13 @@
   (let [categories (d/q '[:find [?n ...]
                           :where
                          [_ :category/name ?n]]
-                       db)]
+                       db)
+        categories (into {}
+                         (d/q '[:find ?name (count ?m)
+                                :where
+                                [?cat :category/name ?name]
+                                [?m :movement/category ?cat]]
+                              db))]
     (generate-response categories)))
 
 (defn movement [name]

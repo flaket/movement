@@ -33,7 +33,7 @@
         [:div.pure-u
          (let [id (str "ctags" i)
                categories-ac-comp (with-meta text-input-component
-                                             {:component-did-mount #(auto-complete-did-mount (str "#" id) (vec (session/get :all-categories)))})]
+                                             {:component-did-mount #(auto-complete-did-mount (str "#" id) (vec (keys (session/get :all-categories))))})]
            [categories-ac-comp {:id     id
                                :class   "edit" :placeholder "type to find and add category.."
                                :on-save #(when (some #{%} (session/get :all-categories))

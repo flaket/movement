@@ -68,10 +68,10 @@
                    :border "1px solid #ddd"
                    :padding "0.5em 2em"
                    :font-size "90%"}]
-    [:.movement {:width (px 180)
+    [:.movement {:width (px 200)
                  :position 'relative
-                 :margin-bottom (px 5)
-                 :margin-right (px 5)
+                 :margin-bottom (px 15)
+                 :margin-right (px 15)
                  :padding (px 5)
                  :border-style 'solid
                  :border-width (px 1)
@@ -127,23 +127,19 @@
                 :height (px 150)
                 :padding (px 0)
                 :margin "5px 10px 50px 10px"}]
+    [:.info {:position 'absolute
+             :bottom (px 20)
+             :right (px 20)}]
     [:.icon {:width (px 25)
              :height (px 25)}]
-
-    [:.sw {:position 'relative
-           :bottom (px 50)}]
-    [:.se {:position 'relative
-           :bottom (px 50)}]
-    [:.rep-text {:position 'absolute
-                 :color "#68f"
+    [:.rep-text {:color "#68f"
                  :border-bottom "1px dashed #13f"}
      [:&:hover {:cursor 'pointer}]]
-    [:.rep {:position 'absolute}]
+    [:.rep {}]
     [:.set-text {:color "#68f"
-                 :border-bottom "1px dashed #13f"
-                 :position 'absolute}
+                 :border-bottom "1px dashed #13f"}
      [:&:hover {:cursor 'pointer}]]
-    [:.set {:position 'absolute}]
-    [:.duration {:position 'absolute}]))
+    [:.set {}]
+    [:.duration {}]))
 
 (insert-styles base-css)

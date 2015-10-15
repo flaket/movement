@@ -5,14 +5,13 @@
             [clojure.pprint :as pp]
             [buddy.hashers :as hashers])
   (:import datomic.Util))
-
 ;; Create database and create a connection.
 (def uri "datomic:dev://localhost:4334/movement10")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
 
-(let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
+(let [schema-tx (first (Util/readﬁAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
 
 (let [
@@ -61,16 +60,17 @@
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(def bobs-template {:title "Bob's Second Strength Session"
-                    :description "Let's do this!"
-                    :parts [{:title "Warmup"
-                             :categories ["Hip Mobility" "Shoulder Mobility"]
-                             :n 1
-                             :regular-movements ["Hip Floor Rotations" "Whippet"]}
-                            {:title "Strength"
+(d/q '[:find [?n ...]
+       :where
+       [_ :category/name ?n]]
+     db)
+
+(def bobs-template {:title "Boborama"
+                    :description "!"
+                    :parts [{:title "Babb"
                              :categories ["Strength"]
                              :n 1
-                             :regular-movements ["Back Squat" "Pull Up"]}]})
+                             :regular-movements ["Squat"]}]})
 
 (defn add-template! [user template]
   (let [title (:title template)
@@ -91,10 +91,10 @@
                              :template/description description
                              :template/part        part-temp-ids}]
         part-data (for [i (range (count parts))
-                          :let [p (get parts i)
-                                cid (get category-temp-ids i)
-                                pid (get part-temp-ids i)
-                                rid (get regular-movement-temp-ids i)]]
+                        :let [p (get parts i)
+                              cid (get category-temp-ids i)
+                              pid (get part-temp-ids i)
+                              rid (get regular-movement-temp-ids i)]]
                     {:db/id                    pid
                      :part/name                (:title p)
                      :part/category            (vec cid)
@@ -183,6 +183,12 @@
      db
      "bob@bob.com")
 
+(d/q '[:find (pull ?m [{:user/template
+                        [:template/title]}])
+       :in $
+       :where [?m :user/email ?cat]]
+     db)
+
 (hashers/check "alice1" (:user/password (d/pull db '[*] [:user/email "alice@alice.com"])))
 
 (let [users (d/q '[:find ?email ?pw ?r
@@ -210,6 +216,13 @@
              [?m :movement/category ?cat]]
            db))))
 (all-categories-sorted)
+
+(into {}
+      (d/q '[:find ?name (count ?m)
+             :where
+             [?cat :category/name ?name]
+             [?m :movement/category ?cat]]
+           db))
 
 ; get specific category
 (defn get-category [name]

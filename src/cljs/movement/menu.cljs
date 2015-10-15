@@ -39,13 +39,6 @@
                                (session/put! :selected-menu-item menu-item-template)
                                (dispatch! "/template"))}
              [:a.pure-menu-link menu-item-template]]
-            [:li {:className (str "pure-menu-item"
-                                  (when (= menu-item-movements selected)
-                                    " menu-item-divided pure-menu-selected"))
-                  :on-click  #(do
-                               (session/put! :selected-menu-item menu-item-movements)
-                               (dispatch! "/movements"))}
-             [:a.pure-menu-link menu-item-movements]]
             [:li {:className (str "pure-menu-item")
                   :on-click  #(do (session/clear!)
                                   (dispatch! "/"))}
