@@ -18,7 +18,7 @@
             :color            (hsl 0 0 10)}]
     [:.content {:margin        "0 auto"
                 :padding       "1rem 1rem"
-                :max-width     (px 1000)
+                :max-width     (px 1200)
                 :margin-bottom (px 50)}]
     [:h1 {:font-weight 400
           :margin-top "2rem"

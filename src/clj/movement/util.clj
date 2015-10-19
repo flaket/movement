@@ -60,6 +60,12 @@
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(def example-session )
+
+(defn add-session! [user session]
+  )
+
+
 (d/q '[:find [?n ...]
        :where
        [_ :category/name ?n]]

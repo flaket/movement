@@ -182,7 +182,19 @@
           (generate-response "New template stored successfully."))
         (generate-response "You already have a template with this title. Choose a unique title for your template." 400)))))
 
+(defn add-session! [user session]
+  )
 
+(defn store-session [req]
+  (let [session (:params req)
+        user (:user session)]
+    (if (nil? user)
+      (generate-response (str "User email lacking from client data. User not logged in?" " Session data: " session) 400)
+      (do
+        ; add session
+        (add-session! user session)
+        (generate-response "Session stored successfully."))
+      )))
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defn find-user [email]
@@ -231,6 +243,9 @@
            (POST "/login" [username password] (jws-login username password))
            (POST "/signup" [username password] (add-user! username password))
 
+           (POST "/store-session" req (if-not (authenticated? req)
+                                        (throw-unauthorized)
+                                        (store-session req)))
            (POST "/template" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (store-new-template req)))
