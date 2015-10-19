@@ -125,6 +125,38 @@
   :db/doc                "Optionally a specific movement can be added to a part"
   :db.install/_attribute :db.part/db}
 
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/rep
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Optionally number of repetitions for each movement can be given"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/set
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Optionally number of sets for each movement can be given"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/distance
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Optionally the distance for each movement can be given"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/duration
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Optionally the duration for each movement can be given"
+  :db.install/_attribute :db.part/db}
+
  ;; category
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :category/name
@@ -152,23 +184,7 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
-  :db/doc                "A movement belongs to several categories"
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/graphic
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db/doc                "A movement may have a graphical image"
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/animation
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db/doc                "A movement may have a graphical animation"
+  :db/doc                "A movement has one or more categories"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -227,14 +243,6 @@
   :db/cardinality        :db.cardinality/one
   :db/unique             :db.unique/identity
   :db/doc                "Equipment has a unique name"
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :equipment/icon
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db/doc                "Equipment has a graphical icon"
   :db.install/_attribute :db.part/db}
 
  ;; session

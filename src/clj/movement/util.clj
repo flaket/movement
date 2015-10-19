@@ -6,16 +6,17 @@
             [buddy.hashers :as hashers])
   (:import datomic.Util))
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement10")
+(def uri "datomic:dev://localhost:4334/movement11")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
 
-(let [schema-tx (first (Util/readﬁAll (io/reader (io/resource "data/schema.edn"))))]
+(let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
 
 (let [
       climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
+      templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))
       crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
       jumping-tx (first (Util/readAll (io/reader (io/resource "data/movements/jumping.edn"))))
       lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
@@ -29,14 +30,13 @@
       core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
       lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
       mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
-      multiplane-tx (first (Util/readAll (io/reader (io/resource "data/movements/multiplane.edn"))))
+
       sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
-
-
-      templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))
 
       ]
   (do
+    (d/transact conn climbing-tx)
+    (d/transact conn templates-tx)
     (d/transact conn acrobatics-tx)
     (d/transact conn pulling-tx)
     (d/transact conn pushing-tx)
@@ -44,12 +44,8 @@
     (d/transact conn core-tx)
     (d/transact conn lowerbody-tx)
     (d/transact conn mobility-tx)
-    (d/transact conn multiplane-tx)
     (d/transact conn sass-tx)
 
-    (d/transact conn templates-tx)
-
-    (d/transact conn climbing-tx)
     (d/transact conn crawling-tx)
     (d/transact conn jumping-tx)
     (d/transact conn lifting-tx)
@@ -60,7 +56,7 @@
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(def example-session )
+
 
 (defn add-session! [user session]
   )
@@ -157,17 +153,7 @@
 (def tx-user-data [{:db/id         #db/id[:db.part/user]
                     :user/email    "admin@movementsession.com"
                     :user/name     "Admin"
-                    :user/password (hashers/encrypt "pw")}
-
-                   {:db/id         #db/id[:db.part/user]
-                    :user/email    "bob@bob.com"
-                    :user/name     "Bob"
-                    :user/password (hashers/encrypt "bob")}
-
-                   {:db/id         #db/id[:db.part/user]
-                    :user/email    "alice@alice.com"
-                    :user/name     "Alice"
-                    :user/password (hashers/encrypt "alice")}])
+                    :user/password (hashers/encrypt "pw")}])
 
 (d/transact conn tx-user-data)
 

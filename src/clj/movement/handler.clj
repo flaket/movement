@@ -26,7 +26,7 @@
             [movement.db]
             [buddy.hashers :as hashers]))
 
-(def uri "datomic:dev://localhost:4334/movement10")
+(def uri "datomic:dev://localhost:4334/movement11")
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/set-resource-path!  (clojure.java.io/resource "templates"))
@@ -98,18 +98,24 @@
         part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
         parts
         (vec (for [p part-entities]
-               (let [name (:part/name p)
+               (let [name (:part/title p)
+                     rep (:part/rep p)
+                     set (:part/set p)
+                     duration (:part/duration p)
+                     distance (:part/distance p)
                      n (:part/number-of-movements p)
                      c (flatten (map vals (:part/category p)))
                      category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
                      movements (vec (get-movements n category-names))]
-                 (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/regular-movement p)))]
-                   {:title      name
-                    :categories category-names
-                    :movements  (concat regular-movements movements)}
-                   {:title      name
-                    :categories category-names
-                    :movements  movements}))))
+                 {:title      name
+                  :categories category-names
+                  :movements  (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/regular-movement p)))]
+                                (concat regular-movements movements)
+                                movements)
+                  :rep        rep
+                  :set        set
+                  :distance   distance
+                  :duration   duration})))
         ]
     (generate-response {:title       title
                         :description description

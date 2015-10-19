@@ -31,11 +31,15 @@
  {:db/id                    #db/id[:db.part/user -200]
   :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
-  :part/number-of-movements 5}
+  :part/number-of-movements 5
+  :part/rep 10
+  :part/set 1}
  {:db/id                    #db/id[:db.part/user -201]
   :part/title                "Strength"
   :part/category            [#db/id[:db.part/user -1]]
-  :part/number-of-movements 5}
+  :part/number-of-movements 4
+  :part/rep 10
+  :part/set 3}
 
  {:db/id                #db/id[:db.part/user -101]
   :template/title       "Bent Arm Strength"
@@ -49,7 +53,9 @@
  {:db/id                    #db/id[:db.part/user -203]
   :part/title                "Bent Arm Strength"
   :part/category            [#db/id[:db.part/user -3]]
-  :part/number-of-movements 4}
+  :part/number-of-movements 4
+  :part/rep 5
+  :part/set 3}
 
 
  {:db/id                #db/id[:db.part/user -102]
@@ -64,7 +70,9 @@
  {:db/id                    #db/id[:db.part/user -205]
   :part/title                "Straight Arm Scapular Strength"
   :part/category            [#db/id[:db.part/user -4]]
-  :part/number-of-movements 4}
+  :part/number-of-movements 4
+  :part/duration 10
+  :part/set 3}
 
  {:db/id                #db/id[:db.part/user -103]
   :template/title       "Mobility"
@@ -73,7 +81,9 @@
  {:db/id                    #db/id[:db.part/user -206]
   :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
-  :part/number-of-movements 12}
+  :part/number-of-movements 12
+  :part/duration 10
+  :part/set 1}
 
  {:db/id                #db/id[:db.part/user -104]
   :template/title       "Locomotion"
@@ -83,11 +93,15 @@
  {:db/id                    #db/id[:db.part/user -207]
   :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
-  :part/number-of-movements 6}
+  :part/number-of-movements 6
+  :part/rep 10
+  :part/set 1}
  {:db/id                    #db/id[:db.part/user -208]
   :part/title                "Locomotion: 4-6 rounds"
   :part/category            [#db/id[:db.part/user -5]]
-  :part/number-of-movements 6}
+  :part/number-of-movements 6
+  :part/distance 20
+  :part/set 1}
 
  {:db/id                #db/id[:db.part/user -105]
   :template/title       "Lower Body Strength"
@@ -98,17 +112,23 @@
  {:db/id                    #db/id[:db.part/user -209]
   :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
-  :part/number-of-movements 4}
+  :part/number-of-movements 4
+  :part/rep 10
+  :part/set 2}
  {:db/id                    #db/id[:db.part/user -210]
   :part/title                "Leg Strength"
   :part/category            [#db/id[:db.part/user -6]]
-  :part/number-of-movements 3}
+  :part/number-of-movements 3
+  :part/rep 5
+  :part/set 5}
  {:db/id                    #db/id[:db.part/user -211]
   :part/title                "Auxiliary"
   :part/category            [#db/id[:db.part/user -8]
                              #db/id[:db.part/user -9]
                              #db/id[:db.part/user -10]]
-  :part/number-of-movements 2}
+  :part/number-of-movements 2
+  :part/rep 10
+  :part/set 2}
 
 
  ;; needs update on categories
@@ -121,14 +141,20 @@
  {:db/id                    #db/id[:db.part/user -212]
   :part/title                "Mobility (3 rounds)"
   :part/category            [#db/id[:db.part/user -2]]
-  :part/number-of-movements 4}
+  :part/number-of-movements 4
+  :part/rep 10
+  :part/set 1}
  {:db/id                    #db/id[:db.part/user -213]
   :part/title                "Skill"
   :part/category            [#db/id[:db.part/user -1]]
-  :part/number-of-movements 1}
+  :part/number-of-movements 1
+  :part/rep 30
+  :part/set 1}
  {:db/id                    #db/id[:db.part/user -214]
   :part/title                "Combination (4 rounds)"
   :part/category            [#db/id[:db.part/user -1]]
-  :part/number-of-movements 5}
+  :part/number-of-movements 5
+  :part/rep 10
+  :part/set 1}
 
  ]

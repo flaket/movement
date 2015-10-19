@@ -150,50 +150,44 @@
         (session/assoc-in! [:logging-session :parts position-in-parts :movements] new-movements)))
     (print (session/get :logging-session))))
 
-(defn slider [target param value min max]
-  [:input {:type "range" :value value :min min :max max
-           :style {:width "100%"}
-           :on-change (fn [e]
-                        (swap! target assoc param (.-target.value e))
-                        #_(when (not= param :bmi)
-                          (swap! target assoc :bmi nil)))}])
-
 ;;;;;; Components ;;;;;;
 
-(defn movement-component []
-  (let [rep-text (atom "repetitions")
+(defn movement-component [{:keys [id category] :as m} {:keys [title rep set distance duration]}]
+  (let [rep-text (cycle ["repetitions" "meters" "seconds"])
+        rep-text (atom "repetitions")
         set-text (atom "set")
-        movement-data (atom {:rep 0
-                             :set 0
-                             :distance 0})
         show-rep-slider (atom false)
-        show-set-slider (atom false)]
-    (fn [{:keys [id category graphic animation equipment] :as m} part-title]
+        show-set-slider (atom false)
+        movement-data (atom {:rep      (if rep rep "-")
+                             :set      (if set set "-")
+                             :distance (if distance distance "-")
+                             :duration (if duration duration "-")})]
+    (fn []
       (let [name (:movement/name m)
             graphic (image-url name)]
         [:div.pure-u.movement {:id (str "m-" id)}
          [:div
-          [:div.refresh {:on-click #(refresh-movement m part-title) :title "Swap with another movement"}]
-          [:div.destroy {:on-click #(remove-movement m part-title) :title "Remove movement"}]]
+          [:div.refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]
+          [:div.destroy {:on-click #(remove-movement m title) :title "Remove movement"}]]
          [:h3.title name]
          #_[:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
          (let [txt @rep-text]
            (case txt
-             "repetitions" [:div.pure-g
-                            [:div.pure-u-1-2.rep {:on-click #(reset! show-rep-slider true)} (:rep @movement-data)]
-                            [:div.pure-u-1-2.rep-text {:on-click #(if (= txt "repetitions")
+             "repetitions" [:div
+                            [:div.rep {:on-click #(reset! show-rep-slider true)} (:rep @movement-data)]
+                            [:div.rep-text {:on-click #(if (= txt "repetitions")
                                                 (reset! rep-text "meters")
                                                 (reset! rep-text "repetitions"))
                                             :title    "Change between repetitions and distance"} txt]
                             (when @show-rep-slider
-                              [:div.pure-g
-                               [:input.pure-u {:type      "range" :value (:rep @movement-data) :min 1 :max 100
-                                :style     {:width "80%"}
+                              [:div
+                               [:input {:type      "range" :value (:rep @movement-data) :min 1 :max 100
+                                :style     {:width "100%"}
                                 :on-change #(swap! movement-data assoc :rep (.-target.value %))}]
                                [:div {:on-click #(reset! show-rep-slider false)} "x"]])]
-             "meters" [:div.pure-g
-                       [:div.pure-1-2.rep {:on-click #(reset! show-rep-slider true)} (:distance @movement-data)]
-                       [:div.pure-1-2.rep-text {:on-click #(if (= txt "repetitions")
+             "meters" [:div
+                       [:div.rep {:on-click #(reset! show-rep-slider true)} (:distance @movement-data)]
+                       [:div.rep-text {:on-click #(if (= txt "repetitions")
                                                    (reset! rep-text "meters")
                                                    (reset! rep-text "repetitions"))
                                                 :title "Change between repetitions and distance"} txt]
@@ -203,9 +197,9 @@
                                    :style     {:width "100%"}
                                    :on-change #(swap! movement-data assoc :distance (.-target.value %))}]
                           [:div {:on-click #(reset! show-rep-slider false)} "x"]])]))
-         [:div.pure-g
-          [:div.pure-u-1-2 {:on-click #(reset! show-set-slider true)} (:set @movement-data)]
-          [:div.pure-u-1-2 " set"]
+         [:div
+          [:div {:on-click #(reset! show-set-slider true)} (:set @movement-data)]
+          [:div "set"]
           (when @show-set-slider
             [:div
              [:input {:type      "range" :value (:set @movement-data) :min 1 :max 10
@@ -215,22 +209,15 @@
 
 (defn part-component []
   (let [show-search-input (atom false)]
-    (fn [{:keys [title categories movements]}]
+    (fn [{:keys [title movements] :as part}]
       [:div.part
        [:h2 title]
        [:div.pure-g
-        [:p.pure-u-1-2 [:a.secondary-button {:on-click #(add-movement title)} "+"]]
-        #_[:p.pure-u-1-2 [:a {:style    {:float "right"}
-                            :on-click #(reset! show-search-input true)} "Find movement"]]
-        #_[movements-ac-component
-         {:id      "mmtags"
-          :class   "edit" :placeholder "type to find and add movement.."
-          :on-save #(when (some #{%} (session/get :all-movements))
-                     nil #_(add-movement-from-search title %))}]]
+        [:p.pure-u-1-2 [:a.secondary-button {:on-click #(add-movement title)} "+"]]]
        [:div.pure-g
         (doall
           (for [m (vals movements)]
-            ^{:key (str m (rand-int 100000))} [movement-component m title]))]])))
+            ^{:key (str m (rand-int 100000))} [movement-component m part]))]])))
 
 (defn date-component []
   (let [date (js/Date.)
@@ -239,40 +226,14 @@
     (fn []
       [:div (str day "/" month)])))
 
-(defn session-component []
-  (let [adding-comment (atom false)]
-    (fn [{:keys [title description parts]}]
+(defn header-component []
+  (let []
+    (fn [{:keys [title description parts] :as m}]
       [:div
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5 [date-component]]
         [:h1.pure-u.pure-u-md-3-5 title]]
-       [:p.subtitle description]
-
-       (doall
-         (for [p parts]
-           ^{:key p} [part-component p]))
-       [:div.pure-g
-        [:p.pure-u [:a.secondary-button {:on-click #(handler-fn (reset! adding-comment true))} "Add comments"]]]
-       [:div.pure-g
-        (when @adding-comment [text-edit-component {:class   "pure-u edit"
-                                                    :on-save #(handler-fn (session/update-in! [:movement-session :comment] conj %))
-                                                    :on-stop #(handler-fn (reset! adding-comment false))
-                                                    :size    45}])]
-       (let [comments (session/get-in [:movement-session :comment])]
-         [:div.pure-u
-          (for [c comments]
-            ^{:key c} [:div.comment
-                       [:p (str c)]])])
-       [:div.pure-g
-        [:h3.pure-u [:div.pure-g [:a.pure-u.log-button {:on-click #(do
-                                                                    (store-rep-set-info)
-                                                                    (print (session/get :movement-session))
-                                                                    #_(POST "store-session"
-                                                                            {:params        {:session (session/get :movement-session)
-                                                                                             :user    (session/get :user)}
-                                                                             :handler       (fn [response] (print response))
-                                                                             :error-handler (fn [response] (print response))}))}
-                                  "Finish movement session"]]]]])))
+       [:p.subtitle description]])))
 
 
 (defn template-component []
@@ -326,14 +287,49 @@
          [:a.pure-u {:on-click #(do (set-element-values! "rep-select" 5)
                              (set-element-values! "set-select" 3))} "5*3"]]]])))
 
+(defn comment-component []
+  (let [adding-comment (atom false)]
+    (fn [comments]
+      [:div
+       [:div.pure-g
+        [:p.pure-u [:a.secondary-button {:on-click #(handler-fn (reset! adding-comment true))} "Add comments"]]]
+       [:div.pure-g
+        (when @adding-comment [text-edit-component {:class   "pure-u edit"
+                                                    :on-save #(handler-fn (session/update-in! [:movement-session :comment] conj %))
+                                                    :on-stop #(handler-fn (reset! adding-comment false))
+                                                    :size    45}])]
+       [:div.pure-u
+        (for [c comments]
+          ^{:key c} [:div.comment
+                     [:p (str c)]])]])))
+
+(defn finish-session-component []
+  (let []
+    (fn []
+      [:div.pure-g
+       [:h3.pure-u [:div.pure-g [:a.pure-u.log-button {:on-click #(do
+                                                                   (store-rep-set-info)
+                                                                   (print (session/get :movement-session))
+                                                                   #_(POST "store-session"
+                                                                           {:params        {:session (session/get :movement-session)
+                                                                                            :user    (session/get :user)}
+                                                                            :handler       (fn [response] (print response))
+                                                                            :error-handler (fn [response] (print response))}))}
+                                 "Finish movement session"]]]])))
+
 (defn generator-component []
   (let []
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content
-        (if (nil? (session/get :movement-session))
-          [blank-state-component]
+        (if-let [session (session/get :movement-session)]
           [:div
            [top-menu-component]
-           [session-component (session/get :movement-session)]])]])))
+           [header-component session]
+           (doall
+             (for [p (:parts session)]
+               ^{:key p} [part-component p]))
+           [comment-component (:comment session)]
+           [finish-session-component]]
+          [blank-state-component])]])))
