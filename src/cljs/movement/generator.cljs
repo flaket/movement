@@ -219,19 +219,14 @@
           (for [m (vals movements)]
             ^{:key (str m (rand-int 100000))} [movement-component m part]))]])))
 
-(defn date-component []
+(defn header-component []
   (let [date (js/Date.)
         day (.getDate date)
         month (.getMonth date)]
-    (fn []
-      [:div (str day "/" month)])))
-
-(defn header-component []
-  (let []
-    (fn [{:keys [title description parts] :as m}]
+    (fn [{:keys [title description]}]
       [:div
        [:div.pure-g
-        [:div.pure-u.pure-u-md-1-5 [date-component]]
+        [:div.pure-u.pure-u-md-1-5 (str day "/" month)]
         [:h1.pure-u.pure-u-md-3-5 title]]
        [:p.subtitle description]])))
 
@@ -239,53 +234,42 @@
 (defn template-component []
   (let []
     (fn [name]
-      [:li {:on-click #(create-session-from-template name)}
-       name])))
+      [:a.pure-u.secondary-button {:on-click #(create-session-from-template name)} name])))
 
 (defn blank-state-component []
-  (let []
+  (let [templates-showing? (atom false)]
     (fn []
       [:div.blank-state
        [:div.pure-g
         [:h1.pure-u "Let's create your next Movement Session"]]
-       [:div.pure-g.random-button
-        [:h3.pure-u [:a {:on-click pick-random-template} "Get inspired by a random movement session."]]]
-       [:div.pure-g.template-button
-        [:h3.pure-u [:a "Or generate a new session based on one of your "]
-         [:ul.templates
-          [:li
-           [:ul
-            (doall
-              (for [t (session/get :templates)]
-                ^{:key t} [template-component t]))]
-           "templates"]]]]])))
+       [:div.pure-g
+        [:h3.pure-u [:a.secondary-button {:on-click pick-random-template} "Get inspired by a random movement session."]]]
+       [:div.pure-g
+        [:h3.pure-u [:a.secondary-button {:on-click #(reset! templates-showing? true)} "Or generate a new session based on one of your templates"]]]
+       [:div.pure-g
+        (when @templates-showing?
+          (doall
+            (for [t (session/get :templates)]
+              ^{:key t} [template-component t])))]])))
+
+
 
 (defn top-menu-component []
-  (let []
+  (let [templates-showing? (atom false)]
     (fn []
-      [:div.pure-g
-       [:h3.pure-u.pure-u-md-1-4
-        [:div.pure-g
-         [:a.pure-u.secondary-button {:on-click pick-random-template} "New random session"]]]
-       [:h3.pure-u.pure-u-md-1-4
-        [:div.pure-g
-         [:a.pure-u.secondary-button "Select "
-          [:ul.templates
-           [:li
-            [:ul
-             (doall
-               (for [t (session/get :templates)]
-                 ^{:key t} [template-component t]))] "template"]]]]]
-       [:h3.pure-u.pure-u-md-2-4 "Set rep/set scheme for all movements "
-        [:div.pure-g
-         [:a.pure-u {:on-click #(do (set-element-values! "rep-select" 10)
-                             (set-element-values! "set-select" 3))} "10*3 "]
-         [:a.pure-u {:on-click #(do (set-element-values! "rep-select" 10)
-                             (set-element-values! "set-select" 1))} "10*1 "]
-         [:a.pure-u {:on-click #(do (set-element-values! "rep-select" 5)
-                             (set-element-values! "set-select" 1))} "5*1 "]
-         [:a.pure-u {:on-click #(do (set-element-values! "rep-select" 5)
-                             (set-element-values! "set-select" 3))} "5*3"]]]])))
+      [:div
+       [:div.pure-g
+        [:h3.pure-u.pure-u-md-1-4
+         [:div.pure-g
+          [:a.pure-u.secondary-button {:on-click pick-random-template} "Random session"]]]
+        [:h3.pure-u.pure-u-md-1-4
+         [:div.pure-g
+          [:a.pure-u.secondary-button {:on-click #(handler-fn (reset! templates-showing? (not @templates-showing?)))} "Select template"]]]]
+       [:div.pure-g
+        (when @templates-showing?
+          (doall
+            (for [t (session/get :templates)]
+              ^{:key t} [template-component t])))]])))
 
 (defn comment-component []
   (let [adding-comment (atom false)]
@@ -308,8 +292,9 @@
     (fn []
       [:div.pure-g
        [:h3.pure-u [:div.pure-g [:a.pure-u.log-button {:on-click #(do
-                                                                   (store-rep-set-info)
-                                                                   (print (session/get :movement-session))
+                                                                   #_(store-rep-set-info)
+                                                                   (print (vals (:movements (first (session/get-in [:movement-session :parts])))))
+                                                                   #_(print (session/get :movement-session))
                                                                    #_(POST "store-session"
                                                                            {:params        {:session (session/get :movement-session)
                                                                                             :user    (session/get :user)}
