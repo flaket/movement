@@ -7,7 +7,7 @@
     [reagent.core :refer [atom]]
     [goog.events :as events]
     [clojure.string :as str]
-    [movement.util :refer [GET POST]]
+    [movement.util :refer [GET POST get-stored-sessions]]
     [movement.text :refer [text-edit-component]]
     [movement.menu :refer [menu-component]]
     [movement.state :refer [movement-session handler-fn log-session]]))
@@ -230,11 +230,12 @@
   (let []
     (fn []
       [:div.pure-g
-       [:h3.pure-u [:div.pure-g [:a.pure-u.log-button {:on-click #(POST "store-session"
-                                                                   {:params        {:session (session/get :movement-session)
-                                                                                    :user    (session/get :user)}
-                                                                    :handler       (fn [response] (print response))
-                                                                    :error-handler (fn [response] (print response))})}
+       [:h3.pure-u [:div.pure-g [:a.pure-u.log-button {:on-click #(do
+                                                                   (POST "store-session"
+                                                                         {:params        {:session (session/get :movement-session)
+                                                                                          :user    (session/get :user)}
+                                                                          :handler       (fn [response] (get-stored-sessions))
+                                                                          :error-handler (fn [response] (print response))}))}
                                  "Finish movement session"]]]])))
 
 (defn generator-component []

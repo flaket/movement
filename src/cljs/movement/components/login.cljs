@@ -35,7 +35,7 @@
                        (reset! loading? true)
                        (POST "login" {:params          {:username @email
                                                         :password @password}
-                                      :handler         (fn [response] (do (println response)
+                                      :handler         (fn [response] (do
                                                                           (session/put! :token (:token response))
                                                                           (session/put! :user (:user response))
                                                                           (session/put! :m-counter (atom 0))
@@ -43,8 +43,7 @@
                                                                           (get-all-categories)
                                                                           (get-all-movements)
                                                                           (get-stored-sessions)
-                                                                          (dispatch! "/generator")
-                                                                          (print (session/get :user))))
+                                                                          (dispatch! "/generator")))
                                       :error-handler   (fn [response] (do
                                                                         (reset! loading? false)
                                                                         (reset! error (:message (:response response)))

@@ -49,9 +49,9 @@
 
 (defn get-stored-sessions []
   (if-let [user (session/get :user)]
-    (GET "stored-sessions" {:params        {:user user}
+    (GET "sessions" {:params        {:user user}
                             :handler       #(session/put! :stored-sessions %)
-                            :error-handler #(print (str "error retrieving stored sessions: " e))})
+                            :error-handler #(print (str "error retrieving stored sessions: " %))})
     (print "no user in session.")))
 
 (defn hook-browser-navigation! []

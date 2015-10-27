@@ -1,4 +1,5 @@
 (ns movement.handler
+  (:import java.util.Date)
   (:require [clojure.java.io :as io]
             [compojure.core :refer [GET POST ANY defroutes]]
             [compojure.route :refer [not-found resources]]
@@ -199,7 +200,8 @@
                        :session/name        title
                        :session/description description
                        :session/comment     (str/join (interpose " " comment))
-                       :session/part        (vec (map :db/id parts))}]
+                       :session/timestamp   (Date.)
+                       :session/part (vec (map :db/id parts))}]
         part-data (vec (for [p parts]
                          {:db/id                 (:db/id p)
                           :part/title            (:title p)
@@ -215,8 +217,8 @@
     (d/transact conn tx-data)))
 
 (defn store-session [req]
-  (let [session (:params req)
-        user (:user session)]
+  (let [session (:session (:params req))
+        user (:user (:params req))]
     (if (nil? user)
       (generate-response (str "User email lacking from client data. User not logged in?" " Session data: " session) 400)
       (do
@@ -226,15 +228,16 @@
       )))
 
 (defn retrieve-sessions [req]
-  (let [user (:user req)
-        sessions (flatten
-                   (d/q '[:find (pull ?s [*])
-                          :in $ ?mail
-                          :where
-                          [?m :user/email ?mail]
-                          [?m :user/session ?s]]
-                        db
-                        user))]
+  (let [db (d/db conn)
+        user (:user (:params req))
+        sessions (vec (flatten
+                        (d/q '[:find (pull ?s [*])
+                               :in $ ?mail
+                               :where
+                               [?m :user/email ?mail]
+                               [?m :user/session ?s]]
+                             db
+                             user)))]
     (generate-response sessions)))
 ;;;;;;;;;;;;;;;;;;;;;;
 
