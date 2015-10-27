@@ -3,7 +3,6 @@
   (:require-macros
     [cljs.core.async.macros :refer [go]])
   (:require
-    [cljs.core.async :as async :refer [>! <! put! take! alts! chan sliding-buffer close!]]
     [reagent.session :as session]
     [reagent.core :refer [atom]]
     [goog.events :as events]
@@ -21,14 +20,8 @@
 (defn positions
   "Finds the integer positions of the elements in the collection, that matches the predicate."
   [pred coll]
-  (keep-indexed
-    (fn [idx x]
-      (when (pred x)
-        idx))
-    coll))
-
-(defn update-session! [nav-list movement]
-  (session/update-in! nav-list conj (first movement)))
+  (keep-indexed (fn [idx x]
+                  (when (pred x) idx)) coll))
 
 (defn add-movement [part-title]
   (let [parts (session/get-in [:movement-session :parts])
@@ -78,18 +71,6 @@
         movements (dissoc movements (:id m))]
     (session/assoc-in! [:movement-session :parts position-in-parts :movements] movements)))
 
-(defn set-element-values!
-  [class value]
-  (let [elements (array-seq (.getElementsByClassName js/document class))]
-    (doseq [e elements]
-      (do (set! (.-value e) value)))))
-
-(defonce rep-atom (atom "-"))
-(defn set-movement-rep-text! [])
-(defn set-movement-set-text! [])
-(defn set-movement-rep! [])
-(defn set-movement-set! [])
-
 (defn list-to-sorted-map [list-of-movements]
   (let [movements (atom (sorted-map))]
     (doseq [m list-of-movements
@@ -116,96 +97,56 @@
   (let [name (first (shuffle (session/get :templates)))]
     (create-session-from-template name)))
 
-(defn store-rep-set-info []
-  ; go through every movement
-  ; look up the select's by id and get the values
-  ; add valyes to movement map
-  (let [parts (session/get-in [:movement-session :parts])]
-    (doseq [p parts]
-      (let [position-in-parts (first (positions #{(:title p)} (map :title parts)))
-            new-movements (mapv (fn [[_ m]]
-                                 (if-let [
-                                       rep-selector (.getElementById js/document (str "rep-" (:id m)))
-                                          ;set-selector (.getElementById js/document (str "set-" (:id m)))
-                                          ;distance-selector (.getElementById js/document (str "distance-" id))
-                                          ;duration-selector (.getElementById js/document (str "duration-" id))
-                                          ]
-                                   (try
-                                     (when (not (= "-" (.-value rep-selector)))
-                                       (assoc m :rep (.-value rep-selector)))
-                                     (catch js/Object e (str "caught exception: " (.log js/console e))))
-                                   #_(try
-                                     (when (not (= "-" (.-value set-selector)))
-                                       (assoc m :set (.-value set-selector)))
-                                     (catch js/Object e (str "caught exception: " (.log js/console e))))
-                                   #_(try
-                                     (when (not (= "-" (.-value distance-selector)))
-                                       (assoc m :distance (.-value distance-selector)))
-                                     (catch js/Object e (str "caught exception: " (.log js/console e))))
-                                   #_(try
-                                     (when (not (= "-" (.-value duration-selector)))
-                                       (assoc m :duration (.-value duration-selector)))
-                                     (catch js/Object e (str "caught exception: " (.log js/console e))))))
-                               (:movements p))]
-        (session/assoc-in! [:logging-session :parts position-in-parts :movements] new-movements)))
-    (print (session/get :logging-session))))
-
 ;;;;;; Components ;;;;;;
 
-(defn movement-component [{:keys [id category] :as m} {:keys [title rep set distance duration]}]
-  (let [rep-text (cycle ["repetitions" "meters" "seconds"])
-        rep-text (atom "repetitions")
-        set-text (atom "set")
-        show-rep-slider (atom false)
-        show-set-slider (atom false)
-        movement-data (atom {:rep      (if rep rep "-")
-                             :set      (if set set "-")
-                             :distance (if distance distance "-")
-                             :duration (if duration duration "-")})]
+(defn movement-component [{:keys [id category distance rep set duration] :as m} {:keys [title]}]
+  (let [name (:movement/name m)
+        graphic (image-url name)
+        parts (session/get-in [:movement-session :parts])
+        position-in-parts (first (positions #{title} (map :title parts)))]
     (fn []
-      (let [name (:movement/name m)
-            graphic (image-url name)]
-        [:div.pure-u.movement {:id (str "m-" id)}
-         [:div
-          [:div.refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]
-          [:div.destroy {:on-click #(remove-movement m title) :title "Remove movement"}]]
-         [:h3.title name]
-         #_[:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
-         (let [txt @rep-text]
-           (case txt
-             "repetitions" [:div
-                            [:div.rep {:on-click #(reset! show-rep-slider true)} (:rep @movement-data)]
-                            [:div.rep-text {:on-click #(if (= txt "repetitions")
-                                                (reset! rep-text "meters")
-                                                (reset! rep-text "repetitions"))
-                                            :title    "Change between repetitions and distance"} txt]
-                            (when @show-rep-slider
-                              [:div
-                               [:input {:type      "range" :value (:rep @movement-data) :min 1 :max 100
-                                :style     {:width "100%"}
-                                :on-change #(swap! movement-data assoc :rep (.-target.value %))}]
-                               [:div {:on-click #(reset! show-rep-slider false)} "x"]])]
-             "meters" [:div
-                       [:div.rep {:on-click #(reset! show-rep-slider true)} (:distance @movement-data)]
-                       [:div.rep-text {:on-click #(if (= txt "repetitions")
-                                                   (reset! rep-text "meters")
-                                                   (reset! rep-text "repetitions"))
-                                                :title "Change between repetitions and distance"} txt]
-                       (when @show-rep-slider
-                         [:div
-                          [:input {:type      "range" :value (:distance @movement-data) :min 1 :max 400
-                                   :style     {:width "100%"}
-                                   :on-change #(swap! movement-data assoc :distance (.-target.value %))}]
-                          [:div {:on-click #(reset! show-rep-slider false)} "x"]])]))
-         [:div
-          [:div {:on-click #(reset! show-set-slider true)} (:set @movement-data)]
-          [:div "set"]
-          (when @show-set-slider
-            [:div
-             [:input {:type      "range" :value (:set @movement-data) :min 1 :max 10
-                      :style     {:width "100%"}
-                      :on-change #(swap! movement-data assoc :set (.-target.value %))}]
-             [:div {:on-click #(reset! show-set-slider false)} "x"]])]]))))
+      [:div.pure-u.movement {:id (str "m-" id)}
+       [:div.pure-g
+        [:div.pure-u.refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]
+        [:div.pure-u.destroy {:on-click #(remove-movement m title) :title "Remove movement"}]
+        [:h3.pure-u.title name]]
+       [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
+       [:div.pure-g
+        [:div.pure-u rep]
+        [:div.pure-u "reps"]
+        [:div.pure-u
+         {:on-click #(session/update-in!
+                      [:movement-session :parts position-in-parts :movements id :rep] inc)} "+"]
+        [:div.pure-u
+         {:on-click #(session/update-in!
+                      [:movement-session :parts position-in-parts :movements id :rep] dec)} "-"]]
+       [:div.pure-g
+        [:div.pure-u set]
+        [:div.pure-u "set"]
+        [:div.pure-u
+         {:on-click #(session/update-in!
+                      [:movement-session :parts position-in-parts :movements id :set] inc)} "+"]
+        [:div.pure-u
+         {:on-click #(session/update-in!
+                      [:movement-session :parts position-in-parts :movements id :set] dec)} "-"]]
+       [:div.pure-g
+        [:div.pure-u distance]
+        [:div.pure-u "meters"]
+        [:div.pure-u
+         {:on-click #(session/update-in!
+                      [:movement-session :parts position-in-parts :movements id :distance] (fn [e] (+ e 5)))} "+"]
+        [:div.pure-u
+         {:on-click #(session/update-in!
+                      [:movement-session :parts position-in-parts :movements id :distance] (fn [e] (- e 5)))} "-"]]
+       [:div.pure-g
+        [:div.pure-u duration]
+        [:div.pure-u "seconds"]
+        [:div.pure-u
+         {:on-click #(session/update-in!
+                      [:movement-session :parts position-in-parts :movements id :duration] (fn [e] (+ e 10)))} "+"]
+        [:div.pure-u
+         {:on-click #(session/update-in!
+                      [:movement-session :parts position-in-parts :movements id :duration] (fn [e] (- e 10)))} "-"]]])))
 
 (defn part-component []
   (let [show-search-input (atom false)]
@@ -252,8 +193,6 @@
             (for [t (session/get :templates)]
               ^{:key t} [template-component t])))]])))
 
-
-
 (defn top-menu-component []
   (let [templates-showing? (atom false)]
     (fn []
@@ -291,15 +230,11 @@
   (let []
     (fn []
       [:div.pure-g
-       [:h3.pure-u [:div.pure-g [:a.pure-u.log-button {:on-click #(do
-                                                                   #_(store-rep-set-info)
-                                                                   (print (vals (:movements (first (session/get-in [:movement-session :parts])))))
-                                                                   #_(print (session/get :movement-session))
-                                                                   #_(POST "store-session"
-                                                                           {:params        {:session (session/get :movement-session)
-                                                                                            :user    (session/get :user)}
-                                                                            :handler       (fn [response] (print response))
-                                                                            :error-handler (fn [response] (print response))}))}
+       [:h3.pure-u [:div.pure-g [:a.pure-u.log-button {:on-click #(POST "store-session"
+                                                                   {:params        {:session (session/get :movement-session)
+                                                                                    :user    (session/get :user)}
+                                                                    :handler       (fn [response] (print response))
+                                                                    :error-handler (fn [response] (print response))})}
                                  "Finish movement session"]]]])))
 
 (defn generator-component []

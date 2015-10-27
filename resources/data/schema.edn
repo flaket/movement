@@ -157,6 +157,14 @@
   :db/doc                "Optionally the duration for each movement can be given"
   :db.install/_attribute :db.part/db}
 
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/session-movement
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A stored session has parts with movements"
+  :db.install/_attribute :db.part/db}
+
  ;; category
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :category/name
@@ -225,6 +233,14 @@
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
   :db/doc                "A movement used in a session may be stored with distance information"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/position-in-part
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement used in a session may be stored with a positional number used in future rendering"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]

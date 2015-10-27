@@ -56,5 +56,9 @@
        [menu-component]
        [:div.content
         [:h3 (str "Welcome " (session/get :user))]
-        [:div
+        [:div.pure-g
+         (doall
+           (for [s (session/get :stored-sessions)]
+             ^{:key s} [:div.pure-u (str s)]))]
+        #_[:div
          [change-password]]]])))

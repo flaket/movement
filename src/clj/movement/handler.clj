@@ -17,6 +17,7 @@
             [environ.core :refer [env]]
             [datomic.api :as d]
             [clojure.string :as str]
+            [clojure.set :refer [rename-keys]]
             [clj-time.core :as time :refer [from-now hours]]
             [buddy.sign.jws :as jws]
             [buddy.auth :refer [authenticated? throw-unauthorized]]
@@ -26,7 +27,7 @@
             [movement.db]
             [buddy.hashers :as hashers]))
 
-(def uri "datomic:dev://localhost:4334/movement11")
+(def uri "datomic:dev://localhost:4334/movement13")
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/set-resource-path!  (clojure.java.io/resource "templates"))
@@ -63,13 +64,15 @@
   (let [movement (d/pull db '[*] [:movement/name name])]
     movement))
 
-(defn get-movements [n categories]
+(defn get-movements
+  [n categories d]
   "Get n random movement entities drawn from param list of categories."
   (let [movements (for [c categories]
                     (d/q '[:find (pull ?m [*]) :in $ ?cat
                            :where [?c :category/name ?cat] [?m :movement/category ?c]]
                          db c))
-        m (->> movements flatten set shuffle (take n))]
+        m (->> movements flatten set shuffle (take n))
+        m (map #(assoc % :rep (:rep d) :set (:set d) :distance (:distance d) :duration (:duration d)) m)]
     m))
 
 (defn all-template-titles [email]
@@ -99,24 +102,18 @@
         parts
         (vec (for [p part-entities]
                (let [name (:part/title p)
-                     rep (:part/rep p)
-                     set (:part/set p)
-                     duration (:part/duration p)
-                     distance (:part/distance p)
                      n (:part/number-of-movements p)
                      c (flatten (map vals (:part/category p)))
                      category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                     movements (vec (get-movements n category-names))]
+                     movements (vec (get-movements n category-names {:rep (:part/rep p)
+                                                                     :set (:part/set p)
+                                                                     :distance (:part/distance p)
+                                                                     :duration (:part/duration p)}))]
                  {:title      name
                   :categories category-names
                   :movements  (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/regular-movement p)))]
                                 (concat regular-movements movements)
-                                movements)
-                  :rep        rep
-                  :set        set
-                  :distance   distance
-                  :duration   duration})))
-        ]
+                                movements)})))]
     (generate-response {:title       title
                         :description description
                         :parts       parts})))
@@ -158,7 +155,7 @@
                               pid (get part-temp-ids i)
                               rid (get regular-movement-temp-ids i)]]
                     {:db/id                    pid
-                     :part/name                (:title p)
+                     :part/title                (:title p)
                      :part/category            (vec cid)
                      :part/number-of-movements (:n p)
                      :part/regular-movement    (vec rid)
@@ -188,8 +185,34 @@
           (generate-response "New template stored successfully."))
         (generate-response "You already have a template with this title. Choose a unique title for your template." 400)))))
 
-(defn add-session! [user session]
-  )
+(defn add-session! [user {:keys [title description parts comment]}]
+  (let [parts (map #(assoc % :movements (vals (:movements %))
+                             :db/id (d/tempid :db.part/user)) parts)
+        parts (map
+                #(assoc %
+                  :movements (map
+                               (fn [e] (assoc e :db/id (d/tempid :db.part/user))) (:movements %))) parts)
+        session-data [{:db/id        #db/id[:db.part/user]
+                       :user/email   user
+                       :user/session [#db/id[:db.part/user -100]]}
+                      {:db/id               #db/id[:db.part/user -100]
+                       :session/name        title
+                       :session/description description
+                       :session/comment     (str/join (interpose " " comment))
+                       :session/part        (vec (map :db/id parts))}]
+        part-data (vec (for [p parts]
+                         {:db/id                 (:db/id p)
+                          :part/title            (:title p)
+                          :part/session-movement (vec (map :db/id (:movements p)))}))
+        movement-data (vec (flatten (for [p parts]
+                                      (for [m (:movements p)]
+                                        (apply dissoc m (for [[k v] m :when (nil? v)] k))))))
+        movement-data (map #(rename-keys % {:rep :movement/rep :set :movement/set
+                                            :distance :movement/distance :duration :movement/duration
+                                            :id :movement/position-in-part})
+                           movement-data)
+        tx-data (concat session-data part-data movement-data)]
+    (d/transact conn tx-data)))
 
 (defn store-session [req]
   (let [session (:params req)
@@ -199,8 +222,20 @@
       (do
         ; add session
         (add-session! user session)
-        (generate-response "Session stored successfully."))
+        (generate-response (:session session) #_(:message "Session stored successfully.")))
       )))
+
+(defn retrieve-sessions [req]
+  (let [user (:user req)
+        sessions (flatten
+                   (d/q '[:find (pull ?s [*])
+                          :in $ ?mail
+                          :where
+                          [?m :user/email ?mail]
+                          [?m :user/session ?s]]
+                        db
+                        user))]
+    (generate-response sessions)))
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defn find-user [email]
@@ -255,6 +290,9 @@
            (POST "/template" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (store-new-template req)))
+           (GET "/sessions" req (if-not (authenticated? req)
+                                  (throw-unauthorized)
+                                  (retrieve-sessions req)))
            (GET "/template" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (let [template-name (:template-name (:params req))
@@ -273,7 +311,7 @@
              (let [categories (vec (vals (:categories (:params req))))]
                (if-not (authenticated? req)
                  (throw-unauthorized)
-                 (generate-response (get-movements 1 categories)))))
+                 (generate-response (get-movements 1 categories {})))))
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
                                     (all-category-names)))

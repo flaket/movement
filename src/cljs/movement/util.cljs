@@ -36,16 +36,23 @@
   (if-let [user (session/get :user)]
     (GET "templates" {:params        {:user user}
                       :handler       #(session/put! :templates %)
-                      :error-handler #(print "error retrieving templates.")})
+                      :error-handler #(print (str "error retrieving templates: " %))})
     (print "no user in session.")))
 
 (defn get-all-categories []
   (GET "categories" {:handler       #(session/put! :all-categories %)
-                     :error-handler #(print "error retrieving categories.")}))
+                     :error-handler #(print (str "error retrieving categories: " %))}))
 
 (defn get-all-movements []
   (GET "movements" {:handler       #(session/put! :all-movements %)
-                    :error-handler #(print "error retrieving movements.")}))
+                    :error-handler #(print (str "error retrieving movements: " %))}))
+
+(defn get-stored-sessions []
+  (if-let [user (session/get :user)]
+    (GET "stored-sessions" {:params        {:user user}
+                            :handler       #(session/put! :stored-sessions %)
+                            :error-handler #(print (str "error retrieving stored sessions: " e))})
+    (print "no user in session.")))
 
 (defn hook-browser-navigation! []
   (doto (History.)

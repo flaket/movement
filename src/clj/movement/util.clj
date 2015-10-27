@@ -3,10 +3,12 @@
             [clojure.java.io :as io]
             [clojure.edn :as edn]
             [clojure.pprint :as pp]
-            [buddy.hashers :as hashers])
+            [buddy.hashers :as hashers]
+            [clojure.string :as str]
+            [clojure.set :refer [rename-keys]])
   (:import datomic.Util))
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement11")
+(def uri "datomic:dev://localhost:4334/movement13")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -57,22 +59,72 @@
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn retrieve-sessions [user]
+  (flatten
+    (d/q '[:find (pull ?s [*])
+                  :in $ ?mail
+                  :where
+                  [?m :user/email ?mail]
+                  [?m :user/session ?s]]
+                db
+                user)))
 
-(defn add-session! [user session]
-  )
-
-
-(d/q '[:find [?n ...]
+(d/q '[:find (pull ?s [:session/name])
+       :in $ ?mail
        :where
-       [_ :category/name ?n]]
-     db)
+       [?m :user/email ?mail]
+       [?m :user/session ?s]]
+     db
+     "admin@movementsession.com")
 
-(def bobs-template {:title "Boborama"
-                    :description "!"
-                    :parts [{:title "Babb"
-                             :categories ["Strength"]
-                             :n 1
-                             :regular-movements ["Squat"]}]})
+(def ex-session {:description "Time to jump and climb!"
+                 :parts       [{:title      "Warmup"
+                                :movements  {5 {:rep                nil
+                                                :duration           60
+                                                :id                 5
+                                                :distance nil
+                                                :movement/name      "Jump Rope"
+                                                :set                5}}}
+                               {:title      "Climbing"
+                                :movements  {9 {:rep               10
+                                                :duration          nil
+                                                :id                9
+                                                :distance          nil
+                                                :movement/name     "Pull Up Reach"
+                                                :set               3}}}]
+                 :title       "Climbing"
+                 :comment ["I'm really starting to like the pull up reach exercise."]})
+
+(def ex-user "admin@movementsession.com")
+
+(defn add-session! [user {:keys [title description parts comment] :as session}]
+  (let [parts (map #(assoc % :movements (vals (:movements %))
+                             :db/id (d/tempid :db.part/user)) parts)
+        parts (map
+                #(assoc %
+                  :movements (map
+                               (fn [e] (assoc e :db/id (d/tempid :db.part/user))) (:movements %))) parts)
+        session-data [{:db/id        #db/id[:db.part/user]
+                       :user/email   user
+                       :user/session [#db/id[:db.part/user -100]]}
+                      {:db/id               #db/id[:db.part/user -100]
+                       :session/name        title
+                       :session/description description
+                       :session/comment     (str/join (interpose " " comment))
+                       :session/part        (vec (map :db/id parts))}]
+        part-data (vec (for [p parts]
+                         {:db/id                 (:db/id p)
+                          :part/title            (:title p)
+                          :part/session-movement (vec (map :db/id (:movements p)))}))
+        movement-data (vec (flatten (for [p parts]
+                                      (for [m (:movements p)]
+                                        (apply dissoc m (for [[k v] m :when (nil? v)] k))))))
+        movement-data (map #(rename-keys % {:rep :movement/rep :set :movement/set
+                                           :distance :movement/distance :duration :movement/duration
+                                            :id :movement/position-in-part})
+                           movement-data)
+        tx-data (concat session-data part-data movement-data)]
+    (d/transact conn tx-data)))
 
 (defn add-template! [user template]
   (let [title (:title template)
@@ -98,7 +150,7 @@
                               pid (get part-temp-ids i)
                               rid (get regular-movement-temp-ids i)]]
                     {:db/id                    pid
-                     :part/name                (:title p)
+                     :part/title                (:title p)
                      :part/category            (vec cid)
                      :part/number-of-movements (:n p)
                      :part/regular-movement    (vec rid)
@@ -168,12 +220,11 @@
      db)
 
 
-(d/q '[:find (pull ?m [{:user/template
-                        [:template/title]}])
-       :in $ ?cat
-       :where [?m :user/email ?cat]]
+(d/q '[:find (pull ?p [*])
+       :in $ ?mail
+       :where [?m :user/email ?mail] [?m :user/template ?t] [?t :template/part ?p]]
      db
-     "bob@bob.com")
+     "admin@movementsession.com")
 
 (d/q '[:find (pull ?m [{:user/template
                         [:template/title]}])

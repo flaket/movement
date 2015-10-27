@@ -1,7 +1,8 @@
 (ns movement.components.login
   (:require [reagent.core :refer [atom]]
             [reagent.session :as session]
-            [movement.util :refer [GET POST text-input get-all-movements get-templates get-all-categories]]
+            [movement.util :refer [GET POST text-input get-all-movements
+                                   get-stored-sessions get-templates get-all-categories]]
             [secretary.core :include-macros true :refer [dispatch!]]
             [reagent.session :as session]
 
@@ -37,11 +38,11 @@
                                       :handler         (fn [response] (do (println response)
                                                                           (session/put! :token (:token response))
                                                                           (session/put! :user (:user response))
-                                                                          (session/put! :logged-sessions [])
                                                                           (session/put! :m-counter (atom 0))
                                                                           (get-templates)
                                                                           (get-all-categories)
                                                                           (get-all-movements)
+                                                                          (get-stored-sessions)
                                                                           (dispatch! "/generator")
                                                                           (print (session/get :user))))
                                       :error-handler   (fn [response] (do
