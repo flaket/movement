@@ -42,7 +42,7 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (set-page! #'generator-component)
+  (set-page! #'home)
 
   (.initializeTouchEvents js/React true)
   (mount-root))

@@ -1,6 +1,21 @@
 (ns movement.components.signup
   (:require [reagent.core :refer [atom]]
-            [movement.util :refer [POST text-input]]))
+            [movement.util :refer [POST text-input get-templates get-all-categories get-all-movements]]
+            [reagent.session :as session]
+            [secretary.core :include-macros true :refer [dispatch!]]))
+
+(defn login-after-signup [email password]
+  (POST "login" {:params        {:username email
+                                  :password password}
+                  :handler       (fn [response] (do
+                                                  (session/put! :token (:token response))
+                                                  (session/put! :user (:user response))
+                                                  (session/put! :m-counter (atom 0))
+                                                  (get-templates)
+                                                  (get-all-categories)
+                                                  (get-all-movements)
+                                                  (dispatch! "/generator")))
+                  :error-handler (fn [response] (println (str "error! " response)))}))
 
 (defn sign-up []
   (let [email (atom "")
@@ -22,15 +37,10 @@
        (when-let [e @error]
          [:div.notice e])
        [:button.pure-button {:class    (when @loading? "disabled")
-                                 :on-click #(if-not (and (seq @email) (seq @password))
-                                             (reset! error "Both fields are required.")
-                                             (POST "signup" {:format          :edn
-                                                            :response-format :edn
-                                                            :params          {:username @email
-                                                                              :password @password}
-                                                            :handler         (fn [response] (do (println response)
-                                                                                                #_(session/put! :user-logged-in? true)
-                                                                                                #_(get-templates)
-                                                                                                #_(dispatch! "/generator")))
-                                                            :error-handler   (fn [response] (println (str "error! " response)))}))}
+                             :on-click #(if-not (and (seq @email) (seq @password))
+                                         (reset! error "Both fields are required.")
+                                         (POST "signup" {:params        {:username @email
+                                                                         :password @password}
+                                                         :handler       (fn [response] (login-after-signup @email @password))
+                                                         :error-handler (fn [response] (println (str "error! " response)))}))}
         (if @loading? "Signing up..." "Sign Up Free")]])))

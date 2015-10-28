@@ -285,7 +285,7 @@
            (GET "/" [] (render-file "app.html" {:dev (env :dev?)
                                                 :csrf-token *anti-forgery-token*}))
            (POST "/login" [username password] (jws-login username password))
-           (POST "/signup" [username password] (add-user! username password))
+           (POST "/signup" [username password](add-user! username password))
 
            (POST "/store-session" req (if-not (authenticated? req)
                                         (throw-unauthorized)
