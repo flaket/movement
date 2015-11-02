@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 ;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement13")
+(def uri "datomic:dev://localhost:4334/movement14")
 #_(d/delete-database uri)
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -17,9 +17,11 @@
 (let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
 
+(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
+  (d/transact conn templates-tx))
+
 (let [
       climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
-      templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))
       crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
       jumping-tx (first (Util/readAll (io/reader (io/resource "data/movements/jumping.edn"))))
       lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
@@ -39,7 +41,6 @@
       ]
   (do
     (d/transact conn climbing-tx)
-    (d/transact conn templates-tx)
     (d/transact conn acrobatics-tx)
     (d/transact conn pulling-tx)
     (d/transact conn pushing-tx)
@@ -72,11 +73,11 @@
                         user))]
     sessions))
 
-(d/q '[:find (pull ?s [:session/name])
+(d/q '[:find (pull ?s [:template/title])
        :in $ ?mail
        :where
        [?m :user/email ?mail]
-       [?m :user/session ?s]]
+       [?m :user/template ?s]]
      db
      "admin@movementsession.com")
 
@@ -135,10 +136,10 @@
         description (:description template)
         parts (:parts template)
         categories (vec (flatten (for [p parts] (for [c (:categories p)] c))))
-        regular-movements (vec (flatten (for [p parts] (for [c (:regular-movements p)] c))))
+        regular-movements (vec (flatten (for [p parts] (for [c (:specific-movements p)] c))))
         part-temp-ids (vec (for [p parts] (d/tempid :db.part/user)))
         category-temp-ids (vec (for [p parts] (for [c (:categories p)] (d/tempid :db.part/user))))
-        regular-movement-temp-ids (vec (for [p parts] (for [c (:regular-movements p)] (d/tempid :db.part/user))))
+        regular-movement-temp-ids (vec (for [p parts] (for [c (:specific-movements p)] (d/tempid :db.part/user))))
         flat-category-temp-ids (vec (flatten category-temp-ids))
         flat-regular-movement-temp-ids (vec (flatten regular-movement-temp-ids))
         user-template-data [{:db/id         #db/id[:db.part/user]

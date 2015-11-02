@@ -5,7 +5,6 @@
                                    get-stored-sessions get-templates get-all-categories]]
             [secretary.core :include-macros true :refer [dispatch!]]
             [reagent.session :as session]
-
             [ajax.edn :refer [edn-request-format edn-response-format]]))
 
 (defn login []

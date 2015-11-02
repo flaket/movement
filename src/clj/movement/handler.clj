@@ -28,7 +28,7 @@
             [movement.db]
             [buddy.hashers :as hashers]))
 
-(def uri "datomic:dev://localhost:4334/movement13")
+(def uri "datomic:dev://localhost:4334/movement14")
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/set-resource-path!  (clojure.java.io/resource "templates"))
@@ -50,14 +50,15 @@
   "Returns the names of all categories in the database."
   (let [categories (d/q '[:find [?n ...]
                           :where
-                         [_ :category/name ?n]]
-                       db)
-        categories (into {}
-                         (d/q '[:find ?name (count ?m)
-                                :where
-                                [?cat :category/name ?name]
-                                [?m :movement/category ?cat]]
-                              db))]
+                          [_ :category/name ?n]]
+                        db)
+        ;categories
+        #_(into {}
+              (d/q '[:find ?name (count ?m)
+                     :where
+                     [?cat :category/name ?name]
+                     [?m :movement/category ?cat]]
+                   db))]
     (generate-response categories)))
 
 (defn movement [name]
@@ -137,10 +138,10 @@
         description (:description template)
         parts (:parts template)
         categories (vec (flatten (for [p parts] (for [c (:categories p)] c))))
-        regular-movements (vec (flatten (for [p parts] (for [c (:regular-movements p)] c))))
+        regular-movements (vec (flatten (for [p parts] (for [c (:specific-movements p)] c))))
         part-temp-ids (vec (for [p parts] (d/tempid :db.part/user)))
         category-temp-ids (vec (for [p parts] (for [c (:categories p)] (d/tempid :db.part/user))))
-        regular-movement-temp-ids (vec (for [p parts] (for [c (:regular-movements p)] (d/tempid :db.part/user))))
+        regular-movement-temp-ids (vec (for [p parts] (for [c (:specific-movements p)] (d/tempid :db.part/user))))
         flat-category-temp-ids (vec (flatten category-temp-ids))
         flat-regular-movement-temp-ids (vec (flatten regular-movement-temp-ids))
         user-template-data [{:db/id         #db/id[:db.part/user]

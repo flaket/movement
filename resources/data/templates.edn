@@ -11,6 +11,14 @@
  {:db/id #db/id[:db.part/user -8] :category/name "Core Strength"}
  {:db/id #db/id[:db.part/user -9] :category/name "Abdominal Strength"}
  {:db/id #db/id[:db.part/user -10] :category/name "Lower Back Strength"}
+ {:db/id #db/id[:db.part/user -11] :category/name "Bodyweight"}
+
+ {:db/id #db/id[:db.part/user -12] :category/name "Jumping"}
+ {:db/id #db/id[:db.part/user -13] :category/name "Crawling"}
+ {:db/id #db/id[:db.part/user -14] :category/name "Lifting"}
+ {:db/id #db/id[:db.part/user -15] :category/name "Rolling"}
+
+ {:db/id #db/id[:db.part/user -16] :category/name "Walking"}
 
  {:db/id #db/id[:db.part/user -1000]
   :user/email "admin@movementsession.com"
@@ -20,7 +28,9 @@
                   #db/id[:db.part/user -103]
                   #db/id[:db.part/user -104]
                   #db/id[:db.part/user -105]
-                  #db/id[:db.part/user -106]]}
+                  #db/id[:db.part/user -106]
+                  #db/id[:db.part/user -107]
+                  #db/id[:db.part/user -108]]}
 
  ;; templates
  {:db/id                #db/id[:db.part/user -100]
@@ -87,7 +97,10 @@
 
  {:db/id                #db/id[:db.part/user -104]
   :template/title       "Locomotion"
-  :template/description "Warm up with mobility work. Then go through the locomotion movements for 4-6 rounds, with minimal rest."
+  :template/description "We're going to practice new ways of moving across the floor.
+                         Warm up well with some mobility work.
+                         Then go through the locomotion movements for 4-6 rounds. Try to keep a smooth and even tempo and
+                          use minimal rest between each movement."
   :template/part        [#db/id[:db.part/user -207]
                          #db/id[:db.part/user -208]]}
  {:db/id                    #db/id[:db.part/user -207]
@@ -97,11 +110,13 @@
   :part/rep 10
   :part/set 1}
  {:db/id                    #db/id[:db.part/user -208]
-  :part/title                "Locomotion: 4-6 rounds"
-  :part/category            [#db/id[:db.part/user -5]]
+  :part/title                "Locomotion (4-6 rounds)"
+  :part/category            [#db/id[:db.part/user -13]
+                             #db/id[:db.part/user -15]
+                             #db/id[:db.part/user -16]]
   :part/number-of-movements 6
   :part/distance 20
-  :part/set 1}
+  :part/set 5}
 
  {:db/id                #db/id[:db.part/user -105]
   :template/title       "Lower Body Strength"
@@ -130,31 +145,78 @@
   :part/rep 10
   :part/set 2}
 
-
- ;; needs update on categories
  {:db/id                #db/id[:db.part/user -106]
   :template/title       "Natural Movement"
-  :template/description ""
+  :template/description "Bodyweight movements in three parts. Go through the warmup and combination parts doing
+                         10 reps of each movement before moving on to the next one. Complete all rounds without
+                         rest. Focus on quality over speed. The movement skill should be practiced mindfully."
   :template/part        [#db/id[:db.part/user -212]
                          #db/id[:db.part/user -213]
                          #db/id[:db.part/user -214]]}
  {:db/id                    #db/id[:db.part/user -212]
-  :part/title                "Mobility (3 rounds)"
+  :part/title                "Warmup/Mobility (3 rounds)"
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 4
   :part/rep 10
-  :part/set 1}
+  :part/set 3}
  {:db/id                    #db/id[:db.part/user -213]
   :part/title                "Skill"
-  :part/category            [#db/id[:db.part/user -1]]
+  :part/category            [#db/id[:db.part/user -11]]
   :part/number-of-movements 1
   :part/rep 30
   :part/set 1}
  {:db/id                    #db/id[:db.part/user -214]
-  :part/title                "Combination (4 rounds)"
-  :part/category            [#db/id[:db.part/user -1]]
+  :part/title                "Combination (3-5 rounds)"
+  :part/category            [#db/id[:db.part/user -11]
+                             #db/id[:db.part/user -12]
+                             #db/id[:db.part/user -13]
+                             #db/id[:db.part/user -14]
+                             #db/id[:db.part/user -15]]
   :part/number-of-movements 5
   :part/rep 10
-  :part/set 1}
+  :part/set 4}
+
+ {:db/id                #db/id[:db.part/user -107]
+  :template/title       "15-12-9"
+  :template/description "Complete 3 rounds as quickly as possible. 15 repetitions on the first round, then 12 on the second
+                         and 9 on the third. Time yourself."
+  :template/part        [#db/id[:db.part/user -215]
+                         #db/id[:db.part/user -216]]}
+ {:db/id                    #db/id[:db.part/user -215]
+  :part/title                "Warmup/Mobility"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 4
+  :part/rep 10
+  :part/set 2}
+ {:db/id                    #db/id[:db.part/user -216]
+  :part/title                "15-12-9 (3 rounds)"
+  :part/category            [#db/id[:db.part/user -1]]
+  :part/number-of-movements 2
+  :part/rep 36}
+
+
+ {:db/id             #db/id[:db.part/user -3000]
+  :movement/name     "Pull Up"}
+ {:db/id             #db/id[:db.part/user -3001]
+  :movement/name     "Deadlift"}
+
+
+ {:db/id                #db/id[:db.part/user -108]
+  :template/title       "21-15-9 Pull Up / Deadlift"
+  :template/description "Complete 3 rounds as quickly as possible. 15 repetitions on the first round, then 12 on the second and 9 on the third. Time yourself."
+  :template/part        [#db/id[:db.part/user -217]
+                         #db/id[:db.part/user -218]]}
+ {:db/id                    #db/id[:db.part/user -217]
+  :part/title                "Warmup/Mobility"
+  :part/category            [#db/id[:db.part/user -2]]
+  :part/number-of-movements 4
+  :part/rep 10
+  :part/set 2}
+ {:db/id                    #db/id[:db.part/user -218]
+  :part/title                "21-15-9 (3 rounds)"
+  :part/category            [#db/id[:db.part/user -1]]
+  :part/specific-movement [#db/id[:db.part/user -3000]
+                          #db/id[:db.part/user -3001]]
+  :part/rep 45}
 
  ]
