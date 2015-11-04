@@ -11,24 +11,64 @@
 
 (def template-state (atom {:parts []}))
 
-(defn movement-component [title image]
-  [:div.pure-u.movement
+(defn preview-file []
+  (let [file (.getElementById js/document "upload")
+        reader (js/FileReader.)]
+    (when-let [file (aget (.-files file) 0)]
+      (set! (.-onloadend reader) #(swap! template-state assoc :background (-> % .-target .-result)))
+      (.readAsDataURL reader file))))
+
+(defn movement-component
+  ([data title image] (movement-component data title image nil))
+  ([{:keys [reps sets distance duration i]} title image m]
+    [:div.pure-u.movement
+     [:div.pure-g
+      [:div.pure-u.refresh {:on-click #()}]
+      [:h3.pure-u.title title]
+      [:div.pure-u.destroy {:on-click #(when (and (not (nil? m)) (not (nil? i)))
+                                        (let [movements (vec (remove #{m} (get-in @template-state [:parts i :specific-movements])))]
+                                          (swap! template-state assoc-in [:parts i :specific-movements] movements)))}]]
+     [:img.graphic.pure-img-responsive {:src image}]
+     [:div.pure-g
+      [:div.pure-u-1-4 reps]
+      [:div.pure-u-3-4 "reps"]]
+     [:div.pure-g
+      [:div.pure-u-1-4 sets]
+      [:div.pure-u-3-4 "set"]]
+     [:div.pure-g
+      [:div.pure-u-1-4 distance]
+      [:div.pure-u-3-4 "meters"]]
+     [:div.pure-g
+      [:div.pure-u-1-4 duration]
+      [:div.pure-u-3-4 "seconds"]]]))
+
+(defn rep-set-distance-duration-component [i]
+  [:div
    [:div.pure-g
-    [:div.pure-u.refresh {:on-click #()}]
-    [:h3.pure-u.title title]
-    [:div.pure-u.destroy {:on-click #()}]]
-   [:img.graphic.pure-img-responsive {:src image}]
+    [:label.pure-u "These movements should be done for: "]]
    [:div.pure-g
-    [:div.pure-u 10]
+    [:div.pure-u [:input {:type "text"
+                          :value (get-in @template-state [:parts i :reps])
+                          :placeholder "nil"
+                          :on-change   #(swap! template-state assoc-in [:parts i :reps] (-> % .-target .-value))}]]
     [:div.pure-u "reps"]]
    [:div.pure-g
-    [:div.pure-u 3]
-    [:div.pure-u "set"]]
+    [:div.pure-u [:input {:type "text"
+                          :value (get-in @template-state [:parts i :sets])
+                          :placeholder "nil"
+                          :on-change #(swap! template-state assoc-in [:parts i :sets] (-> % .-target .-value))}]]
+    [:div.pure-u "sets"]]
    [:div.pure-g
-    [:div.pure-u "-"]
+    [:div.pure-u [:input {:type "text"
+                          :value (get-in @template-state [:parts i :distance])
+                          :placeholder "nil"
+                          :on-change #(swap! template-state assoc-in [:parts i :distance] (-> % .-target .-value))}]]
     [:div.pure-u "meters"]]
    [:div.pure-g
-    [:div.pure-u "-"]
+    [:div.pure-u [:input {:type "text"
+                          :value (get-in @template-state [:parts i :duration])
+                          :placeholder "nil"
+                          :on-change #(swap! template-state assoc-in [:parts i :duration] (-> % .-target .-value))}]]
     [:div.pure-u "seconds"]]])
 
 (defn part-creator-component []
@@ -37,17 +77,22 @@
       [:div
        [:div.pure-g
         [:h2.pure-u [:input {:type        "text"
-                             :placeholder "\"warmup\", \"repeat for 3 rounds\" "
+                             :placeholder "A title for this part"
                              :on-change   #(swap! template-state assoc-in [:parts i :title] (-> % .-target .-value))
                              :value       (get-in @template-state [:parts i :title])}]]]
 
        [:div.pure-g
-        (for [m (get-in @template-state [:parts i :specific-movements])]
-          ^{:key (str m (rand-int 1000))} [:div {:on-click #(let [movements (vec (remove #{m} (get-in @template-state [:parts i :specific-movements])))]
-                                       (swap! template-state assoc-in [:parts i :specific-movements] movements))}
-                     (movement-component (str m) (str "images/" (str/replace (str/lower-case m) " " "-") ".png"))])
-        (for [n (range (get-in @template-state [:parts i :n]))]
-          ^{:key (str n (rand-int 1000))} (movement-component "movement name" "images/push-up.png"))]
+        (let [r (get-in @template-state [:parts i :reps])
+              s (get-in @template-state [:parts i :sets])
+              di (get-in @template-state [:parts i :distance])
+              du (get-in @template-state [:parts i :duration])
+              data {:reps r :sets s :distance di :duration du :i i}]
+          (for [m (get-in @template-state [:parts i :specific-movements])]
+            ^{:key (str m (rand-int 1000))} [:div
+                                             (movement-component data
+                                               (str m) (str "images/" (str/replace (str/lower-case m) " " "-") ".png") m)])
+          (for [n (range (get-in @template-state [:parts i :n]))]
+            ^{:key (str n (rand-int 1000))} (movement-component data "movement name" "images/push-up.png")))]
 
 
        [:div.pure-g
@@ -87,14 +132,6 @@
                                                              "yellow")}
                                     :on-click #(when (not (some #{c} (get-in @template-state [:parts i :categories])))
                                                 (swap! template-state update-in [:parts i :categories] conj c))} c]]))
-
-
-
-
-
-
-
-
        [:div.pure-g
         [:label.pure-u "Additionally, the following exercises should always be included:"]
         [:div.pure-u
@@ -104,32 +141,30 @@
                                                                     (str "#" id)
                                                                     (vec (session/get :all-movements)))})]
            [movements-ac-comp {:id      (str "mtags" i)
-                               :class   "eit" :placeholder "type to find and add movement.."
+                               :class   "edit" :placeholder "type to find and add movement.."
                                :on-save #(when (and (some #{%} (session/get :all-movements))
                                                     (not (some #{%} (get-in @template-state [:parts i :specific-movements]))))
-                                          (swap! template-state update-in [:parts i :specific-movements] conj %))}])]]])))
+                                          (swap! template-state update-in [:parts i :specific-movements] conj %))}])]]
 
-(defn save-template-component [error-atom]
+       (rep-set-distance-duration-component i)
+       ])))
+
+
+
+(defn upload-background-component []
   [:div.pure-g
-   [:button.pure-u {:on-click #(do
-                                (swap! template-state assoc :user (session/get :user))
-                                (let [title (:title @template-state)
-                                      parts (:parts @template-state)]
-                                  (cond
-                                    (nil? title) (reset! error-atom "The template needs a title.")
-                                    (empty? parts) (reset! error-atom "A session must have 1 or more parts.")
-
-                                    :else (print @template-state) #_(POST "template"
-                                                {:params        @template-state
-                                                 :handler       (fn [response] (print response))
-                                                 :error-handler (fn [response] (reset! error-atom (:response response)))}))))}
-    "Save"]])
+   [:div.pure-u "Upload a custom background image for your template: "]
+   [:input.pure-u {:id "upload"
+            :type "file" :on-change #(preview-file)}]
+   (when (:background @template-state)
+     [:div.pure-u {:on-click #(swap! template-state dissoc :background)
+            :style    {:color "blue"}} "Remove custom background"])])
 
 (defn title-component []
   [:div.pure-g
    [:h1.pure-u
     [:input {:type        "text"
-             :placeholder "Your Title"
+             :placeholder "Your Template Title"
              :on-change   #(swap! template-state assoc :title (-> % .-target .-value))
              :value       (:title @template-state)}]]])
 
@@ -137,7 +172,7 @@
   [:div.pure-g
   [:p.subtitle.pure-u
     [:input {:type        "text"
-             :placeholder "A suitable description"
+             :placeholder "Optional description"
              :on-change   #(swap! template-state assoc :description (-> % .-target .-value))
              :value       (:description @template-state)}]]])
 
@@ -153,24 +188,42 @@
   [:div.pure-g
    [:div.pure-u "Movements belong to "
     [:span {:style {:color "red"}} (count (:parts @template-state))] " parts."]
-   [:button.pure-button
+   [:button.pure-u
     {:on-click #(swap! template-state update-in [:parts]
                        conj {:title    ""
                              :categories []
                              :n        0
                              :specific-movements []})} "+"]
-   [:button.pure-button
+   [:button.pure-u
     {:on-click #(when (> (count (:parts @template-state)) 0)
                  (swap! template-state update-in [:parts] pop))} "-"]])
+
+(defn save-template-component [error-atom]
+  [:div.pure-g
+   [:button.pure-button
+    {:on-click #(do
+                 (swap! template-state assoc :user (session/get :user))
+                 (let [title (:title @template-state)
+                       parts (:parts @template-state)]
+                   (cond
+                     (nil? title) (reset! error-atom "The template needs a title.")
+                     (empty? parts) (reset! error-atom "A session must have 1 or more parts.")
+                     :else (print @template-state)
+                     #_(POST "template"
+                             {:params        @template-state
+                              :handler       (fn [response] (print response))
+                              :error-handler (fn [response] (reset! error-atom (:response response)))}))))}
+    "Save"]])
 
 (defn template-creator-component []
   (let [error (atom "")]
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
-       [:div.content
+       [:div.content {:style {:background-image (str "url(" (:background @template-state) ")")}}
         (heading-component)
         (error-component error)
+        (upload-background-component)
         (title-component)
         (description-component)
         (adjust-parts-component)
