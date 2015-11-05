@@ -51,22 +51,15 @@
   (let [categories (d/q '[:find [?n ...]
                           :where
                           [_ :category/name ?n]]
-                        db)
-        ;categories
-        #_(into {}
-              (d/q '[:find ?name (count ?m)
-                     :where
-                     [?cat :category/name ?name]
-                     [?m :movement/category ?cat]]
-                   db))]
+                        db)]
     (generate-response categories)))
 
-(defn movement [name]
+(defn get-movement-entity [name]
   "Returns the whole entity of a named movement."
   (let [movement (d/pull db '[*] [:movement/name name])]
     movement))
 
-(defn get-movements
+(defn get-n-movements-from-categories
   [n categories d]
   "Get n random movement entities drawn from param list of categories."
   (let [movements (for [c categories]
@@ -99,28 +92,26 @@
                                   db
                                   title
                                   user))
-        description (:template/description title-entity)
         part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
-        parts
-        (vec (for [p part-entities]
-               (let [name (:part/title p)
-                     n (:part/number-of-movements p)
-                     c (flatten (map vals (:part/category p)))
-                     category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                     movements (vec (get-movements n category-names {:rep (:part/rep p)
-                                                                     :set (:part/set p)
-                                                                     :distance (:part/distance p)
-                                                                     :duration (:part/duration p)}))]
-                 {:title      name
-                  :categories category-names
-                  :movements  (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/regular-movement p)))]
-                                (concat regular-movements movements)
-                                movements)})))]
+        parts (vec (for [p part-entities]
+                     (let [name (:part/title p)
+                           n (:part/number-of-movements p)
+                           c (flatten (map vals (:part/category p)))
+                           category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                           movements (if (nil? n) [] (vec (get-n-movements-from-categories n category-names {:rep      (:part/rep p)
+                                                                                           :set      (:part/set p)
+                                                                                           :distance (:part/distance p)
+                                                                                           :duration (:part/duration p)})))]
+                       {:title      name
+                        :categories category-names
+                        :movements  (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement p)))]
+                                      (concat regular-movements movements)
+                                      movements)})))]
+
     (generate-response {:title       title
-                        :description description
+                        :description (:template/description title-entity)
+                        :background (:template/background title-entity)
                         :parts       parts})))
-
-
 
 (defn new-unique-template? [user template-title]
   (empty? (d/q '[:find [?user ...]
@@ -133,15 +124,21 @@
                user
                template-title)))
 
-(defn add-template! [user {:keys [title description parts] :as template}]
+(defn transact-template! [user {:keys [title description background parts] :as template}]
   (let [parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
         user-template-data [{:db/id         #db/id[:db.part/user]
                              :user/email    user
                              :user/template [#db/id[:db.part/user -100]]}
                             {:db/id                #db/id[:db.part/user -100]
                              :template/title       title
-                             :template/description description
-                             :template/part        (vec (map :db/id parts))}]
+                             :template/part        (vec (for [p parts] (:db/id p)))}
+                            (when description
+                              {:db/id #db/id[:db.part/user -100]
+                               :template/description description})
+                            (when background
+                              {:db/id #db/id[:db.part/user -100]
+                               :template/background background})]
+        user-template-data (remove nil? user-template-data)
         parts (map #(rename-keys % {:n                  :part/number-of-movements
                                     :categories         :part/category
                                     :specific-movements :part/specific-movement
@@ -165,7 +162,7 @@
         tx-data (concat user-template-data part-data category-data specific-movement-data)]
     (d/transact conn tx-data)))
 
-(defn add-session! [user {:keys [title description parts comment]}]
+(defn transact-session! [user {:keys [title description parts comment]}]
   (let [parts (map #(assoc % :movements (vals (:movements %))
                              :db/id (d/tempid :db.part/user)) parts)
         parts (map
@@ -195,29 +192,30 @@
         tx-data (concat session-data part-data movement-data)]
     (d/transact conn tx-data)))
 
-(defn store-session [req]
+(defn add-session! [req]
   (let [session (:session (:params req))
         user (:user (:params req))]
     (if (nil? user)
-      (generate-response (str "User email lacking from client data. User not logged in?" " Session data: " session) 400)
-      (do
-        ; add session
-        (add-session! user session)
-        (generate-response (:session session) #_(:message "Session stored successfully.")))
-      )))
+      (generate-response {:message "User email lacking from client data. User not logged in?"
+                          :session session} 400)
+      (try
+        (transact-session! user session)
+        (catch Exception e
+          (generate-response {:message (str "Exception: " e)}))
+        (finally (generate-response {:session session :message "Session stored successfully."}))))))
 
-(defn store-new-template [req]
+(defn add-template! [req]
   (let [template (:params req)
         user (:user template)]
     (if (nil? user)
       (generate-response (str "User email lacking from client data. User not logged in?" " template: " template) 400)
       (if (new-unique-template? user (:title template))
         (try
-          (add-template! user template)
+          (transact-template! user template)
           (catch Exception e
-            (generate-response (str "Exception: " e)))
-          (finally (generate-response "New template stored successfully.")))
-        (generate-response "You already have a template with this title. Choose a unique title for your template." 400)))))
+            (generate-response {:message (str "Exception: " e)}))
+          (finally (generate-response {:template template :message "New template stored successfully."})))
+        (generate-response {:message "You already have a template with this title. Choose a unique title for your template."} 400)))))
 
 (defn retrieve-sessions [req]
   (let [db (d/db conn)
@@ -281,10 +279,10 @@
 
            (POST "/store-session" req (if-not (authenticated? req)
                                         (throw-unauthorized)
-                                        (store-session req)))
+                                        (add-session! req)))
            (POST "/template" req (if-not (authenticated? req)
                                    (throw-unauthorized)
-                                   (store-new-template req)))
+                                   (add-template! req)))
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (retrieve-sessions req)))
@@ -298,7 +296,7 @@
                                    (all-template-titles (str (:user (:params req))))))
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (movement (:name (:params req)))))
+                                  (get-movement-entity (:name (:params req)))))
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (all-movement-names)))
@@ -306,7 +304,7 @@
              (let [categories (vec (vals (:categories (:params req))))]
                (if-not (authenticated? req)
                  (throw-unauthorized)
-                 (generate-response (get-movements 1 categories {})))))
+                 (generate-response (get-n-movements-from-categories 1 categories {})))))
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
                                     (all-category-names)))

@@ -60,6 +60,120 @@
 ;; Get the database value.
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn get-n-movements-from-categories
+  [n categories d]
+  "Get n random movement entities drawn from param list of categories."
+  (let [movements (for [c categories]
+                    (d/q '[:find (pull ?m [*]) :in $ ?cat
+                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
+                         db c))
+        m (->> movements flatten set shuffle (take n))
+        m (map #(assoc % :rep (:rep d) :set (:set d) :distance (:distance d) :duration (:duration d)) m)]
+    m))
+(defn create-session [title user]
+  (let [title-entity (ffirst (d/q '[:find (pull ?t [*])
+                                    :in $ ?title ?email
+                                    :where
+                                    [?e :user/email ?email]
+                                    [?e :user/template ?t]
+                                    [?t :template/title ?title]]
+                                  db
+                                  title
+                                  user))
+        description (:template/description title-entity)
+        part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
+        parts (vec (for [p part-entities]
+                     (let [name (:part/title p)
+                           n (:part/number-of-movements p)
+                           c (flatten (map vals (:part/category p)))
+                           category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                           movements (if (nil? n) [] (vec (get-n-movements-from-categories n category-names {:rep      (:part/rep p)
+                                                                                                             :set      (:part/set p)
+                                                                                                             :distance (:part/distance p)
+                                                                                                             :duration (:part/duration p)})))]
+                       {:title      name
+                        :categories category-names
+                        :movements  (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement p)))]
+                                      (concat regular-movements movements)
+                                      movements)})))]
+
+    {:title       title
+     :description (:template/description title-entity)
+     :background (:template/background title-entity)
+     :parts       parts}))
+
+(def ex-template-1 {:parts [{:title "Warmup", :categories ["Hip Mobility" "Shoulder Mobility"],
+                             :n     4, :specific-movements [],
+                             :rep   10, :set 3}
+                            {:title "Strength", :categories ["Strength"],
+                             :n     3, :specific-movements [],
+                             :rep   5, :set 5}],
+                    :title "Example Template 1",
+                    :user  "admin@movementsession.com"})
+(def ex-template-2 {:parts [{:title "Warmup", :categories ["Hip Mobility" "Jumping" "Ankle Mobility"],
+                             :n     6
+                             :rep 10, :set 2}
+                            {:title "Run!", :categories ["Running"],
+                             :specific-movements ["Run"],
+                             :distance 200, :set 6}],
+                    :title "Example Template 2",
+                    :user  "admin@movementsession.com"
+                    :description "Warm up thoroughly. Practice 200 meter runs with high intensity.
+                    Rest for 60-120 seconds between each run."})
+
+(def ex-user "admin@movementsession.com")
+
+(defn transact-template! [user {:keys [title description background parts] :as template}]
+  (let [parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
+        user-template-data [{:db/id         #db/id[:db.part/user]
+                             :user/email    user
+                             :user/template [#db/id[:db.part/user -100]]}
+                            {:db/id                #db/id[:db.part/user -100]
+                             :template/title       title
+                             :template/part        (vec (for [p parts] (:db/id p)))}
+                            (when description
+                              {:db/id #db/id[:db.part/user -100]
+                               :template/description description})
+                            (when background
+                              {:db/id #db/id[:db.part/user -100]
+                               :template/background background})]
+        user-template-data (remove nil? user-template-data)
+        parts (map #(rename-keys % {:n                  :part/number-of-movements
+                                    :categories         :part/category
+                                    :specific-movements :part/specific-movement
+                                    :title              :part/title
+                                    :rep                :part/rep
+                                    :set                :part/set
+                                    :distance           :part/distance
+                                    :duration           :part/duration}) parts)
+        parts (map #(assoc %
+                     :part/category (vec (for [c (:part/category %)] {:db/id         (d/tempid :db.part/user)
+                                                                      :category/name c}))
+                     :part/specific-movement (vec (for [m (:part/specific-movement %)] {:db/id         (d/tempid :db.part/user)
+                                                                                        :movement/name m}))) parts)
+        part-data (map #(assoc %
+                         :part/category (vec (for [c (:part/category %)] (:db/id c)))
+                         :part/specific-movement (vec (for [m (:part/specific-movement %)] (:db/id m)))) parts)
+        part-data (for [p part-data] (if (empty? (:part/specific-movement p)) (dissoc p :part/specific-movement) p))
+        part-data (for [p part-data] (if (empty? (:part/category p)) (dissoc p :part/category) p))
+        category-data (flatten (map #(:part/category %) parts))
+        specific-movement-data (flatten (map #(:part/specific-movement %) parts))
+        tx-data (concat user-template-data part-data category-data specific-movement-data)]
+    (d/transact conn tx-data)))
+
+
+(defn get-movements
+  [n categories d]
+  "Get n random movement entities drawn from param list of categories."
+  (let [movements (for [c categories]
+                    (d/q '[:find (pull ?m [*]) :in $ ?cat
+                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
+                         db c))
+        m (->> movements flatten set shuffle (take n))
+        m (map #(assoc % :rep (:rep d) :set (:set d) :distance (:distance d) :duration (:duration d)) m)]
+    m))
+
+
 
 (defn retrieve-sessions [req]
   (let [user (:user req)
@@ -90,85 +204,8 @@
                   :title "main title", :description "descriptorama",
                   :user  "admin@movementsession.com"})
 
-(def ex-user "admin@movementsession.com")
-
-(defn add-template! [user {:keys [title description parts] :as template}]
-  (let [parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
-        user-template-data [{:db/id         #db/id[:db.part/user]
-                             :user/email    user
-                             :user/template [#db/id[:db.part/user -100]]}
-                            {:db/id                #db/id[:db.part/user -100]
-                             :template/title       title
-                             :template/description description
-                             :template/part        (vec (map :db/id parts))}]
-        parts (map #(rename-keys % {:n                  :part/number-of-movements
-                                    :categories         :part/category
-                                    :specific-movements :part/specific-movement
-                                    :title              :part/title
-                                    :rep                :part/rep
-                                    :set                :part/set
-                                    :distance           :part/distance
-                                    :duration           :part/duration}) parts)
-        parts (map #(assoc %
-                     :part/category (vec (for [c (:part/category %)] {:db/id         (d/tempid :db.part/user)
-                                                                      :category/name c}))
-                     :part/specific-movement (vec (for [m (:part/specific-movement %)] {:db/id         (d/tempid :db.part/user)
-                                                                                        :movement/name m}))) parts)
-        part-data (map #(assoc %
-                         :part/category (vec (for [c (:part/category %)] (:db/id c)))
-                         :part/specific-movement (vec (for [m (:part/specific-movement %)] (:db/id m)))) parts)
-        part-data (for [p part-data] (if (empty? (:part/specific-movement p)) (dissoc p :part/specific-movement) p))
-        part-data (for [p part-data] (if (empty? (:part/category p)) (dissoc p :part/category) p))
-        category-data (flatten (map #(:part/category %) parts))
-        specific-movement-data (flatten (map #(:part/specific-movement %) parts))
-        tx-data (concat user-template-data part-data category-data specific-movement-data)]
-    (d/transact conn tx-data)))
 
 
-
-
-(defn add-session! [user {:keys [title description parts comment]}]
-  (let [parts (map #(assoc % :movements (vals (:movements %))
-                             :db/id (d/tempid :db.part/user)) parts)
-        parts (map
-                #(assoc %
-                  :movements (map
-                               (fn [e] (assoc e :db/id (d/tempid :db.part/user))) (:movements %))) parts)
-        session-data [{:db/id        #db/id[:db.part/user]
-                       :user/email   user
-                       :user/session [#db/id[:db.part/user -100]]}
-                      {:db/id               #db/id[:db.part/user -100]
-                       :session/name        title
-                       :session/description description
-                       :session/comment     (str/join (interpose " " comment))
-                       :session/timestamp   (Date.)
-                                            :session/part (vec (map :db/id parts))}]
-        part-data (vec (for [p parts]
-                         {:db/id                 (:db/id p)
-                          :part/title            (:title p)
-                          :part/session-movement (vec (map :db/id (:movements p)))}))
-        movement-data (vec (flatten (for [p parts]
-                                      (for [m (:movements p)]
-                                        (apply dissoc m (for [[k v] m :when (nil? v)] k))))))
-        movement-data (map #(rename-keys % {:rep :movement/rep :set :movement/set
-                                            :distance :movement/distance :duration :movement/duration
-                                            :id :movement/position-in-part})
-                           movement-data)
-        tx-data (concat session-data part-data movement-data)]
-    (d/transact conn tx-data)))
-
-
-
-(defn new-unique-template? [user template-title]
-  (empty? (d/q '[:find [?user ...]
-                 :in $ ?user ?template-title
-                 :where
-                 [?e :user/email ?user]
-                 [?e :user/template ?template]
-                 [?template :template/title ?template-title]]
-               db
-               user
-               template-title)))
 
 (defn pull-on-id [id]
   (d/pull db '[*] id))

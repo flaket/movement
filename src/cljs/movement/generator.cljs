@@ -245,7 +245,7 @@
        [menu-component]
        [:div.content
         (if-let [session (session/get :movement-session)]
-          [:div
+          [:div {:style {:background-image (str "url(" (:background session) ")")}}
            [top-menu-component]
            [header-component session]
            (doall

@@ -7,7 +7,8 @@
             [movement.util :refer [text-input POST]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
             [movement.state :refer [handler-fn]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [cljs.reader :refer [read-string]]))
 
 (def template-state (atom {:parts []}))
 
@@ -15,7 +16,7 @@
   (let [file (.getElementById js/document "upload")
         reader (js/FileReader.)]
     (when-let [file (aget (.-files file) 0)]
-      (set! (.-onloadend reader) #(swap! template-state assoc :background (-> % .-target .-result)))
+      (set! (.-onloadend reader) #(swap! template-state assoc :background (-> % .-target .-result str)))
       (.readAsDataURL reader file))))
 
 (defn movement-component
@@ -47,28 +48,49 @@
    [:div.pure-g
     [:label.pure-u "These movements should be done for: "]]
    [:div.pure-g
-    [:div.pure-u [:input {:type "text"
-                          :value (get-in @template-state [:parts i :rep])
+    [:div.pure-u [:input {:type        "text"
+                          :value       (get-in @template-state [:parts i :rep])
                           :placeholder "nil"
-                          :on-change   #(swap! template-state assoc-in [:parts i :rep] (-> % .-target .-value))}]]
+                          :on-change   #(try
+                                         (let [value (-> % .-target .-value read-string)]
+                                           (if (or (nil? value) (and (integer? value) (< 0 value)))
+                                             (swap! template-state assoc-in [:parts i :rep] value)))
+                                         (catch js/Error e
+                                           (print (str "Caught exception: " e))))}]]
+
     [:div.pure-u "reps"]]
    [:div.pure-g
-    [:div.pure-u [:input {:type "text"
-                          :value (get-in @template-state [:parts i :set])
+    [:div.pure-u [:input {:type        "text"
+                          :value       (get-in @template-state [:parts i :set])
                           :placeholder "nil"
-                          :on-change #(swap! template-state assoc-in [:parts i :set] (-> % .-target .-value))}]]
+                          :on-change   #(try
+                                         (let [value (-> % .-target .-value read-string)]
+                                           (if (or (nil? value) (and (integer? value) (< 0 value)))
+                                             (swap! template-state assoc-in [:parts i :set] value)))
+                                         (catch js/Error e
+                                           (print (str "Caught exception: " e))))}]]
     [:div.pure-u "sets"]]
    [:div.pure-g
-    [:div.pure-u [:input {:type "text"
-                          :value (get-in @template-state [:parts i :distance])
+    [:div.pure-u [:input {:type        "text"
+                          :value       (get-in @template-state [:parts i :distance])
                           :placeholder "nil"
-                          :on-change #(swap! template-state assoc-in [:parts i :distance] (-> % .-target .-value))}]]
+                          :on-change   #(try
+                                         (let [value (-> % .-target .-value read-string)]
+                                           (if (or (nil? value) (and (integer? value) (< 0 value)))
+                                             (swap! template-state assoc-in [:parts i :distance] value)))
+                                         (catch js/Error e
+                                           (print (str "Caught exception: " e))))}]]
     [:div.pure-u "meters"]]
    [:div.pure-g
-    [:div.pure-u [:input {:type "text"
-                          :value (get-in @template-state [:parts i :duration])
+    [:div.pure-u [:input {:type        "text"
+                          :value       (get-in @template-state [:parts i :duration])
                           :placeholder "nil"
-                          :on-change #(swap! template-state assoc-in [:parts i :duration] (-> % .-target .-value))}]]
+                          :on-change   #(try
+                                         (let [value (-> % .-target .-value read-string)]
+                                           (if (or (nil? value) (and (integer? value) (< 0 value)))
+                                             (swap! template-state assoc-in [:parts i :duration] value)))
+                                         (catch js/Error e
+                                           (print (str "Caught exception: " e))))}]]
     [:div.pure-u "seconds"]]])
 
 (defn part-creator-component []
@@ -86,14 +108,14 @@
               s (get-in @template-state [:parts i :set])
               di (get-in @template-state [:parts i :distance])
               du (get-in @template-state [:parts i :duration])
-              data {:rep r :set s :distance di :duration du :i i}]
-          (for [m (get-in @template-state [:parts i :specific-movements])]
-            ^{:key (str m (rand-int 1000))} [:div
-                                             (movement-component data
-                                               (str m) (str "images/" (str/replace (str/lower-case m) " " "-") ".png") m)])
-          (for [n (range (get-in @template-state [:parts i :n]))]
-            ^{:key (str n (rand-int 1000))} (movement-component data "movement name" "images/push-up.png")))]
-
+              data {:rep r :set s :distance di :duration du :i i}
+              specific-movements (get-in @template-state [:parts i :specific-movements])
+              n (get-in @template-state [:parts i :n])]
+          (for [m specific-movements]
+            ^{:key m} (movement-component data (str m)
+                                          (str "images/" (str/replace (str/lower-case m) " " "-") ".png") m))
+          (for [i (range n)]
+            ^{:key i} (movement-component data "movement name" "images/push-up.png")))]
 
        [:div.pure-g
         [:div.pure-u
@@ -216,7 +238,7 @@
                              #_(POST "template"
                                      {:params        @template-state
                                       :handler       (fn [response] (print response))
-                                      :error-handler (fn [response] (reset! error-atom (:response response)))})))))}
+                                      :error-handler (fn [response] (reset! error-atom response))})))))}
     "Save"]])
 
 (defn template-creator-component []
@@ -227,7 +249,7 @@
        [:div.content {:style {:background-image (str "url(" (:background @template-state) ")")}}
         (heading-component)
         (error-component error)
-        (upload-background-component)
+        #_(upload-background-component)
         (title-component)
         (description-component)
         (adjust-parts-component)
