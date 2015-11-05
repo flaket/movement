@@ -20,7 +20,7 @@
 
 (defn movement-component
   ([data title image] (movement-component data title image nil))
-  ([{:keys [reps sets distance duration i]} title image m]
+  ([{:keys [rep set distance duration i]} title image m]
     [:div.pure-u.movement
      [:div.pure-g
       [:div.pure-u.refresh {:on-click #()}]
@@ -30,10 +30,10 @@
                                           (swap! template-state assoc-in [:parts i :specific-movements] movements)))}]]
      [:img.graphic.pure-img-responsive {:src image}]
      [:div.pure-g
-      [:div.pure-u-1-4 reps]
+      [:div.pure-u-1-4 rep]
       [:div.pure-u-3-4 "reps"]]
      [:div.pure-g
-      [:div.pure-u-1-4 sets]
+      [:div.pure-u-1-4 set]
       [:div.pure-u-3-4 "set"]]
      [:div.pure-g
       [:div.pure-u-1-4 distance]
@@ -48,15 +48,15 @@
     [:label.pure-u "These movements should be done for: "]]
    [:div.pure-g
     [:div.pure-u [:input {:type "text"
-                          :value (get-in @template-state [:parts i :reps])
+                          :value (get-in @template-state [:parts i :rep])
                           :placeholder "nil"
-                          :on-change   #(swap! template-state assoc-in [:parts i :reps] (-> % .-target .-value))}]]
+                          :on-change   #(swap! template-state assoc-in [:parts i :rep] (-> % .-target .-value))}]]
     [:div.pure-u "reps"]]
    [:div.pure-g
     [:div.pure-u [:input {:type "text"
-                          :value (get-in @template-state [:parts i :sets])
+                          :value (get-in @template-state [:parts i :set])
                           :placeholder "nil"
-                          :on-change #(swap! template-state assoc-in [:parts i :sets] (-> % .-target .-value))}]]
+                          :on-change #(swap! template-state assoc-in [:parts i :set] (-> % .-target .-value))}]]
     [:div.pure-u "sets"]]
    [:div.pure-g
     [:div.pure-u [:input {:type "text"
@@ -82,11 +82,11 @@
                              :value       (get-in @template-state [:parts i :title])}]]]
 
        [:div.pure-g
-        (let [r (get-in @template-state [:parts i :reps])
-              s (get-in @template-state [:parts i :sets])
+        (let [r (get-in @template-state [:parts i :rep])
+              s (get-in @template-state [:parts i :set])
               di (get-in @template-state [:parts i :distance])
               du (get-in @template-state [:parts i :duration])
-              data {:reps r :sets s :distance di :duration du :i i}]
+              data {:rep r :set s :distance di :duration du :i i}]
           (for [m (get-in @template-state [:parts i :specific-movements])]
             ^{:key (str m (rand-int 1000))} [:div
                                              (movement-component data
@@ -117,7 +117,7 @@
                                                                     (str "#" id)
                                                                     (vec (session/get :all-categories)))})]
           [:div.pure-u
-           [categories-ac-comp {:id      (str "ctags" i)
+           [categories-ac-comp {:id      id
                                 :class   "edit" :placeholder "type to find and add category.."
                                 :on-save #(when (and (some #{%} (session/get :all-categories))
                                                      (not (some #{%} (get-in @template-state [:parts i :categories]))))
@@ -208,11 +208,15 @@
                    (cond
                      (nil? title) (reset! error-atom "The template needs a title.")
                      (empty? parts) (reset! error-atom "A session must have 1 or more parts.")
-                     :else (print @template-state)
-                     #_(POST "template"
-                             {:params        @template-state
-                              :handler       (fn [response] (print response))
-                              :error-handler (fn [response] (reset! error-atom (:response response)))}))))}
+                     (< 0 (count (filter (fn [p] (str/blank? (:title p))) parts))) (reset! error-atom "All parts must have a title.")
+                     :else (let []
+                             (when (empty? (:categories @template-state)) (swap! template-state dissoc :categories))
+                             (when (empty? (:specific-movements @template-state)) (swap! template-state dissoc :specific-movements))
+                             (print @template-state)
+                             #_(POST "template"
+                                     {:params        @template-state
+                                      :handler       (fn [response] (print response))
+                                      :error-handler (fn [response] (reset! error-atom (:response response)))})))))}
     "Save"]])
 
 (defn template-creator-component []
