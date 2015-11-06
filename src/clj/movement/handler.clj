@@ -46,6 +46,14 @@
                        db)]
     (generate-response movements)))
 
+(defn all-equipment-names []
+  "Returns the all equipment names in the database."
+  (let [equipment (d/q '[:find [?n ...]
+                         :where
+                         [_ :equipment/name ?n]]
+                       db)]
+    (generate-response equipment)))
+
 (defn all-category-names []
   "Returns the names of all categories in the database."
   (let [categories (d/q '[:find [?n ...]
@@ -112,6 +120,12 @@
                         :description (:template/description title-entity)
                         :background (:template/background title-entity)
                         :parts       parts})))
+
+(defn create-equipment-session [name]
+  (let []
+    (generate-response {:title       "TITLE"
+                        :description "fakk"
+                        :parts       []})))
 
 (defn new-unique-template? [user template-title]
   (empty? (d/q '[:find [?user ...]
@@ -229,7 +243,6 @@
                              db
                              user)))]
     (generate-response sessions)))
-;;;;;;;;;;;;;;;;;;;;;;
 
 (defn find-user [email]
   (let [db (d/db conn)]
@@ -272,10 +285,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
-           (GET "/" [] (render-file "app.html" {:dev (env :dev?)
+           (GET "/" [] (render-file "app.html" {:dev        (env :dev?)
                                                 :csrf-token *anti-forgery-token*}))
            (POST "/login" [username password] (jws-login username password))
-           (POST "/signup" [username password](add-user! username password))
+           (POST "/signup" [username password] (add-user! username password))
 
            (POST "/store-session" req (if-not (authenticated? req)
                                         (throw-unauthorized)
@@ -300,6 +313,13 @@
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (all-movement-names)))
+           (GET "/equipment" req (if-not (authenticated? req)
+                                   (throw-unauthorized)
+                                   (all-equipment-names)))
+           (GET "/equipment-session" req (if-not (authenticated? req)
+                                           (throw-unauthorized)
+                                           (let [equipment (:equipment (:params req))]
+                                             (create-equipment-session equipment))))
            (GET "/singlemovement" req
              (let [categories (vec (vals (:categories (:params req))))]
                (if-not (authenticated? req)

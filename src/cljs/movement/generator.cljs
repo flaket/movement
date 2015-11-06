@@ -7,8 +7,8 @@
     [reagent.core :refer [atom]]
     [goog.events :as events]
     [clojure.string :as str]
-    [movement.util :refer [GET POST get-stored-sessions]]
-    [movement.text :refer [text-edit-component]]
+    [movement.util :refer [GET POST get-stored-sessions get-equipment]]
+    [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]
     [movement.state :refer [movement-session handler-fn log-session]]))
 
@@ -193,8 +193,24 @@
             (for [t (session/get :templates)]
               ^{:key t} [template-component t])))]])))
 
+(defn equipment-component []
+  (let [id "equipment"
+        equipment-ac-comp (with-meta text-input-component
+                                     {:component-did-mount #(auto-complete-did-mount
+                                                             (str "#" id)
+                                                             (vec (session/get :equipment)))})]
+    [equipment-ac-comp {:id      id
+                        :class   "edit" :placeholder "find equipment.."
+                        :on-save #(when (some #{%} (session/get :equipment))
+                                   (GET "equipment-session"
+                                        {:params        {:equipment %
+                                                         :user (session/get :user)}
+                                         :handler       (fn [e] (print e))
+                                         :error-handler (fn [e] (print (str "error getting session data from server: " e)))}))}]))
+
 (defn top-menu-component []
-  (let [templates-showing? (atom false)]
+  (let [templates-showing? (atom false)
+        equipment-showing? (atom false)]
     (fn []
       [:div
        [:div.pure-g
@@ -203,12 +219,22 @@
           [:a.pure-u.secondary-button {:on-click pick-random-template} "Random session"]]]
         [:h3.pure-u.pure-u-md-1-4
          [:div.pure-g
-          [:a.pure-u.secondary-button {:on-click #(handler-fn (reset! templates-showing? (not @templates-showing?)))} "Select template"]]]]
+          [:a.pure-u.secondary-button {:on-click #(handler-fn (reset! templates-showing? (not @templates-showing?)))} "Select template"]]]
+        [:h3.pure-u.pure-u-md-1-4
+         [:div.pure-g
+          [:a.pure-u.secondary-button {:on-click #(handler-fn
+                                                   (do
+                                                     (when (nil? (session/get :equipment))
+                                                       (get-equipment))
+                                                     (reset! equipment-showing? (not @equipment-showing?))))} "Select equipment"]]]]
        [:div.pure-g
         (when @templates-showing?
           (doall
             (for [t (session/get :templates)]
-              ^{:key t} [template-component t])))]])))
+              ^{:key t} [template-component t])))]
+       [:div.pure-g
+        (when @equipment-showing?
+          (equipment-component))]])))
 
 (defn comment-component []
   (let [adding-comment (atom false)]

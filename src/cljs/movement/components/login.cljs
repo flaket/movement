@@ -2,7 +2,8 @@
   (:require [reagent.core :refer [atom]]
             [reagent.session :as session]
             [movement.util :refer [GET POST text-input get-all-movements
-                                   get-stored-sessions get-templates get-all-categories]]
+                                   get-stored-sessions get-templates
+                                   get-equipment get-all-categories]]
             [secretary.core :include-macros true :refer [dispatch!]]
             [reagent.session :as session]
             [ajax.edn :refer [edn-request-format edn-response-format]]))
@@ -42,6 +43,7 @@
                                                                           (get-all-categories)
                                                                           (get-all-movements)
                                                                           (get-stored-sessions)
+                                                                          (get-equipment)
                                                                           (dispatch! "/generator")))
                                       :error-handler   (fn [response] (do
                                                                         (reset! loading? false)
