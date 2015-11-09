@@ -28,14 +28,23 @@
         position-in-parts (first (positions #{part-title} (map :title parts)))
         categories (:categories (first (filter #(= part-title (:title %)) parts)))
         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
-    (GET "singlemovement"
-         {:params        {:categories categories}
-          :handler       #(let [id (swap! m-counter inc)
-                                new-movement (first %)
-                                new-movement (assoc new-movement :id id)
-                                new-movements (assoc movements id new-movement)]
-                           (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-          :error-handler #(print "error getting single movement through add.")})))
+    (if-let [equipment (session/get-in [:movement-session :parts position-in-parts :equipment])]
+      (GET "movement-from-equipment"
+           {:params        {:equipment equipment}
+            :handler       #(let [id (swap! m-counter inc)
+                                  new-movement (first %)
+                                  new-movement (assoc new-movement :id id)
+                                  new-movements (assoc movements id new-movement)]
+                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+            :error-handler #(print "error getting movement from equipment through add.")})
+      (GET "singlemovement"
+           {:params        {:categories categories}
+            :handler       #(let [id (swap! m-counter inc)
+                                  new-movement (first %)
+                                  new-movement (assoc new-movement :id id)
+                                  new-movements (assoc movements id new-movement)]
+                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+            :error-handler #(print "error getting single movement through add.")}))))
 
 (defn add-movement-from-search [part-title movement-name]
   (let [parts (session/get-in [:movement-session :parts])
@@ -92,6 +101,13 @@
                         :user (session/get :user)}
         :handler       add-session-handler
         :error-handler (fn [] (print "error getting session data from server."))}))
+
+(defn create-session-from-equipment [equipment-name]
+  (GET "equipment-session"
+       {:params        {:equipment equipment-name
+                        :user      (session/get :user)}
+        :handler       add-session-handler
+        :error-handler (fn [e] (print (str "error getting session data from server: " e)))}))
 
 (defn pick-random-template []
   (let [name (first (shuffle (session/get :templates)))]
@@ -193,20 +209,9 @@
             (for [t (session/get :templates)]
               ^{:key t} [template-component t])))]])))
 
-(defn equipment-component []
-  (let [id "equipment"
-        equipment-ac-comp (with-meta text-input-component
-                                     {:component-did-mount #(auto-complete-did-mount
-                                                             (str "#" id)
-                                                             (vec (session/get :equipment)))})]
-    [equipment-ac-comp {:id      id
-                        :class   "edit" :placeholder "find equipment.."
-                        :on-save #(when (some #{%} (session/get :equipment))
-                                   (GET "equipment-session"
-                                        {:params        {:equipment %
-                                                         :user (session/get :user)}
-                                         :handler       (fn [e] (print e))
-                                         :error-handler (fn [e] (print (str "error getting session data from server: " e)))}))}]))
+(defn equipment-component [equipment-name]
+  [:a.pure-u.secondary-button
+   {:on-click #(create-session-from-equipment equipment-name)} equipment-name])
 
 (defn top-menu-component []
   (let [templates-showing? (atom false)
@@ -219,14 +224,16 @@
           [:a.pure-u.secondary-button {:on-click pick-random-template} "Random session"]]]
         [:h3.pure-u.pure-u-md-1-4
          [:div.pure-g
-          [:a.pure-u.secondary-button {:on-click #(handler-fn (reset! templates-showing? (not @templates-showing?)))} "Select template"]]]
+          [:a.pure-u.secondary-button {:on-click #(handler-fn (reset! templates-showing? (not @templates-showing?)))}
+           "Session from template"]]]
         [:h3.pure-u.pure-u-md-1-4
          [:div.pure-g
           [:a.pure-u.secondary-button {:on-click #(handler-fn
                                                    (do
                                                      (when (nil? (session/get :equipment))
                                                        (get-equipment))
-                                                     (reset! equipment-showing? (not @equipment-showing?))))} "Select equipment"]]]]
+                                                     (reset! equipment-showing? (not @equipment-showing?))))}
+           "Session from equipment"]]]]
        [:div.pure-g
         (when @templates-showing?
           (doall
@@ -234,7 +241,9 @@
               ^{:key t} [template-component t])))]
        [:div.pure-g
         (when @equipment-showing?
-          (equipment-component))]])))
+          (doall
+            (for [e (session/get :equipment)]
+              ^{:key e} (equipment-component e))))]])))
 
 (defn comment-component []
   (let [adding-comment (atom false)]

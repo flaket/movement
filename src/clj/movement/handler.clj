@@ -67,6 +67,17 @@
   (let [movement (d/pull db '[*] [:movement/name name])]
     movement))
 
+(defn get-movement-from-equipment [e]
+  (let [r (d/q '[:find (pull ?m [*])
+                 :in $ ?name
+                 :where
+                 [?e :equipment/name ?name]
+                 [?m :movement/equipment ?e]]
+               db
+               e)
+        m (->> r flatten set shuffle (take 1))]
+    (generate-response m)))
+
 (defn get-n-movements-from-categories
   [n categories d]
   "Get n random movement entities drawn from param list of categories."
@@ -106,7 +117,8 @@
                            n (:part/number-of-movements p)
                            c (flatten (map vals (:part/category p)))
                            category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                           movements (if (nil? n) [] (vec (get-n-movements-from-categories n category-names {:rep      (:part/rep p)
+                           movements (if (nil? n) [] (vec (get-n-movements-from-categories n category-names
+                                                                                           {:rep      (:part/rep p)
                                                                                            :set      (:part/set p)
                                                                                            :distance (:part/distance p)
                                                                                            :duration (:part/duration p)})))]
@@ -121,11 +133,20 @@
                         :background (:template/background title-entity)
                         :parts       parts})))
 
-(defn create-equipment-session [name]
-  (let []
-    (generate-response {:title       "TITLE"
-                        :description "fakk"
-                        :parts       []})))
+(defn create-equipment-session [name n]
+  (let [r (d/q '[:find (pull ?m [*])
+                 :in $ ?name
+                 :where
+                 [?e :equipment/name ?name]
+                 [?m :movement/equipment ?e]]
+               db
+               name)
+        m (->> r flatten set shuffle (take n) vec)]
+    (generate-response {:title "Let's play with.."
+                        :parts [{:title      (str/capitalize name)
+                                 :categories []
+                                 :equipment  name
+                                 :movements  m}]})))
 
 (defn new-unique-template? [user template-title]
   (empty? (d/q '[:find [?user ...]
@@ -319,7 +340,11 @@
            (GET "/equipment-session" req (if-not (authenticated? req)
                                            (throw-unauthorized)
                                            (let [equipment (:equipment (:params req))]
-                                             (create-equipment-session equipment))))
+                                             (create-equipment-session equipment 5))))
+           (GET "/movement-from-equipment" req (let [e (:equipment (:params req))]
+                                                 (if-not (authenticated? req)
+                                                   (throw-unauthorized)
+                                                   (get-movement-from-equipment e))))
            (GET "/singlemovement" req
              (let [categories (vec (vals (:categories (:params req))))]
                (if-not (authenticated? req)

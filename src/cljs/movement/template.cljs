@@ -19,6 +19,15 @@
       (set! (.-onloadend reader) #(swap! template-state assoc :background (-> % .-target .-result str)))
       (.readAsDataURL reader file))))
 
+(defn upload-background-component []
+  [:div.pure-g
+   [:div.pure-u "Upload a custom background image for your template: "]
+   [:input.pure-u {:id "upload"
+                   :type "file" :on-change #(preview-file)}]
+   (when (:background @template-state)
+     [:div.pure-u {:on-click #(swap! template-state dissoc :background)
+                   :style    {:color "blue"}} "Remove custom background"])])
+
 (defn movement-component
   ([data title image] (movement-component data title image nil))
   ([{:keys [rep set distance duration i]} title image m]
@@ -173,14 +182,7 @@
 
 
 
-(defn upload-background-component []
-  [:div.pure-g
-   [:div.pure-u "Upload a custom background image for your template: "]
-   [:input.pure-u {:id "upload"
-            :type "file" :on-change #(preview-file)}]
-   (when (:background @template-state)
-     [:div.pure-u {:on-click #(swap! template-state dissoc :background)
-            :style    {:color "blue"}} "Remove custom background"])])
+
 
 (defn title-component []
   [:div.pure-g
