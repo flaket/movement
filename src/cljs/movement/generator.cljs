@@ -188,30 +188,49 @@
        [:p.subtitle description]])))
 
 
-(defn template-component []
-  (let []
-    (fn [name]
-      [:a.pure-u.secondary-button {:on-click #(create-session-from-template name)} name])))
+(defn template-component [name]
+  [:a.pure-u.secondary-button {:on-click #(create-session-from-template name)} name])
+
+(defn equipment-component [name]
+  [:a.pure-u.secondary-button {:on-click #(create-session-from-equipment name)} name])
 
 (defn blank-state-component []
-  (let [templates-showing? (atom false)]
+  (let [templates-showing? (atom false)
+        equipment-showing? (atom false)]
     (fn []
       [:div.blank-state
        [:div.pure-g
         [:h1.pure-u "Let's create your next Movement Session"]]
        [:div.pure-g
-        [:h3.pure-u [:a.secondary-button {:on-click pick-random-template} "Get inspired by a random movement session."]]]
+        [:h3.pure-u [:button.pure-button {:on-click pick-random-template} "Get inspired by a random movement session."]]]
        [:div.pure-g
-        [:h3.pure-u [:a.secondary-button {:on-click #(reset! templates-showing? true)} "Or generate a new session based on one of your templates"]]]
+        [:h3.pure-u [:button.pure-button {:on-click #(handler-fn
+                                                      (do
+                                                        (when (nil? (session/get :equipment))
+                                                          (get-equipment))
+                                                        (when equipment-showing?
+                                                          (reset! equipment-showing? false))
+                                                        (reset! templates-showing? (not @templates-showing?))))}
+                     "Or generate a new session based on one of your templates."]]]
+       [:div.pure-g
+        [:h3.pure-u [:button.pure-button {:on-click #(handler-fn
+                                                      (do
+                                                        (when (nil? (session/get :equipment))
+                                                          (get-equipment))
+                                                        (when templates-showing?
+                                                          (reset! templates-showing? false))
+                                                        (reset! equipment-showing? (not @equipment-showing?))))}
+                     "Or choose your available equipment and do some movements with that."]]]
        [:div.pure-g
         (when @templates-showing?
           (doall
             (for [t (session/get :templates)]
-              ^{:key t} [template-component t])))]])))
-
-(defn equipment-component [equipment-name]
-  [:a.pure-u.secondary-button
-   {:on-click #(create-session-from-equipment equipment-name)} equipment-name])
+              ^{:key (str t (rand-int 1000))} (template-component t))))]
+       [:div.pure-g
+        (when @equipment-showing?
+          (doall
+            (for [e (session/get :equipment)]
+              ^{:key (str e (rand-int 1000))} (equipment-component e))))]])))
 
 (defn top-menu-component []
   (let [templates-showing? (atom false)
@@ -224,7 +243,13 @@
           [:a.pure-u.secondary-button {:on-click pick-random-template} "Random session"]]]
         [:h3.pure-u.pure-u-md-1-4
          [:div.pure-g
-          [:a.pure-u.secondary-button {:on-click #(handler-fn (reset! templates-showing? (not @templates-showing?)))}
+          [:a.pure-u.secondary-button {:on-click #(handler-fn
+                                                   (do
+                                                     (when (nil? (session/get :equipment))
+                                                       (get-equipment))
+                                                     (when equipment-showing?
+                                                       (reset! equipment-showing? false))
+                                                     (reset! templates-showing? (not @templates-showing?))))}
            "Session from template"]]]
         [:h3.pure-u.pure-u-md-1-4
          [:div.pure-g
@@ -232,6 +257,8 @@
                                                    (do
                                                      (when (nil? (session/get :equipment))
                                                        (get-equipment))
+                                                     (when templates-showing?
+                                                       (reset! templates-showing? false))
                                                      (reset! equipment-showing? (not @equipment-showing?))))}
            "Session from equipment"]]]]
        [:div.pure-g
@@ -262,16 +289,14 @@
                      [:p (str c)]])]])))
 
 (defn finish-session-component []
-  (let []
-    (fn []
-      [:div.pure-g
-       [:h3.pure-u [:div.pure-g [:a.pure-u.log-button {:on-click #(do
-                                                                   (POST "store-session"
-                                                                         {:params        {:session (session/get :movement-session)
-                                                                                          :user    (session/get :user)}
-                                                                          :handler       (fn [response] (get-stored-sessions))
-                                                                          :error-handler (fn [response] (print response))}))}
-                                 "Finish movement session"]]]])))
+  [:h3.pure-g
+   [:a.pure-u.log-button
+    {:on-click #(POST "store-session"
+                      {:params        {:session (session/get :movement-session)
+                                       :user    (session/get :user)}
+                       :handler       (fn [response] (get-stored-sessions))
+                       :error-handler (fn [response] (print response))})}
+    "Finish movement session"]])
 
 (defn generator-component []
   (let []
@@ -287,5 +312,5 @@
              (for [p (:parts session)]
                ^{:key p} [part-component p]))
            [comment-component (:comment session)]
-           [finish-session-component]]
+           (finish-session-component)]
           [blank-state-component])]])))
