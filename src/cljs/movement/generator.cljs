@@ -5,6 +5,7 @@
   (:require
     [reagent.session :as session]
     [reagent.core :refer [atom]]
+    [cljs.core.async :as async :refer [timeout <!]]
     [goog.events :as events]
     [clojure.string :as str]
     [movement.util :refer [GET POST get-stored-sessions get-equipment]]
@@ -294,8 +295,12 @@
     (fn []
       [:div
        (if @session-stored-successfully?
-         [:h3.pure-g
-          [:div.pure-u {:style {:color "green"}} "Session stored successfully!"]]
+         (let []
+           (go (<! (timeout 3000))
+               (reset! finish-button-clicked? false)
+               (reset! session-stored-successfully? false))
+           [:h3.pure-g
+            [:div.pure-u {:style {:color "green"}} "Session stored successfully!"]])
          [:h3.pure-g
           (if @finish-button-clicked?
             [:a.pure-u.log-button
@@ -308,7 +313,7 @@
                                 :error-handler (fn [response] (print response))})}
              "Confirm Finish Session"]
             [:a.pure-u.log-button
-             {:on-click #(reset! finish-button-clicked? true)}
+             {:on-click #(handler-fn (reset! finish-button-clicked? true))}
              "Finish Movement Session"])])])))
 
 (defn generator-component []
