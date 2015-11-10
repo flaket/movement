@@ -289,14 +289,27 @@
                      [:p (str c)]])]])))
 
 (defn finish-session-component []
-  [:h3.pure-g
-   [:a.pure-u.log-button
-    {:on-click #(POST "store-session"
-                      {:params        {:session (session/get :movement-session)
-                                       :user    (session/get :user)}
-                       :handler       (fn [response] (get-stored-sessions))
-                       :error-handler (fn [response] (print response))})}
-    "Finish movement session"]])
+  (let [finish-button-clicked? (atom false)
+        session-stored-successfully? (atom false)]
+    (fn []
+      [:div
+       (if @session-stored-successfully?
+         [:h3.pure-g
+          [:div.pure-u {:style {:color "green"}} "Session stored successfully!"]]
+         [:h3.pure-g
+          (if @finish-button-clicked?
+            [:a.pure-u.log-button
+             {:on-click #(POST "store-session"
+                               {:params        {:session (session/get :movement-session)
+                                                :user    (session/get :user)}
+                                :handler       (fn [response] (do
+                                                                (reset! session-stored-successfully? true)
+                                                                (get-stored-sessions)))
+                                :error-handler (fn [response] (print response))})}
+             "Confirm Finish Session"]
+            [:a.pure-u.log-button
+             {:on-click #(reset! finish-button-clicked? true)}
+             "Finish Movement Session"])])])))
 
 (defn generator-component []
   (let []
@@ -312,5 +325,5 @@
              (for [p (:parts session)]
                ^{:key p} [part-component p]))
            [comment-component (:comment session)]
-           (finish-session-component)]
+           [finish-session-component]]
           [blank-state-component])]])))
