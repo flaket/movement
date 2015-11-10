@@ -126,7 +126,7 @@
                 :width (px 150)
                 :height (px 150)
                 :padding (px 0)
-                :margin "5px 10px 50px 10px"}]
+                :margin "15px 0px 0px 15px"}]
     [:.info {:position 'absolute
              :bottom (px 20)
              :right (px 20)}]

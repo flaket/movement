@@ -47,6 +47,29 @@
                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
             :error-handler #(print "error getting single movement through add.")}))))
 
+(defn refresh-movement [m part-title]
+  (let [parts (session/get-in [:movement-session :parts])
+        position-in-parts (first (positions #{part-title} (map :title parts)))
+        categories (:categories (first (filter #(= part-title (:title %)) parts)))
+        movements (session/get-in [:movement-session :parts position-in-parts :movements])]
+    (if-let [equipment (session/get-in [:movement-session :parts position-in-parts :equipment])]
+      (GET "movement-from-equipment"
+           {:params        {:equipment equipment}
+            :handler       #(let [id (:id m)
+                                  new-movement (first %)
+                                  new-movement (assoc new-movement :id id)
+                                  new-movements (assoc movements id new-movement)]
+                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+            :error-handler #(print "error getting movement from equipment through refresh.")})
+      (GET "singlemovement"
+           {:params        {:categories categories}
+            :handler       #(let [id (:id m)
+                                  new-movement (first %)
+                                  new-movement (assoc new-movement :id id)
+                                  new-movements (assoc movements id new-movement)]
+                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+            :error-handler #(print "error getting single movement through refresh.")}))))
+
 (defn add-movement-from-search [part-title movement-name]
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))
@@ -59,20 +82,6 @@
                                 new-movements (assoc movements id new-movement)]
                            (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
           :error-handler #(print "error getting single movement through add.")})))
-
-(defn refresh-movement [m part-title]
-  (let [parts (session/get-in [:movement-session :parts])
-        position-in-parts (first (positions #{part-title} (map :title parts)))
-        categories (:categories (first (filter #(= part-title (:title %)) parts)))
-        movements (session/get-in [:movement-session :parts position-in-parts :movements])]
-    (GET "singlemovement"
-         {:params        {:categories categories}
-          :handler       #(let [id (:id m)
-                                new-movement (first %)
-                                new-movement (assoc new-movement :id id)
-                                new-movements (assoc movements id new-movement)]
-                           (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-          :error-handler #(print "error getting single movement through refresh.")})))
 
 (defn remove-movement [m part-title]
   (let [parts (session/get-in [:movement-session :parts])
@@ -115,55 +124,118 @@
     (create-session-from-template name)))
 
 ;;;;;; Components ;;;;;;
+(defn buttons-component [m title]
+  [:div.pure-g
+   [:div.pure-u.refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]
+   [:div.pure-u.destroy {:on-click #(remove-movement m title) :title "Remove movement"}]])
+
+(defn rep-set-component [rep set]
+  [:div
+   [:div.pure-g
+    [:div.pure-u-1-12]
+    [:div.pure-u-5-12 (when-not (and rep (< 0 rep)) {:style {:opacity "0.4"}})
+     [:div.pure-u "Reps"]]
+    [:div.pure-u-5-12 (when-not (and set (< 0 set)) {:style {:opacity "0.4"}})
+     [:div.pure-u "Set"]]
+    [:div.pure-u-1-12]]
+
+   [:div.pure-g
+    [:div.pure-u-1-12]
+    [:div.pure-u-5-12
+     (if (and rep (< 0 rep))
+       [:div.pure-u {:style {:color     "#9999cc"
+                             :font-size 24}} rep]
+       [:div.pure-u])]
+    [:div.pure-u-5-12
+     (if (and set (< 0 set))
+       [:div.pure-u {:style {:color     "#9999cc"
+                             :font-size 24}} set]
+       [:div.pure-u])]
+    [:div.pure-u-1-12]]])
+
+(defn distance-duration-component [distance duration]
+  [:div
+   [:div.pure-g
+    [:div.pure-u-1-12]
+    [:div.pure-u-5-12 (when-not (and distance (< 0 distance)) {:style {:opacity "0.4"}})
+     [:div.pure-u "Meters"]
+     ]
+    [:div.pure-u-5-12 (when-not (and duration (< 0 duration)) {:style {:opacity "0.4"}})
+     [:div.pure-u "Seconds"]
+     ]
+    [:div.pure-u-1-12]]
+
+   [:div.pure-g
+    [:div.pure-u-1-12]
+    [:div.pure-u-5-12
+     (if (and distance (< 0 distance))
+       [:h3.pure-u {:style {:color "#9999cc"}} distance]
+       [:div.pure-u])]
+    [:div.pure-u-5-12
+     (if (and duration (< 0 duration))
+       [:h3.pure-u {:style {:color "#9999cc"}} duration]
+       [:div.pure-u])]
+    [:div.pure-u-1-12]]])
 
 (defn movement-component [{:keys [id category distance rep set duration] :as m} {:keys [title]}]
   (let [name (:movement/name m)
         graphic (image-url name)
         parts (session/get-in [:movement-session :parts])
-        position-in-parts (first (positions #{title} (map :title parts)))]
+        position-in-parts (first (positions #{title} (map :title parts)))
+        show-rep-set? (atom false)
+        rep-set-clicked? (atom false)
+        distance-duration-clicked? (atom false)]
     (fn []
       [:div.pure-u.movement {:id (str "m-" id)}
-       [:div.pure-g
-        [:div.pure-u.refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]
-        [:div.pure-u.destroy {:on-click #(remove-movement m title) :title "Remove movement"}]
-        [:h3.pure-u.title name]]
+
+       (buttons-component m title)
+
+       [:h3.pure-g
+        [:div.pure-u.title name]]
+
        [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
-       [:div.pure-g
-        [:div.pure-u rep]
-        [:div.pure-u "reps"]
-        [:div.pure-u
-         {:on-click #(session/update-in!
-                      [:movement-session :parts position-in-parts :movements id :rep] inc)} "+"]
-        [:div.pure-u
-         {:on-click #(session/update-in!
-                      [:movement-session :parts position-in-parts :movements id :rep] dec)} "-"]]
-       [:div.pure-g
-        [:div.pure-u set]
-        [:div.pure-u "set"]
-        [:div.pure-u
-         {:on-click #(session/update-in!
-                      [:movement-session :parts position-in-parts :movements id :set] inc)} "+"]
-        [:div.pure-u
-         {:on-click #(session/update-in!
-                      [:movement-session :parts position-in-parts :movements id :set] dec)} "-"]]
-       [:div.pure-g
-        [:div.pure-u distance]
-        [:div.pure-u "meters"]
-        [:div.pure-u
-         {:on-click #(session/update-in!
-                      [:movement-session :parts position-in-parts :movements id :distance] (fn [e] (+ e 5)))} "+"]
-        [:div.pure-u
-         {:on-click #(session/update-in!
-                      [:movement-session :parts position-in-parts :movements id :distance] (fn [e] (- e 5)))} "-"]]
-       [:div.pure-g
-        [:div.pure-u duration]
-        [:div.pure-u "seconds"]
-        [:div.pure-u
-         {:on-click #(session/update-in!
-                      [:movement-session :parts position-in-parts :movements id :duration] (fn [e] (+ e 10)))} "+"]
-        [:div.pure-u
-         {:on-click #(session/update-in!
-                      [:movement-session :parts position-in-parts :movements id :duration] (fn [e] (- e 10)))} "-"]]])))
+
+       [:div {:on-click #(reset! rep-set-clicked? (not @rep-set-clicked?))}
+        (rep-set-component rep set)]
+
+       (when @rep-set-clicked?
+         [:div.pure-g
+          [:div.pure-u-1-12]
+          [:div.pure-u-1-12 {:on-click #(session/update-in!
+                                         [:movement-session :parts position-in-parts :movements id :rep]
+                                         inc)} "+"]
+          [:div.pure-u-1-12 {:on-click #(session/update-in!
+                                         [:movement-session :parts position-in-parts :movements id :rep]
+                                         dec)} "-"]
+          [:div.pure-u-1-2]
+          [:div.pure-u-1-12 {:on-click #(session/update-in!
+                                         [:movement-session :parts position-in-parts :movements id :set]
+                                         inc)} "+"]
+          [:div.pure-u-1-12 {:on-click #(session/update-in!
+                                         [:movement-session :parts position-in-parts :movements id :set]
+                                         dec)} "-"]])
+
+
+       [:div {:on-click #(reset! distance-duration-clicked? (not @distance-duration-clicked?))}
+        (distance-duration-component distance duration)]
+       (when @distance-duration-clicked?
+         [:div.pure-g
+          [:div.pure-u-1-12]
+          [:div.pure-u-1-12 {:on-click #(session/update-in!
+                                        [:movement-session :parts position-in-parts :movements id :distance]
+                                        (fn [e] (+ e 5)))} "+"]
+          [:div.pure-u-1-12 {:on-click #(session/update-in!
+                                        [:movement-session :parts position-in-parts :movements id :distance]
+                                        (fn [e] (- e 5)))} "-"]
+          [:div.pure-u-1-2]
+          [:div.pure-u-1-12 {:on-click #(session/update-in!
+                                        [:movement-session :parts position-in-parts :movements id :duration]
+                                        (fn [e] (+ e 10)))} "+"]
+          [:div.pure-u-1-12 {:on-click #(session/update-in!
+                                        [:movement-session :parts position-in-parts :movements id :duration]
+                                        (fn [e] (- e 10)))} "-"]])
+
+       ])))
 
 (defn part-component []
   (let [show-search-input (atom false)]
