@@ -22,6 +22,7 @@
             [:a.pure-menu-link {:on-click #(reset! sign-in-pressed? true)} "Log In"]])]
         (if @sign-in-pressed?
           [:div.pure-g
+           [:div.pure-u-3-4]
            [:div.pure-u
             [:div.pure-form
              [login]]]]

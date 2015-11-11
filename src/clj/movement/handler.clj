@@ -89,6 +89,28 @@
         m (map #(assoc % :rep (:rep d) :set (:set d) :distance (:distance d) :duration (:duration d)) m)]
     m))
 
+(defn get-new-difficulty-movement [movement difficulty]
+  (case difficulty
+    :easier (let [r (d/q '[:find (pull ?e [*])
+                           :in $ ?id
+                           :where
+                           [?m :db/id ?id]
+                           [?m :movement/harder ?e]]
+                         db
+                         movement)
+                  m (->> r flatten set shuffle (take 1))]
+              (generate-response m))
+    :harder (let [r (d/q '[:find (pull ?e [*])
+                           :in $ ?id
+                           :where
+                           [?m :db/id ?id]
+                           [?m :movement/easier ?e]]
+                         db
+                         movement)
+                  m (->> r flatten set shuffle (take 1))]
+              (generate-response m))
+    nil))
+
 (defn all-template-titles [email]
   (let [db (d/db conn)
         templates (d/q '[:find [?title ...]
@@ -341,15 +363,22 @@
                                            (throw-unauthorized)
                                            (let [equipment (:equipment (:params req))]
                                              (create-equipment-session equipment 5))))
-           (GET "/movement-from-equipment" req (let [e (:equipment (:params req))]
+           (GET "/movement-from-equipment" req (let [e (:equipment (:params req))
+                                                     difficulty (:difficulty (:params req))]
                                                  (if-not (authenticated? req)
                                                    (throw-unauthorized)
                                                    (get-movement-from-equipment e))))
            (GET "/singlemovement" req
-             (let [categories (vec (vals (:categories (:params req))))]
+             (let [categories (vec (vals (:categories (:params req))))
+                   difficulty (:difficulty (:params req))]
                (if-not (authenticated? req)
                  (throw-unauthorized)
                  (generate-response (get-n-movements-from-categories 1 categories {})))))
+           (GET "/movement-from-difficulty" req (let [movement (:movement (:params req))
+                                                      difficulty (:difficulty (:params req))]
+                                                 (if-not (authenticated? req)
+                                                   (throw-unauthorized)
+                                                   (get-new-difficulty-movement movement difficulty))))
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
                                     (all-category-names)))

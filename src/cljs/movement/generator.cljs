@@ -47,28 +47,42 @@
                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
             :error-handler #(print "error getting single movement through add.")}))))
 
-(defn refresh-movement [m part-title]
-  (let [parts (session/get-in [:movement-session :parts])
-        position-in-parts (first (positions #{part-title} (map :title parts)))
-        categories (:categories (first (filter #(= part-title (:title %)) parts)))
-        movements (session/get-in [:movement-session :parts position-in-parts :movements])]
-    (if-let [equipment (session/get-in [:movement-session :parts position-in-parts :equipment])]
-      (GET "movement-from-equipment"
-           {:params        {:equipment equipment}
-            :handler       #(let [id (:id m)
-                                  new-movement (first %)
-                                  new-movement (assoc new-movement :id id)
-                                  new-movements (assoc movements id new-movement)]
-                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-            :error-handler #(print "error getting movement from equipment through refresh.")})
-      (GET "singlemovement"
-           {:params        {:categories categories}
-            :handler       #(let [id (:id m)
-                                  new-movement (first %)
-                                  new-movement (assoc new-movement :id id)
-                                  new-movements (assoc movements id new-movement)]
-                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-            :error-handler #(print "error getting single movement through refresh.")}))))
+(defn refresh-movement
+  ([m part-title]
+   (let [parts (session/get-in [:movement-session :parts])
+         position-in-parts (first (positions #{part-title} (map :title parts)))
+         categories (:categories (first (filter #(= part-title (:title %)) parts)))
+         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
+     (if-let [equipment (session/get-in [:movement-session :parts position-in-parts :equipment])]
+       (GET "movement-from-equipment"
+            {:params        {:equipment equipment}
+             :handler       #(let [id (:id m)
+                                   new-movement (first %)
+                                   new-movement (assoc new-movement :id id)
+                                   new-movements (assoc movements id new-movement)]
+                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+             :error-handler #(print "error getting movement from equipment through refresh.")})
+       (GET "singlemovement"
+            {:params        {:categories categories}
+             :handler       #(let [id (:id m)
+                                   new-movement (first %)
+                                   new-movement (assoc new-movement :id id)
+                                   new-movements (assoc movements id new-movement)]
+                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+             :error-handler #(print "error getting single movement through refresh.")}))))
+  ([m part-title new-difficulty]
+   (let [parts (session/get-in [:movement-session :parts])
+         position-in-parts (first (positions #{part-title} (map :title parts)))
+         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
+     (GET "movement-from-difficulty"
+            {:params        {:movement (:db/id m)
+                             :difficulty  new-difficulty}
+             :handler       #(let [id (:id m)
+                                   new-movement (first %)
+                                   new-movement (assoc new-movement :id id)
+                                   new-movements (assoc movements id new-movement)]
+                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+             :error-handler #(print "error getting new difficulty movement through refresh.")}))))
 
 (defn add-movement-from-search [part-title movement-name]
   (let [parts (session/get-in [:movement-session :parts])
@@ -126,16 +140,22 @@
 ;;;;;; Components ;;;;;;
 (defn buttons-component [m title]
   [:div.pure-g
-   [:div.pure-u.refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]
-   [:div.pure-u.destroy {:on-click #(remove-movement m title) :title "Remove movement"}]])
+   [:div.pure-u.refresh
+    [:i.fa.fa-refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
+   [:div.pure-u.refresh
+    [:i.fa.fa-level-down {:on-click #(refresh-movement m title :easier) :title "Swap with easier movement"}]]
+   [:div.pure-u.refresh
+    [:i.fa.fa-level-up {:on-click #(refresh-movement m title :harder) :title "Swap with harder movement"}]]
+   [:div.pure-u.destroy
+    [:i.fa.fa-minus-circle {:on-click #(remove-movement m title) :title "Remove movement"}]]])
 
 (defn rep-set-component [rep set]
   [:div
    [:div.pure-g
     [:div.pure-u-1-12]
-    [:div.pure-u-5-12 (when-not (and rep (< 0 rep)) {:style {:opacity "0.4"}})
+    [:div.pure-u-5-12 (when-not (and rep (< 0 rep)) {:style {:opacity "0.2"}})
      [:div.pure-u "Reps"]]
-    [:div.pure-u-5-12 (when-not (and set (< 0 set)) {:style {:opacity "0.4"}})
+    [:div.pure-u-5-12 (when-not (and set (< 0 set)) {:style {:opacity "0.2"}})
      [:div.pure-u "Set"]]
     [:div.pure-u-1-12]]
 
@@ -157,10 +177,10 @@
   [:div
    [:div.pure-g
     [:div.pure-u-1-12]
-    [:div.pure-u-5-12 (when-not (and distance (< 0 distance)) {:style {:opacity "0.4"}})
+    [:div.pure-u-5-12 (when-not (and distance (< 0 distance)) {:style {:opacity "0.2"}})
      [:div.pure-u "Meters"]
      ]
-    [:div.pure-u-5-12 (when-not (and duration (< 0 duration)) {:style {:opacity "0.4"}})
+    [:div.pure-u-5-12 (when-not (and duration (< 0 duration)) {:style {:opacity "0.2"}})
      [:div.pure-u "Seconds"]
      ]
     [:div.pure-u-1-12]]
@@ -169,20 +189,22 @@
     [:div.pure-u-1-12]
     [:div.pure-u-5-12
      (if (and distance (< 0 distance))
-       [:h3.pure-u {:style {:color "#9999cc"}} distance]
+       [:div.pure-u {:style {:color "#9999cc"
+                             :font-size 24}} distance]
        [:div.pure-u])]
     [:div.pure-u-5-12
      (if (and duration (< 0 duration))
-       [:h3.pure-u {:style {:color "#9999cc"}} duration]
+       [:div.pure-u {:style {:color "#9999cc"
+                             :font-size 24}} duration]
        [:div.pure-u])]
     [:div.pure-u-1-12]]])
 
-(defn movement-component [{:keys [id category distance rep set duration] :as m} {:keys [title]}]
+(defn movement-component [{:keys [id category distance rep set duration] :as m}
+                          {:keys [title]}]
   (let [name (:movement/name m)
         graphic (image-url name)
         parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{title} (map :title parts)))
-        show-rep-set? (atom false)
         rep-set-clicked? (atom false)
         distance-duration-clicked? (atom false)]
     (fn []
@@ -195,7 +217,8 @@
 
        [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
 
-       [:div {:on-click #(reset! rep-set-clicked? (not @rep-set-clicked?))}
+       [:div {:on-click        #(handler-fn (reset! rep-set-clicked? (not @rep-set-clicked?)))
+              :on-double-click #(handler-fn (print "hello"))}
         (rep-set-component rep set)]
 
        (when @rep-set-clicked?
@@ -207,7 +230,7 @@
           [:div.pure-u-1-12 {:on-click #(session/update-in!
                                          [:movement-session :parts position-in-parts :movements id :rep]
                                          dec)} "-"]
-          [:div.pure-u-1-2]
+          [:div.pure-u-1-4]
           [:div.pure-u-1-12 {:on-click #(session/update-in!
                                          [:movement-session :parts position-in-parts :movements id :set]
                                          inc)} "+"]
@@ -218,6 +241,7 @@
 
        [:div {:on-click #(reset! distance-duration-clicked? (not @distance-duration-clicked?))}
         (distance-duration-component distance duration)]
+
        (when @distance-duration-clicked?
          [:div.pure-g
           [:div.pure-u-1-12]
@@ -227,15 +251,13 @@
           [:div.pure-u-1-12 {:on-click #(session/update-in!
                                         [:movement-session :parts position-in-parts :movements id :distance]
                                         (fn [e] (- e 5)))} "-"]
-          [:div.pure-u-1-2]
+          [:div.pure-u-1-4]
           [:div.pure-u-1-12 {:on-click #(session/update-in!
                                         [:movement-session :parts position-in-parts :movements id :duration]
                                         (fn [e] (+ e 10)))} "+"]
           [:div.pure-u-1-12 {:on-click #(session/update-in!
                                         [:movement-session :parts position-in-parts :movements id :duration]
-                                        (fn [e] (- e 10)))} "-"]])
-
-       ])))
+                                        (fn [e] (- e 10)))} "-"]])])))
 
 (defn part-component []
   (let [show-search-input (atom false)]
@@ -243,7 +265,7 @@
       [:div.part
        [:h2 title]
        [:div.pure-g
-        [:p.pure-u-1-2 [:a.secondary-button {:on-click #(add-movement title)} "+"]]]
+        [:a.pure-u.secondary-button {:on-click #(add-movement title)} [:i.fa.fa-plus]]]
        [:div.pure-g
         (doall
           (for [m (vals movements)]

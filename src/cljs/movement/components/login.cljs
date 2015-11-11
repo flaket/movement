@@ -15,16 +15,18 @@
         loading? (atom false)]
     (fn []
       [:div
-       [:label {:for "email" :alt "Enter email"} "Your Email"]
-       [text-input email {:class (when @loading? "disabled")
-                          :type  "email"
-                          :name  "email"
-                          :placeholder "Your Email"}]
-       [:label {:for "password" :alt "Enter password"} "Your Password"]
-       [text-input password {:class (when @loading? "disabled")
-                             :type  "password"
-                             :name  "password"
-                             :placeholder "Your Password"}]
+       [:div.pure-g
+        [:span.pure-u [:i.fa.fa-envelope-o.fa-fw]]
+        [text-input email {:class       (str "pure-u" (when @loading? "disabled"))
+                           :type        "email"
+                           :name        "email"
+                           :placeholder "Your Email"}]]
+       [:div.pure-g
+        [:span.pure-u [:i.fa.fa-key.fa-fw]]
+        [text-input password {:class       (str "pure-u" (when @loading? "disabled"))
+                              :type        "password"
+                              :name        "password"
+                              :placeholder "Your Password"}]]
        (when-let [e @error]
          [:div.notice e])
        [:button.pure-button

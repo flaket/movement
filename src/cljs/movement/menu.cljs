@@ -6,14 +6,14 @@
     [secretary.core :include-macros true :refer [dispatch!]]))
 
 (defn menu-component []
-  (let [menu-item-session "Session"
-        menu-item-user "User"
-        menu-item-template "Templates"
-        menu-item-movements "Movements"]
+  (let [menu-item-session " Session"
+        menu-item-user " User"
+        menu-item-template " Templates"]
     (fn []
       [:div
        [:a {:class    (str "menu-link " (when (session/get :active?) "active"))
-            :on-click  #(session/put! :active? (not (session/get :active?)))}]
+            :on-click  #(session/put! :active? (not (session/get :active?)))}
+        [:span]]
        (let [selected (session/get :selected-menu-item)]
          [:div#menu {:class (str "" (when (session/get :active?) "active"))}
           [:div.pure-menu
@@ -24,22 +24,25 @@
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-session)
                                (dispatch! "/generator"))}
-             [:a.pure-menu-link menu-item-session]]
+
+             [:a.pure-menu-link [:i.fa.fa-home] menu-item-session]]
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-user selected)
                                     " menu-item-divided pure-menu-selected"))
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-user)
                                (dispatch! "/user"))}
-             [:a.pure-menu-link menu-item-user]]
+
+             [:a.pure-menu-link [:i.fa.fa-user] menu-item-user]]
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-template selected)
                                     " menu-item-divided pure-menu-selected"))
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-template)
                                (dispatch! "/template"))}
-             [:a.pure-menu-link menu-item-template]]
+             [:a.pure-menu-link [:i.fa.fa-shield] menu-item-template]]
+
             [:li {:className (str "pure-menu-item")
                   :on-click  #(do (session/clear!)
                                   (dispatch! "/"))}
-             [:a.pure-menu-link "Log Out"]]]]])])))
+             [:a.pure-menu-link [:i.fa.fa-power-off] " Log Out"]]]]])])))

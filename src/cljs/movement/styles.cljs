@@ -81,39 +81,12 @@
                  :border-radius (px 25)}]
 
     [:.refresh {:position 'relative
-                :left     (px 10)
-                :width    (px 25)
-                :height   (px 25)
                 :margin   "auto 0"
                 :font-size "1.8em"
                 :color "#99cc99"
                 :cursor 'pointer
                 :-webkit-transition "all 0.2s"
-                :transition "all 0.2s"}
-     #_[:&:hover {:text-shadow "0 0 1px #000, 0 0 10px rgba(0,255,0,0.8"
-                :-webkit-transform "scale(1.3)"
-                :-ms-transform "scale(1.3)"
-                :transform "scale(1.3)"}]
-     #_[:&:after {:content "∴"}]]
-
-    #_[:.destroy {:position 'absolute
-                :top (px 10)
-                :right (px 5)
-                :width (px 25)
-                :height (px 25)
-                :margin "auto 0"
-                :font-size "1.5em"
-                :color "#CC9999"
-                :cursor 'pointer
-                  ;:-webkit-transition "all 0.2s"
-                :transition "all 0.2s"}
-     #_[:&:hover {:text-shadow "0 0 1px #000, 0 0 10px rgba(255,0,0,0.8"
-                :-webkit-transform "scale(1.3)"
-                :-ms-transform "scale(1.3)"
-                :transform "scale(1.3)"}]
-     #_[:&:destroy {:content "✖"}]]
-
-
+                :transition "all 0.2s"}]
 
 
     [:.description {:position 'relative
