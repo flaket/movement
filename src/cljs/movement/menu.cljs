@@ -40,7 +40,7 @@
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-template)
                                (dispatch! "/template"))}
-             [:a.pure-menu-link [:i.fa.fa-shield] menu-item-template]]
+             [:a.pure-menu-link [:i.fa.fa-book] menu-item-template]]
 
             [:li {:className (str "pure-menu-item")
                   :on-click  #(do (session/clear!)

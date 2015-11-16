@@ -77,17 +77,20 @@
                  :border-width (px 1)
                  :border-color "#ffffa4"
                  :background-color (hsl 55 30 95)
-                 :box-shadow "0px 0px 2px rgba(50,50,50,0.5)"
-                 :border-radius (px 25)}]
+                 :box-shadow "0px 0px 3px rgba(50,50,50,0.5)"
+                 :border-radius (px 15)}]
 
     [:.refresh {:position 'relative
+                :top (px 10)
+                :right (px 5)
+                :width (px 25)
+                :height (px 25)
                 :margin   "auto 0"
-                :font-size "1.8em"
+                :font-size "1.3em"
                 :color "#99cc99"
                 :cursor 'pointer
                 :-webkit-transition "all 0.2s"
                 :transition "all 0.2s"}]
-
 
     [:.description {:position 'relative
                     :padding 0
@@ -99,20 +102,6 @@
                 :width (px 150)
                 :height (px 150)
                 :padding (px 0)
-                :margin "15px 0px 0px 15px"}]
-    [:.info {:position 'absolute
-             :bottom (px 20)
-             :right (px 20)}]
-    [:.icon {:width (px 25)
-             :height (px 25)}]
-    [:.rep-text {:color "#68f"
-                 :border-bottom "1px dashed #13f"}
-     [:&:hover {:cursor 'pointer}]]
-    [:.rep {}]
-    [:.set-text {:color "#68f"
-                 :border-bottom "1px dashed #13f"}
-     [:&:hover {:cursor 'pointer}]]
-    [:.set {}]
-    [:.duration {}]))
+                :margin "15px 0px 0px 15px"}]))
 
 (insert-styles base-css)

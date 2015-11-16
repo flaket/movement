@@ -237,7 +237,7 @@
                              (when (empty? (:categories @template-state)) (swap! template-state dissoc :categories))
                              (when (empty? (:specific-movements @template-state)) (swap! template-state dissoc :specific-movements))
                              (print @template-state)
-                             #_(POST "template"
+                             (POST "template"
                                      {:params        @template-state
                                       :handler       (fn [response] (print response))
                                       :error-handler (fn [response] (reset! error-atom response))})))))}

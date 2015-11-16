@@ -24,12 +24,12 @@
         loading? (atom false)]
     (fn []
       [:div
-       [:label {:for "email" :alt "Enter email" :placeholder "Email"} "Your Email"]
+       [:span.pure-u [:i.fa.fa-envelope-o.fa-fw]]
        [text-input email {:class    (when @loading? "disabled")
                           :type     "email"
                           :name     "email"
                           :placeholder "Your Email"}]
-       [:label {:for "password" :alt "Enter password" :placeholder "Password"} "Your Password"]
+       [:span.pure-u [:i.fa.fa-key.fa-fw]]
        [text-input password {:class    (when @loading? "disabled")
                          :type     "password"
                          :name     "password"

@@ -5,8 +5,7 @@
                                    get-stored-sessions get-templates
                                    get-equipment get-all-categories]]
             [secretary.core :include-macros true :refer [dispatch!]]
-            [reagent.session :as session]
-            [ajax.edn :refer [edn-request-format edn-response-format]]))
+            [reagent.session :as session]))
 
 (defn login []
   (let [email (atom "")

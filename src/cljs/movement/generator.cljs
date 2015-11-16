@@ -140,14 +140,16 @@
 ;;;;;; Components ;;;;;;
 (defn buttons-component [m title]
   [:div.pure-g
+   [:div.pure-u-1-12]
    [:div.pure-u.refresh
     [:i.fa.fa-refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
    [:div.pure-u.refresh
-    [:i.fa.fa-level-down {:on-click #(refresh-movement m title :easier) :title "Swap with easier movement"}]]
+    [:i.fa.fa-minus {:on-click #(refresh-movement m title :easier) :title "Swap with easier movement"}]]
    [:div.pure-u.refresh
-    [:i.fa.fa-level-up {:on-click #(refresh-movement m title :harder) :title "Swap with harder movement"}]]
+    [:i.fa.fa-plus {:on-click #(refresh-movement m title :harder) :title "Swap with harder movement"}]]
    [:div.pure-u.destroy
-    [:i.fa.fa-minus-circle {:on-click #(remove-movement m title) :title "Remove movement"}]]])
+    [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
+   [:div.pure-u-1-12]])
 
 (defn rep-set-component [rep set]
   [:div
@@ -199,65 +201,94 @@
        [:div.pure-u])]
     [:div.pure-u-1-12]]])
 
+(defn slider []
+  (let [data (atom 0)]
+    (fn [position-in-parts id r min max step]
+      [:div.pure-g
+       [:div.pure-u @data]
+       [:div.pure-u {:on-click #(session/assoc-in!
+                                 [:movement-session :parts position-in-parts :movements id r]
+                                 @data)} "Save"]
+       [:input {:className "pure-u"
+                :type      "range" :value @data :min min :max max :step step
+                :style     {:width "100%"}
+                :on-change #(reset! data (-> % .-target .-value))}]])))
+
 (defn movement-component [{:keys [id category distance rep set duration] :as m}
                           {:keys [title]}]
   (let [name (:movement/name m)
         graphic (image-url name)
         parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{title} (map :title parts)))
-        rep-set-clicked? (atom false)
-        distance-duration-clicked? (atom false)]
+        rep-clicked? (atom false)
+        set-clicked? (atom false)
+        distance-clicked? (atom false)
+        duration-clicked? (atom false)]
     (fn []
       [:div.pure-u.movement {:id (str "m-" id)}
-
        (buttons-component m title)
-
        [:h3.pure-g
+        [:div.pure-u-1-12]
         [:div.pure-u.title name]]
-
        [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
-
-       [:div {:on-click        #(handler-fn (reset! rep-set-clicked? (not @rep-set-clicked?)))
-              :on-double-click #(handler-fn (print "hello"))}
-        (rep-set-component rep set)]
-
-       (when @rep-set-clicked?
-         [:div.pure-g
-          [:div.pure-u-1-12]
-          [:div.pure-u-1-12 {:on-click #(session/update-in!
-                                         [:movement-session :parts position-in-parts :movements id :rep]
-                                         inc)} "+"]
-          [:div.pure-u-1-12 {:on-click #(session/update-in!
-                                         [:movement-session :parts position-in-parts :movements id :rep]
-                                         dec)} "-"]
-          [:div.pure-u-1-4]
-          [:div.pure-u-1-12 {:on-click #(session/update-in!
-                                         [:movement-session :parts position-in-parts :movements id :set]
-                                         inc)} "+"]
-          [:div.pure-u-1-12 {:on-click #(session/update-in!
-                                         [:movement-session :parts position-in-parts :movements id :set]
-                                         dec)} "-"]])
-
-
-       [:div {:on-click #(reset! distance-duration-clicked? (not @distance-duration-clicked?))}
-        (distance-duration-component distance duration)]
-
-       (when @distance-duration-clicked?
-         [:div.pure-g
-          [:div.pure-u-1-12]
-          [:div.pure-u-1-12 {:on-click #(session/update-in!
-                                        [:movement-session :parts position-in-parts :movements id :distance]
-                                        (fn [e] (+ e 5)))} "+"]
-          [:div.pure-u-1-12 {:on-click #(session/update-in!
-                                        [:movement-session :parts position-in-parts :movements id :distance]
-                                        (fn [e] (- e 5)))} "-"]
-          [:div.pure-u-1-4]
-          [:div.pure-u-1-12 {:on-click #(session/update-in!
-                                        [:movement-session :parts position-in-parts :movements id :duration]
-                                        (fn [e] (+ e 10)))} "+"]
-          [:div.pure-u-1-12 {:on-click #(session/update-in!
-                                        [:movement-session :parts position-in-parts :movements id :duration]
-                                        (fn [e] (- e 10)))} "-"]])])))
+       [:div
+        [:div.pure-g
+         [:div.pure-u-1-12]
+         [:div.pure-u-5-12 (when-not (and rep (< 0 rep)) {:style {:opacity "0.2"}})
+          [:div.pure-u {:on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))
+                        :style    (if @rep-clicked? {:background-color "#5555aa"} {})} "Reps"]]
+         [:div.pure-u-5-12 (when-not (and set (< 0 set)) {:style {:opacity "0.2"}})
+          [:div.pure-u {:on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))
+                        :style    (if @set-clicked? {:background-color "#5555aa"} {})} "Set"]]
+         [:div.pure-u-1-12]]
+        [:div.pure-g
+         [:div.pure-u-1-12]
+         [:div.pure-u-5-12
+          (if (and rep (< 0 rep))
+            [:div.pure-u {:style {:color     "#9999cc"
+                                  :font-size 24}
+                          :on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} rep]
+            [:div.pure-u])]
+         [:div.pure-u-5-12
+          (if (and set (< 0 set))
+            [:div.pure-u {:style {:color     "#9999cc"
+                                  :font-size 24}
+                          :on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))} set]
+            [:div.pure-u])]
+         [:div.pure-u-1-12]]]
+       [:div
+        [:div.pure-g
+         [:div.pure-u-1-12]
+         [:div.pure-u-5-12 (when-not (and distance (< 0 distance)) {:style {:opacity "0.2"}})
+          [:div.pure-u {:on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))
+                        :style    (if @distance-clicked? {:background-color "#5555aa"} {})} "Meters"]]
+         [:div.pure-u-5-12 (when-not (and duration (< 0 duration)) {:style {:opacity "0.2"}})
+          [:div.pure-u {:on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))
+                        :style    (if @duration-clicked? {:background-color "#5555aa"} {})} "Seconds"]]
+         [:div.pure-u-1-12]]
+        [:div.pure-g
+         [:div.pure-u-1-12]
+         [:div.pure-u-5-12
+          (if (and distance (< 0 distance))
+            [:div.pure-u {:style {:color "#9999cc"
+                                  :font-size 24}
+                          :on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} distance]
+            [:div.pure-u])]
+         [:div.pure-u-5-12
+          (if (and duration (< 0 duration))
+            [:div.pure-u {:style {:color "#9999cc"
+                                  :font-size 24}
+                          :on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} duration]
+            [:div.pure-u])]
+         [:div.pure-u-1-12]]]
+       (when @rep-clicked?
+         [slider position-in-parts id :rep 0 50 1])
+       (when @set-clicked?
+         [slider position-in-parts id :set 0 10 1])
+       (when @distance-clicked?
+         [slider position-in-parts id :distance 0 400 5])
+       (when @duration-clicked?
+         [slider position-in-parts id :duration 0 1800 10])])))
 
 (defn part-component []
   (let [show-search-input (atom false)]
@@ -265,7 +296,7 @@
       [:div.part
        [:h2 title]
        [:div.pure-g
-        [:a.pure-u.secondary-button {:on-click #(add-movement title)} [:i.fa.fa-plus]]]
+        [:a.pure-u.button {:on-click #(add-movement title)} "Add" #_[:i.fa.fa-plus]]]
        [:div.pure-g
         (doall
           (for [m (vals movements)]
@@ -280,14 +311,15 @@
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5 (str day "/" month)]
         [:h1.pure-u.pure-u-md-3-5 title]]
-       [:p.subtitle description]])))
+       [:div.pure-g
+        [:p.pure-u.subtitle description]]])))
 
 
 (defn template-component [name]
-  [:a.pure-u.secondary-button {:on-click #(create-session-from-template name)} name])
+  [:a.pure-u.button {:on-click #(create-session-from-template name)} name])
 
 (defn equipment-component [name]
-  [:a.pure-u.secondary-button {:on-click #(create-session-from-equipment name)} name])
+  [:a.pure-u.button {:on-click #(create-session-from-equipment name)} name])
 
 (defn blank-state-component []
   (let [templates-showing? (atom false)
@@ -297,9 +329,10 @@
        [:div.pure-g
         [:h1.pure-u "Let's create your next Movement Session"]]
        [:div.pure-g
-        [:h3.pure-u [:button.pure-button {:on-click pick-random-template} "Get inspired by a random movement session."]]]
+        [:h3.pure-u [:a.button {:on-click pick-random-template} "Get inspired by a random movement session."]]]
        [:div.pure-g
-        [:h3.pure-u [:button.pure-button {:on-click #(handler-fn
+        [:h3.pure-u [:a.button {:className (when @templates-showing? "button-primary")
+                                :on-click #(handler-fn
                                                       (do
                                                         (when (nil? (session/get :equipment))
                                                           (get-equipment))
@@ -308,7 +341,8 @@
                                                         (reset! templates-showing? (not @templates-showing?))))}
                      "Or generate a new session based on one of your templates."]]]
        [:div.pure-g
-        [:h3.pure-u [:button.pure-button {:on-click #(handler-fn
+        [:h3.pure-u [:a.button {:className (when @equipment-showing? "button-primary")
+                                :on-click #(handler-fn
                                                       (do
                                                         (when (nil? (session/get :equipment))
                                                           (get-equipment))
@@ -333,29 +367,25 @@
     (fn []
       [:div
        [:div.pure-g
-        [:h3.pure-u.pure-u-md-1-4
-         [:div.pure-g
-          [:a.pure-u.secondary-button {:on-click pick-random-template} "Random session"]]]
-        [:h3.pure-u.pure-u-md-1-4
-         [:div.pure-g
-          [:a.pure-u.secondary-button {:on-click #(handler-fn
-                                                   (do
-                                                     (when (nil? (session/get :equipment))
-                                                       (get-equipment))
-                                                     (when equipment-showing?
-                                                       (reset! equipment-showing? false))
-                                                     (reset! templates-showing? (not @templates-showing?))))}
-           "Session from template"]]]
-        [:h3.pure-u.pure-u-md-1-4
-         [:div.pure-g
-          [:a.pure-u.secondary-button {:on-click #(handler-fn
-                                                   (do
-                                                     (when (nil? (session/get :equipment))
-                                                       (get-equipment))
-                                                     (when templates-showing?
-                                                       (reset! templates-showing? false))
-                                                     (reset! equipment-showing? (not @equipment-showing?))))}
-           "Session from equipment"]]]]
+        [:h3.pure-u.button {:on-click pick-random-template} "Random session"]
+        [:h3.pure-u.button {:className (when @templates-showing? "button-primary")
+                           :on-click #(handler-fn
+                                       (do
+                                         (when (nil? (session/get :equipment))
+                                           (get-equipment))
+                                         (when equipment-showing?
+                                           (reset! equipment-showing? false))
+                                         (reset! templates-showing? (not @templates-showing?))))}
+         "Session from template"]
+        [:h3.pure-u.button {:className (when @equipment-showing? "button-primary")
+                           :on-click #(handler-fn
+                                       (do
+                                         (when (nil? (session/get :equipment))
+                                           (get-equipment))
+                                         (when templates-showing?
+                                           (reset! templates-showing? false))
+                                         (reset! equipment-showing? (not @equipment-showing?))))}
+         "Session from equipment"]]
        [:div.pure-g
         (when @templates-showing?
           (doall
@@ -372,7 +402,7 @@
     (fn [comments]
       [:div
        [:div.pure-g
-        [:p.pure-u [:a.secondary-button {:on-click #(handler-fn (reset! adding-comment true))} "Add comments"]]]
+        [:p.pure-u [:a.button {:on-click #(handler-fn (reset! adding-comment true))} "Add comments"]]]
        [:div.pure-g
         (when @adding-comment [text-edit-component {:class   "pure-u edit"
                                                     :on-save #(handler-fn (session/update-in! [:movement-session :comment] conj %))
@@ -397,7 +427,7 @@
             [:div.pure-u {:style {:color "green"}} "Session stored successfully!"]])
          [:h3.pure-g
           (if @finish-button-clicked?
-            [:a.pure-u.log-button
+            [:a.pure-u.button.button-primary
              {:on-click #(POST "store-session"
                                {:params        {:session (session/get :movement-session)
                                                 :user    (session/get :user)}
@@ -406,7 +436,7 @@
                                                                 (get-stored-sessions)))
                                 :error-handler (fn [response] (print response))})}
              "Confirm Finish Session"]
-            [:a.pure-u.log-button
+            [:a.pure-u.button.button-primary
              {:on-click #(handler-fn (reset! finish-button-clicked? true))}
              "Finish Movement Session"])])])))
 
