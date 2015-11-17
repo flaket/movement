@@ -32,7 +32,8 @@
                  [cljs-ajax "0.5.0"]
                  [garden "1.2.5" ]
                  #_[garden "1.3.0-SNAPSHOT"]
-                 [prismatic/dommy "1.1.0"]]
+                 [prismatic/dommy "1.1.0"]
+                 [hiccup "1.0.5"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]

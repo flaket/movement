@@ -47,7 +47,7 @@
        (if (not= (:new-pass @pass) (:repeat-pass @pass))
          [:div.error "password mismatch"]
          (when (not-empty (:new-pass @pass))
-           [:span.button {:on-click #(update-password! pass)} "change password"]))])))
+           [:a.button.button-primary {:on-click #(update-password! pass)} "change password"]))])))
 
 (defn user-component []
   (let []

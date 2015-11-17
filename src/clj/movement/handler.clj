@@ -24,9 +24,12 @@
             [buddy.auth :refer [authenticated? throw-unauthorized]]
             [buddy.auth.backends.token :refer [jws-backend]]
             [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
+            [buddy.hashers :as hashers]
+            [hiccup.core :refer [html]]
 
             [movement.db]
-            [buddy.hashers :as hashers]))
+            [movement.pages.landing :refer [landing]]
+            ))
 
 (def uri "datomic:dev://localhost:4334/movement14")
 (def conn (d/connect uri))
@@ -328,63 +331,84 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
-           (GET "/" [] (render-file "app.html" {:dev        (env :dev?)
-                                                :csrf-token *anti-forgery-token*}))
+           (GET "/" [] (landing))
+
+           (GET "/app" [] (render-file "app.html" {:dev        (env :dev?)
+                                                   :csrf-token *anti-forgery-token*}))
+
            (POST "/login" [username password] (jws-login username password))
+
            (POST "/signup" [username password] (add-user! username password))
 
            (POST "/store-session" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (add-session! req)))
+
            (POST "/template" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (add-template! req)))
+
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (retrieve-sessions req)))
+
            (GET "/template" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (let [template-name (:template-name (:params req))
                                         user (:user (:params req))]
                                     (create-session template-name user))))
+
            (GET "/templates" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (all-template-titles (str (:user (:params req))))))
+
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (get-movement-entity (:name (:params req)))))
+
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (all-movement-names)))
+
            (GET "/equipment" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (all-equipment-names)))
+
            (GET "/equipment-session" req (if-not (authenticated? req)
                                            (throw-unauthorized)
                                            (let [equipment (:equipment (:params req))]
                                              (create-equipment-session equipment 5))))
+
            (GET "/movement-from-equipment" req (let [e (:equipment (:params req))
                                                      difficulty (:difficulty (:params req))]
                                                  (if-not (authenticated? req)
                                                    (throw-unauthorized)
                                                    (get-movement-from-equipment e))))
+
            (GET "/singlemovement" req
              (let [categories (vec (vals (:categories (:params req))))
                    difficulty (:difficulty (:params req))]
                (if-not (authenticated? req)
                  (throw-unauthorized)
                  (generate-response (get-n-movements-from-categories 1 categories {})))))
+
            (GET "/movement-from-difficulty" req (let [movement (:movement (:params req))
                                                       difficulty (:difficulty (:params req))]
                                                  (if-not (authenticated? req)
                                                    (throw-unauthorized)
                                                    (get-new-difficulty-movement movement difficulty))))
+
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
                                     (all-category-names)))
+
            (resources "/")
+
            (not-found "Not Found")
-           (GET "/raw" [] (render-file "indexraw.html" {:dev (env :dev?)})))
+
+           (GET "/raw" [] (render-file "indexraw.html" {:dev (env :dev?)}))
+
+           )
 
 (def app
   (let [handler (-> routes

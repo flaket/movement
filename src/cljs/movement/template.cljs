@@ -224,7 +224,7 @@
 
 (defn save-template-component [error-atom]
   [:div.pure-g
-   [:button.pure-button
+   [:a.button.button-primary
     {:on-click #(do
                  (swap! template-state assoc :user (session/get :user))
                  (let [title (:title @template-state)

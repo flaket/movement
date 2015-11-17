@@ -9,7 +9,6 @@
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
-            [movement.explorer :refer [explorer-component]]
             [movement.share :refer [share-component]]
             [movement.components.landing :refer [home]]
             [movement.components.signup :refer [sign-up]]
@@ -24,11 +23,9 @@
 (secretary/defroute "/" [] (set-page! #'home))
 (secretary/defroute "/signup" [] (set-page! #'sign-up))
 (secretary/defroute "/login" [] (set-page! #'login))
-
 (secretary/defroute "/generator" [] (set-page! #'generator-component))
 (secretary/defroute "/user" [] (set-page! #'user-component))
 (secretary/defroute "/template" [] (set-page! #'template-creator-component))
-(secretary/defroute "/movements" [] (set-page! #'explorer-component))
 (secretary/defroute "/share" [] (set-page! #'share-component))
 
 ;---------------------------
@@ -42,7 +39,9 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (set-page! #'generator-component)
+  (if (session/get :user)
+    (set-page! #'generator-component)
+    (set-page! #'login))
 
   (.initializeTouchEvents js/React true)
   (mount-root))

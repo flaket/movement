@@ -208,7 +208,7 @@
        [:div.pure-u @data]
        [:div.pure-u {:on-click #(session/assoc-in!
                                  [:movement-session :parts position-in-parts :movements id r]
-                                 @data)} "Save"]
+                                 (int @data))} "Save"]
        [:input {:className "pure-u"
                 :type      "range" :value @data :min min :max max :step step
                 :style     {:width "100%"}
