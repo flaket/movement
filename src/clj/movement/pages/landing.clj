@@ -78,7 +78,6 @@
         {:title  "Follow MovementSession on Twitter"
          :href   ""
          :target "_blank"} "Tweet"]]]]))
-;
 
 (defn landing []
   (html5
