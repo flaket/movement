@@ -1,6 +1,7 @@
 (ns movement.pages.landing
   (:require [hiccup.core :refer [html]]
-            [hiccup.page :refer [include-css include-js html5]]))
+            [hiccup.page :refer [include-css include-js html5]]
+            [movement.activation :refer [generate-activation-id send-activation-email]]))
 
 (defn header []
   (html
