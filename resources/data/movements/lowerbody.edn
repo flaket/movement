@@ -35,11 +35,27 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]]}
 
- {:db/id             #db/id[:db.part/user]
+ {:db/id             #db/id[:db.part/user -200]
+  :movement/name     "Shin Shrimp Single Leg Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]]
+  :movement/harder   [#db/id[:db.part/user -200]]}
+
+ {:db/id             #db/id[:db.part/user -201]
+  :movement/name     "Knee Shrimp Single Leg Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]]
+  :movement/harder   [#db/id[:db.part/user -202]]
+  :movement/easier   [#db/id[:db.part/user -200]]}
+
+ {:db/id             #db/id[:db.part/user -202]
   :movement/name     "Shrimp Single Leg Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]]}
+ :movement/easier   [#db/id[:db.part/user -201]]
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Extend Behind Single Leg Squat"

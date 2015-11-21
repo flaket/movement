@@ -15,7 +15,7 @@
  {:db/id #db/id[:db.part/user -9] :category/name "Pushing"}
  {:db/id #db/id[:db.part/user -10] :category/name "Leg Strength"}
 
- {:db/id              #db/id[:db.part/user]
+ {:db/id              #db/id[:db.part/user -200]
   :movement/name      "Back Squat"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
@@ -23,9 +23,10 @@
                        #db/id[:db.part/user -4]
                        #db/id[:db.part/user -5]
                        #db/id[:db.part/user -10]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
+  :movement/equipment [#db/id[:db.part/user -5000]]
+  :movement/harder    [#db/id[:db.part/user -201]]}
 
- {:db/id              #db/id[:db.part/user]
+ {:db/id              #db/id[:db.part/user -201]
   :movement/name      "Front Squat"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
@@ -33,9 +34,11 @@
                        #db/id[:db.part/user -4]
                        #db/id[:db.part/user -5]
                        #db/id[:db.part/user -10]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
+  :movement/equipment [#db/id[:db.part/user -5000]]
+  :movement/easier    [#db/id[:db.part/user -200]]
+  :movement/harder    [#db/id[:db.part/user -202]]}
 
- {:db/id              #db/id[:db.part/user]
+ {:db/id              #db/id[:db.part/user -202]
   :movement/name      "Overhead Squat"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
@@ -43,9 +46,10 @@
                        #db/id[:db.part/user -4]
                        #db/id[:db.part/user -5]
                        #db/id[:db.part/user -10]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
+  :movement/equipment [#db/id[:db.part/user -5000]]
+  :movement/easier    [#db/id[:db.part/user -201]]}
 
- {:db/id              #db/id[:db.part/user]
+ {:db/id              #db/id[:db.part/user -203]
   :movement/name      "Back Lunge"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
@@ -53,9 +57,10 @@
                        #db/id[:db.part/user -6]
                        #db/id[:db.part/user -5]
                        #db/id[:db.part/user -10]]
+  :movement/harder    [#db/id[:db.part/user -204]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
- {:db/id              #db/id[:db.part/user]
+ {:db/id              #db/id[:db.part/user -204]
   :movement/name      "Front Lunge"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
@@ -63,9 +68,11 @@
                        #db/id[:db.part/user -6]
                        #db/id[:db.part/user -5]
                        #db/id[:db.part/user -10]]
+  :movement/harder    [#db/id[:db.part/user -205]]
+  :movement/easier    [#db/id[:db.part/user -203]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
- {:db/id              #db/id[:db.part/user]
+ {:db/id              #db/id[:db.part/user -205]
   :movement/name      "Overhead Lunge"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
@@ -73,6 +80,7 @@
                        #db/id[:db.part/user -6]
                        #db/id[:db.part/user -5]
                        #db/id[:db.part/user -10]]
+  :movement/easier    [#db/id[:db.part/user -204]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]

@@ -278,7 +278,7 @@
           (if (and duration (< 0 duration))
             [:div.pure-u {:style {:color "#9999cc"
                                   :font-size 24}
-                          :on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} duration]
+                          :on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))} duration]
             [:div.pure-u])]
          [:div.pure-u-1-12]]]
        (when @rep-clicked?

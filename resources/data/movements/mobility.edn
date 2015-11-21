@@ -15,45 +15,50 @@
 
  ;; Hip
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Squat Hip Rotations"
+  :movement/name      "Squat Hip Rotation"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Static Squat"
+  :movement/name      "Squat"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Dynamic Squat"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Knee Push Away"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Dynamic Squat Stretch"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Floor Hip Rotations"
+  :movement/name      "Floor Hip Rotation"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Toes Stretch"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Dynamic Toes Stretch"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Sky Reach"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Buddha Prayer"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Squat Bow"
   :movement/category  [#db/id[:db.part/user -1]
@@ -62,65 +67,70 @@
 
 ;; Shoulder
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Elastic Band Shoulder Dislocation"
+  :movement/name      "Band Shoulder Dislocation"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "External Rotation"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Lateral Raise"
+  :movement/name      "Band Lateral Raise"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Elastic Band Overhead Rotation"
+  :movement/name      "Band Overhead Rotation"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Elastic Band Side Rotation"
+  :movement/name      "Band Side Rotation"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Elastic Band Hands Down Rotation"
+  :movement/name      "Band Low Rotation"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Elastic Band Overhead Fly"
+  :movement/name      "Band Overhead Fly"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Elastic Band Side Fly"
+  :movement/name      "Band Side Fly"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Elastic Band Hands Down Fly"
+  :movement/name      "Band Low Fly"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Scapula Push Up"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -3]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
+                       #db/id[:db.part/user -3]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Overhead Straight Arm Pull Down"
+  :movement/name      "Band Overhead Pull Down"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Whippet"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -3]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Cuban Rotation"
   :movement/category  [#db/id[:db.part/user -1]
@@ -155,31 +165,42 @@
 
 
 ;; Spine
- {:db/id              #db/id[:db.part/user]
+ {:db/id              #db/id[:db.part/user -200]
   :movement/name      "Slide Into Low Bridge"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -6]
                        #db/id[:db.part/user -7]]}
- {:db/id              #db/id[:db.part/user]
+
+ {:db/id              #db/id[:db.part/user -201]
   :movement/name      "Rotate Into Low Bridge"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -7]]}
+                       #db/id[:db.part/user -7]]
+  :movement/easier    [#db/id[:db.part/user -200]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Wall Rotation"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -7]]}
- {:db/id              #db/id[:db.part/user]
+                       #db/id[:db.part/user -7]]
+  :movement/harder    [#db/id[:db.part/user -201]
+                       #db/id[:db.part/user -202]]}
+
+ {:db/id              #db/id[:db.part/user -202]
   :movement/name      "Rotate Into High Bridge"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -7]]}
+                       #db/id[:db.part/user -7]]
+  :movement/easier    [#db/id[:db.part/user -201]]}
+
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "High Bridge Hold"
+  :movement/name      "High Bridge"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -7]]}
+                       #db/id[:db.part/user -7]]
+  :movement/easier    [#db/id[:db.part/user -200]]
+  :movement/harder    [#db/id[:db.part/user -202]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Jefferson Curl"
   :movement/category  [#db/id[:db.part/user -1]

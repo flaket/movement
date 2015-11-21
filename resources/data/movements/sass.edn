@@ -25,6 +25,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Straddle Back Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -32,6 +33,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "One Leg Extended Back Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -39,6 +41,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Flat Back Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -46,6 +49,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Tuck Back Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -53,6 +57,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
+
 
  ;; Front lever
  {:db/id             #db/id[:db.part/user]
@@ -62,6 +67,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Straddle Front Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -69,6 +75,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "One Leg Extended Front Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -76,6 +83,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Flat Front Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -83,6 +91,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Tuck Front Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -90,6 +99,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]}
+
 
  ;; Side lever
  {:db/id             #db/id[:db.part/user]
@@ -99,12 +109,14 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -7]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Straddle Side Lever"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -7]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "One Leg Extended Side Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -112,6 +124,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -7]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Flat Side Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -119,6 +132,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -7]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Tuck Side Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -128,6 +142,7 @@
                       #db/id[:db.part/user -9]]}
 
 
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Negative Back Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -135,6 +150,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Negative Front Lever"
   :movement/category [#db/id[:db.part/user -1]
@@ -142,6 +158,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Back Lever Raise"
   :movement/category [#db/id[:db.part/user -1]
@@ -149,6 +166,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Front Lever Raise"
   :movement/category [#db/id[:db.part/user -1]
@@ -156,6 +174,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Tick Tock"
   :movement/category [#db/id[:db.part/user -1]
@@ -164,6 +183,7 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Pull From German Hang"
   :movement/category [#db/id[:db.part/user -1]
@@ -172,6 +192,7 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]}
 
+
  ;; Planche
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Planche"
@@ -179,24 +200,28 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -8]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Straddle Planche"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -8]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "One Leg Extended Planche"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -8]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Flat Planche"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -8]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Tuck Planche"
   :movement/category [#db/id[:db.part/user -1]
@@ -205,18 +230,21 @@
                       #db/id[:db.part/user -8]]}
 
 
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Wall Bar Front Support"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Wall Bar Back Support"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
 
 
  {:db/id              #db/id[:db.part/user]

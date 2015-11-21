@@ -8,10 +8,17 @@
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Ostrich Walk"
   :movement/category [#db/id[:db.part/user -2]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Horse Stance Walk"
   :movement/category [#db/id[:db.part/user -2]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Duck Walk"
   :movement/category [#db/id[:db.part/user -2]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hiking"
+  :movement/category [#db/id[:db.part/user -2]]}
+
  ]

@@ -3,20 +3,31 @@
  {:db/id #db/id[:db.part/user -4] :category/name "Acrobatics"}
 
  ;; acrobatic
+
+ ;; easier movements leading to cartwheel
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Cartwheel"
   :movement/category [#db/id[:db.part/user -4]]}
- {:db/id             #db/id[:db.part/user]
+
+ {:db/id             #db/id[:db.part/user -201]
   :movement/name     "Handstand Walk"
-  :movement/category [#db/id[:db.part/user -4]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Dynamic Kick to Handstand"
-  :movement/category [#db/id[:db.part/user -4]]}
+  :movement/category [#db/id[:db.part/user -4]]
+  :movement/easier   [#db/id[:db.part/user -200]]}
+
+ {:db/id             #db/id[:db.part/user -200]
+  :movement/name     "Kick to Handstand"
+  :movement/category [#db/id[:db.part/user -4]]
+  :movement/harder   [#db/id[:db.part/user -201]]}
+
+ ;; easier movements leading to front flip
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Front Flip"
   :movement/category [#db/id[:db.part/user -4]]}
+
+ ;; easier movements leading to back flip
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Back Flip"
   :movement/category [#db/id[:db.part/user -4]]}
+
 
  ]
