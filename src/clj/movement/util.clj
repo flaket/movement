@@ -20,42 +20,41 @@
 (let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
   (d/transact conn templates-tx))
 
-(let [
+(let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/acrobatics.edn"))))
+      balancing-tx (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
       climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
+      core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
       crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
+      e-tx (first (Util/readAll (io/reader (io/resource "data/movements/e.edn"))))
+      endurance-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
       jumping-tx (first (Util/readAll (io/reader (io/resource "data/movements/jumping.edn"))))
       lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
-      rolling-tx (first (Util/readAll (io/reader (io/resource "data/movements/rolling.edn"))))
-      walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))
-
-      acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/acrobatics.edn"))))
-      pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
-      pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
-      conditioning-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
-      core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
       lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
       mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
-
+      pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
+      pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
+      rolling-tx (first (Util/readAll (io/reader (io/resource "data/movements/rolling.edn"))))
       sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
-
-      ]
+      throwing-catching-tx (first (Util/readAll (io/reader (io/resource "data/movements/throwing-catching.edn"))))
+      walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))]
   (do
-    (d/transact conn climbing-tx)
     (d/transact conn acrobatics-tx)
-    (d/transact conn pulling-tx)
-    (d/transact conn pushing-tx)
-    (d/transact conn conditioning-tx)
+    (d/transact conn balancing-tx)
+    (d/transact conn climbing-tx)
     (d/transact conn core-tx)
-    (d/transact conn lowerbody-tx)
-    (d/transact conn mobility-tx)
-    (d/transact conn sass-tx)
-
     (d/transact conn crawling-tx)
+    (d/transact conn e-tx)
+    (d/transact conn endurance-tx)
     (d/transact conn jumping-tx)
     (d/transact conn lifting-tx)
+    (d/transact conn lowerbody-tx)
+    (d/transact conn mobility-tx)
+    (d/transact conn pulling-tx)
+    (d/transact conn pushing-tx)
     (d/transact conn rolling-tx)
-    (d/transact conn walking-tx)
-    ))
+    (d/transact conn sass-tx)
+    (d/transact conn throwing-catching-tx)
+    (d/transact conn walking-tx)))
 
 ;; Get the database value.
 (def db (d/db conn))
