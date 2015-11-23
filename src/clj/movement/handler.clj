@@ -31,7 +31,7 @@
             [movement.pages.landing :refer [landing]]
             ))
 
-(def uri "datomic:dev://localhost:4334/movement14")
+(def uri "datomic:dev://localhost:4334/test")
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/set-resource-path!  (clojure.java.io/resource "templates"))
@@ -93,26 +93,13 @@
     m))
 
 (defn get-new-difficulty-movement [movement difficulty]
-  (case difficulty
-    :easier (let [r (d/q '[:find (pull ?e [*])
-                           :in $ ?id
-                           :where
-                           [?m :db/id ?id]
-                           [?m :movement/harder ?e]]
-                         db
-                         movement)
-                  m (->> r flatten set shuffle (take 1))]
-              (generate-response m))
-    :harder (let [r (d/q '[:find (pull ?e [*])
-                           :in $ ?id
-                           :where
-                           [?m :db/id ?id]
-                           [?m :movement/easier ?e]]
-                         db
-                         movement)
-                  m (->> r flatten set shuffle (take 1))]
-              (generate-response m))
-    nil))
+  (let [entity (d/pull db '[*] movement)
+        kw (case difficulty "easier" :movement/easier "harder" :movement/harder nil)]
+    (if-let [new-movements (kw entity)]
+      (let [new-entity (:db/id (first (take 1 (shuffle new-movements))))
+            new-movement (d/pull db '[*] new-entity)]
+        (generate-response new-movement))
+      (generate-response "error"))))
 
 (defn all-template-titles [email]
   (let [db (d/db conn)
@@ -379,8 +366,7 @@
                                            (let [equipment (:equipment (:params req))]
                                              (create-equipment-session equipment 5))))
 
-           (GET "/movement-from-equipment" req (let [e (:equipment (:params req))
-                                                     difficulty (:difficulty (:params req))]
+           (GET "/movement-from-equipment" req (let [e (:equipment (:params req))]
                                                  (if-not (authenticated? req)
                                                    (throw-unauthorized)
                                                    (get-movement-from-equipment e))))

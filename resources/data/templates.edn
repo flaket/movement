@@ -92,7 +92,7 @@
   :part/title                "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
   :part/number-of-movements 12
-  :part/duration 10
+  :part/rep 10
   :part/set 1}
 
  {:db/id                #db/id[:db.part/user -104]

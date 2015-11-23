@@ -7,7 +7,7 @@
   (html
     [:div.header
      [:div.home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
-      [:a.pure-menu-heading {:on-click #()} "Movement Session"]
+      [:a.pure-menu-heading "Movement Session"]
       [:ul.pure-menu-list
        [:li.pure-menu-item
         [:a.pure-menu-link {:title  "Visit blog"
@@ -53,8 +53,11 @@
      [:h2.content-head.is-center "So, are you ready to start moving more?"]
      [:div.pure-g
       [:div.l-box-lrg.pure-u-1.pure-u-md-2-5
-       [:div.pure-form.pure-form-stacked
-        ]]
+       [:form.pure-form.pure-form-stacked
+        [:fieldset
+         [:input#email {:type "text" :placeholder "Your Email"}]
+         [:input#password {:type "password" :placeholder "Your Password"}]
+         [:a.pure-button {:type "submit"} "Sign Up Free"]]]]
       [:div.l-box-lrg.pure-u-1.pure-u-md-3-5
        [:h4 "Contact Us"]
        [:i.fa.fa-envelope]
@@ -67,18 +70,29 @@
       [:div.pure-u
        [:p "Movement Session"]]
       [:div.pure-u
-       [:a {:on-click #()} "Home"]]
+       [:a {:title  "Movement Session"
+            :href   "/"
+            :target ""} "Home"]]
       [:div.pure-u
-       [:a {:on-click #()} "About"]]
+       [:a {:title  "About Movement Session"
+            :href   "/about"
+            :target ""} "About"]]
       [:div.pure-u
-       [:a {:on-click #()} "Blog"]]
+       [:a {:title  "Read our Blog"
+            :href   "/blog"
+            :target ""} "Blog"]]
       [:div.pure-u
-       [:a {:on-click #()} "Contact Us"]]
+       [:a {:title  "Contact Us"
+            :href   "/contact"
+            :target ""} "Contact Us"]]
       [:div.pure-u
-       [:a
-        {:title  "Follow MovementSession on Twitter"
-         :href   ""
-         :target "_blank"} "Tweet"]]]]))
+       [:a {:title  "Follow MovementSession on Twitter"
+            :href   "https://twitter.com/movementsessionapp"
+            :target "_blank"} "Tweet"]]
+      [:div.pure-u
+       [:a {:title  "Follow MovementSession on Instagram"
+            :href   "https://instagram.com/movementsession"
+            :target "_blank"} "Instagram"]]]]))
 
 (defn landing []
   (html5

@@ -8,10 +8,13 @@
             [clojure.set :refer [rename-keys]])
   (:import datomic.Util)
   (:import java.util.Date))
-;; Create database and create a connection.
-(def uri "datomic:dev://localhost:4334/movement14")
+
+(def uri "datomic:dev://localhost:4334/test")
+
 #_(d/delete-database uri)
+
 (d/create-database uri)
+
 (def conn (d/connect uri))
 
 (let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
@@ -19,6 +22,12 @@
 
 (let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
   (d/transact conn templates-tx))
+
+(let [tx-user-data [{:db/id         #db/id[:db.part/user]
+                     :user/email    "admin@movementsession.com"
+                     :user/name     "Admin"
+                     :user/password (hashers/encrypt "pw")}]]
+  (d/transact conn tx-user-data))
 
 (let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/acrobatics.edn"))))
       balancing-tx (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
@@ -58,15 +67,14 @@
 
 ;; Get the database value.
 (def db (d/db conn))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn image-url [name]
   (str "public/images/" (str/replace (str/lower-case name) " " "-") ".png"))
 
 (defn has-no-image? [m]
-  (if-not (io/resource (image-url m))
-    true
-    false))
+  (if-not (io/resource (image-url m)) true false))
 
 (defn url->name [url]
   (let [name (-> url
@@ -102,230 +110,32 @@
 (defn find-no-data-images []
   (let [f (io/file "resources/public/images")
         images (for [file (file-seq f)] (.getName file))
-        images (drop 2 images)
+        images (drop 2 images) ; hard coded removal of leading junk files
         no-data-images (filter #(has-no-data? %) images)]
     [(count no-data-images) no-data-images]))
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn create-equipment-session [name n]
-  (let [r (d/q '[:find (pull ?m [*])
-                 :in $ ?name
-                 :where
-                 [?e :equipment/name ?name]
-                 [?m :movement/equipment ?e]]
-               db
-               name)
-        m (->> r flatten set shuffle (take n) vec)]
-    {:title  "Let's play with.."
-     :parts [{:title      (str/capitalize name)
-              :categories []
-              :equipment  name
-              :movements  m}]}))
+;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn get-n-movements-from-categories
-  [n categories d]
-  "Get n random movement entities drawn from param list of categories."
-  (let [movements (for [c categories]
-                    (d/q '[:find (pull ?m [*]) :in $ ?cat
-                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
-                         db c))
-        m (->> movements flatten set shuffle (take n))
-        m (map #(assoc % :rep (:rep d) :set (:set d) :distance (:distance d) :duration (:duration d)) m)]
-    m))
+(defn get-new-difficulty-movement [movement difficulty]
+  (let [entity (d/pull db '[*] movement)
+        kw (case difficulty "easier" :movement/easier "harder" :movement/harder nil)]
+    (if-let [new-movements (kw entity)]
+      (let [new-entity (:db/id (first (take 1 (shuffle new-movements))))
+            new-movement (d/pull db '[*] new-entity)]
+        new-movement)
+      "error")))
 
+(d/pull db '[*] 17592186045637)
 
-(defn pull-on-id [id]
-  (d/pull db '[*] id))
-
-(defn number-of-movements-in-db []
-  (count (d/q '[:find [?n ...]
-                :where
-                [_ :movement/name ?n]]
-              db)))
-
-(defn find-user [email]
-  (let [db (d/db conn)]
-    (d/pull db '[*] [:user/email email])))
-
-(defn valid-user? [user password]
-  (hashers/check password (:user/password user)))
-
-(defn add-user [email password]
-  (let [tx-user-data [{:db/id         #db/id[:db.part/user]
-                       :user/email    email
-                       :user/password (hashers/encrypt password)}]]
-    (d/transact conn tx-user-data)))
-
-
-(def tx-user-data [{:db/id         #db/id[:db.part/user]
-                    :user/email    "admin@movementsession.com"
-                    :user/name     "Admin"
-                    :user/password (hashers/encrypt "pw")}])
-
-(d/transact conn tx-user-data)
-
-;;;
-(d/q '[:find ?email ?name ?pw
-       :in $
+(d/q '[:find ?e
+       :in $ ?id
        :where
-       [?e :user/email ?email]
-       [?e :user/password ?pw]
-       [?e :user/name ?name]
-       ]
-     db)
-
-
-(d/q '[:find (pull ?p [*])
-       :in $ ?mail
-       :where [?m :user/email ?mail] [?m :user/template ?t] [?t :template/part ?p]]
+       [_ :db/id ?id]
+       #_[?m :movement/harder ?e]]
      db
-     "admin@movementsession.com")
-
-(d/q '[:find (pull ?m [{:user/template
-                        [:template/title]}])
-       :in $
-       :where [?m :user/email ?cat]]
-     db)
-
-(hashers/check "alice1" (:user/password (d/pull db '[*] [:user/email "alice@alice.com"])))
-
-(let [users (d/q '[:find ?email ?pw ?r
-                   :in $
-                   :where
-                   [?e :user/email ?email]
-                   [?e :user/password ?pw]
-                   [?e :user/role ?r]
-                   ]
-                 db)
-      users (map #(zipmap [:username :password :roles] %) users)
-      users (map #(assoc % :roles (read-string (:roles %))) users)
-      users (zipmap (map #(:username %) users) users)]
-  users)
-
-
-
-; get all category names + number of movements in category
-(defn all-categories-sorted []
-  (reverse
-    (sort
-      (d/q '[:find (count ?m) ?name
-             :where
-             [?cat :category/name ?name]
-             [?m :movement/category ?cat]]
-           db))))
-(all-categories-sorted)
-
-(into {}
-      (d/q '[:find ?name (count ?m)
-             :where
-             [?cat :category/name ?name]
-             [?m :movement/category ?cat]]
-           db))
-
-; get specific category
-(defn get-category [name]
-  (d/q '[:find (pull ?e [*])
-         :in $ ?category
-         :where
-         [?e :category/name ?category]]
-       db
-       name))
-(get-category "Lower Body Strength")
-
-
-; get n movements drawn randomly from categories
-(defn get-movements [n categories]
-  (let [movements (for [c categories]
-                    (d/q '[:find (pull ?m [*]) :in $ ?cat
-                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
-                         db c))
-        m (->> movements flatten set shuffle (take n))]
-    m))
-
-(first (get-movements 1 ["Climbing"]))
-
-(def title "Strength")
-(def title-entity (d/pull db '[*] [:template/title title]))
-title-entity
-(def part-entities (map #(d/pull db '[*] %) (flatten (map vals (:template/part title-entity)))))
-part-entities
-(vec (for [p part-entities]
-       (let [name (:part/name p)
-             n (:part/number-of-movements p)
-             c (flatten (map vals (:part/category p)))
-             category-names (apply merge (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-             movements (vec (get-movements n [category-names]))]
-         {:title     name
-          :parts     [category-names]
-          :movements movements})))
-
-(def category-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:part/category (first part-entities)))))))
-category-entities
-
-(defn movement [name]
-  "Returns the whole entity of a named movement."
-  (let [movement (d/pull db '[*] [:movement/name name])]
-    movement))
-
-(defn get-movements [n categories]
-  "Get n random movement entities drawn from param list of categories."
-  (let [movements (for [c categories]
-                    (d/q '[:find (pull ?m [*]) :in $ ?cat
-                           :where [?c :category/name ?cat] [?m :movement/category ?c]]
-                         db c))
-        m (->> movements flatten set shuffle (take n))]
-    m))
-
-(defn create-session [title]
-  (let [title-entity (ffirst (d/q '[:find (pull ?t [*])
-                                    :in $ ?title ?email
-                                    :where
-                                    [?e :user/email ?email]
-                                    [?e :user/template ?t]
-                                    [?t :template/title ?title]]
-                                  db
-                                  title
-                                  "bob@bob.com"))
-        description (:template/description title-entity)
-        part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
-        parts
-        (vec (for [p part-entities]
-               (let [name (:part/name p)
-                     n (:part/number-of-movements p)
-                     c (flatten (map vals (:part/category p)))
-                     category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                     movements (vec (get-movements n category-names))]
-                 (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/regular-movement p)))]
-                   {:title      name
-                    :categories category-names
-                    :movements  (concat regular-movements movements)}
-                   {:title      name
-                    :categories category-names
-                    :movements  movements}))))
-        ]
-    {:title       title
-        :description description
-        :parts       parts}))
-
-(create-session "Straight Arm Strength")
-
-
-(defn decorate
-  "Map of entity attributes."
-  [id]
-  (let [e (d/entity db id)]
-    (select-keys e (keys e))))
-
-(defn decorate-results
-  "Decorate a set of results."
-  [r]
-  (map #(decorate (first %)) r))
-
-
-;;;;;;;;;;;;
-
+     17592186045637)
 
 ; all exercises not using the input equipment parameter.
 (d/q '[:find ?name

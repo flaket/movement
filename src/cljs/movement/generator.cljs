@@ -144,62 +144,12 @@
    [:div.pure-u.refresh
     [:i.fa.fa-refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
    [:div.pure-u.refresh
-    [:i.fa.fa-minus {:on-click #(refresh-movement m title :easier) :title "Swap with easier movement"}]]
+    [:i.fa.fa-minus {:on-click #(refresh-movement m title "easier") :title "Swap with easier movement"}]]
    [:div.pure-u.refresh
-    [:i.fa.fa-plus {:on-click #(refresh-movement m title :harder) :title "Swap with harder movement"}]]
+    [:i.fa.fa-plus {:on-click #(refresh-movement m title "harder" ) :title "Swap with harder movement"}]]
    [:div.pure-u.destroy
     [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
    [:div.pure-u-1-12]])
-
-(defn rep-set-component [rep set]
-  [:div
-   [:div.pure-g
-    [:div.pure-u-1-12]
-    [:div.pure-u-5-12 (when-not (and rep (< 0 rep)) {:style {:opacity "0.2"}})
-     [:div.pure-u "Reps"]]
-    [:div.pure-u-5-12 (when-not (and set (< 0 set)) {:style {:opacity "0.2"}})
-     [:div.pure-u "Set"]]
-    [:div.pure-u-1-12]]
-
-   [:div.pure-g
-    [:div.pure-u-1-12]
-    [:div.pure-u-5-12
-     (if (and rep (< 0 rep))
-       [:div.pure-u {:style {:color     "#9999cc"
-                             :font-size 24}} rep]
-       [:div.pure-u])]
-    [:div.pure-u-5-12
-     (if (and set (< 0 set))
-       [:div.pure-u {:style {:color     "#9999cc"
-                             :font-size 24}} set]
-       [:div.pure-u])]
-    [:div.pure-u-1-12]]])
-
-(defn distance-duration-component [distance duration]
-  [:div
-   [:div.pure-g
-    [:div.pure-u-1-12]
-    [:div.pure-u-5-12 (when-not (and distance (< 0 distance)) {:style {:opacity "0.2"}})
-     [:div.pure-u "Meters"]
-     ]
-    [:div.pure-u-5-12 (when-not (and duration (< 0 duration)) {:style {:opacity "0.2"}})
-     [:div.pure-u "Seconds"]
-     ]
-    [:div.pure-u-1-12]]
-
-   [:div.pure-g
-    [:div.pure-u-1-12]
-    [:div.pure-u-5-12
-     (if (and distance (< 0 distance))
-       [:div.pure-u {:style {:color "#9999cc"
-                             :font-size 24}} distance]
-       [:div.pure-u])]
-    [:div.pure-u-5-12
-     (if (and duration (< 0 duration))
-       [:div.pure-u {:style {:color "#9999cc"
-                             :font-size 24}} duration]
-       [:div.pure-u])]
-    [:div.pure-u-1-12]]])
 
 (defn slider []
   (let [data (atom 0)]
