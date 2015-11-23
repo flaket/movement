@@ -61,6 +61,55 @@
 (def db (d/db conn))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn image-url [name]
+  (str "public/images/" (str/replace (str/lower-case name) " " "-") ".png"))
+
+(defn has-no-image? [m]
+  (if-not (io/resource (image-url m))
+    true
+    false))
+
+(defn url->name [url]
+  (let [name (-> url
+                 (str/split (re-pattern ".png"))
+                 (first)
+                 (str/replace "-" " ")
+                 (str/split (re-pattern " ")))
+        name (map #(str/capitalize %) name)
+        name (-> name
+                 (interleave (cycle " "))
+                 (drop-last)
+                 (str/join))]
+    name))
+
+(defn has-no-data? [url]
+  (let [name (url->name url)
+        x (d/q '[:find ?e
+                 :in $ ?name
+                 :where
+                 [?e :movement/name ?name]]
+               db
+               name)]
+    (empty? x)))
+
+(defn find-no-image-movements []
+  (let [movements (flatten (seq (d/q '[:find ?name
+                                       :where
+                                       [_ :movement/name ?name]]
+                                     db)))
+        no-image-movements (filter #(has-no-image? %) movements)]
+    [(count no-image-movements) no-image-movements]))
+
+(defn find-no-data-images []
+  (let [f (io/file "resources/public/images")
+        images (for [file (file-seq f)] (.getName file))
+        images (drop 2 images)
+        no-data-images (filter #(has-no-data? %) images)]
+    [(count no-data-images) no-data-images]))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn create-equipment-session [name n]
   (let [r (d/q '[:find (pull ?m [*])
                  :in $ ?name
