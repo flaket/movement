@@ -206,7 +206,7 @@
     (fn [position-in-parts id r min max step]
       [:div.pure-g
        [:div.pure-u @data]
-       [:div.pure-u {:on-click #(session/assoc-in!
+       [:a.pure-u {:on-click #(session/assoc-in!
                                  [:movement-session :parts position-in-parts :movements id r]
                                  (int @data))} "Save"]
        [:input {:className "pure-u"
@@ -231,7 +231,7 @@
         [:div.pure-u-1-12]
         [:div.pure-u.title name]]
        [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
-       [:div
+       [:div {:style {:cursor 'pointer}}
         [:div.pure-g
          [:div.pure-u-1-12]
          [:div.pure-u-5-12 (when-not (and rep (< 0 rep)) {:style {:opacity "0.2"}})
@@ -256,7 +256,7 @@
                           :on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))} set]
             [:div.pure-u])]
          [:div.pure-u-1-12]]]
-       [:div
+       [:div {:style {:cursor 'pointer}}
         [:div.pure-g
          [:div.pure-u-1-12]
          [:div.pure-u-5-12 (when-not (and distance (< 0 distance)) {:style {:opacity "0.2"}})

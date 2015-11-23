@@ -15,12 +15,12 @@
  ;; Handstand
 
  {:db/id #db/id[:db.part/user]
-  :movement/name "Wall Walk"
+  :movement/name "Handstand Wall Walk"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]]}
 
  {:db/id #db/id[:db.part/user]
-  :movement/name "Kick to Wall Handstand"
+  :movement/name "Handstand Straighten Into Line"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]]}
 
@@ -93,7 +93,12 @@
                       #db/id[:db.part/user -3]]}
 
  {:db/id #db/id[:db.part/user]
-  :movement/name "Headstand"
+  :movement/name "Headstand Leg Lift"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -3]]}
+
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Headstand Straight Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -3]]}
 

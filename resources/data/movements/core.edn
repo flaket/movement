@@ -62,7 +62,8 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]}
+                      #db/id[:db.part/user -4]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Headstand Leg Lift"
