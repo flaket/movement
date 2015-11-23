@@ -8,18 +8,32 @@
  {:db/id #db/id[:db.part/user -3] :category/name "Running"}
 
 
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Jump Rope"
+ {:db/id              #db/id[:db.part/user -100]
+  :movement/name      "Single Under"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
- {:db/id             #db/id[:db.part/user]
+  :movement/equipment [#db/id[:db.part/user -5000]]
+  :movement/harder [#db/id[:db.part/user -101]]}
+
+ {:db/id              #db/id[:db.part/user -101]
+  :movement/name      "Double Under"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]
+  :movement/equipment [#db/id[:db.part/user -5000]]
+  :movement/easier    [#db/id[:db.part/user -100]]}
+
+ {:db/id             #db/id[:db.part/user -200]
   :movement/name     "Run"
   :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -3]]}
- {:db/id             #db/id[:db.part/user]
+                      #db/id[:db.part/user -3]]
+  :movement/harder [#db/id[:db.part/user -201]]}
+
+ {:db/id             #db/id[:db.part/user -201]
   :movement/name     "Sprint"
   :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -3]]}
+                      #db/id[:db.part/user -3]]
+  :movement/easier    [#db/id[:db.part/user -200]]}
+
+ ;; todo: running drills, other endurance activities
 
  ]

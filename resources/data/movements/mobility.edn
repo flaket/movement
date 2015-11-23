@@ -25,6 +25,11 @@
                        #db/id[:db.part/user -2]]}
 
  {:db/id              #db/id[:db.part/user]
+  :movement/name      "Static Squat"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+
+ {:db/id              #db/id[:db.part/user]
   :movement/name      "Knee Push Away"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
@@ -64,6 +69,11 @@
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
 
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Front Leg Swing"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+
 
 ;; Shoulder
  {:db/id              #db/id[:db.part/user]
@@ -73,7 +83,7 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "External Rotation"
+  :movement/name      "Band External Rotation"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}

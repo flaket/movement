@@ -11,10 +11,20 @@
  {:db/id #db/id[:db.part/user -5] :category/name "Push Up"}
  {:db/id #db/id[:db.part/user -6] :category/name "Dip"}
  {:db/id #db/id[:db.part/user -7] :category/name "Ring"}
+ {:db/id #db/id[:db.part/user -8] :category/name "Jumping"}
 
 
  ;:rocking :rotational-rocking
  ;:backward-sprawl :forward-sprawl-to-push-up
+
+ {:db/id #db/id[:db.part/user -98]
+  :movement/name "Burpee"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -8]]}
 
  {:db/id #db/id[:db.part/user -99]
   :movement/name "Knee Push Up"
@@ -64,8 +74,18 @@
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]]
   :movement/easier [#db/id[:db.part/user -100]]}
+
  {:db/id #db/id[:db.part/user -104]
   :movement/name "Hindu Push Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]
+  :movement/easier [#db/id[:db.part/user -100]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Spiderman Push Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -87,7 +107,9 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
+                      #db/id[:db.part/user -5]]
+  :movement/harder   [#db/id[:db.part/user -122]
+                      #db/id[:db.part/user -123]]}
 
  {:db/id #db/id[:db.part/user -107]
   :movement/name "Archer Push Up"
@@ -128,7 +150,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]]}
+                      #db/id[:db.part/user -6]]
+  :movement/easier [#db/id[:db.part/user -126]]}
 
  {:db/id #db/id[:db.part/user -112]
   :movement/name "Russian Dip"
@@ -136,7 +159,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]]}
+                      #db/id[:db.part/user -6]]
+  :movement/easier [#db/id[:db.part/user -111]]}
 
  {:db/id #db/id[:db.part/user -113]
   :movement/name "Single Bar Dip"
@@ -144,7 +168,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]]}
+                      #db/id[:db.part/user -6]]
+  :movement/easier [#db/id[:db.part/user -111]]}
 
  {:db/id #db/id[:db.part/user -114]
   :movement/name "Korean Dip"
@@ -152,7 +177,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]]}
+                      #db/id[:db.part/user -6]]
+  :movement/easier [#db/id[:db.part/user -113]]}
 
  {:db/id #db/id[:db.part/user -115]
   :movement/name "Ring Dip"
@@ -173,6 +199,7 @@
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
  {:db/id #db/id[:db.part/user -117]
   :movement/name "Archer Ring Dip"
   :movement/category [#db/id[:db.part/user -1]
@@ -213,6 +240,50 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]]}
+
+ {:db/id #db/id[:db.part/user -122]
+  :movement/name "One Leg Bridge Push Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]
+  :movement/easier   [#db/id[:db.part/user -106]]}
+
+ {:db/id #db/id[:db.part/user -123]
+  :movement/name "One Arm Bridge Push Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]
+  :movement/easier   [#db/id[:db.part/user -106]]}
+
+ {:db/id #db/id[:db.part/user -124]
+  :movement/name "Elevated Pike Push Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]
+  :movement/easier [#db/id[:db.part/user -104]]}
+
+ {:db/id #db/id[:db.part/user -125]
+  :movement/name "Fingertip Push Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+
+ {:db/id #db/id[:db.part/user -126]
+  :movement/name "Jumping Dip"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]]
+  :movement/harder [#db/id[:db.part/user -111]]}
 
 
  ]

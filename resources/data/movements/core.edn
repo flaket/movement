@@ -20,53 +20,77 @@
   :category/name "Lower Back Strength"}
 
  ;; movements
+
+ ;; todo: legge til enklere varianter
  {:db/id             #db/id[:db.part/user]
   :movement/name     "L-Sit"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "L-Straddle"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "V-Up"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Leg Lift"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Incline Bench Leg Lift"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Headstand Leg Lift"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -5]]}
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Arch Up"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -5]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Tuck V-Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "V-Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Leg Lift"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Incline Bench Leg Lift"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Headstand Leg Lift"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -5]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Arch Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -5]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hollow Body"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hollow Body Rock"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
 
  ]

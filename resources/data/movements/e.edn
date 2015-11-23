@@ -2,29 +2,100 @@
 
  ;; categories
  {:db/id #db/id[:db.part/user -1]
-  :category/name "Handstand"}
+  :category/name "Equilibre"}
  {:db/id #db/id[:db.part/user -2]
-  :category/name "Strength"}
+  :category/name "Handstand"}
+ {:db/id #db/id[:db.part/user -3]
+  :category/name "Headstand"}
+ {:db/id #db/id[:db.part/user -4]
+  :category/name "Air Baby"}
 
  ;; movements
+
+ ;; Handstand
+
  {:db/id #db/id[:db.part/user]
   :movement/name "Wall Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]]}
+
  {:db/id #db/id[:db.part/user]
   :movement/name "Kick to Wall Handstand"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]]}
+
  {:db/id #db/id[:db.part/user]
   :movement/name "Handstand Walk"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]]}
+
  {:db/id #db/id[:db.part/user]
-  :movement/name "Air Baby"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/name "Handstand Push Up Kip"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]]}
+
  {:db/id #db/id[:db.part/user]
-  :movement/name "QDR"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/name "Back Extend To Handstand"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]]}
+
+
+ ;; Air Baby
+ {:db/id #db/id[:db.part/user -300]
+  :movement/name "Frog Stance"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -4]]
+  :movement/harder   [#db/id[:db.part/user -301]]}
+
+ {:db/id #db/id[:db.part/user -301]
+  :movement/name "Static Air Baby Two Arms"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -4]]
+  :movement/harder   [#db/id[:db.part/user -302]]
+  :movement/easier  [#db/id[:db.part/user -300]]}
+
+ {:db/id #db/id[:db.part/user -302]
+  :movement/name "Static Air Baby Fingertips"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -4]]
+  :movement/harder   [#db/id[:db.part/user -303]]
+  :movement/easier  [#db/id[:db.part/user -301]]}
+
+ {:db/id #db/id[:db.part/user -303]
+  :movement/name "Static Air Baby"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -4]]
+  :movement/easier  [#db/id[:db.part/user -302]]}
+
+ {:db/id #db/id[:db.part/user -304]
+  :movement/name "Air Baby Extend Leg"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -4]]
+  :movement/harder   [#db/id[:db.part/user -305]]}
+
+ {:db/id #db/id[:db.part/user -305]
+  :movement/name "Air Baby Extend Rotate"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -4]]
+  :movement/easier  [#db/id[:db.part/user -304]]}
+
+ ;; Headstand
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Frog Stance To Headstand"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -3]]}
+
  {:db/id #db/id[:db.part/user]
   :movement/name "Headstand"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -3]]}
+
+ {:db/id #db/id[:db.part/user]
+  :movement/name "Headstand"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -3]]}
 
 
  ]

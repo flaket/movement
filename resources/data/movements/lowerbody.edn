@@ -29,6 +29,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]]}
 
+ ;; todo: easier variations of pistol
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Pistol Single Leg Squat"
   :movement/category [#db/id[:db.part/user -1]
