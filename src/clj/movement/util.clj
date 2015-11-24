@@ -124,10 +124,10 @@
     (if-let [new-movements (kw entity)]
       (let [new-entity (:db/id (first (take 1 (shuffle new-movements))))
             new-movement (d/pull db '[*] new-entity)]
-        new-movement)
-      "error")))
+         new-movement)
+       {:message (str "Couldn't find any " difficulty " movements.")})))
 
-(d/pull db '[*] 17592186045637)
+(d/pull db '[*] 17592186045682)
 
 (d/q '[:find ?e
        :in $ ?id

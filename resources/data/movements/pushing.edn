@@ -15,7 +15,7 @@
 
 
  ;:rocking :rotational-rocking
- ;:backward-sprawl :forward-sprawl-to-push-up
+ ; :forward-sprawl-to-push-up
 
  {:db/id #db/id[:db.part/user -98]
   :movement/name "Burpee"

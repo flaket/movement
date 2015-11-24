@@ -34,7 +34,7 @@
 (def uri "datomic:dev://localhost:4334/test")
 (def conn (d/connect uri))
 (def db (d/db conn))
-(selmer.parser/set-resource-path!  (clojure.java.io/resource "templates"))
+(selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
 
 (defn generate-response [data & [status]]
   {:status  (or status 200)
@@ -65,10 +65,13 @@
                         db)]
     (generate-response categories)))
 
-(defn get-movement-entity [name]
+(defn entity-by-name [name]
   "Returns the whole entity of a named movement."
   (let [movement (d/pull db '[*] [:movement/name name])]
     movement))
+
+(defn entity-by-id [id]
+  (d/pull db '[*] id))
 
 (defn get-movement-from-equipment [e]
   (let [r (d/q '[:find (pull ?m [*])
@@ -93,13 +96,14 @@
     m))
 
 (defn get-new-difficulty-movement [movement difficulty]
-  (let [entity (d/pull db '[*] movement)
+  (generate-response {:message (str movement " " difficulty)} 500)
+  #_(let [entity (d/pull db '[*] movement)
         kw (case difficulty "easier" :movement/easier "harder" :movement/harder nil)]
     (if-let [new-movements (kw entity)]
       (let [new-entity (:db/id (first (take 1 (shuffle new-movements))))
             new-movement (d/pull db '[*] new-entity)]
         (generate-response new-movement))
-      (generate-response "error"))))
+      (generate-response {:message (str "Couldn't find any " difficulty " movements.")} 500))))
 
 (defn all-template-titles [email]
   (let [db (d/db conn)
@@ -351,7 +355,12 @@
 
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (get-movement-entity (:name (:params req)))))
+                                  (entity-by-name (:name (:params req)))))
+
+           (GET "/movement-by-id" req (if-not (authenticated? req)
+                                        (throw-unauthorized)
+                                        (generate-response
+                                          (entity-by-id (:entity (:params req))))))
 
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
@@ -372,8 +381,7 @@
                                                    (get-movement-from-equipment e))))
 
            (GET "/singlemovement" req
-             (let [categories (vec (vals (:categories (:params req))))
-                   difficulty (:difficulty (:params req))]
+             (let [categories (vec (vals (:categories (:params req))))]
                (if-not (authenticated? req)
                  (throw-unauthorized)
                  (generate-response (get-n-movements-from-categories 1 categories {})))))
@@ -391,8 +399,6 @@
            (resources "/")
 
            (not-found "Not Found")
-
-           (GET "/raw" [] (render-file "indexraw.html" {:dev (env :dev?)}))
 
            )
 

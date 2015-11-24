@@ -73,16 +73,26 @@
   ([m part-title new-difficulty]
    (let [parts (session/get-in [:movement-session :parts])
          position-in-parts (first (positions #{part-title} (map :title parts)))
-         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
-     (GET "movement-from-difficulty"
-            {:params        {:movement (:db/id m)
-                             :difficulty  new-difficulty}
-             :handler       #(let [id (:id m)
-                                   new-movement (first %)
-                                   new-movement (assoc new-movement :id id)
-                                   new-movements (assoc movements id new-movement)]
-                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-             :error-handler #(print "error getting new difficulty movement through refresh.")}))))
+         movements (session/get-in [:movement-session :parts position-in-parts :movements])
+         difficulty (case new-difficulty "easier" :movement/easier "harder" :movement/harder nil)]
+     (when-let [entity (:db/id (first (shuffle (difficulty m))))]
+       (GET "movement-by-id"
+            {:params        {:entity entity}
+             :handler       #(print %) #_(let [id (:id m)
+                                               new-movement (first %)
+                                               new-movement (assoc new-movement :id id)
+                                               new-movements (assoc movements id new-movement)]
+                                           (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+             :error-handler #(print (str "error: " %))}))
+     #_(GET "movement-from-difficulty"
+          {:params        {:movement   (:db/id m)
+                           :difficulty new-difficulty}
+           :handler       #(let [id (:id m)
+                                 new-movement (first %)
+                                 new-movement (assoc new-movement :id id)
+                                 new-movements (assoc movements id new-movement)]
+                            (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+           :error-handler #(print (:message (:response %)))}))))
 
 (defn add-movement-from-search [part-title movement-name]
   (let [parts (session/get-in [:movement-session :parts])

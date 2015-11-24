@@ -35,7 +35,7 @@
                        #db/id[:db.part/user -2]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Dynamic Squat Stretch"
+  :movement/name      "Dynamic Soleus Stretch"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
 
