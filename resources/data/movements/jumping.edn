@@ -6,20 +6,26 @@
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Leg Swing Jump"
   :movement/category [#db/id[:db.part/user -1]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Broad Jump"
   :movement/category [#db/id[:db.part/user -1]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Split Jump"
   :movement/category [#db/id[:db.part/user -1]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Vertical Jump"
   :movement/category [#db/id[:db.part/user -1]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Depth Jump"
   :movement/category [#db/id[:db.part/user -1]]}
+
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Lateral Jump"
   :movement/category [#db/id[:db.part/user -1]]}
+
 
  ]

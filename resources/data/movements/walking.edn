@@ -18,7 +18,7 @@
   :movement/category [#db/id[:db.part/user -2]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Hiking"
+  :movement/name     "Walking Lunge"
   :movement/category [#db/id[:db.part/user -2]]}
 
  ]

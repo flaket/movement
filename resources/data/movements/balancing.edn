@@ -6,9 +6,15 @@
   :movement/name      "Balancing Walk"
   :movement/category  [#db/id[:db.part/user -1]]}
 
- {:db/id              #db/id[:db.part/user]
+ {:db/id              #db/id[:db.part/user -100]
+  :movement/name      "Tripod Transition"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/harder    [#db/id[:db.part/user -101]]}
+
+ {:db/id              #db/id[:db.part/user -101]
   :movement/name      "Balancing Tripod Transition"
-  :movement/category  [#db/id[:db.part/user -1]]}
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/easier    [#db/id[:db.part/user -100]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Balancing Split Squat"
@@ -22,10 +28,11 @@
   :movement/name      "Backward Sprawl"
   :movement/category  [#db/id[:db.part/user -1]]}
 
+
+
  ;:tip-toe-balancing :balancing-walk :balancing-split-squat
  ;:balancing-shuffle :cross-reverse :pivot-reverse
  ;:split-squat-pivot-reverse :balancing-tripod-transition
  ;:balancing-foot-hand-crawl
  ; :tripod-transition
-
  ]

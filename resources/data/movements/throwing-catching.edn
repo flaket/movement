@@ -1,4 +1,12 @@
+[
 
+ {:db/id #db/id[:db.part/user -1] :category/name "Throwing"}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Chest Throw"
+  :movement/category  [#db/id[:db.part/user -1]]}
+
+ ]
 
 
 ;movnat-throwing [:chest-throw :rotational-throw :front-swing-throw :overhead-throw]
