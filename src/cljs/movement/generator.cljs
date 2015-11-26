@@ -78,21 +78,12 @@
      (when-let [entity (:db/id (first (shuffle (difficulty m))))]
        (GET "movement-by-id"
             {:params        {:entity entity}
-             :handler       #(print %) #_(let [id (:id m)
-                                               new-movement (first %)
-                                               new-movement (assoc new-movement :id id)
-                                               new-movements (assoc movements id new-movement)]
-                                           (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-             :error-handler #(print (str "error: " %))}))
-     #_(GET "movement-from-difficulty"
-          {:params        {:movement   (:db/id m)
-                           :difficulty new-difficulty}
-           :handler       #(let [id (:id m)
-                                 new-movement (first %)
-                                 new-movement (assoc new-movement :id id)
-                                 new-movements (assoc movements id new-movement)]
-                            (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-           :error-handler #(print (:message (:response %)))}))))
+             :handler       #(let [id (:id m)
+                                   new-movement %
+                                   new-movement (assoc new-movement :id id)
+                                   new-movements (assoc movements id new-movement)]
+                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+             :error-handler #(print (str "error: " %))})))))
 
 (defn add-movement-from-search [part-title movement-name]
   (let [parts (session/get-in [:movement-session :parts])

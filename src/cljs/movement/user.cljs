@@ -8,17 +8,16 @@
   (let [old-pass (:old-pass @pass)
         new-pass (:new-pass @pass)
         repeat-pass (:repeat-pass @pass)]
-    (POST "/change-password!"
-          {
-           :params {:username (session/get-in [:profile :handle])
-                    :password old-pass
-                    :new-pass new-pass
-                    :repeat-pass repeat-pass}
+    (POST "/change-password"
+          {:params {:username     (session/get :user)
+                    :password     old-pass
+                    :new-password new-pass}
            :handler
-                    (fn [_] (reset! pass {}))
+                   (fn [response]
+                     (swap! pass assoc :info (get-in response [:message])))
            :error-handler
-                    (fn [response]
-                      (swap! pass assoc :error (get-in response [:response :error])))})))
+                   (fn [response]
+                     (swap! pass assoc :error (get-in response [:message])))})))
 
 (defn change-password []
   (let [pass (atom {})]

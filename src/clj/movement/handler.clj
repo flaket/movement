@@ -30,10 +30,9 @@
             [movement.db]
             [movement.pages.landing :refer [landing temp]]
             [movement.pages.signup :refer [signup-page]]
-            [movement.activation :refer [generate-activation-id send-activation-email]]
-            ))
+            [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-(def uri "datomic:dev://localhost:4334/test4")
+(def uri "datomic:dev://localhost:4334/test5")
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
@@ -96,16 +95,6 @@
         m (->> movements flatten set shuffle (take n))
         m (map #(assoc % :rep (:rep d) :set (:set d) :distance (:distance d) :duration (:duration d)) m)]
     m))
-
-(defn get-new-difficulty-movement [movement difficulty]
-  (generate-response {:message (str movement " " difficulty)} 500)
-  #_(let [entity (d/pull db '[*] movement)
-        kw (case difficulty "easier" :movement/easier "harder" :movement/harder nil)]
-    (if-let [new-movements (kw entity)]
-      (let [new-entity (:db/id (first (take 1 (shuffle new-movements))))
-            new-movement (d/pull db '[*] new-entity)]
-        (generate-response new-movement))
-      (generate-response {:message (str "Couldn't find any " difficulty " movements.")} 500))))
 
 (defn all-template-titles [email]
   (let [db (d/db conn)
@@ -322,13 +311,15 @@
       (let [activation-id (generate-activation-id)]
         (add-user email password activation-id)
         (send-activation-email email activation-id)
-        (str "<h1>An activation email has been sent to your email address.</h1>")))
-    (str "<h1>This email is already registered as a user.n\n<a href=\"http://localhost:8000/app\"Login here:</a></h1>")))
+        (str "An activation email has been sent to your email address.")))
+    (str "This email is already registered as a user."
+         "\n"
+         "<a href=\"http://localhost:8000/app\">Login here</a>")))
 
 (defn activate-user! [id]
   (let [db (d/db conn)
         user (d/pull db '[*] [:user/activation-id id])]
-    (if-not (nil? user)
+    (if-not (nil? (:db/id user))
       (do
         (let [tx-user-data [{:db/id        #db/id[:db.part/user]
                              :user/email   (:user/email user)
@@ -339,6 +330,19 @@
          :headers {"Location" "/activated"}
          :body ""})
       (str "<h1>This activation-id is invalid.</h1>"))))
+
+(defn change-password! [req]
+  (let [email (:username (:params req))
+        password (:password (:params req))
+        new-password (:new-password (:params req))]
+    (if (valid-user? email password)
+      (do
+        (let [tx-user-data [{:db/id         #db/id[:db.part/user]
+                             :user/email    (:user/email email)
+                             :user/password (hashers/encrypt new-password)}]]
+          (d/transact conn tx-user-data))
+        (generate-response {:message "Password changed successfully!"}))
+      (generate-response {:message "Wrong email/password combination"} 401))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -360,6 +364,9 @@
            (POST "/template" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (add-template! req)))
+           (POST "/change-password" req (if-not (authenticated? req)
+                                          (throw-unauthorized)
+                                          (change-password! req)))
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (retrieve-sessions req)))
@@ -377,7 +384,7 @@
            (GET "/movement-by-id" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (generate-response
-                                          (entity-by-id (:entity (:params req))))))
+                                          (entity-by-id (read-string (:entity (:params req)))))))
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (all-movement-names)))
@@ -397,11 +404,6 @@
                (if-not (authenticated? req)
                  (throw-unauthorized)
                  (generate-response (get-n-movements-from-categories 1 categories {})))))
-           (GET "/movement-from-difficulty" req (let [movement (:movement (:params req))
-                                                      difficulty (:difficulty (:params req))]
-                                                 (if-not (authenticated? req)
-                                                   (throw-unauthorized)
-                                                   (get-new-difficulty-movement movement difficulty))))
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
                                     (all-category-names)))

@@ -68,7 +68,6 @@
          [:a.pure-menu-link {:title  "Log in"
                              :href   "/app"
                              :target ""} "Log In"]]]]]]]
-   [:div.splash-container
-    [:div.splash
-     [:div.splash-head
-      [login]]]]])
+   [:div.pure-g.splash
+    [:div.pure-u.content
+     [login]]]])
