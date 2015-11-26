@@ -1,6 +1,8 @@
 (ns movement.pages.landing
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
+            [ring.util.anti-forgery :refer [anti-forgery-field]]
+            [movement.pages.signup :refer [signup-form]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
 (defn header []
@@ -26,7 +28,9 @@
       [:p.splash-subhead.animated.fadeInDown "You have a body to move; stop creating static training programs and
          let MovementSession inspire you to plan and learn new and challenging ways of moving your body."]
       [:p.animated.fadeInDown
-       [:a.pure-button.pure-button-primary "Sign Up Free"]]]]))
+       [:a.pure-button.pure-button-primary {:title  "Sign Up Free"
+                                            :href   "/signup"
+                                            :target ""} "Sign Up Free"]]]]))
 
 (defn benefits []
   (html
@@ -53,11 +57,7 @@
      [:h2.content-head.is-center "So, are you ready to start moving more?"]
      [:div.pure-g
       [:div.l-box-lrg.pure-u-1.pure-u-md-2-5
-       [:form.pure-form.pure-form-stacked
-        [:fieldset
-         [:input#email {:type "text" :placeholder "Your Email"}]
-         [:input#password {:type "password" :placeholder "Your Password"}]
-         [:a.pure-button {:type "submit"} "Sign Up Free"]]]]
+       (signup-form)]
       [:div.l-box-lrg.pure-u-1.pure-u-md-3-5
        [:h4 "Contact Us"]
        [:i.fa.fa-envelope]
@@ -93,6 +93,12 @@
        [:a {:title  "Follow MovementSession on Instagram"
             :href   "https://instagram.com/movementsession"
             :target "_blank"} "Instagram"]]]]))
+
+(defn temp [code]
+  (html5
+    [:head]
+    [:body
+     [:div (str "HELLO: " code)]]))
 
 (defn landing []
   (html5

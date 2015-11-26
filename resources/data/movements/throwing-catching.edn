@@ -9,5 +9,5 @@
  ]
 
 
-;movnat-throwing [:chest-throw :rotational-throw :front-swing-throw :overhead-throw]
+; :rotational-throw :front-swing-throw :overhead-throw
 

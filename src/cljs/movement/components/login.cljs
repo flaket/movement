@@ -51,3 +51,24 @@
                                                                         (reset! error (:message (:response response)))
                                                                         (println (str "error! " response))))})))}
         (if @loading? "Logging in..." "Log In")]])))
+
+(defn home []
+  [:div
+   [:div.pure-g
+    [:div.pure-u
+     [:div.header
+      [:div.home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
+       [:a.pure-menu-heading "Movement Session"]
+       [:ul.pure-menu-list
+        [:li.pure-menu-item
+         [:a.pure-menu-link {:title  "Visit blog"
+                             :href   "/blog"
+                             :target ""} "Blog"]]
+        [:li.pure-menu-item
+         [:a.pure-menu-link {:title  "Log in"
+                             :href   "/app"
+                             :target ""} "Log In"]]]]]]]
+   [:div.splash-container
+    [:div.splash
+     [:div.splash-head
+      [login]]]]])

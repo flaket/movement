@@ -15,9 +15,6 @@
  {:db/id #db/id[:db.part/user -8] :category/name "Planche"}
  {:db/id #db/id[:db.part/user -9] :category/name "Grip Strength"}
 
- ;; movements
-
-
  ;; Back Lever
  {:db/id             #db/id[:db.part/user -100]
   :movement/name     "Back Lever"
@@ -281,11 +278,6 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -8]]}
-
-
-
-
-
 
 
 

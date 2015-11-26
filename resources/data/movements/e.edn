@@ -25,6 +25,11 @@
                       #db/id[:db.part/user -2]]}
 
  {:db/id #db/id[:db.part/user]
+  :movement/name "Kick To Handstand"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]]}
+
+ {:db/id #db/id[:db.part/user]
   :movement/name "Handstand Walk"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]]}

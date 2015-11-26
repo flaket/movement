@@ -6,6 +6,8 @@
   :equipment/name "Wall Bar"}
  {:db/id          #db/id[:db.part/user -5002]
   :equipment/name "Stool"}
+ {:db/id          #db/id[:db.part/user -5003]
+  :equipment/name "Rings"}
 
  ;; categories
  {:db/id         #db/id[:db.part/user -1]
@@ -21,30 +23,32 @@
 
  ;; movements
 
+ ;:rocking :rotational-rocking
+
  ;; todo: legge til enklere varianter
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "L-Sit"
+  :movement/name     "L Sit"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "L-Straddle"
+  :movement/name     "L Straddle"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Tuck V-Up"
+  :movement/name     "Tuck V Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "V-Up"
+  :movement/name     "V Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -73,6 +77,13 @@
                       #db/id[:db.part/user -5]]}
 
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Headstand Straight Leg Lift"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -5]]}
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Arch Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
@@ -88,6 +99,28 @@
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Hollow Body Rock"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Ring L Sit"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]
+  :movement/equipment [#db/id[:db.part/user -5003]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Sit Up Pike"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Sit Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]

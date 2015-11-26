@@ -10,9 +10,7 @@
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
             [movement.share :refer [share-component]]
-            [movement.components.landing :refer [home]]
-            [movement.components.signup :refer [sign-up]]
-            [movement.components.login :refer [login]]
+            [movement.components.login :refer [home login]]
             [movement.styles :refer [insert-styles]])
   (:import goog.History))
 
@@ -21,7 +19,6 @@
 ;; -------------------------
 ;; Client side routes
 (secretary/defroute "/" [] (set-page! #'home))
-(secretary/defroute "/signup" [] (set-page! #'sign-up))
 (secretary/defroute "/login" [] (set-page! #'login))
 (secretary/defroute "/generator" [] (set-page! #'generator-component))
 (secretary/defroute "/user" [] (set-page! #'user-component))
@@ -41,7 +38,7 @@
   (secretary/set-config! :prefix "#")
   (if (session/get :user)
     (set-page! #'generator-component)
-    (set-page! #'login))
+    (set-page! #'home))
 
   (.initializeTouchEvents js/React true)
   (mount-root))

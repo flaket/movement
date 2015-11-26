@@ -74,6 +74,27 @@
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
 
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Side Leg Swing"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Kneeling To Tall Half Kneeling"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -5]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Stepping Over"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Stepping Under"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+
 
 ;; Shoulder
  {:db/id              #db/id[:db.part/user]
@@ -146,22 +167,6 @@
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5001]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Kneeling To Tall Half Kneeling"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]
-                       #db/id[:db.part/user -5]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Stepping Over"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Stepping Under"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]}
 
 
  ; movnat

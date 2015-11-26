@@ -35,6 +35,23 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/activation-id
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/unique             :db.unique/identity
+  :db/doc                "User activation id"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/active?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Is the user account active?"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :user/payment
   :db/index              true
   :db/valueType          :db.type/ref

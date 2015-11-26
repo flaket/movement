@@ -14,7 +14,7 @@
  {:db/id #db/id[:db.part/user -8] :category/name "Jumping"}
 
 
- ;:rocking :rotational-rocking
+
  ; :forward-sprawl-to-push-up
 
  {:db/id #db/id[:db.part/user -98]
@@ -284,6 +284,15 @@
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -6]]
   :movement/harder [#db/id[:db.part/user -111]]}
+
+ {:db/id #db/id[:db.part/user -127]
+  :movement/name "Pike Push Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]
+  :movement/harder [#db/id[:db.part/user -124]]}
 
 
  ]

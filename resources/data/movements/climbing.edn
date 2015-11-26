@@ -27,8 +27,6 @@
  {:db/id #db/id[:db.part/user -11]
   :category/name "Ring"}
 
- ;; movements
-
  ;; muscle up
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Muscle Up"
@@ -65,7 +63,7 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "L-Sit Muscle Up"
+  :movement/name     "L Sit Muscle Up"
   :movement/category [#db/id[:db.part/user -2]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -6]

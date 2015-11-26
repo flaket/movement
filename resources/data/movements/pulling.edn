@@ -3,8 +3,9 @@
  ;; equipment
  {:db/id #db/id[:db.part/user -5000] :equipment/name "Rings"}
  {:db/id #db/id[:db.part/user -5001] :equipment/name "Weights"}
- {:db/id #db/id[:db.part/user -5002] :equipment/name "Climbing Rope"}
  {:db/id #db/id[:db.part/user -5002] :equipment/name "Bar"}
+ {:db/id #db/id[:db.part/user -5003] :equipment/name "Elastic Band"}
+ {:db/id #db/id[:db.part/user -5004] :equipment/name "Climbing Rope"}
 
  ;; category
  {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
@@ -138,7 +139,8 @@
                       #db/id[:db.part/user -7]
                       #db/id[:db.part/user -8]]
   :movement/equipment [#db/id[:db.part/user -5000]
-                       #db/id[:db.part/user -5002]]}
+                       #db/id[:db.part/user -5002]
+                       #db/id[:db.part/user -5003]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Hold Forearm One Arm Pull Up"
@@ -249,7 +251,7 @@
                        #db/id[:db.part/user -6]
                        #db/id[:db.part/user -7]
                        #db/id[:db.part/user -8]]
-  :movement/equipment [#db/id[:db.part/user -5002]]}
+  :movement/equipment [#db/id[:db.part/user -5004]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Front Lever Row"
@@ -266,6 +268,18 @@
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Ring Chin Up"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -3]
+                       #db/id[:db.part/user -4]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]
+                       #db/id[:db.part/user -8]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Ring Wide Chin Up"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
                        #db/id[:db.part/user -3]

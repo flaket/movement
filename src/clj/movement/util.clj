@@ -9,27 +9,27 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-(def uri "datomic:dev://localhost:4334/test")
+(def uri "datomic:dev://localhost:4334/test4")
 
 #_(d/delete-database uri)
 
-(d/create-database uri)
+#_(d/create-database uri)
 
 (def conn (d/connect uri))
 
-(let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
+#_(let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
 
-(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
+#_(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
   (d/transact conn templates-tx))
 
-(let [tx-user-data [{:db/id         #db/id[:db.part/user]
+#_(let [tx-user-data [{:db/id         #db/id[:db.part/user]
                      :user/email    "admin@movementsession.com"
                      :user/name     "Admin"
                      :user/password (hashers/encrypt "pw")}]]
   (d/transact conn tx-user-data))
 
-(let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/acrobatics.edn"))))
+#_(let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/acrobatics.edn"))))
       balancing-tx (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
       climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
       core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
@@ -113,8 +113,6 @@
         images (drop 2 images) ; hard coded removal of leading junk files
         no-data-images (filter #(has-no-data? %) images)]
     [(count no-data-images) no-data-images]))
-
-
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 

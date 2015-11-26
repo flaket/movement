@@ -12,11 +12,11 @@
   :movement/category [#db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Backward Roll to Lying"
+  :movement/name     "Backward Roll To Lying"
   :movement/category [#db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Lying to Forward Roll"
+  :movement/name     "Lying To Forward Roll"
   :movement/category [#db/id[:db.part/user -3]]}
 
 
