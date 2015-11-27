@@ -56,3 +56,5 @@ figwheel_server.log
 .idea/libraries/Leiningen__com_fasterxml_jackson_dataformat_jackson_dataformat_smile_2_4_4.xml
 
 *.xml
+
+.idea/inspectionProfiles/Project_Default.xml

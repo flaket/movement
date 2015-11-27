@@ -93,7 +93,6 @@
                        #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
-
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Lapping"
   :movement/category  [#db/id[:db.part/user -7]
