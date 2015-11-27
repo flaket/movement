@@ -59,6 +59,9 @@
         [:ul
          (doall
            (for [s (session/get :stored-sessions)]
-             ^{:key s} [:li (str (:session/timestamp s) " - " (:session/name s) " - " (:session/comment s))]))]
+             ^{:key s} [:li (str
+                              (:session/timestamp s) " - " (:session/name s) " - " (:session/comment s)
+                              "\t")
+                        [:a {:href (str "/session/" (:session/url s)) :target "_blank"} "View"]]))]
         [:div
          [change-password]]]])))

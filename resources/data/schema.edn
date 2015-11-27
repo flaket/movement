@@ -304,6 +304,15 @@
 
  ;; session
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :session/url
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/unique             :db.unique/identity
+  :db/doc                "A session is stored with a unique url"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :session/name
   :db/index              true
   :db/valueType          :db.type/string

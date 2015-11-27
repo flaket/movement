@@ -30,9 +30,10 @@
             [movement.db]
             [movement.pages.landing :refer [landing temp]]
             [movement.pages.signup :refer [signup-page]]
+            [movement.pages.session :refer [view-session-page]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-(def uri "datomic:dev://localhost:4334/test5")
+(def uri "datomic:dev://localhost:4334/test6")
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
@@ -215,6 +216,7 @@
                        :user/email   user
                        :user/session [#db/id[:db.part/user -100]]}
                       {:db/id               #db/id[:db.part/user -100]
+                       :session/url         (str (java.util.UUID/randomUUID))
                        :session/name        title
                        :session/description description
                        :session/comment     (str/join (interpose " " comment))
@@ -344,6 +346,20 @@
         (generate-response {:message "Password changed successfully!"}))
       (generate-response {:message "Wrong email/password combination"} 401))))
 
+(defn show-session [url]
+  (let [db (d/db conn)
+        x (d/q '[:find (pull ?e [*])
+                 :in $ ?url
+                 :where
+                 [?e :session/url ?url]]
+               db
+               url)]
+    (view-session-page x)
+    #_(if-not (nil? (:db/id x))
+      (view-session-page x)
+      "unknown session url")))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
@@ -370,6 +386,7 @@
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (retrieve-sessions req)))
+           (GET "/session/:url" [url] (show-session url))
            (GET "/template" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (let [template-name (:template-name (:params req))
