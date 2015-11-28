@@ -348,16 +348,13 @@
 
 (defn show-session [url]
   (let [db (d/db conn)
-        x (d/q '[:find (pull ?e [*])
+        session (d/q '[:find (pull ?e [*])
                  :in $ ?url
                  :where
                  [?e :session/url ?url]]
                db
                url)]
-    (view-session-page x)
-    #_(if-not (nil? (:db/id x))
-      (view-session-page x)
-      "unknown session url")))
+    (view-session-page session)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;

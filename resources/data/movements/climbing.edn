@@ -231,6 +231,15 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Side Swing Traverse"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Front Swing Traverse"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
@@ -341,6 +350,26 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Sliding Swing Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -9]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Elbow Swing Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -9]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Tuck Pop Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
@@ -349,6 +378,10 @@
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+
+
+
 
 
 

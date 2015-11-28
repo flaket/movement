@@ -19,6 +19,19 @@
 
  ;; movements
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Jumping Pull Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]
+  :movement/equipment [#db/id[:db.part/user -5002]]}
+
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Pull Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]

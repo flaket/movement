@@ -33,6 +33,10 @@
   :movement/category  [#db/id[:db.part/user -1]]}
 
  {:db/id              #db/id[:db.part/user]
+  :movement/name      "Split Squat Reverse"
+  :movement/category  [#db/id[:db.part/user -1]]}
+
+ {:db/id              #db/id[:db.part/user]
   :movement/name      "Side Shuffle"
   :movement/category  [#db/id[:db.part/user -1]]}
 
