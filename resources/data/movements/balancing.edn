@@ -33,6 +33,10 @@
   :movement/category  [#db/id[:db.part/user -1]]}
 
  {:db/id              #db/id[:db.part/user]
+  :movement/name      "Cross Reverse"
+  :movement/category  [#db/id[:db.part/user -1]]}
+
+ {:db/id              #db/id[:db.part/user]
   :movement/name      "Split Squat Reverse"
   :movement/category  [#db/id[:db.part/user -1]]}
 
@@ -41,7 +45,7 @@
   :movement/category  [#db/id[:db.part/user -1]]}
 
 
- ;:balancing-shuffle :cross-reverse
+ ;:balancing-shuffle
  ;:split-squat-pivot-reverse
 
  ]

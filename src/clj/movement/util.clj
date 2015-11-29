@@ -116,14 +116,6 @@
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn get-new-difficulty-movement [movement difficulty]
-  (let [entity (d/pull db '[*] movement)
-        kw (case difficulty "easier" :movement/easier "harder" :movement/harder nil)]
-    (if-let [new-movements (kw entity)]
-      (let [new-entity (:db/id (first (take 1 (shuffle new-movements))))
-            new-movement (d/pull db '[*] new-entity)]
-         new-movement)
-       {:message (str "Couldn't find any " difficulty " movements.")})))
 
 (d/pull db '[*] 17592186045682)
 

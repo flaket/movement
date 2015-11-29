@@ -23,7 +23,7 @@
 
  ;; movements
 
- ;:rocking :rotational-rocking
+ ;:rocking
 
  ;; todo: legge til enklere varianter
  {:db/id             #db/id[:db.part/user]
@@ -121,6 +121,13 @@
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Sit Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Rotational Rocking"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
