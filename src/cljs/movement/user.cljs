@@ -12,20 +12,18 @@
           {:params {:username     (session/get :user)
                     :password     old-pass
                     :new-password new-pass}
-           :handler
-                   (fn [response]
-                     (swap! pass assoc :info (get-in response [:message])))
-           :error-handler
-                   (fn [response]
-                     (swap! pass assoc :error (get-in response [:message])))})))
+           :handler (fn [response]
+                      (swap! pass assoc :info (:message response)))
+           :error-handler (fn [response]
+                            (swap! pass assoc :error (:message response)))})))
 
 (defn change-password []
   (let [pass (atom {})]
     (fn []
       [:div
-       [:h2 "Password"]
+       [:h2 "Change password"]
        [:input {:type "password"
-                :placeholder "password"
+                :placeholder "old password"
                 :value (:old-pass @pass)
                 :on-change #(swap! pass assoc :old-pass (-> % .-target .-value))}]
        [:br]
@@ -35,7 +33,7 @@
                 :on-change #(swap! pass assoc :new-pass (-> % .-target .-value))}]
        [:br]
        [:input {:type "password"
-                :placeholder "confirm password"
+                :placeholder "confirm new password"
                 :value (:repeat-pass @pass)
                 :on-change #(swap! pass assoc :repeat-pass (-> % .-target .-value))}]
        [:br]
@@ -44,9 +42,9 @@
        (when-let [error (:error @pass)]
          [:div.error error])
        (if (not= (:new-pass @pass) (:repeat-pass @pass))
-         [:div.error "password mismatch"]
-         (when (not-empty (:new-pass @pass))
-           [:a.button.button-primary {:on-click #(update-password! pass)} "change password"]))])))
+         [:div.error "new password mismatch"]
+         (when (and (not-empty (:old-pass @pass)) (not-empty (:new-pass @pass)))
+           [:a.button.button-primary {:on-click #(update-password! pass)} "Change password"]))])))
 
 (defn user-component []
   (let []
@@ -54,7 +52,7 @@
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content
-        [:h3 (str "Welcome " (session/get :user))]
+        [:h3 (str "Logged in as " (session/get :user))]
         [:h2 "Logged sessions"]
         [:ul
          (doall

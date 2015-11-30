@@ -26,6 +26,8 @@
   :category/name "Muscle Up"}
  {:db/id #db/id[:db.part/user -11]
   :category/name "Ring"}
+ {:db/id #db/id[:db.part/user -12]
+  :category/name "Static"}
 
  ;; muscle up
  {:db/id             #db/id[:db.part/user]
@@ -93,7 +95,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -11]]
+                      #db/id[:db.part/user -11]
+                      #db/id[:db.part/user -12]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5001]]}
 
@@ -104,7 +107,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -11]]
+                      #db/id[:db.part/user -11]
+                      #db/id[:db.part/user -12]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5001]]}
 
@@ -114,7 +118,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -11]]
+                      #db/id[:db.part/user -11]
+                      #db/id[:db.part/user -12]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5001]]}
 
@@ -133,7 +138,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -7]]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -12]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5001]]}
 
@@ -152,7 +158,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -11]]
+                      #db/id[:db.part/user -11]
+                      #db/id[:db.part/user -12]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5001]]}
 
@@ -163,7 +170,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -11]]
+                      #db/id[:db.part/user -11]
+                      #db/id[:db.part/user -12]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5001]]}
 
@@ -326,7 +334,8 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -7]]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -12]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]

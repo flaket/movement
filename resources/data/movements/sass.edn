@@ -14,6 +14,7 @@
  {:db/id #db/id[:db.part/user -7] :category/name "Side Lever"}
  {:db/id #db/id[:db.part/user -8] :category/name "Planche"}
  {:db/id #db/id[:db.part/user -9] :category/name "Grip Strength"}
+ {:db/id #db/id[:db.part/user -10] :category/name "Static"}
 
  ;; Back Lever
  {:db/id             #db/id[:db.part/user -100]
@@ -22,7 +23,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/easier   [#db/id[:db.part/user -101]]
   :movement/equipment [#db/id[:db.part/user -5001]
                        #db/id[:db.part/user -5002]]}
@@ -33,7 +35,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/easier   [#db/id[:db.part/user -102]]
   :movement/harder   [#db/id[:db.part/user -100]]
   :movement/equipment [#db/id[:db.part/user -5001]
@@ -45,7 +48,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/easier   [#db/id[:db.part/user -103]]
   :movement/harder   [#db/id[:db.part/user -101]]
   :movement/equipment [#db/id[:db.part/user -5001]
@@ -57,7 +61,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/easier   [#db/id[:db.part/user -104]]
   :movement/harder   [#db/id[:db.part/user -102]]
   :movement/equipment [#db/id[:db.part/user -5001]
@@ -69,7 +74,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/harder   [#db/id[:db.part/user -103]]
   :movement/equipment [#db/id[:db.part/user -5001]
                        #db/id[:db.part/user -5002]]}
@@ -80,7 +86,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5001]
                        #db/id[:db.part/user -5002]]}
 
@@ -92,7 +99,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/easier   [#db/id[:db.part/user -111]]
   :movement/equipment [#db/id[:db.part/user -5001]
                        #db/id[:db.part/user -5002]]}
@@ -103,7 +111,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/easier   [#db/id[:db.part/user -112]]
   :movement/harder   [#db/id[:db.part/user -110]]
   :movement/equipment [#db/id[:db.part/user -5001]
@@ -115,7 +124,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/easier   [#db/id[:db.part/user -113]]
   :movement/harder   [#db/id[:db.part/user -111]]
   :movement/equipment [#db/id[:db.part/user -5001]
@@ -127,7 +137,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/easier   [#db/id[:db.part/user -114]]
   :movement/harder   [#db/id[:db.part/user -112]]
   :movement/equipment [#db/id[:db.part/user -5001]
@@ -139,7 +150,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/harder   [#db/id[:db.part/user -113]]
   :movement/equipment [#db/id[:db.part/user -5001]
                        #db/id[:db.part/user -5002]]}
@@ -162,7 +174,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
@@ -170,7 +183,9 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -7]]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
@@ -179,7 +194,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
@@ -188,7 +204,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
@@ -197,7 +214,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
 
@@ -249,35 +267,40 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -8]]}
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -10]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Straddle Planche"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -8]]}
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -10]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "One Leg Extended Planche"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -8]]}
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -10]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Flat Planche"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -8]]}
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -10]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Tuck Planche"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -8]]}
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -10]]}
 
 
 
@@ -286,7 +309,8 @@
   :movement/name      "Ring Support Hold"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
-                       #db/id[:db.part/user -3]]
+                       #db/id[:db.part/user -3]
+                       #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5001]]}
 
  ]

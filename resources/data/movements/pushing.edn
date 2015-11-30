@@ -13,10 +13,6 @@
  {:db/id #db/id[:db.part/user -7] :category/name "Ring"}
  {:db/id #db/id[:db.part/user -8] :category/name "Jumping"}
 
-
-
- ; :forward-sprawl-to-push-up
-
  {:db/id #db/id[:db.part/user -98]
   :movement/name "Burpee"
   :movement/category [#db/id[:db.part/user -1]

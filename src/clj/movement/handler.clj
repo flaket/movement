@@ -336,15 +336,18 @@
 (defn change-password! [req]
   (let [email (:username (:params req))
         password (:password (:params req))
-        new-password (:new-password (:params req))]
-    (if (valid-user? email password)
-      (do
+        new-password (:new-password (:params req))
+        user (find-user email)]
+    (if (valid-user? user password)
+      (try
         (let [tx-user-data [{:db/id         #db/id[:db.part/user]
-                             :user/email    (:user/email email)
+                             :user/email    (:user/email user)
                              :user/password (hashers/encrypt new-password)}]]
-          (d/transact conn tx-user-data))
-        (generate-response {:message "Password changed successfully!"}))
-      (generate-response {:message "Wrong email/password combination"} 401))))
+          (d/transact conn tx-user-data)
+          (generate-response {:message "Password changed successfully!"}))
+        (catch Exception e
+          (generate-response {:message "Error changing password."})))
+      (generate-response {:message "Wrong old password."}))))
 
 (defn show-session [url]
   (let [db (d/db conn)
@@ -355,7 +358,6 @@
                db
                url)]
     (view-session-page session)))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 

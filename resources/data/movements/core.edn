@@ -20,10 +20,11 @@
   :category/name "Abdominal Strength"}
  {:db/id         #db/id[:db.part/user -5]
   :category/name "Lower Back Strength"}
+ {:db/id         #db/id[:db.part/user -6]
+  :category/name "Static"}
+
 
  ;; movements
-
- ;:rocking
 
  ;; todo: legge til enklere varianter
  {:db/id             #db/id[:db.part/user]
@@ -31,14 +32,16 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]}
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "L Straddle"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]}
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Tuck V Up"
@@ -95,7 +98,8 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]}
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Hollow Body Rock"
@@ -109,7 +113,8 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]]
   :movement/equipment [#db/id[:db.part/user -5003]]}
 
  {:db/id             #db/id[:db.part/user]
