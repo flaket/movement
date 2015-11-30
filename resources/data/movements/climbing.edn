@@ -127,7 +127,6 @@
   :movement/name     "Side Swing"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -147,7 +146,6 @@
   :movement/name     "Front Swing"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -179,7 +177,6 @@
   :movement/name     "Side Swing Grip Change"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -197,7 +194,6 @@
   :movement/name     "Tuck Swing"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -206,7 +202,6 @@
   :movement/name     "Tap Swing"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -215,7 +210,6 @@
   :movement/name     "Side Swing Traverse"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -242,7 +236,6 @@
   :movement/name     "Side Swing Traverse"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -251,7 +244,6 @@
   :movement/name     "Front Swing Traverse"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}

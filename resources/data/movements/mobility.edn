@@ -12,6 +12,7 @@
  {:db/id #db/id[:db.part/user -5] :category/name "Ankle Mobility"}
  {:db/id #db/id[:db.part/user -6] :category/name "Spine Mobility"}
  {:db/id #db/id[:db.part/user -7] :category/name "Bridge"}
+ {:db/id #db/id[:db.part/user -8] :category/name "Balance"}
 
  ;; Hip
  {:db/id              #db/id[:db.part/user]
@@ -99,7 +100,8 @@
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Front Leg Swing"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]}
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -8]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Side Leg Swing"
