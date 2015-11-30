@@ -294,5 +294,14 @@
                       #db/id[:db.part/user -5]]
   :movement/harder [#db/id[:db.part/user -124]]}
 
+ {:db/id #db/id[:db.part/user -128]
+  :movement/name "Forward Sprawl To Push Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -8]]}
+
 
  ]

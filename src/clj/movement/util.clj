@@ -105,14 +105,17 @@
                                        [_ :movement/name ?name]]
                                      db)))
         no-image-movements (filter #(has-no-image? %) movements)]
-    [(count no-image-movements) no-image-movements]))
+    {:#                  (count no-image-movements)
+     :no-image-movements (vec no-image-movements)}))
 
 (defn find-no-data-images []
   (let [f (io/file "resources/public/images")
         images (for [file (file-seq f)] (.getName file))
         images (drop 2 images) ; hard coded removal of leading junk files
         no-data-images (filter #(has-no-data? %) images)]
-    [(count no-data-images) no-data-images]))
+    {:#images          (count images)
+     :#no-data-images (count no-data-images)
+     :no-data-images  (vec no-data-images)}))
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 

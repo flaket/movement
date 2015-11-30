@@ -10,8 +10,12 @@
   :movement/name      "Overhead Throw"
   :movement/category  [#db/id[:db.part/user -1]]}
 
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Front Swing Throw"
+  :movement/category  [#db/id[:db.part/user -1]]}
+
  ]
 
 
-; :rotational-throw :front-swing-throw
+; :rotational-throw
 

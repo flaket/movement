@@ -34,6 +34,10 @@
   :movement/category [#db/id[:db.part/user -1]]}
 
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Foot Hand Crawl"
+  :movement/category [#db/id[:db.part/user -1]]}
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Army Crawl"
   :movement/category [#db/id[:db.part/user -1]]}
 
