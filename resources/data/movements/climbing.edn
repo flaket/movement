@@ -361,6 +361,15 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Elbow Pull Up"
+  :movement/category [#db/id[:db.part/user -2]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Sliding Swing Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
@@ -381,7 +390,7 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Tuck Pop Up"
+  :movement/name     "Hand Swing Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -391,13 +400,26 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Elbow Pull Up"
-  :movement/category [#db/id[:db.part/user -2]
-                      #db/id[:db.part/user -4]
+  :movement/name     "Swing Pop Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -10]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -8]
                       #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Tuck Pop Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -9]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+
 
 
  ]

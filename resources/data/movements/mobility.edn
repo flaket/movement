@@ -115,6 +115,12 @@
                        #db/id[:db.part/user -5]]}
 
  {:db/id              #db/id[:db.part/user]
+  :movement/name      "Kneeling To Tall Kneeling"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -5]]}
+
+ {:db/id              #db/id[:db.part/user]
   :movement/name      "Lateral Half Kneeling"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
