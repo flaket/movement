@@ -15,8 +15,19 @@
  {:db/id #db/id[:db.part/user -8] :category/name "Grip Strength"}
 
  ;; movements
+
+
  {:db/id             #db/id[:db.part/user -100]
   :movement/name     "Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]
+  :movement/harder   [#db/id[:db.part/user -150]
+                      #db/id[:db.part/user -200]]}
+
+ {:db/id             #db/id[:db.part/user -99]
+  :movement/name     "Air Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
