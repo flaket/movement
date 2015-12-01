@@ -131,33 +131,12 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Shouldering"
+  :movement/name      "Power Clean"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
-                       #db/id[:db.part/user -5]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Shoulder Carry Squat"
-  :movement/category  [#db/id[:db.part/user -7]
-                       #db/id[:db.part/user -1]
+                       #db/id[:db.part/user -8]
                        #db/id[:db.part/user -5]
                        #db/id[:db.part/user -10]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Hands Free Shoulder Carry Squat"
-  :movement/category  [#db/id[:db.part/user -7]
-                       #db/id[:db.part/user -1]
-                       #db/id[:db.part/user -5]
-                       #db/id[:db.part/user -10]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Shoulder Carry Switch"
-  :movement/category  [#db/id[:db.part/user -7]
-                       #db/id[:db.part/user -1]
-                       #db/id[:db.part/user -5]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
@@ -174,15 +153,6 @@
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
                        #db/id[:db.part/user -5]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Power Clean"
-  :movement/category  [#db/id[:db.part/user -7]
-                       #db/id[:db.part/user -1]
-                       #db/id[:db.part/user -8]
-                       #db/id[:db.part/user -5]
-                       #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]

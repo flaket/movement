@@ -42,7 +42,25 @@
                        #db/id[:db.part/user -5]]}
 
  {:db/id              #db/id[:db.part/user]
+  :movement/name      "Split Kneeling To Sitting"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -5]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Split Kneeling Walk"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -5]]}
+
+ {:db/id              #db/id[:db.part/user]
   :movement/name      "Squat To Tall Kneeling"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -5]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Split Kneeling Walk"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
                        #db/id[:db.part/user -5]]}
@@ -221,15 +239,13 @@
   :movement/equipment [#db/id[:db.part/user -5001]]}
 
 
- ; movnat
- ; :split-stand-to-split-sit :walking-split-squat :side-shuffle
- ;                      :hinged-walk
+ ; :split-stand-to-split-sit :walking-split-squat
  ;                     :squat-to-medium-kneeling :squat-to-kneeling :kneeling-to-tall-kneeling
  ;                     :kneeling-to-tall-half-kneeling :kneeling-to-lateral-half-kneeling
  ;                     :split-knee-walk :tall-half-kneeling-to-tall-split-kneeling
  ;                     :deep-squat :deep-squat-to-deep-knee-bend
  ;                     :deep-squat-narrow-base :tall-half-kneeling-to-kneeling
- ;                     :tall-split-kneeling-to-bent-sit :deep-knee-bend-to-kneeling
+ ;                     :deep-knee-bend-to-kneeling
  ;                     :stepping-up :backward-stepping-down :extended-stepping-up :forward-stepping-down
  ;:bent-sit-to-lateral-half-kneeling
 

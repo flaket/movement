@@ -302,9 +302,6 @@
                       #db/id[:db.part/user -8]
                       #db/id[:db.part/user -10]]}
 
-
-
-
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Ring Support Hold"
   :movement/category  [#db/id[:db.part/user -1]

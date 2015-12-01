@@ -18,8 +18,7 @@
   :movement/name      "Rotational Throw"
   :movement/category  [#db/id[:db.part/user -1]]}
 
+ ; todo: crossfit throwing exercises
+
  ]
-
-
-; :rotational-throw
 

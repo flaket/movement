@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-(def uri "datomic:dev://localhost:4334/test6")
+(def uri "datomic:dev://localhost:4334/test7")
 
 #_(d/delete-database uri)
 
@@ -111,7 +111,7 @@
 (defn find-no-data-images []
   (let [f (io/file "resources/public/images")
         images (for [file (file-seq f)] (.getName file))
-        images (drop 2 images) ; hard coded removal of leading junk files
+        images (drop 2 images) ; remove leading junk files
         no-data-images (filter #(has-no-data? %) images)]
     {:#images          (count images)
      :#no-data-images (count no-data-images)
