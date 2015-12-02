@@ -1,6 +1,7 @@
 [
 
  {:db/id #db/id[:db.part/user -4] :category/name "Acrobatics"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Jumping"}
 
  ;; acrobatic
 
@@ -22,12 +23,14 @@
  ;; easier movements leading to front flip
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Front Flip"
-  :movement/category [#db/id[:db.part/user -4]]}
+  :movement/category [#db/id[:db.part/user -4]
+                      #db/id[:db.part/user -3]]}
 
  ;; easier movements leading to back flip
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Back Flip"
-  :movement/category [#db/id[:db.part/user -4]]}
+  :movement/category [#db/id[:db.part/user -4]
+                      #db/id[:db.part/user -3]]}
 
 
  ]
