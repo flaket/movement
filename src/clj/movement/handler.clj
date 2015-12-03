@@ -286,7 +286,7 @@
 (defn jws-login
   [email password]
   (let [user (find-user email)]
-    (if-not (or (nil? (:db/id user)) (false? (:user/active? user)))
+    (if-not (or (nil? (:db/id user)) (false? (:user/activated? user)))
       (let [valid? (valid-user? user password)]
         (if valid?
           (let [claims {:user (keyword email)
@@ -304,7 +304,7 @@
                        :user/email email
                        :user/password (hashers/encrypt password)
                        :user/activation-id activation-id
-                       :user/active? false}]]
+                       :user/activated? false}]]
     (d/transact conn tx-user-data)))
 
 (defn add-user! [email password]
@@ -325,8 +325,14 @@
       (do
         (let [tx-user-data [{:db/id        #db/id[:db.part/user]
                              :user/email   (:user/email user)
-                             :user/active? true
-                             :user/activation-id (generate-activation-id)}]]
+                             :user/activated? true
+                             :user/activation-id (generate-activation-id)
+                             :user/sign-up-timestamp (Date.)
+                             :user/setting [#db/id[:db.part/user -100]]}
+                            {:db/id        #db/id[:db.part/user -100]
+                             :setting/show-standard-templates? true
+                             :setting/view "Standard"
+                             :setting/receive-email? true}]]
           (d/transact conn tx-user-data))
         {:status  302
          :headers {"Location" "/activated"}

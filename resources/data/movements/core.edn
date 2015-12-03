@@ -109,6 +109,20 @@
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Superman"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Superman Rocking"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Ring L Sit"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]

@@ -15,15 +15,15 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
-  :db/doc                "User name"
+  :db/doc                "User name, optional"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/role
+  :db/ident              :user/sign-up-timestamp
   :db/index              true
-  :db/valueType          :db.type/string
+  :db/valueType          :db.type/instant
   :db/cardinality        :db.cardinality/one
-  :db/doc                "User role"
+  :db/doc                "User sign up date"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -44,7 +44,7 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/active?
+  :db/ident              :user/activated?
   :db/index              true
   :db/valueType          :db.type/boolean
   :db/cardinality        :db.cardinality/one
@@ -75,13 +75,54 @@
   :db/doc                "A user has logged movement sessions"
   :db.install/_attribute :db.part/db}
 
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/setting
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A user has settings"
+  :db.install/_attribute :db.part/db}
+
+ ;; setting
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :setting/show-standard-templates?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Boolean setting for showing standard templates"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :setting/view
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Which view the user prefers"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :setting/receive-email?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Boolean setting for receiving email"
+  :db.install/_attribute :db.part/db}
+
  ;; payment
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :payment/amount
   :db/index              true
-  :db/valueType          :db.type/float
+  :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A single payment"
+  :db/doc                "A single payment amount"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :payment/timestamp
+  :db/index              true
+  :db/valueType          :db.type/instant
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A payment is stored with a timestamp"
   :db.install/_attribute :db.part/db}
 
  ;; template
@@ -313,11 +354,11 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :session/name
+  :db/ident              :session/title
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A session is stored with a name"
+  :db/doc                "A session is stored with a title"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]

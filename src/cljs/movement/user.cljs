@@ -49,6 +49,11 @@
            [:div.pure-g
             [:a.pure-u.button.button-primary {:on-click #(update-password! pass)} "Change password"]]))])))
 
+(defn unsubscribe-component []
+  [:a {:href "https://www.paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=7MLAKH5Y6KQA6"}
+   [:img {:src "https://www.paypalobjects.com/en_US/i/btn/btn_unsubscribe_LG.gif"
+          :border "0"}]])
+
 (defn user-component []
   (let []
     (fn []
@@ -67,4 +72,33 @@
               (str (:session/timestamp s) " - " (:session/name s) " - " (:session/comment s) "\t")
               [:a {:href (str "/session/" (:session/url s)) :target "_blank"} "View"]]))]
         [:div
-         [change-password]]]])))
+         [change-password]]
+        (unsubscribe-component)]])))
+
+(defn payment-component []
+  (let []
+    (fn []
+      [:div#layout {:class (str "" (when (session/get :active?) "active"))}
+       [menu-component]
+       [:div.content
+        [:div.pure-g
+         [:form.pure-form {:action "https://www.paypal.com/cgi-bin/webscr"
+                 :method "post"
+                 :target "_top"}
+          [:input {:type  "hidden"
+                   :name  "cmd"
+                   :value "_s-xclick"}]
+          [:input {:type  "hidden"
+                   :name  "hosted_button_id"
+                   :value "9U8DQ9HYGV68S"}]
+          [:input {:type   "image"
+                   :src    "https://www.paypalobjects.com/en_US/NO/i/btn/btn_subscribeCC_LG.gif"
+                   :border "0"
+                   :name   "submit"
+                   :alt    "PayPal - The safer, easier way to pay online!"}]
+          [:img {:alt    ""
+                 :border "0"
+                 :src    "https://www.paypalobjects.com/no_NO/i/scr/pixel.gif"
+                 :width  "1"
+                 :height "1"}]]]]])))
+
