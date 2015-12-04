@@ -58,11 +58,19 @@
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Leg Lift"
+  :movement/name     "Lying Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Sitting Leg Lift"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Incline Bench Leg Lift"
@@ -174,6 +182,24 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Plank"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "One Arm Plank"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -6]]}
 
 
  ]

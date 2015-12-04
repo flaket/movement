@@ -12,11 +12,19 @@
   :movement/category [#db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Gymnastic Backward Roll"
+  :movement/category [#db/id[:db.part/user -3]]}
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Backward Roll To Lying"
   :movement/category [#db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Lying To Forward Roll"
+  :movement/category [#db/id[:db.part/user -3]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Backward Roll To Handstand"
   :movement/category [#db/id[:db.part/user -3]]}
 
 

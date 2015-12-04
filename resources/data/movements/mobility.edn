@@ -101,7 +101,7 @@
                        #db/id[:db.part/user -2]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Sky Reach"
+  :movement/name      "Squat Sky Reach"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
 
@@ -123,6 +123,11 @@
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Side Leg Swing"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Back Leg Swing"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
 

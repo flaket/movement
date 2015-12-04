@@ -315,4 +315,12 @@
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]]}
 
+ {:db/id #db/id[:db.part/user -119]
+  :movement/name "Tricep Dip"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -6]]}
+
  ]
