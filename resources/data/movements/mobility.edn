@@ -106,7 +106,12 @@
                        #db/id[:db.part/user -2]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Buddha Prayer"
+  :movement/name      "Sky Reach Hold"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Prayer Squat"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
 
