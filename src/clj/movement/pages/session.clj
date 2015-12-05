@@ -6,18 +6,18 @@
 (defn image-url [name]
   (str "../images/" (str/replace (str/lower-case name) " " "-") ".png"))
 
-(defn comment-component [comments]
-  [:ul
-   (for [c comments]
-     ^{:key c}
-     [:div.pure-g [:li.pure-u.comment (str c)]])])
+(defn comment-component [comment]
+  [:div comment])
 
-(defn movement-component [{:keys [id category distance rep set duration] :as m}
-                          {:keys [title]}]
-  (let [name (:movement/name m)
-        graphic (image-url name)]
+(defn movement-component [m]
+  (let [id (:db/id m)
+        name (:movement/name m)
+        graphic (image-url name)
+        rep (:movement/rep m)
+        set (:movement/set m)
+        distance (:movement/distance m)
+        duration (:movement/duration m)]
     [:div.pure-u.movement {:id (str "m-" id)}
-
      [:h3.pure-g
       [:div.pure-u-1-12]
       [:div.pure-u.title name]]
@@ -72,9 +72,9 @@
    [:div.pure-g]
    [:div.pure-g
     (doall
-      (for [m movements #_(vals movements)]
+      (for [m movements]
         ^{:key (str m (rand-int 100000))}
-        (movement-component m part)))]])
+        (movement-component m)))]])
 
 (defn header-component [{:keys [title description]}]
   [:div
@@ -95,38 +95,21 @@
        "https://fonts.googleapis.com/css?family=Raleway"
        "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
        "/css/normalize.css"
-       ;"/css/animate.min.css"
-       ;"/css/marketing.css"
-       ;"/css/side-menu.css"
+       "/css/animate.min.css"
+       "/css/marketing.css"
+       "/css/side-menu.css"
        "/css/site.css")]
     [:body
-     [:div.pure-g
+     #_[:div.pure-g
       [:div.pure-u (str session)]]
-     (let [session {:title   "Strength Session"
-                    :description "An example strength session."
-                    :parts   [{:title     "Warmup"
-                               :movements [{:movement/name "Squat"
-                                            :rep           10
-                                            :set           3}
-                                           {:movement/name "Floor Hip Rotation"
-                                            :rep           10
-                                            :set           3}]}
-                              {:title     "Strength"
-                               :movements [{:movement/name "Pull Up"
-                                            :rep 5
-                                            :set 5}
-                                           {:movement/name "One Arm Push Up"
-                                            :rep 5
-                                            :set 5}]}]
-                    :comment ["First comment"
-                              "Second comment"]}]
-       [:div#layout
-        [:div.content
-         [:div
-          (header-component session)
-          (doall
-              (for [p (:parts session)]
-                ^{:key p} (part-component p)))
-          (comment-component (:comment session))]]])]))
+     [:div#layout
+      [:div.content
+       [:div
+        (header-component session)
+        [:div (:time session)]
+        (doall
+          (for [p (:parts session)]
+            ^{:key p} (part-component p)))
+        (comment-component (:comment session))]]]]))
 
 ;id category distance rep set duration

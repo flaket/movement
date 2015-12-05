@@ -354,42 +354,80 @@
       [:div
        [:div.pure-g
         [:p.pure-u [:a.button {:on-click #(handler-fn (reset! adding-comment true))} "Add comments"]]]
+       (when @adding-comment
+         [:div
+          [:div.pure-g
+           [text-edit-component {:class   "pure-u edit"
+                                 :on-save #(handler-fn (session/update-in! [:movement-session :comment] conj %))
+                                 :on-stop #(handler-fn (reset! adding-comment false))
+                                 :size    45}]]])
        [:div.pure-g
-        (when @adding-comment [text-edit-component {:class   "pure-u edit"
-                                                    :on-save #(handler-fn (session/update-in! [:movement-session :comment] conj %))
-                                                    :on-stop #(handler-fn (reset! adding-comment false))
-                                                    :size    45}])]
-       [:div.pure-u
         (for [c comments]
-          ^{:key c} [:div.comment
+          ^{:key c} [:div.pure-u.comment
                      [:p (str c)]])]])))
+
+(defn time-component []
+  (let [adding-time (atom false)]
+    (fn []
+      [:div
+       [:div.pure-g
+        [:div.pure-u [:a.button {:on-click #(handler-fn (reset! adding-time true))} "Add time"]]]
+       (when @adding-time
+         [:div
+          [:div.pure-g
+           [:label.pure-u-1-5 "minutes"]
+           [:label.pure-u-1-5 "seconds"]]
+          [:div.pure-g
+           [:input.pure-u-1-5 {:type      "number"
+                               :value     (session/get-in [:movement-session :time :minutes])
+                               :min       0
+                               :on-change #(try
+                                            (let [value (-> % .-target .-value)]
+                                              (session/assoc-in! [:movement-session :time :minutes] value))
+                                            (catch js/Error e
+                                              (print (str "Caught exception: " e))))}]
+           [:input.pure-u-1-5 {:type      "number"
+                               :value     (session/get-in [:movement-session :time :seconds])
+                               :min       0
+                               :on-change #(try
+                                            (let [value (-> % .-target .-value)]
+                                              (session/assoc-in! [:movement-session :time :seconds] value))
+                                            (catch js/Error e
+                                              (print (str "Caught exception: " e))))}]]])])))
 
 (defn finish-session-component []
   (let [finish-button-clicked? (atom false)
         session-stored-successfully? (atom false)]
     (fn []
-      [:div
-       (if @session-stored-successfully?
-         (let []
-           (go (<! (timeout 3000))
-               (reset! finish-button-clicked? false)
-               (reset! session-stored-successfully? false))
-           [:h3.pure-g
-            [:div.pure-u {:style {:color "green"}} "Session stored successfully!"]])
-         [:h3.pure-g
-          (if @finish-button-clicked?
-            [:a.pure-u.button.button-primary
-             {:on-click #(POST "store-session"
+      (if @session-stored-successfully?
+        (let []
+          (go (<! (timeout 3000))
+              (reset! finish-button-clicked? false)
+              (reset! session-stored-successfully? false))
+          [:div.pure-g
+           [:div.pure-u {:style {:color "green"}} "Session stored successfully!"]])
+        [:div.pure-g
+         (if @finish-button-clicked?
+           [:a.pure-u.button.button-secondary
+            {:on-click #(do
+                         (let [min (session/get-in [:movement-session :time :minutes])
+                               min (if (nil? min) 0 min)
+                               sec (session/get-in [:movement-session :time :seconds])
+                               sec (if (nil? sec) 0 sec)]
+                           (session/assoc-in! [:movement-session :time]
+                                              (int (+ (* 60 min)
+                                                      sec))))
+                         (POST "store-session"
                                {:params        {:session (session/get :movement-session)
                                                 :user    (session/get :user)}
                                 :handler       (fn [response] (do
                                                                 (reset! session-stored-successfully? true)
                                                                 (get-stored-sessions)))
-                                :error-handler (fn [response] (print response))})}
-             "Confirm Finish Session"]
-            [:a.pure-u.button.button-primary
-             {:on-click #(handler-fn (reset! finish-button-clicked? true))}
-             "Finish Movement Session"])])])))
+                                :error-handler (fn [response] (print response))}))}
+            "Confirm Finish Session"]
+           [:a.pure-u.button.button-primary
+            {:on-click #(handler-fn (reset! finish-button-clicked? true))}
+            "Finish Movement Session"])]))))
 
 (defn generator-component []
   (let []
@@ -404,6 +442,7 @@
            (doall
              (for [p (:parts session)]
                ^{:key p} [part-component p]))
+           [time-component]
            [comment-component (:comment session)]
            [finish-session-component]]
           [blank-state-component])]])))

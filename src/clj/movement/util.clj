@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-(def uri "datomic:dev://localhost:4334/test7")
+(def uri "datomic:dev://localhost:4334/test8")
 
 #_(d/delete-database uri)
 
@@ -118,7 +118,6 @@
      :no-data-images  (vec no-data-images)}))
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
-
 
 (d/pull db '[*] 17592186045682)
 

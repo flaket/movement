@@ -33,7 +33,7 @@
             [movement.pages.session :refer [view-session-page]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-(def uri "datomic:dev://localhost:4334/test6")
+(def uri "datomic:dev://localhost:4334/test8")
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
@@ -205,7 +205,7 @@
         tx-data (concat user-template-data part-data category-data specific-movement-data)]
     (d/transact conn tx-data)))
 
-(defn transact-session! [user {:keys [title description parts comment]}]
+(defn transact-session! [user {:keys [title description parts comment time]}]
   (let [parts (map #(assoc % :movements (vals (:movements %))
                              :db/id (d/tempid :db.part/user)) parts)
         parts (map
@@ -217,11 +217,12 @@
                        :user/session [#db/id[:db.part/user -100]]}
                       {:db/id               #db/id[:db.part/user -100]
                        :session/url         (str (java.util.UUID/randomUUID))
-                       :session/name        title
+                       :session/title       title
                        :session/description description
                        :session/comment     (str/join (interpose " " comment))
                        :session/timestamp   (Date.)
-                       :session/part (vec (map :db/id parts))}]
+                       :session/part        (vec (map :db/id parts))
+                       :session/time time}]
         part-data (vec (for [p parts]
                          {:db/id                 (:db/id p)
                           :part/title            (:title p)
@@ -357,13 +358,21 @@
 
 (defn show-session [url]
   (let [db (d/db conn)
-        session (d/q '[:find (pull ?e [*])
-                 :in $ ?url
-                 :where
-                 [?e :session/url ?url]]
-               db
-               url)]
-    (view-session-page session)))
+        session (ffirst (d/q '[:find (pull ?e [*])
+                               :in $ ?url
+                               :where
+                               [?e :session/url ?url]]
+                             db
+                             url))
+        parts (vec (map #(d/pull db '[*] (:db/id %)) (:session/part session)))
+        parts (vec (for [p parts]
+                     {:title     (:part/title p)
+                      :movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/session-movement p)))}))]
+    (view-session-page {:title (:session/title session)
+                        :description (:session/description session)
+                        :parts parts
+                        :comment (:session/comment session)
+                        :time (:session/time session)})))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 

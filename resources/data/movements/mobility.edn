@@ -263,9 +263,10 @@
 
 ;; Ankle
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Ankle"
+  :movement/name      "Dynamic Reach"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -5]]}
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -8]]}
 
 
 ;; Spine
