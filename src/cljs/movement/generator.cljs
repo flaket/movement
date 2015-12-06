@@ -231,6 +231,24 @@
        (when @duration-clicked?
          [slider position-in-parts id :duration 0 1800 10])])))
 
+(defn add-movement-component [title]
+  [:div.pure-u.movement
+   [:div.pure-g {:style {:margin-top "30px"
+                         :margin-bottom "30px"
+                         :margin-left "5px"
+                         }}
+    [:div.pure-u-2-5]
+    [:div.pure-u-1-5 {:on-click #(add-movement title)
+                  :style    {:opacity 0.5
+                             :cursor  'pointer}} [:i.fa.fa-plus.fa-2x]]]
+   #_[:div.pure-g {:style {:margin-bottom "30px"
+                         :margin-left "5px"
+                         }}
+    [:div.pure-u-2-5]
+    [:div.pure-u-1-5 {:on-click #(add-movement title)
+                      :style    {:opacity 0.5
+                                 :cursor  'pointer}} [:i.fa.fa-search-plus.fa-2x]]]])
+
 (defn part-component []
   (let [show-search-input (atom false)]
     (fn [{:keys [title movements] :as part}]
@@ -239,12 +257,8 @@
        [:div.pure-g.movements
         (doall
           (for [m (vals movements)]
-            ^{:key (str m (rand-int 100000))} [movement-component m part]))]
-       [:div.pure-g
-        [:a.pure-u.pure-u-md-1-5.button {:on-click #(add-movement title)} [:i.fa.fa-plus] "random" ]
-        [:div.pure-u.pure-u-md-3-5]
-        #_[:a.pure-u.pure-u-md-1-5.button {:on-click #(add-movement title)} "search" [:i.fa.fa-plus]]]
-       ])))
+            ^{:key (str m (rand-int 100000))} [movement-component m part]))
+        (add-movement-component title)]])))
 
 (defn header-component []
   (let [date (js/Date.)
@@ -273,17 +287,16 @@
        [:div.pure-g
         [:h1.pure-u "Let's create your next Movement Session"]]
        [:div.pure-g
-        [:h3.pure-u [:a.button {:on-click pick-random-template} "Get inspired by a random movement session."]]]
-       [:div.pure-g
-        [:h3.pure-u [:a.button {:className (when @templates-showing? "button-primary")
-                                :on-click #(handler-fn
-                                                      (do
-                                                        (when (nil? (session/get :equipment))
-                                                          (get-equipment))
-                                                        (when equipment-showing?
-                                                          (reset! equipment-showing? false))
-                                                        (reset! templates-showing? (not @templates-showing?))))}
-                     "Or generate a new session based on one of your templates."]]]
+        [:div.pure-u.pure-u-md-2-5.button.button-primary {:on-click pick-random-template} "Start moving"]
+        [:div.pure-u.pure-u-md-2-5.button {:className (when @templates-showing? "button-primary")
+                                           :on-click  #(handler-fn
+                                                        (do
+                                                          (when (nil? (session/get :equipment))
+                                                            (get-equipment))
+                                                          (when equipment-showing?
+                                                            (reset! equipment-showing? false))
+                                                          (reset! templates-showing? (not @templates-showing?))))}
+         "Choose template"]]
        #_[:div.pure-g
         [:h3.pure-u [:a.button {:className (when @equipment-showing? "button-primary")
                                 :on-click #(handler-fn
