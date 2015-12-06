@@ -44,5 +44,7 @@
 
             [:li {:className (str "pure-menu-item")
                   :on-click  #(do (session/clear!)
-                                  (dispatch! "/"))}
-             [:a.pure-menu-link  [:i.fa.fa-power-off] " Log Out"]]]]])])))
+                                  (dispatch! "/"))
+                  :style {:margin-top "50px"}}
+             [:a.pure-menu-link
+              [:i.fa.fa-power-off] " Log Out"]]]]])])))

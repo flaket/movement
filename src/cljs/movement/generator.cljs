@@ -152,7 +152,7 @@
     [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
    [:div.pure-u-1-12]])
 
-(defn slider []
+(defn slider-component []
   (let [data (atom 0)]
     (fn [position-in-parts id r min max step]
       [:div.pure-g
@@ -223,13 +223,13 @@
             [:div.rep-set {:on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))} duration])]
          [:div.pure-u-1-12]]]
        (when @rep-clicked?
-         [slider position-in-parts id :rep 0 50 1])
+         [slider-component position-in-parts id :rep 0 50 1])
        (when @set-clicked?
-         [slider position-in-parts id :set 0 10 1])
+         [slider-component position-in-parts id :set 0 10 1])
        (when @distance-clicked?
-         [slider position-in-parts id :distance 0 400 5])
+         [slider-component position-in-parts id :distance 0 400 5])
        (when @duration-clicked?
-         [slider position-in-parts id :duration 0 1800 10])])))
+         [slider-component position-in-parts id :duration 0 1800 10])])))
 
 (defn add-movement-component [title]
   [:div.pure-u.movement
@@ -284,11 +284,13 @@
         equipment-showing? (atom false)]
     (fn []
       [:div.blank-state
-       [:div.pure-g
+       [:div.pure-g {:style {:margin-bottom "25px"}}
         [:h1.pure-u "Let's create your next Movement Session"]]
        [:div.pure-g
-        [:div.pure-u.pure-u-md-2-5.button.button-primary {:on-click pick-random-template} "Start moving"]
-        [:div.pure-u.pure-u-md-2-5.button {:className (when @templates-showing? "button-primary")
+        [:div.pure-u.pure-u-md-1-8]
+        [:div.pure-u.pure-u-md-1-4.button.button-primary {:on-click pick-random-template} "Start moving"]
+        [:div.pure-u.pure-u-md-1-8]
+        [:div.pure-u.pure-u-md-1-4.button {:className (when @templates-showing? "button-primary")
                                            :on-click  #(handler-fn
                                                         (do
                                                           (when (nil? (session/get :equipment))
@@ -307,7 +309,7 @@
                                                           (reset! templates-showing? false))
                                                         (reset! equipment-showing? (not @equipment-showing?))))}
                      "Or choose your available equipment and do some movements with that."]]]
-       [:div.pure-g
+       [:div.pure-g {:style {:margin-top "10px"}}
         (when @templates-showing?
           (doall
             (for [t (session/get :templates)]

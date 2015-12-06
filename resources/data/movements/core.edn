@@ -4,8 +4,6 @@
   :equipment/name "Bench"}
  {:db/id          #db/id[:db.part/user -5001]
   :equipment/name "Wall Bar"}
- {:db/id          #db/id[:db.part/user -5002]
-  :equipment/name "Stool"}
  {:db/id          #db/id[:db.part/user -5003]
   :equipment/name "Rings"}
 
@@ -200,6 +198,11 @@
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Backward Sprawl"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]}
 
 
  ]

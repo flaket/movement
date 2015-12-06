@@ -12,6 +12,7 @@
  {:db/id #db/id[:db.part/user -6] :category/name "Dip"}
  {:db/id #db/id[:db.part/user -7] :category/name "Ring"}
  {:db/id #db/id[:db.part/user -8] :category/name "Jumping"}
+ {:db/id #db/id[:db.part/user -9] :category/name "Headstand"}
 
  {:db/id #db/id[:db.part/user -98]
   :movement/name "Burpee"
@@ -299,12 +300,13 @@
                       #db/id[:db.part/user -5]]}
 
  {:db/id #db/id[:db.part/user -130]
-  :movement/name "Headstand To Pushup"
+  :movement/name "Headstand Push Out"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]}
+                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -9]]}
 
  {:db/id #db/id[:db.part/user -131]
   :movement/name "Tricep Dip"

@@ -248,7 +248,7 @@
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
-       [:div.content {:style {:background-image (str "url(" (:background @template-state) ")")}}
+       [:div.content #_{:style {:background-image (str "url(" (:background @template-state) ")")}}
         (heading-component)
         (error-component error)
         #_(upload-background-component)

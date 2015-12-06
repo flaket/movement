@@ -35,6 +35,5 @@
                       #db/id[:db.part/user -3]]
   :movement/easier    [#db/id[:db.part/user -200]]}
 
- ;; todo: running drills, other endurance activities
 
  ]

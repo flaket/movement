@@ -124,6 +124,14 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
+  :movement/name      "Farmers Walk"
+  :movement/category  [#db/id[:db.part/user -7]
+                       #db/id[:db.part/user -1]
+                       #db/id[:db.part/user -8]
+                       #db/id[:db.part/user -5]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
   :movement/name      "Shoulder Carry"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
@@ -171,7 +179,6 @@
                        #db/id[:db.part/user -9]
                        #db/id[:db.part/user -5]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
-
 
  ]
 

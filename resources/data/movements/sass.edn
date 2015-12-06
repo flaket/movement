@@ -91,7 +91,6 @@
   :movement/equipment [#db/id[:db.part/user -5001]
                        #db/id[:db.part/user -5002]]}
 
-
  ;; Front lever
  {:db/id             #db/id[:db.part/user -110]
   :movement/name     "Front Lever"
@@ -256,7 +255,15 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -5]
+                      #db/id[:db.part/user -9]]
+  :movement/equipment [#db/id[:db.part/user -5001]
+                       #db/id[:db.part/user -5002]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Pull From German Hang"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
                       #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5001]
                        #db/id[:db.part/user -5002]]}

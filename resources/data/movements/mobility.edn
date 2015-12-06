@@ -248,17 +248,6 @@
                        #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5001]]}
 
-
- ; :split-stand-to-split-sit :walking-split-squat
- ;                     :squat-to-medium-kneeling :squat-to-kneeling :kneeling-to-tall-kneeling
- ;                     :kneeling-to-tall-half-kneeling :kneeling-to-lateral-half-kneeling
- ;                     :split-knee-walk :tall-half-kneeling-to-tall-split-kneeling
- ;                     :deep-squat :deep-squat-to-deep-knee-bend
- ;                     :deep-squat-narrow-base :tall-half-kneeling-to-kneeling
- ;                     :deep-knee-bend-to-kneeling
- ;                     :stepping-up :backward-stepping-down :extended-stepping-up :forward-stepping-down
- ;:bent-sit-to-lateral-half-kneeling
-
  ;; Wrist
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Wrist"
@@ -314,6 +303,7 @@
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Jefferson Curl"
   :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
                        #db/id[:db.part/user -6]]
   :movement/equipment [#db/id[:db.part/user -5001]]}
 

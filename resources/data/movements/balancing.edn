@@ -25,10 +25,6 @@
   :movement/category  [#db/id[:db.part/user -1]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Backward Sprawl"
-  :movement/category  [#db/id[:db.part/user -1]]}
-
- {:db/id              #db/id[:db.part/user]
   :movement/name      "Pivot Reverse"
   :movement/category  [#db/id[:db.part/user -1]]}
 
@@ -44,8 +40,5 @@
   :movement/name      "Side Shuffle"
   :movement/category  [#db/id[:db.part/user -1]]}
 
-
- ;:balancing-shuffle
- ;:split-squat-pivot-reverse
 
  ]
