@@ -80,15 +80,6 @@
                       #db/id[:db.part/user -5]]
   :movement/easier [#db/id[:db.part/user -100]]}
 
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Spiderman Push Up"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]]
-  :movement/easier [#db/id[:db.part/user -100]]}
-
  {:db/id #db/id[:db.part/user -105]
   :movement/name "Lateral Push Up"
   :movement/category [#db/id[:db.part/user -1]
@@ -299,7 +290,7 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -8]]}
 
- {:db/id #db/id[:db.part/user -127]
+ {:db/id #db/id[:db.part/user -129]
   :movement/name "Ring Handstand Push Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
@@ -307,7 +298,7 @@
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]]}
 
- {:db/id #db/id[:db.part/user -119]
+ {:db/id #db/id[:db.part/user -130]
   :movement/name "Headstand To Pushup"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
@@ -315,12 +306,21 @@
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]]}
 
- {:db/id #db/id[:db.part/user -119]
+ {:db/id #db/id[:db.part/user -131]
   :movement/name "Tricep Dip"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -6]]}
+
+ {:db/id             #db/id[:db.part/user -132]
+  :movement/name     "Spiderman Push Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]
+  :movement/easier [#db/id[:db.part/user -100]]}
 
  ]

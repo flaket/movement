@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-(def uri "datomic:dev://localhost:4334/test8")
+(def uri "datomic:dev://localhost:4334/test9")
 
 #_(d/delete-database uri)
 

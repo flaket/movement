@@ -8,17 +8,10 @@
 (defn header []
   (html
     [:div.header
-     [:div.home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
-      [:a.pure-menu-heading "Movement Session"]
-      [:ul.pure-menu-list
-       [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Visit blog"
-                            :href   "/blog"
-                            :target ""} "Blog"]]
-       [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Log in"
-                            :href   "/app"
-                            :target ""} "Log In"]]]]]))
+     [:div.home-menu.pure-menu.pure-menu-horizontal
+      [:a.pure-menu-heading {:title  "Home"
+                             :href   "/"
+                             :target ""} "Movement Session"]]]))
 
 (defn prolog []
   (html

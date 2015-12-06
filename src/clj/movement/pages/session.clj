@@ -1,7 +1,9 @@
 (ns movement.pages.session
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [movement.pages.landing :refer [header]]
+            [movement.pages.signup :refer [signup-form]]))
 
 (defn image-url [name]
   (str "../images/" (str/replace (str/lower-case name) " " "-") ".png"))
@@ -24,53 +26,46 @@
 
      [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
 
-     [:div {:style {:cursor 'pointer}}
+     [:div
       [:div.pure-g
        [:div.pure-u-1-12]
-       [:div.pure-u-5-12 (when-not (and rep (< 0 rep)) {:style {:opacity "0.2"}})
+       [:div.pure-u-5-12 {:className (str (when-not (and rep (< 0 rep)) " no-data"))}
         [:div.pure-u "Reps"]]
-       [:div.pure-u-5-12 (when-not (and set (< 0 set)) {:style {:opacity "0.2"}})
+       [:div.pure-u-5-12 {:className (str (when-not (and set (< 0 set)) " no-data"))}
         [:div.pure-u "Set"]]
        [:div.pure-u-1-12]]
       [:div.pure-g
        [:div.pure-u-1-12]
-       [:div.pure-u-5-12 (if (and rep (< 0 rep))
-                           [:div.pure-u {:style {:color     "#9999cc"
-                                                 :font-size 24}} rep]
-                           [:div.pure-u])]
-       [:div.pure-u-5-12 (if (and set (< 0 set))
-                           [:div.pure-u {:style {:color     "#9999cc"
-                                                 :font-size 24}} set]
-                           [:div.pure-u])]
+       [:div.pure-u-5-12
+        (when (and rep (< 0 rep))
+          [:div.rep-set rep])]
+       [:div.pure-u-5-12
+        (when (and set (< 0 set))
+          [:div.rep-set set])]
        [:div.pure-u-1-12]]]
 
-     [:div {:style {:cursor 'pointer}}
+     [:div
       [:div.pure-g
        [:div.pure-u-1-12]
-       [:div.pure-u-5-12 (when-not (and distance (< 0 distance)) {:style {:opacity "0.2"}})
-        [:div.pure-u "Meters"]]
-       [:div.pure-u-5-12 (when-not (and duration (< 0 duration)) {:style {:opacity "0.2"}})
-        [:div.pure-u "Seconds"]]
+       [:div.pure-u-5-12 {:className (str (when-not (and distance (< 0 distance)) " no-data"))}
+        [:div "Meters"]]
+       [:div.pure-u-5-12 {:className (str (when-not (and duration (< 0 duration)) " no-data"))}
+        [:div "Seconds"]]
        [:div.pure-u-1-12]]
       [:div.pure-g
        [:div.pure-u-1-12]
        [:div.pure-u-5-12
-        (if (and distance (< 0 distance))
-          [:div.pure-u {:style {:color     "#9999cc"
-                                :font-size 24}} distance]
-          [:div.pure-u])]
+        (when (and distance (< 0 distance))
+          [:div.rep-set distance])]
        [:div.pure-u-5-12
-        (if (and duration (< 0 duration))
-          [:div.pure-u {:style {:color     "#9999cc"
-                                :font-size 24}} duration]
-          [:div.pure-u])]
+        (when (and duration (< 0 duration))
+          [:div.rep-set duration])]
        [:div.pure-u-1-12]]]]))
 
-(defn part-component [{:keys [title movements] :as part}]
+(defn part-component [{:keys [title movements]}]
   [:div.part
    [:h2 title]
-   [:div.pure-g]
-   [:div.pure-g
+   [:div.pure-g.movements
     (doall
       (for [m movements]
         ^{:key (str m (rand-int 100000))}
@@ -83,6 +78,16 @@
     [:h1.pure-u.pure-u-md-3-5 title]]
    [:div.pure-g
     [:p.pure-u.subtitle description]]])
+
+(defn epilog []
+  [:div.content
+   [:h2.content-head.is-center "Sign up and be inspired by sessions like this"]
+   [:div.pure-g
+    [:div.l-box-lrg.pure-u-1.pure-u-md-2-5
+     (signup-form)]
+    [:div.l-box-lrg.pure-u-1.pure-u-md-3-5
+     [:h4 "Contact Us"]
+     [:p "support@movementsession.com"]]]])
 
 (defn view-session-page [session]
   (html5
@@ -100,16 +105,14 @@
        "/css/side-menu.css"
        "/css/site.css")]
     [:body
-     #_[:div.pure-g
-      [:div.pure-u (str session)]]
      [:div#layout
+      (header)
       [:div.content
-       [:div
+       [:div.logged-session
         (header-component session)
         [:div (:time session)]
         (doall
           (for [p (:parts session)]
             ^{:key p} (part-component p)))
-        (comment-component (:comment session))]]]]))
-
-;id category distance rep set duration
+        (comment-component (:comment session))]]
+      (epilog)]]))

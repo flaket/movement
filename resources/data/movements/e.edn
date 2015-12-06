@@ -1,18 +1,11 @@
 [
 
  ;; categories
- {:db/id #db/id[:db.part/user -1]
-  :category/name "Equilibre"}
- {:db/id #db/id[:db.part/user -2]
-  :category/name "Handstand"}
- {:db/id #db/id[:db.part/user -3]
-  :category/name "Headstand"}
- {:db/id #db/id[:db.part/user -4]
-  :category/name "Air Baby"}
- {:db/id #db/id[:db.part/user -5]
-  :category/name "Static"}
-
- ;; movements
+ {:db/id #db/id[:db.part/user -1] :category/name "Equilibre"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Handstand"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Headstand"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Air Baby"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Static"}
 
  ;; Handstand
 

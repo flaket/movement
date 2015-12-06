@@ -80,6 +80,27 @@ h1, h2, p.subtitle {
   margin-bottom: 4rem;
 }
 
+.movements {
+  margin-top: 2rem;
+}
+
+.rep-set {
+    color: #9999cc;
+    font-size: 24px;
+}
+
+.no-data {
+    opacity: 0.2;
+}
+
+.selected {
+    background-color: #5555aa;
+}
+
+.logged-session {
+    margin-top: 8rem;
+}
+
 p, ol, ul {
   font-size: 1.2rem;
 }
@@ -104,28 +125,6 @@ a:hover {
 .blank-state {
   margin-top: 3rem;
   text-align: center;
-}
-
-.primary-button {
-  color: #fff;
-  background: #1b98f8;
-  margin: 1em 0;
-}
-
-.secondary-button {
-  color: #333;
-  background: #f4f4ff;
-  margin: 1em 0;
-  padding: 0.5em 2em;
-  font-size: 90%;
-}
-
-.log-button {
-  color: #fff;
-  background: #1b98f8;
-  border: 1px solid #ddd;
-  padding: 0.5em 2em;
-  font-size: 90%;
 }
 
 .movement {
@@ -238,8 +237,6 @@ input[type="button"]:focus {
   color: #333;
   border-color: #888;
   outline: 0; }
-
-
 
 .button.button-primary,
 button.button-primary,

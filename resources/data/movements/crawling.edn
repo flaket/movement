@@ -31,11 +31,6 @@
                       #db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Knee Elbow Crawl"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -3]]}
-
- {:db/id             #db/id[:db.part/user]
   :movement/name     "Knee Hand Crawl"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -3]]}

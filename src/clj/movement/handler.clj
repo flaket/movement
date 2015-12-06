@@ -219,7 +219,7 @@
                        :session/url         (str (java.util.UUID/randomUUID))
                        :session/title       title
                        :session/description description
-                       :session/comment     (str/join (interpose " " comment))
+                       :session/comment     comment
                        :session/timestamp   (Date.)
                        :session/part        (vec (map :db/id parts))
                        :session/time time}]
