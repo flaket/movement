@@ -11,6 +11,14 @@
 (defn comment-component [comment]
   [:div comment])
 
+(defn header []
+  (html
+    [:div.header
+     [:div.home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
+      [:a.pure-menu-heading {:title  "Home"
+                             :href   "/"
+                             :target ""} "Movement Session"]]]))
+
 (defn movement-component [m]
   (let [id (:db/id m)
         name (:movement/name m)

@@ -8,10 +8,19 @@
 (defn header []
   (html
     [:div.header
-     [:div.home-menu.pure-menu.pure-menu-horizontal
+     [:div.home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
       [:a.pure-menu-heading {:title  "Home"
                              :href   "/"
-                             :target ""} "Movement Session"]]]))
+                             :target ""} "Movement Session"]
+      [:ul.pure-menu-list
+       [:li.pure-menu-item
+        [:a.pure-menu-link {:title  "Blog"
+                            :href   "/blog"
+                            :target ""} "Blog"]]
+       [:li.pure-menu-item
+        [:a.pure-menu-link {:title  "Log in"
+                            :href   "/app"
+                            :target ""} "Log in"]]]]]))
 
 (defn prolog []
   (html
@@ -43,6 +52,14 @@
       [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4
        [:h3.content-subhead [:i.fa.fa-floppy-o] "Log"]
        [:p "Log your sessions and review them later."]]]]))
+
+(defn ribbon []
+  (html
+    [:div.ribbon.l-box-lrg.pure-g
+     [:div.l-box-lrg.is-center.pure-u-1.pure-u-md-1-2.pure-u-lg-2-5]
+     [:div.pure-u-1.pure-u-md-1-2.pure-u-lg-3-5
+      [:h2.content-head.content-head-ribbon "tempheader"]
+      [:p "temptext"]]]))
 
 (defn epilog []
   (html
@@ -87,12 +104,6 @@
             :href   "https://instagram.com/movementsession"
             :target "_blank"} "Instagram"]]]]))
 
-(defn temp [code]
-  (html5
-    [:head]
-    [:body
-     [:div (str "HELLO: " code)]]))
-
 (defn landing []
   (html5
     [:head
@@ -111,13 +122,15 @@
        "/css/animate.min.css"
        "/css/marketing.css"
        "/css/side-menu.css"
-       "/css/site.css")]
+       "/css/site.css"
+       )]
     [:body
      [:div
       (header)
       (prolog)
       [:div.content-wrapper
        (benefits)
+       (ribbon)
        (epilog)
        (footer)]]]))
 

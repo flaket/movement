@@ -167,20 +167,16 @@
                user
                template-title)))
 
-(defn transact-template! [user {:keys [title description background parts] :as template}]
-  (let [parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
+(defn transact-template! [user {:keys [title description parts] :as template}]
+  (let [description (if (nil? description) "" description)
+        parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
         user-template-data [{:db/id         #db/id[:db.part/user]
                              :user/email    user
                              :user/template [#db/id[:db.part/user -100]]}
                             {:db/id                #db/id[:db.part/user -100]
                              :template/title       title
-                             :template/part        (vec (for [p parts] (:db/id p)))}
-                            (when description
-                              {:db/id #db/id[:db.part/user -100]
-                               :template/description description})
-                            (when background
-                              {:db/id #db/id[:db.part/user -100]
-                               :template/background background})]
+                             :template/part        (vec (for [p parts] (:db/id p)))
+                             :template/description description}]
         user-template-data (remove nil? user-template-data)
         parts (map #(rename-keys % {:n                  :part/number-of-movements
                                     :categories         :part/category

@@ -232,7 +232,7 @@
          [slider-component position-in-parts id :duration 0 1800 10])])))
 
 (defn add-movement-component [title]
-  [:div.pure-u.movement
+  [:div.pure-u.movement.add-movement
    [:div.pure-g {:style {:margin-top "30px"
                          :margin-bottom "30px"
                          :margin-left "5px"
@@ -366,7 +366,7 @@
          [:div.pure-g
           [:div.pure-u
            [:textarea {:rows 4
-                       :cols 50
+                       :cols 45
                        :on-change   #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
                        :value       (session/get-in [:movement-session :comment])}]]])])))
 

@@ -39,7 +39,7 @@
   (secretary/set-config! :prefix "#")
   (if (session/get :user)
     ;todo: if registered more than 14 days and not payed, show payment-component
-    (set-page! #'generator-component)
+    (set-page! #'template-creator-component)
     (set-page! #'home))
 
   (.initializeTouchEvents js/React true)

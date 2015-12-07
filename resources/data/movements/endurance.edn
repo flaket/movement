@@ -7,19 +7,31 @@
  {:db/id #db/id[:db.part/user -1] :category/name "Endurance"}
  {:db/id #db/id[:db.part/user -2] :category/name "Jump Rope"}
  {:db/id #db/id[:db.part/user -3] :category/name "Running"}
+  {:db/id #db/id[:db.part/user -4] :category/name "Jumping"}
 
+
+{:db/id              #db/id[:db.part/user -99]
+  :movement/name      "Jump Rope"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -4]]
+  :movement/equipment [#db/id[:db.part/user -5000]]
+  :movement/harder [#db/id[:db.part/user -101]]}
 
  {:db/id              #db/id[:db.part/user -100]
   :movement/name      "Single Under"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -4]]
   :movement/equipment [#db/id[:db.part/user -5000]]
   :movement/harder [#db/id[:db.part/user -101]]}
+
 
  {:db/id              #db/id[:db.part/user -101]
   :movement/name      "Double Under"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -4]]
   :movement/equipment [#db/id[:db.part/user -5000]]
   :movement/easier    [#db/id[:db.part/user -100]]}
 

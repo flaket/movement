@@ -250,7 +250,7 @@
 
  ;; Wrist
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Wrist"
+  :movement/name      "Wrist Stretches"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -4]]}
 
@@ -264,6 +264,12 @@
 
 
 ;; Spine
+
+{:db/id              #db/id[:db.part/user -199]
+  :movement/name      "Four Way Spine Stretch"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -6]]}
+
  {:db/id              #db/id[:db.part/user -200]
   :movement/name      "Slide Into Low Bridge"
   :movement/category  [#db/id[:db.part/user -1]

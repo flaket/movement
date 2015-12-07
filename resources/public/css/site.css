@@ -141,6 +141,10 @@ a:hover {
   border-radius: 15px;
 }
 
+.add-movement {
+    opacity: 0.5;
+}
+
 .refresh {
   width: 25px;
   right: 5px;
