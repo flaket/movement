@@ -180,5 +180,16 @@
                        #db/id[:db.part/user -5]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
+ {:db/id              #db/id[:db.part/user -201]
+  :movement/name      "Thruster"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]
+                       #db/id[:db.part/user -4]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -7]
+                       #db/id[:db.part/user -9]
+                       #db/id[:db.part/user -10]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
  ]
 
