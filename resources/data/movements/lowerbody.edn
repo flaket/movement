@@ -13,6 +13,7 @@
  {:db/id #db/id[:db.part/user -6] :category/name "Lunge"}
  {:db/id #db/id[:db.part/user -7] :category/name "Acrobatics"}
  {:db/id #db/id[:db.part/user -8] :category/name "Grip Strength"}
+ {:db/id #db/id[:db.part/user -9] :category/name "Balance"}
 
  ;; movements
 
@@ -49,7 +50,8 @@
   :movement/name     "Pistol Single Leg Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]]
   :movement/harder   [#db/id[:db.part/user -202]
                       #db/id[:db.part/user -203]]}
 
@@ -57,14 +59,16 @@
   :movement/name     "Shin Shrimp Single Leg Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]]
   :movement/harder   [#db/id[:db.part/user -200]]}
 
  {:db/id             #db/id[:db.part/user -201]
   :movement/name     "Knee Shrimp Single Leg Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]]
   :movement/harder   [#db/id[:db.part/user -202]]
   :movement/easier   [#db/id[:db.part/user -200]]}
 
@@ -72,21 +76,17 @@
   :movement/name     "Shrimp Single Leg Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]]
   :movement/easier   [#db/id[:db.part/user -201]]}
 
 
  {:db/id             #db/id[:db.part/user -203]
-  :movement/name     "Extend Behind Single Leg Squat"
+  :movement/name     "Crossing Pistol Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]]
   :movement/easier   [#db/id[:db.part/user -150]]}
-
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Natural Leg Curl"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]}
 
  ]

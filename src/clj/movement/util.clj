@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-(def uri "datomic:dev://localhost:4334/test9")
+(def uri "datomic:dev://localhost:4334/test10")
 
 #_(d/delete-database uri)
 
@@ -46,7 +46,6 @@
       sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
       throwing-catching-tx (first (Util/readAll (io/reader (io/resource "data/movements/throwing-catching.edn"))))
       walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))]
-  (do
     (d/transact conn acrobatics-tx)
     (d/transact conn balancing-tx)
     (d/transact conn climbing-tx)
@@ -63,7 +62,7 @@
     (d/transact conn rolling-tx)
     (d/transact conn sass-tx)
     (d/transact conn throwing-catching-tx)
-    (d/transact conn walking-tx)))
+    (d/transact conn walking-tx))
 
 ;; Get the database value.
 (def db (d/db conn))

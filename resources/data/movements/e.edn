@@ -32,12 +32,6 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]]}
 
- {:db/id #db/id[:db.part/user -203]
-  :movement/name "Handstand"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]]}
-
  {:db/id #db/id[:db.part/user -204]
   :movement/name "Handstand Push Up Kip"
   :movement/category [#db/id[:db.part/user -1]
@@ -63,6 +57,12 @@
 
  {:db/id #db/id[:db.part/user -208]
   :movement/name "One Arm Handstand"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]]}
+
+ {:db/id #db/id[:db.part/user -209]
+  :movement/name "Handstand"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -5]]}
