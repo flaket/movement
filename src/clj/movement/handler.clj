@@ -314,7 +314,7 @@
         (str "An activation email has been sent to your email address.")))
     (str "This email is already registered as a user."
          "\n"
-         "<a href=\"http://localhost:8000/app\">Login here</a>")))
+         "<a href=\"http://movementsession.com/app\">Login here</a>")))
 
 (defn activate-user! [id]
   (let [db (d/db conn)
@@ -387,7 +387,7 @@
            (GET "/activated" [] (str
                                   "Account successfully activated!"
                                   "\n"
-                                  "<a href=\"http://localhost:8000/app\">Login here</a>"))
+                                  "<a href=\"http://movementsession.com/app\">Login here</a>"))
 
            (POST "/subscription-activated" req (subscription-activated! req))
            (POST "/subscription-deactivated" req (subscription-deactivated! req))

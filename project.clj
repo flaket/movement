@@ -32,7 +32,6 @@
                  [cljs-ajax "0.5.0"]
                  [prismatic/dommy "1.1.0"]
                  [hiccup "1.0.5"]
-                 [garden "1.2.5"]
                  [com.draines/postal "1.11.3"]
                  [com.taoensso/timbre "4.1.4"]
                  [slingshot "0.12.2"]]
@@ -40,19 +39,7 @@
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]
             [lein-ring "0.9.1"]
-            [lein-asset-minifier "0.2.2"]
-            [lein-garden "0.2.6"]]
-  :garden {:builds [{;; Optional name of the build:
-                     :id "screen"
-                     ;; Source paths where the stylesheet source code is
-                     :source-paths ["src/clj/movement/styles"]
-                     ;; The var containing your stylesheet:
-                     :stylesheet movement.styles.core/screen
-                     ;; Compiler flags passed to `garden.core/css`:
-                     :compiler {;; Where to save the file:
-                                :output-to "resources/public/css/garden/screen.css"
-                                ;; Compress the output?
-                                :pretty-print? false}}]}
+            [lein-asset-minifier "0.2.2"]]
   :ring {:handler movement.handler/app
          :uberwar-name "movement.war"}
 
