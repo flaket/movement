@@ -103,9 +103,7 @@
 
                    :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
                                               :compiler {
-                                                         :main "movement.dev"}}
-}
-}}
+                                                         :main "movement.dev"}}}}}
 
              :uberjar {:hooks [leiningen.cljsbuild minify-assets.plugin/hooks]
                        :env {:production true}
