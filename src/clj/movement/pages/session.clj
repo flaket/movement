@@ -11,7 +11,7 @@
 (defn comment-component [comment]
   [:div comment])
 
-(defn header []
+(defn header-menu []
   (html
     [:div.header
      [:div.home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
@@ -114,7 +114,7 @@
        "/css/site.css")]
     [:body
      [:div#layout
-      (header)
+      (header-menu)
       [:div.content
        [:div.logged-session
         (header-component session)
@@ -124,3 +124,10 @@
             ^{:key p} (part-component p)))
         (comment-component (:comment session))]]
       (epilog)]]))
+
+(defn view-sub-activated-page [req]
+  (html5
+    [:head
+     [:title ""]]
+    [:body
+     [:div (str req)]]))

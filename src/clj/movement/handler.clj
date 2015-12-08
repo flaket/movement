@@ -28,12 +28,13 @@
             [hiccup.core :refer [html]]
 
             [movement.db]
-            [movement.pages.landing :refer [landing temp]]
+            [movement.pages.landing :refer [landing]]
             [movement.pages.signup :refer [signup-page]]
-            [movement.pages.session :refer [view-session-page]]
+            [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-(def uri "datomic:dev://localhost:4334/test8")
+(def local-uri "datomic:dev://localhost:4334/test10")
+(def uri "datomic:ddb://us-east-1/movementsession/test-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 (def conn (d/connect uri))
 (def db (d/db conn))
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
@@ -370,6 +371,12 @@
                         :comment (:session/comment session)
                         :time (:session/time session)})))
 
+(defn subscription-activated! [req]
+  (view-sub-activated-page req))
+
+(defn subscription-deactivated! [req]
+  (view-sub-activated-page req))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
@@ -381,6 +388,10 @@
                                   "Account successfully activated!"
                                   "\n"
                                   "<a href=\"http://localhost:8000/app\">Login here</a>"))
+
+           (POST "/subscription-activated" req (subscription-activated! req))
+           (POST "/subscription-deactivated" req (subscription-deactivated! req))
+
            (GET "/app" [] (render-file "app.html" {:dev        (env :dev?)
                                                    :csrf-token *anti-forgery-token*}))
            (POST "/login" [username password] (jws-login username password))
