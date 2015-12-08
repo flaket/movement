@@ -9,15 +9,15 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-(def local-uri "datomic:dev://localhost:4334/test10")
+#_(def local-uri "datomic:dev://localhost:4334/test10")
 
-(def uri "datomic:ddb://us-east-1/movementsession/test-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+#_(def uri "datomic:ddb://us-east-1/movementsession/test-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 #_(d/delete-database uri)
 
 #_(d/create-database uri)
 
-(def conn (d/connect uri))
+#_(def conn (d/connect uri))
 
 #_(let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
@@ -67,17 +67,17 @@
     (d/transact conn walking-tx))
 
 ;; Get the database value.
-(def db (d/db conn))
+#_(def db (d/db conn))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn image-url [name]
+#_(defn image-url [name]
   (str "public/images/" (str/replace (str/lower-case name) " " "-") ".png"))
 
-(defn has-no-image? [m]
+#_(defn has-no-image? [m]
   (if-not (io/resource (image-url m)) true false))
 
-(defn url->name [url]
+#_(defn url->name [url]
   (let [name (-> url
                  (str/split (re-pattern ".png"))
                  (first)
@@ -90,7 +90,7 @@
                  (str/join))]
     name))
 
-(defn has-no-data? [url]
+#_(defn has-no-data? [url]
   (let [name (url->name url)
         x (d/q '[:find ?e
                  :in $ ?name
@@ -100,7 +100,7 @@
                name)]
     (empty? x)))
 
-(defn find-no-image-movements []
+#_(defn find-no-image-movements []
   (let [movements (flatten (seq (d/q '[:find ?name
                                        :where
                                        [_ :movement/name ?name]]
@@ -109,7 +109,7 @@
     {:#                  (count no-image-movements)
      :no-image-movements (vec no-image-movements)}))
 
-(defn find-no-data-images []
+#_(defn find-no-data-images []
   (let [f (io/file "resources/public/images")
         images (for [file (file-seq f)] (.getName file))
         images (drop 2 images) ; remove leading junk files
@@ -120,9 +120,9 @@
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 
-(d/pull db '[*] 17592186045682)
+#_(d/pull db '[*] 17592186045682)
 
-(d/q '[:find ?e
+#_(d/q '[:find ?e
        :in $ ?id
        :where
        [_ :db/id ?id]
@@ -131,7 +131,7 @@
      17592186045637)
 
 ; all exercises not using the input equipment parameter.
-(d/q '[:find ?name
+#_(d/q '[:find ?name
        :in $ ?equipment
        :where
        (not-join [?e]
@@ -149,15 +149,15 @@
 ; The [:ns ""] vector is a "look-up ref". Anywhere in datomic where
 ; an entity is supposed to be provided, a look-up ref can be used instead.
 ; This let's us avoid dealing with entities. The attribute value must be unique.
-(d/pull db '[] [:equipment/name "Rings"])
+#_(d/pull db '[] [:equipment/name "Rings"])
 
 ; There are three different ways of referring to an entity in datomic.
 ; By it's id
-(d/pull db '[*] 17592186045430)
+#_(d/pull db '[*] 17592186045430)
 ; By look-up ref
-(d/pull db '[*] [:category/name "Pushing"])
+#_(d/pull db '[*] [:category/name "Pushing"])
 ; Directly by it's programmtic name (if it has one, this does not.)
-(d/pull db '[*] :category/pushing)
+#_(d/pull db '[*] :category/pushing)
 
 ; Four ways of getting data from Datomic:
 ; datalog (declarative)
@@ -224,7 +224,7 @@
 ;;;;; data queries ;;;;;;
 
 ; find all categories a movement belongs to
-(d/q '[:find ?category-name
+#_(d/q '[:find ?category-name
        :in $ ?movement-name
        :where
        [?e :movement/name ?movement-name]
@@ -234,7 +234,7 @@
      "Russian Dip")
 
 ; find all movement names
-(d/q '[:find ?name
+#_(d/q '[:find ?name
        :where
        [_ :movement/name ?name]]
      db)
@@ -244,15 +244,15 @@
 ; ?t . says "Give only one, unwrapped result".
 
 ; find all category names, return unwrapped collection.
-(d/q '[:find [?name ...]
+#_(d/q '[:find [?name ...]
        :where
        [_ :category/name ?name]]
      db)
 
 ; pull syntax '[*]: getting everything about an entity
-(d/pull db '[*] 17592186045430)
+#_(d/pull db '[*] 17592186045430)
 ; pull syntax '[attribute-1 attribute-2 attribute-3] gets specific entity attribute(s)
-(d/pull db '[:category/name] 17592186045430)
+#_(d/pull db '[:category/name] 17592186045430)
 
 ; The query api is a logic api that's primarily about locating entities.
 ; The pull api is a declarative api and it's primarily about navigating from entities
@@ -260,7 +260,7 @@
 ; that can be reached by logic and by joins. These things are pretty much chocolate and
 ; peanut butter, and the mixing of the two is the way to go!
 
-(d/q '[:find (pull ?p [:part/name])
+#_(d/q '[:find (pull ?p [:part/name])
        :in $ ?template-name
        :where
        [?e :template/title ?template-name]
@@ -269,7 +269,7 @@
      "Strength")
 
 ; exercises that use "Rings" equipment.
-(d/q '[:find (pull ?m [:movement/name])
+#_(d/q '[:find (pull ?m [:movement/name])
        :in $ ?equipment-name
        :where
        [?e :equipment/name ?equipment-name]
