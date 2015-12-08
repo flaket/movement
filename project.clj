@@ -53,9 +53,9 @@
   :clean-targets ^{:protect false} ["resources/public/js" "resources/public/css/garden"]
 
   :repositories {"my.datomic.com" {:url      "https://my.datomic.com/repo"
-                                   :username ~(System/getenv "DATOMIC_EMAIL")
-                                   :password ~(System/getenv "DATOMIC_KEY")
-                                   ;:creds :gpg
+                                   ;:username ~(System/getenv "DATOMIC_EMAIL")
+                                   ;:password ~(System/getenv "DATOMIC_KEY")
+                                   :creds :gpg
                                    }}
 
   :minify-assets
@@ -99,7 +99,7 @@
 
              :uberjar {:hooks [leiningen.cljsbuild minify-assets.plugin/hooks]
                        :env {:production true}
-                       :aot :all
+                       ;:aot :all
                        :omit-source true
                        :cljsbuild {:jar true
                                    :builds {:app

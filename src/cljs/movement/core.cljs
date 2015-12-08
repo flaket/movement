@@ -10,8 +10,7 @@
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
             [movement.share :refer [share-component]]
-            [movement.components.login :refer [home login]]
-            [movement.styles :refer [insert-styles]])
+            [movement.components.login :refer [home login]])
   (:import goog.History))
 
 (enable-console-print!)

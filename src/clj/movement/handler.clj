@@ -1,7 +1,7 @@
 (ns movement.handler
   (:import java.util.Date)
   (:require [clojure.java.io :as io]
-            [compojure.core :refer [GET POST ANY defroutes]]
+            [compojure.core :refer [GET POST HEAD ANY defroutes]]
             [compojure.route :refer [not-found resources]]
             [compojure.response :refer [render]]
             [ring.util.response :refer [redirect]]
@@ -380,6 +380,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
+           (HEAD "/" [] "")
            (GET "/" [] (landing))
            (GET "/signup" [] (signup-page))
            (POST "/signup" [email password] (add-user! email password))
