@@ -60,3 +60,5 @@ figwheel_server.log
 .idea/inspectionProfiles/Project_Default.xml
 
 .idea/misc.xml
+
+*.xml

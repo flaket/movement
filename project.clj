@@ -9,7 +9,7 @@
   :dependencies [[org.clojure/clojure "1.7.0" :exclusions [time]]
                  [org.clojure/clojurescript "0.0-3196" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [com.datomic/datomic-pro "0.9.5344" :exclusions [joda-time]]
+                 [com.datomic/datomic-pro "0.9.5201" :exclusions [joda-time]]
                  [clj-time "0.11.0"]
                  [ring "1.3.2"]
                  [ring-server "0.4.0"]
@@ -30,9 +30,9 @@
                  [buddy/buddy-hashers "0.7.0"]
                  [buddy/buddy-sign "0.7.1"]
                  [cljs-ajax "0.5.0"]
-                 #_[garden "1.2.5"]
                  [prismatic/dommy "1.1.0"]
                  [hiccup "1.0.5"]
+                 [garden "1.2.5"]
                  [com.draines/postal "1.11.3"]
                  [com.taoensso/timbre "4.1.4"]]
 
@@ -63,8 +63,11 @@
 
   :clean-targets ^{:protect false} ["resources/public/js" "resources/public/css/garden"]
 
-  :repositories {"my.datomic.com" {:url "https://my.datomic.com/repo"
-                                   :creds :gpg}}
+  :repositories {"my.datomic.com" {:url      "https://my.datomic.com/repo"
+                                   :username ~(System/getenv "DATOMIC_EMAIL")
+                                   :password ~(System/getenv "DATOMIC_KEY")
+                                   ;:creds :gpg
+                                   }}
 
   :minify-assets
   {:assets
