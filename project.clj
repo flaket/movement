@@ -39,7 +39,8 @@
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]
             [lein-ring "0.9.1"]
-            [lein-asset-minifier "0.2.2"]]
+            [lein-asset-minifier "0.2.2"]
+            [lein-beanstalk "0.2.7"]]
   :ring {:handler movement.handler/app
          :uberwar-name "movement.war"}
 
