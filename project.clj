@@ -34,7 +34,8 @@
                  [hiccup "1.0.5"]
                  [garden "1.2.5"]
                  [com.draines/postal "1.11.3"]
-                 [com.taoensso/timbre "4.1.4"]]
+                 [com.taoensso/timbre "4.1.4"]
+                 [slingshot "0.12.2"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]
