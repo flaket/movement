@@ -2,9 +2,48 @@
 
  {:db/id #db/id[:db.part/user -1] :category/name "Balance"}
 
+ {:db/id #db/id[:db.part/user -5000] :equipment/name "Beam"}
+
+
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Balancing Walk"
-  :movement/category  [#db/id[:db.part/user -1]]}
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Balancing Backward Walk"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Balancing Lateral Walk"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Low Walk"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Low Backward Walk"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Low Lateral Walk"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Stealth Walk"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Stealth Lateral Walk"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user -100]
   :movement/name      "Tripod Transition"
@@ -14,31 +53,40 @@
  {:db/id              #db/id[:db.part/user -101]
   :movement/name      "Balancing Tripod Transition"
   :movement/category  [#db/id[:db.part/user -1]]
-  :movement/easier    [#db/id[:db.part/user -100]]}
+  :movement/easier    [#db/id[:db.part/user -100]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Balancing Split Squat"
-  :movement/category  [#db/id[:db.part/user -1]]}
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Balancing Foot Hand Crawl"
-  :movement/category  [#db/id[:db.part/user -1]]}
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Balancing Inverted Crawl"
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Pivot Reverse"
-  :movement/category  [#db/id[:db.part/user -1]]}
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Cross Reverse"
-  :movement/category  [#db/id[:db.part/user -1]]}
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Split Squat Reverse"
-  :movement/category  [#db/id[:db.part/user -1]]}
+  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Side Shuffle"
-  :movement/category  [#db/id[:db.part/user -1]]}
+
 
 
  ]

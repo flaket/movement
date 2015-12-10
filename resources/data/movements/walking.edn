@@ -29,6 +29,10 @@
   :movement/name     "Hinged Walk"
   :movement/category [#db/id[:db.part/user -2]]}
 
+ {:db/id              #db/id[:db.part/user]
+  :movement/name      "Side Shuffle"
+  :movement/category  [#db/id[:db.part/user -2]]}
+
 
 
  ]

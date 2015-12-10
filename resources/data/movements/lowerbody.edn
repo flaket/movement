@@ -14,21 +14,13 @@
  {:db/id #db/id[:db.part/user -7] :category/name "Acrobatics"}
  {:db/id #db/id[:db.part/user -8] :category/name "Grip Strength"}
  {:db/id #db/id[:db.part/user -9] :category/name "Balance"}
+ {:db/id #db/id[:db.part/user -10] :category/name "Single Leg Squat"}
 
  ;; movements
 
 
  {:db/id             #db/id[:db.part/user -100]
   :movement/name     "Squat"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]]
-  :movement/harder   [#db/id[:db.part/user -150]
-                      #db/id[:db.part/user -200]]}
-
- {:db/id             #db/id[:db.part/user -99]
-  :movement/name     "Air Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -46,38 +38,50 @@
                       #db/id[:db.part/user -200]]}
 
  ;; todo: easier variations of pistol
- {:db/id             #db/id[:db.part/user -150]
-  :movement/name     "Pistol Single Leg Squat"
+ {:db/id             #db/id[:db.part/user -149]
+  :movement/name     "Elevated Split Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]}
+
+ {:db/id             #db/id[:db.part/user -150]
+  :movement/name     "Pistol Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/harder   [#db/id[:db.part/user -202]
                       #db/id[:db.part/user -203]]}
 
  {:db/id             #db/id[:db.part/user -200]
-  :movement/name     "Shin Shrimp Single Leg Squat"
+  :movement/name     "Shin Shrimp Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/harder   [#db/id[:db.part/user -200]]}
 
  {:db/id             #db/id[:db.part/user -201]
-  :movement/name     "Knee Shrimp Single Leg Squat"
+  :movement/name     "Knee Shrimp Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/harder   [#db/id[:db.part/user -202]]
   :movement/easier   [#db/id[:db.part/user -200]]}
 
  {:db/id             #db/id[:db.part/user -202]
-  :movement/name     "Shrimp Single Leg Squat"
+  :movement/name     "Shrimp Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
   :movement/easier   [#db/id[:db.part/user -201]]}
 
 
@@ -86,7 +90,18 @@
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -9]]
-  :movement/easier   [#db/id[:db.part/user -150]]}
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
+  :movement/easier   [#db/id[:db.part/user -150]
+                      #db/id[:db.part/user -204]]}
+
+ {:db/id             #db/id[:db.part/user -204]
+  :movement/name     "Elevated Crossing Pistol Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
+  :movement/harder   [#db/id[:db.part/user -203]]}
 
  ]

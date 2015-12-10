@@ -18,6 +18,20 @@
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Inverted Backward Crawl"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Inverted Lateral Crawl"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]]}
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Inchworm"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
@@ -48,6 +62,24 @@
                       #db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
+  :movement/name     "Foot Hand Backward Crawl"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Foot Hand Lateral Crawl"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Knee Elbow Crawl"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]]}
+
+ {:db/id             #db/id[:db.part/user]
   :movement/name     "Army Crawl"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
@@ -61,6 +93,24 @@
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Spiderman Crawl"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Gallop Crawl"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Hover Crawl"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "Traveling Squat"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]]}
