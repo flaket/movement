@@ -33,8 +33,8 @@
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-#_(def uri "datomic:dev://localhost:4334/test11")
-(def uri "datomic:ddb://us-east-1/movementsession/test-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+(def uri "datomic:dev://localhost:4334/test11")
+#_(def uri "datomic:ddb://us-east-1/movementsession/test-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 #_(def conn (d/connect uri))
 #_(def db (d/db conn))
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
