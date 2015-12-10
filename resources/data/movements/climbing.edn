@@ -19,6 +19,29 @@
  {:db/id         #db/id[:db.part/user -13] :category/name "Core Strength"}
 
  ;; muscle up
+ {:db/id             #db/id[:db.part/user -98]
+  :movement/name     "Negative Muscle Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id             #db/id[:db.part/user -99]
+  :movement/name     "Ring Muscle Up Transition"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]]
+  :movement/equipment [#db/id[:db.part/user -5000]]
+  :movement/harder [#db/id[:db.part/user -101]]}
+
  {:db/id             #db/id[:db.part/user -100]
   :movement/name     "Muscle Up"
   :movement/category [#db/id[:db.part/user -1]
@@ -43,20 +66,21 @@
                       #db/id[:db.part/user -10]
                       #db/id[:db.part/user -11]]
   :movement/equipment [#db/id[:db.part/user -5001]]
-  :movement/harder [#db/id[:db.part/user -103]]}
+  :movement/harder [#db/id[:db.part/user -103]]
+  :movement/easier [#db/id[:db.part/user -99]]}
 
  {:db/id             #db/id[:db.part/user -102]
-  :movement/name     "Negative Muscle Up"
+  :movement/name     "Negative Ring Muscle Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -8]
                       #db/id[:db.part/user -9]
-                      #db/id[:db.part/user -10]]
-  :movement/equipment [#db/id[:db.part/user -5000]]
-  :movement/harder [#db/id[:db.part/user -100]]}
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]
+  :movement/equipment [#db/id[:db.part/user -5001]]
+  :movement/harder [#db/id[:db.part/user -101]]}
 
  {:db/id             #db/id[:db.part/user -103]
   :movement/name     "L Sit Muscle Up"
@@ -150,14 +174,6 @@
                       #db/id[:db.part/user -12]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5001]]}
-
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Front Swing"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -7]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "One Arm Passive Hang"
@@ -301,17 +317,6 @@
                       #db/id[:db.part/user -13]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5001]]}
-
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Hanging Knee To Bar"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -13]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Toes To Bar"

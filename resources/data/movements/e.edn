@@ -67,6 +67,12 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -5]]}
 
+ {:db/id #db/id[:db.part/user -210]
+  :movement/name "L Handstand"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]]}
+
 
  ;; Air Baby
  {:db/id #db/id[:db.part/user -300]

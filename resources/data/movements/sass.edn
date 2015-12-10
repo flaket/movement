@@ -80,17 +80,6 @@
   :movement/equipment [#db/id[:db.part/user -5001]
                        #db/id[:db.part/user -5002]]}
 
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Negative Back Lever"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -9]
-                      #db/id[:db.part/user -10]]
-  :movement/equipment [#db/id[:db.part/user -5001]
-                       #db/id[:db.part/user -5002]]}
-
  ;; Front lever
  {:db/id             #db/id[:db.part/user -110]
   :movement/name     "Front Lever"
@@ -154,17 +143,6 @@
   :movement/harder   [#db/id[:db.part/user -113]]
   :movement/equipment [#db/id[:db.part/user -5001]
                        #db/id[:db.part/user -5002]]}
-
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Negative Front Lever"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -9]]
-  :movement/equipment [#db/id[:db.part/user -5001]
-                       #db/id[:db.part/user -5002]]}
-
 
  ;; Side lever
  {:db/id             #db/id[:db.part/user]

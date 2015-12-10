@@ -33,10 +33,15 @@
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-#_(def uri "datomic:dev://localhost:4334/test11")
-(def uri "datomic:ddb://us-east-1/movementsession/test-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
-#_(def conn (d/connect uri))
-#_(def db (d/db conn))
+(def uri "datomic:dev://localhost:4334/test11")
+#_(def uri "datomic:ddb://us-east-1/movementsession/test-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+
+(def tx (atom {}))
+
+(defn update-tx-conn! [] (swap! tx assoc :conn (d/connect uri)))
+(defn update-tx-db! [] (swap! tx assoc :db (d/db (:conn @tx))))
+
+
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
 
 (defn generate-response [data & [status]]
@@ -46,18 +51,15 @@
 
 (defn all-movement-names []
   "Returns the names of all movements in the database."
-  (let [conn (d/connect uri)
-        db (d/db conn)
-        movements (d/q '[:find [?n ...]
+  (let [movements (d/q '[:find [?n ...]
                          :where
                          [_ :movement/name ?n]]
-                       db)]
+                       (:db @tx))]
     (generate-response movements)))
 
 (defn all-equipment-names []
   "Returns the all equipment names in the database."
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [db (:db @tx)
         equipment (d/q '[:find [?n ...]
                          :where
                          [_ :equipment/name ?n]]
@@ -66,29 +68,24 @@
 
 (defn all-category-names []
   "Returns the names of all categories in the database."
-  (let [conn (d/connect uri)
-        db (d/db conn)
-        categories (d/q '[:find [?n ...]
+  (let [categories (d/q '[:find [?n ...]
                           :where
                           [_ :category/name ?n]]
-                        db)]
+                        (:db @tx))]
     (generate-response categories)))
 
 (defn entity-by-name [name]
   "Returns the whole entity of a named movement."
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [db (:db @tx)
         movement (d/pull db '[*] [:movement/name name])]
     movement))
 
 (defn entity-by-id [id]
-  (let [conn (d/connect uri)
-        db (d/db conn)]
+  (let [db (:db @tx)]
     (d/pull db '[*] id)))
 
 (defn get-movement-from-equipment [e]
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [db (:db @tx)
         r (d/q '[:find (pull ?m [*])
                  :in $ ?name
                  :where
@@ -102,8 +99,7 @@
 (defn get-n-movements-from-categories
   [n categories d]
   "Get n random movement entities drawn from param list of categories."
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [db (:db @tx)
         movements (for [c categories]
                     (d/q '[:find (pull ?m [*]) :in $ ?cat
                            :where [?c :category/name ?cat] [?m :movement/category ?c]]
@@ -113,8 +109,7 @@
     m))
 
 (defn all-template-titles [email]
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [db (:db @tx)
         templates (d/q '[:find [?title ...]
                          :in $ ?email
                          :where
@@ -126,8 +121,7 @@
     (generate-response templates)))
 
 (defn create-session [title user]
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [db (:db @tx)
         title-entity (ffirst (d/q '[:find (pull ?t [*])
                                     :in $ ?title ?email
                                     :where
@@ -160,8 +154,7 @@
                         :parts       parts})))
 
 (defn create-equipment-session [name n]
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [db (:db @tx)
         r (d/q '[:find (pull ?m [*])
                  :in $ ?name
                  :where
@@ -177,8 +170,7 @@
                                  :movements  m}]})))
 
 (defn new-unique-template? [user template-title]
-  (let [conn (d/connect uri)
-        db (d/db conn)]
+  (let [db (:db @tx)]
     (empty? (d/q '[:find [?user ...]
                    :in $ ?user ?template-title
                    :where
@@ -190,7 +182,7 @@
                  template-title))))
 
 (defn transact-template! [user {:keys [title description parts] :as template}]
-  (let [conn (d/connect uri)
+  (let [conn (:conn @tx)
         description (if (nil? description) "" description)
         parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
         user-template-data [{:db/id         #db/id[:db.part/user]
@@ -225,7 +217,7 @@
     (d/transact conn tx-data)))
 
 (defn transact-session! [user {:keys [title description parts comment time]}]
-  (let [conn (d/connect uri)
+  (let [conn (:conn @tx)
         parts (map #(assoc % :movements (vals (:movements %))
                              :db/id (d/tempid :db.part/user)) parts)
         parts (map
@@ -267,7 +259,8 @@
         (transact-session! user session)
         (catch Exception e
           (generate-response {:message (str "Exception: " e)}))
-        (finally (generate-response {:session session :message "Session stored successfully."}))))))
+        (finally (do (update-tx-db!)
+                     (generate-response {:session session :message "Session stored successfully."})))))))
 
 (defn add-template! [req]
   (let [template (:params req)
@@ -279,12 +272,12 @@
           (transact-template! user template)
           (catch Exception e
             (generate-response {:message (str "Exception: " e)}))
-          (finally (generate-response {:template template :message "New template stored successfully."})))
+          (finally (do (update-tx-db!)
+                       (generate-response {:template template :message "New template stored successfully."}))))
         (generate-response {:message "You already have a template with this title. Choose a unique title for your template."} 400)))))
 
 (defn retrieve-sessions [req]
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [db (:db @tx)
         user (:user (:params req))
         sessions (vec (flatten
                         (d/q '[:find (pull ?s [*])
@@ -297,8 +290,7 @@
     (generate-response sessions)))
 
 (defn find-user [email]
-  (let [conn (d/connect uri)
-        db (d/db conn)]
+  (let [db (:db @tx)]
     (d/pull db '[*] [:user/email email])))
 
 (defn valid-user? [user password]
@@ -323,7 +315,7 @@
 ;;;;;;
 
 (defn add-user [email password activation-id]
-  (let [conn (d/connect uri)
+  (let [conn (:conn @tx)
         tx-user-data [{:db/id #db/id[:db.part/user]
                        :user/email email
                        :user/password (hashers/encrypt password)
@@ -337,14 +329,15 @@
       (let [activation-id (generate-activation-id)]
         (add-user email password activation-id)
         (send-activation-email email activation-id)
+        (update-tx-db!)
         (str "An activation email has been sent to your email address.")))
     (str "This email is already registered as a user."
          "\n"
          "<a href=\"http://movementsession.com/app\">Login here</a>")))
 
 (defn activate-user! [id]
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [conn (:conn @tx)
+        db (:db @tx)
         user (d/pull db '[*] [:user/activation-id id])]
     (if-not (nil? (:db/id user))
       (do
@@ -365,7 +358,7 @@
       (str "<h1>This activation-id is invalid.</h1>"))))
 
 (defn change-password! [req]
-  (let [conn (d/connect uri)
+  (let [conn (:conn @tx)
         email (:username (:params req))
         password (:password (:params req))
         new-password (:new-password (:params req))
@@ -375,15 +368,15 @@
         (let [tx-user-data [{:db/id         #db/id[:db.part/user]
                              :user/email    (:user/email user)
                              :user/password (hashers/encrypt new-password)}]]
-          (d/transact conn tx-user-data)
-          (generate-response {:message "Password changed successfully!"}))
+          (d/transact conn tx-user-data))
         (catch Exception e
-          (generate-response {:message "Error changing password."})))
+          (generate-response {:message "Error changing password."}))
+        (finally (do (update-tx-db!)
+                     (generate-response {:message "Password changed successfully!"}))))
       (generate-response {:message "Wrong old password."}))))
 
 (defn show-session [url]
-  (let [conn (d/connect uri)
-        db (d/db conn)
+  (let [db (:db @tx)
         session (ffirst (d/q '[:find (pull ?e [*])
                                :in $ ?url
                                :where
@@ -422,8 +415,11 @@
            (POST "/subscription-activated" req (subscription-activated! req))
            (POST "/subscription-deactivated" req (subscription-deactivated! req))
 
-           (GET "/app" [] (render-file "app.html" {:dev        (env :dev?)
-                                                   :csrf-token *anti-forgery-token*}))
+           (GET "/app" [] (do
+                            (update-tx-conn!)
+                            (update-tx-db!)
+                            (render-file "app.html" {:dev        (env :dev?)
+                                                     :csrf-token *anti-forgery-token*})))
            (POST "/login" [username password] (jws-login username password))
            (POST "/store-session" req (if-not (authenticated? req)
                                         (throw-unauthorized)

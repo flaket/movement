@@ -227,7 +227,17 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -8]]
-  :movement/equipment [#db/id[:db.part/user -5002]]}
+  :movement/equipment [#db/id[:db.part/user -5000]
+                       #db/id[:db.part/user -5002]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/name     "False Grip Row"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -8]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/name     "False Grip Pull Up"
@@ -239,8 +249,7 @@
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
                       #db/id[:db.part/user -8]]
-  :movement/equipment [#db/id[:db.part/user -5000]
-                       #db/id[:db.part/user -5002]]}
+  :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Rope Climb"
