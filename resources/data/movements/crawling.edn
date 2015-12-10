@@ -18,12 +18,6 @@
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Bear Crawl"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]}
-
- {:db/id             #db/id[:db.part/user]
   :movement/name     "Inchworm"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]

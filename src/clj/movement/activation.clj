@@ -19,7 +19,8 @@
       {:from    "admin@movementsession.com"
        :to      email
        :subject "Movementsession activation link"
-       :body    (str "Click the following activation link to verify your email address:\n "
+       :body    (str "Thanks for signing up for MovementSession! Please click the link below to confirm your email address.
+                     \n "
                      url activation-id
                      "\n\n"
                      "If you did not recently sign up for an account at movementsession.com, you can simply ignore this email.")})
@@ -27,19 +28,3 @@
     true
        (catch Exception e
          (error e "could not send email!\n"))))
-
-(defn send-ivar-mail [email]
-  (try
-    (send-message
-      ^{:host "mail.privateemail.com"
-        :user "admin@movementsession.com"
-        :pass "13movementsession13"
-        :ssl :yes}
-      {:from    "admin@movementsession.com"
-       :to      email
-       :subject "Hello from the adminorama of movementsession"
-       :body    "fakk yuuu"})
-    (info "sent fakk yu email to: " email)
-    true
-    (catch Exception e
-      (error e "could not send email!\n"))))

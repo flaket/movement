@@ -217,29 +217,6 @@
                       #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
-
-
-
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Back Lever Raise"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -9]]
-  :movement/equipment [#db/id[:db.part/user -5001]
-                       #db/id[:db.part/user -5002]]}
-
- {:db/id             #db/id[:db.part/user]
-  :movement/name     "Front Lever Raise"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -9]]
-  :movement/equipment [#db/id[:db.part/user -5001]
-                       #db/id[:db.part/user -5002]]}
-
  {:db/id             #db/id[:db.part/user]
   :movement/name     "Tick Tock"
   :movement/category [#db/id[:db.part/user -1]
