@@ -108,10 +108,10 @@
   (html5
     [:head
      [:title ""]
-     #_(include-js "http://code.jquery.com/ui/1.11.2/jquery-ui.min.js"
+     (include-js "http://code.jquery.com/ui/1.11.2/jquery-ui.min.js"
                  "https://code.jquery.com/jquery-1.11.2.min.js")
      (include-css
-       #_"http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.min.css"
+       "http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.min.css"
        "http://yui.yahooapis.com/pure/0.6.0/pure-min.css"
        "http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css"
        "https://fonts.googleapis.com/css?family=Roboto"
@@ -122,8 +122,7 @@
        "/css/animate.min.css"
        "/css/marketing.css"
        "/css/side-menu.css"
-       "/css/site.css"
-       )]
+       "/css/site.css")]
     [:body
      [:div
       (header)

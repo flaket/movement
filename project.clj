@@ -99,7 +99,7 @@
 
              :uberjar {:hooks [leiningen.cljsbuild minify-assets.plugin/hooks]
                        :env {:production true}
-                       ;:aot :all
+                       :aot :all
                        :omit-source true
                        :cljsbuild {:jar true
                                    :builds {:app
