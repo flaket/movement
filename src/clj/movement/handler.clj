@@ -139,9 +139,9 @@
                            category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
                            movements (if (nil? n) [] (vec (get-n-movements-from-categories n category-names
                                                                                            {:rep      (:part/rep p)
-                                                                                           :set      (:part/set p)
-                                                                                           :distance (:part/distance p)
-                                                                                           :duration (:part/duration p)})))]
+                                                                                            :set      (:part/set p)
+                                                                                            :distance (:part/distance p)
+                                                                                            :duration (:part/duration p)})))]
                        {:title      name
                         :categories category-names
                         :movements  (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement p)))]
@@ -150,7 +150,7 @@
 
     (generate-response {:title       title
                         :description (:template/description title-entity)
-                        :background (:template/background title-entity)
+                        :background  (:template/background title-entity)
                         :parts       parts})))
 
 (defn create-equipment-session [name n]
@@ -234,7 +234,7 @@
                        :session/comment     comment
                        :session/timestamp   (Date.)
                        :session/part        (vec (map :db/id parts))
-                       :session/time time}]
+                       :session/time        time}]
         part-data (vec (for [p parts]
                          {:db/id                 (:db/id p)
                           :part/title            (:title p)
@@ -242,9 +242,9 @@
         movement-data (vec (flatten (for [p parts]
                                       (for [m (:movements p)]
                                         (apply dissoc m (for [[k v] m :when (nil? v)] k))))))
-        movement-data (map #(rename-keys % {:rep :movement/rep :set :movement/set
+        movement-data (map #(rename-keys % {:rep      :movement/rep :set :movement/set
                                             :distance :movement/distance :duration :movement/duration
-                                            :id :movement/position-in-part})
+                                            :id       :movement/position-in-part})
                            movement-data)
         tx-data (concat session-data part-data movement-data)]
     (d/transact conn tx-data)))
@@ -263,10 +263,10 @@
                      (generate-response {:session session :message "Session stored successfully."})))))))
 
 (defn add-template! [req]
-  (let [template (:params req)
-        user (:user template)]
+  (let [user (:user (:params req))
+        template (:template (:params req))]
     (if (nil? user)
-      (generate-response (str "User email lacking from client data. User not logged in?" " template: " template) 400)
+      (generate-response {:message "User email lacking from client data. User not logged in?"} 400)
       (if (new-unique-template? user (:title template))
         (try
           (transact-template! user template)
@@ -274,7 +274,7 @@
             (generate-response {:message (str "Exception: " e)}))
           (finally (do (update-tx-db!)
                        (generate-response {:template template :message "New template stored successfully."}))))
-        (generate-response {:message "You already have a template with this title. Choose a unique title for your template."} 400)))))
+        (generate-response {:message "You already have a template with this title. Please choose a unique title for your template."} 400)))))
 
 (defn retrieve-sessions [req]
   (let [db (:db @tx)
@@ -316,11 +316,11 @@
 
 (defn add-user [email password activation-id]
   (let [conn (:conn @tx)
-        tx-user-data [{:db/id #db/id[:db.part/user]
-                       :user/email email
-                       :user/password (hashers/encrypt password)
+        tx-user-data [{:db/id              #db/id[:db.part/user]
+                       :user/email         email
+                       :user/password      (hashers/encrypt password)
                        :user/activation-id activation-id
-                       :user/activated? false}]]
+                       :user/activated?    false}]]
     (d/transact conn tx-user-data)))
 
 (defn add-user! [email password]
@@ -341,20 +341,20 @@
         user (d/pull db '[*] [:user/activation-id id])]
     (if-not (nil? (:db/id user))
       (do
-        (let [tx-user-data [{:db/id        #db/id[:db.part/user]
-                             :user/email   (:user/email user)
-                             :user/activated? true
-                             :user/activation-id (generate-activation-id)
+        (let [tx-user-data [{:db/id                  #db/id[:db.part/user]
+                             :user/email             (:user/email user)
+                             :user/activated?        true
+                             :user/activation-id     (generate-activation-id)
                              :user/sign-up-timestamp (Date.)
-                             :user/setting [#db/id[:db.part/user -100]]}
-                            {:db/id        #db/id[:db.part/user -100]
+                             :user/setting           [#db/id[:db.part/user -100]]}
+                            {:db/id                            #db/id[:db.part/user -100]
                              :setting/show-standard-templates? true
-                             :setting/view "Standard"
-                             :setting/receive-email? true}]]
+                             :setting/view                     "Standard"
+                             :setting/receive-email?           true}]]
           (d/transact conn tx-user-data))
         {:status  302
          :headers {"Location" "/activated"}
-         :body ""})
+         :body    ""})
       (str "<h1>This activation-id is invalid.</h1>"))))
 
 (defn change-password! [req]
@@ -387,11 +387,11 @@
         parts (vec (for [p parts]
                      {:title     (:part/title p)
                       :movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/session-movement p)))}))]
-    (view-session-page {:title (:session/title session)
+    (view-session-page {:title       (:session/title session)
                         :description (:session/description session)
-                        :parts parts
-                        :comment (:session/comment session)
-                        :time (:session/time session)})))
+                        :parts       parts
+                        :comment     (:session/comment session)
+                        :time        (:session/time session)})))
 
 (defn subscription-activated! [req]
   (view-sub-activated-page req))

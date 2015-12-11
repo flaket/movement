@@ -18,17 +18,19 @@
                (stop))]
     (fn [props]
       [:input (merge props
-                          {:type "text"
-                           :value @val
-                           :on-blur #(do (reset! val (-> % .-target .-value))
-                                         (save))
-                           :on-change #(reset! val (-> % .-target .-value))
-                           :on-key-down #(case (.-which %)
-                                          13 (save)
-                                          27 (stop)
-                                          nil)
-                           :size size
-                           :autofocus false})])))
+                     {:type        "text"
+                      :value       @val
+                      :on-blur     #(do (reset! val (-> % .-target .-value))
+                                        (save))
+                      :on-change   #(reset! val (-> % .-target .-value))
+                      :on-key-down #(do
+                                     (reset! val (-> % .-target .-value))
+                                     (case (.-which %)
+                                       13 (save)
+                                       27 (stop)
+                                       nil))
+                      :size        size
+                      :autofocus   false})])))
 
 
 (def text-edit-component

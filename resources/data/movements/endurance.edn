@@ -46,11 +46,4 @@
                       #db/id[:db.part/user -3]]
   :movement/easier    [#db/id[:db.part/user -200]]}
 
- {:db/id             #db/id[:db.part/user -202]
-  :movement/name     "Jog"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -3]]
-  :movement/harder [#db/id[:db.part/user -201]]}
-
-
  ]

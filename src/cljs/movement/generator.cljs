@@ -116,7 +116,7 @@
   (let [new-parts (mapv #(assoc % :movements (list-to-sorted-map (:movements %)))
                         (:parts session))
         new-session (assoc session :parts new-parts)
-        new-session (assoc new-session :comment [])
+        new-session (assoc new-session :comment "")
         ]
     (session/put! :movement-session new-session)))
 
@@ -258,7 +258,8 @@
         (doall
           (for [m (vals movements)]
             ^{:key (str m (rand-int 100000))} [movement-component m part]))
-        (add-movement-component title)]])))
+        (when-not (empty? (:categories part))
+          (add-movement-component title))]])))
 
 (defn header-component []
   (let [date (js/Date.)
@@ -438,7 +439,7 @@
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
-       [:div.content
+       [:div.content {:style {:margin-top "20px"}}
         (if-let [session (session/get :movement-session)]
           [:div {:style {:background-image (str "url(" (:background session) ")")}}
            [top-menu-component]

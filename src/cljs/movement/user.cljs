@@ -86,7 +86,7 @@
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
-       [:div.content
+       [:div.content {:style {:margin-top "20px"}}
         [:div.pure-g
          [:h4.pure-u (str "Logged in as " (session/get :user))]]
         [logged-sessions-component]
