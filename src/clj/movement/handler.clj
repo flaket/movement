@@ -76,9 +76,8 @@
 
 (defn entity-by-name [name]
   "Returns the whole entity of a named movement."
-  (let [db (:db @tx)
-        movement (d/pull db '[*] [:movement/name name])]
-    movement))
+  (let [db (:db @tx)]
+    (d/pull db '[*] [:movement/name name])))
 
 (defn entity-by-id [id]
   (let [db (:db @tx)]
@@ -448,7 +447,7 @@
                                    (all-template-titles (str (:user (:params req))))))
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (entity-by-name (:name (:params req)))))
+                                  (generate-response (entity-by-name (:name (:params req))))))
            (GET "/movement-by-id" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (generate-response

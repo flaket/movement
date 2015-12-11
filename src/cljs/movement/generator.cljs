@@ -39,13 +39,13 @@
                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
             :error-handler #(print "error getting movement from equipment through add.")})
       (GET "singlemovement"
-           {:params        {:categories categories}
-            :handler       #(let [id (swap! m-counter inc)
-                                  new-movement (first %)
-                                  new-movement (assoc new-movement :id id)
-                                  new-movements (assoc movements id new-movement)]
-                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-            :error-handler #(print "error getting single movement through add.")}))))
+             {:params        {:categories categories}
+              :handler       #(let [id (swap! m-counter inc)
+                                    new-movement (first %)
+                                    new-movement (assoc new-movement :id id)
+                                    new-movements (assoc movements id new-movement)]
+                               (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+              :error-handler #(print "error getting single movement through add.")}))))
 
 (defn refresh-movement
   ([m part-title]
@@ -89,10 +89,10 @@
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))
         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
-    (GET "movement/"
-         {:params         {:name movement-name}
+    (GET "movement"
+         {:params        {:name (str movement-name)}
           :handler       #(let [id (swap! m-counter inc)
-                                new-movement (first %)
+                                new-movement %
                                 new-movement (assoc new-movement :id id)
                                 new-movements (assoc movements id new-movement)]
                            (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
@@ -153,6 +153,9 @@
    [:div.pure-u.destroy
     [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
    [:div.pure-u-1-12]])
+
+(defn autocomplete-component []
+  )
 
 (defn slider-component []
   (let [data (atom 0)]
@@ -233,27 +236,46 @@
        (when @duration-clicked?
          [slider-component position-in-parts id :duration 0 1800 10])])))
 
-(defn add-movement-component [title]
-  [:div.pure-u.movement.add-movement
-   [:div.pure-g {:style {:margin-top "30px"
-                         :margin-bottom "30px"
-                         :margin-left "5px"
-                         }}
-    [:div.pure-u-2-5]
-    [:div.pure-u-1-5 {:on-click #(add-movement title)
-                  :style    {:opacity 0.5
-                             :cursor  'pointer}} [:i.fa.fa-plus.fa-2x]]]
-   #_[:div.pure-g {:style {:margin-bottom "30px"
-                         :margin-left "5px"
-                         }}
-    [:div.pure-u-2-5]
-    [:div.pure-u-1-5 {:on-click #(add-movement title)
-                      :style    {:opacity 0.5
-                                 :cursor  'pointer}} [:i.fa.fa-search-plus.fa-2x]]]])
+(defn add-movement-component [title i]
+  (let [show-search-input? (atom false)]
+    (fn []
+      [:div.pure-u.movement.add-movement
+       [:div.pure-g {:style {:margin-top    "30px"
+                             :margin-bottom "30px"
+                             :margin-left   "5px"}}
+        [:div.pure-u-2-5]
+        [:div.pure-u-1-5
+         [:i.fa.fa-plus.fa-2x
+          {:on-click #(do (add-movement title)
+                          (reset! show-search-input? false))
+           :style    {:opacity 0.5
+                      :cursor  'pointer}}]]]
+       (if @show-search-input?
+         [:div.pure-g
+          [:div.pure-u
+           (let [id (str "mtags" i)
+                 movements-ac-comp (with-meta text-input-component
+                                              {:component-did-mount #(auto-complete-did-mount
+                                                                      (str "#" id)
+                                                                      (vec (session/get :all-movements)))})]
+             [movements-ac-comp {:id          id
+                                 :class       "edit"
+                                 :placeholder "type to find and add movement.."
+                                 :size        21
+                                 :on-save     #(when (some #{%} (session/get :all-movements))
+                                                (add-movement-from-search title %))}])]]
+         [:div.pure-g {:style {:margin-bottom "30px"
+                               :margin-left   "5px"}}
+          [:div.pure-u-2-5]
+          [:div.pure-u-1-5
+           [:i.fa.fa-search-plus.fa-2x
+            {:on-click #(reset! show-search-input? true)
+             :style    {:opacity 0.5
+                        :cursor  'pointer}}]]])])))
 
 (defn part-component []
-  (let [show-search-input (atom false)]
-    (fn [{:keys [title movements] :as part}]
+  (let []
+    (fn [{:keys [title movements] :as part} i]
       [:div.part
        [:h2 title]
        [:div.pure-g.movements
@@ -261,7 +283,7 @@
           (for [m (vals movements)]
             ^{:key (str m (rand-int 100000))} [movement-component m part]))
         (when-not (empty? (:categories part))
-          (add-movement-component title))]])))
+          [add-movement-component title i])]])))
 
 (defn header-component []
   (let [date (js/Date.)
@@ -443,12 +465,13 @@
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
         (if-let [session (session/get :movement-session)]
-          [:div {:style {:background-image (str "url(" (:background session) ")")}}
+          [:div #_{:style {:background-image (str "url(" (:background session) ")")}}
            [top-menu-component]
            [header-component session]
-           (doall
-             (for [p (:parts session)]
-               ^{:key p} [part-component p]))
+           (let [parts (:parts session)]
+             (doall
+               (for [i (range (count parts))]
+                 ^{:key i} [part-component (get parts i) i])))
            [time-component]
            [comment-component]
            [finish-session-component]]
