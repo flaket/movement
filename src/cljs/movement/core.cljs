@@ -18,12 +18,12 @@
 ;; -------------------------
 ;; Client side routes
 (secretary/defroute "/" [] (set-page! #'home))
-(secretary/defroute "/login" [] (set-page! #'login))
+#_(secretary/defroute "/login" [] (set-page! #'login))
 (secretary/defroute "/generator" [] (set-page! #'generator-component))
 (secretary/defroute "/user" [] (set-page! #'user-component))
 (secretary/defroute "/template" [] (set-page! #'template-creator-component))
-(secretary/defroute "/share" [] (set-page! #'share-component))
-(secretary/defroute "/pay" [] (set-page! #'payment-component))
+#_(secretary/defroute "/share" [] (set-page! #'share-component))
+#_(secretary/defroute "/pay" [] (set-page! #'payment-component))
 
 ;---------------------------
 (defn page []
@@ -38,7 +38,6 @@
   (secretary/set-config! :prefix "#")
   (if (session/get :user)
     ;todo: if registered more than 14 days and not payed, show payment-component
-    (set-page! #'template-creator-component)
     (set-page! #'home))
 
   (.initializeTouchEvents js/React true)

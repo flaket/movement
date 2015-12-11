@@ -309,7 +309,7 @@
         equipment-showing? (atom false)]
     (fn []
       [:div.blank-state
-       [:div.pure-g {:style {:margin-bottom "25px"}}
+       [:div.pure-g {:style {:margin-bottom 50}}
         [:h1.pure-u "Let's create your next Movement Session"]]
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-8]

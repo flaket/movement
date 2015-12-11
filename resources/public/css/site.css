@@ -101,6 +101,10 @@ h1, h2, p.subtitle {
     margin-top: 8rem;
 }
 
+.login {
+    margin-top: 20rem;
+}
+
 p, ol, ul {
   font-size: 1.2rem;
 }

@@ -30,6 +30,7 @@
             [movement.db]
             [movement.pages.landing :refer [landing]]
             [movement.pages.signup :refer [signup-page]]
+            [movement.pages.login :refer [login-page]]
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
@@ -40,7 +41,6 @@
 
 (defn update-tx-conn! [] (swap! tx assoc :conn (d/connect uri)))
 (defn update-tx-db! [] (swap! tx assoc :db (d/db (:conn @tx))))
-
 
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
 
@@ -310,7 +310,8 @@
           (let [claims {:user (keyword email)
                         :exp  (-> 3 hours from-now)}
                 token (jws/sign claims secret {:alg :hs512})]
-            (generate-response {:token token :user (:user/email (dissoc user :user/password :db/id))}))
+            (generate-response {:token token
+                                :user (:user/email (dissoc user :user/password :db/id))}))
           (generate-response {:message "Wrong email/password combination"} 401)))
       (generate-response {:message "Unknown/non-activated email"} 400))))
 
@@ -409,21 +410,19 @@
            (GET "/" [] (landing))
            (GET "/signup" [] (signup-page))
            (POST "/signup" [email password] (add-user! email password))
+           (POST "/login" [email password] (do
+                                             (update-tx-conn!)
+                                             (update-tx-db!)
+                                             (jws-login email password)))
            (GET "/activate/:id" [id] (activate-user! id))
            (GET "/activated" [] (str
-                                  "Account successfully activated!"
-                                  "\n"
-                                  "<a href=\"http://movementsession.com/app\">Login here</a>"))
-
+                                     "Account successfully activated!"
+                                     "\n"
+                                     "<a href=\"http://movementsession.com/app\">Login here</a>"))
            (POST "/subscription-activated" req (subscription-activated! req))
            (POST "/subscription-deactivated" req (subscription-deactivated! req))
-
-           (GET "/app" [] (do
-                            (update-tx-conn!)
-                            (update-tx-db!)
-                            (render-file "app.html" {:dev        (env :dev?)
-                                                     :csrf-token *anti-forgery-token*})))
-           (POST "/login" [username password] (jws-login username password))
+           (GET "/app" [] (render-file "app.html" {:dev        (env :dev?)
+                                                   :csrf-token *anti-forgery-token*}))
            (POST "/store-session" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (add-session! req)))
