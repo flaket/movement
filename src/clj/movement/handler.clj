@@ -145,7 +145,11 @@
                        {:title      name
                         :categories category-names
                         :movements  (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement p)))]
-                                      (concat regular-movements movements)
+                                      (let [specific-movements (map #(assoc % :rep (:part/rep p)
+                                                                              :set (:part/set p)
+                                                                              :distance (:part/distance p)
+                                                                              :duration (:part/duration p)) regular-movements)]
+                                        (concat specific-movements movements))
                                       movements)})))]
 
     (generate-response {:title       title

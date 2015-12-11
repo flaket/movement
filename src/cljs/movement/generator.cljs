@@ -143,11 +143,13 @@
   [:div.pure-g
    [:div.pure-u-1-12]
    [:div.pure-u.refresh
-    [:i.fa.fa-refresh {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
-   [:div.pure-u.refresh
-    [:i.fa.fa-minus {:on-click #(refresh-movement m title "easier") :title "Swap with easier movement"}]]
-   [:div.pure-u.refresh
-    [:i.fa.fa-plus {:on-click #(refresh-movement m title "harder" ) :title "Swap with harder movement"}]]
+    [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
+   (when (:movement/easier m)
+     [:div.pure-u.refresh
+      [:i.fa.fa-minus {:on-click #(refresh-movement m title "easier") :title "Swap with easier movement"}]])
+   (when (:movement/harder m)
+     [:div.pure-u.refresh
+      [:i.fa.fa-plus {:on-click #(refresh-movement m title "harder") :title "Swap with harder movement"}]])
    [:div.pure-u.destroy
     [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
    [:div.pure-u-1-12]])
