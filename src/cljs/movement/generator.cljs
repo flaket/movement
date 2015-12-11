@@ -246,10 +246,9 @@
         [:div.pure-u-2-5]
         [:div.pure-u-1-5
          [:i.fa.fa-plus.fa-2x
-          {:on-click #(do (add-movement title)
-                          (reset! show-search-input? false))
-           :style    {:opacity 0.5
-                      :cursor  'pointer}}]]]
+          {:on-click #(add-movement title)
+           :style {:opacity 0.5
+                   :cursor  'pointer}}]]]
        (if @show-search-input?
          [:div.pure-g
           [:div.pure-u
@@ -262,6 +261,7 @@
                                  :class       "edit"
                                  :placeholder "type to find and add movement.."
                                  :size        21
+                                 :auto-focus true
                                  :on-save     #(when (some #{%} (session/get :all-movements))
                                                 (add-movement-from-search title %))}])]]
          [:div.pure-g {:style {:margin-bottom "30px"
