@@ -4,23 +4,23 @@
 
  ;; rolling
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Forward Roll"
+  :movement/unique-name     "Forward Roll"
   :movement/category [#db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Backward Roll"
+  :movement/unique-name     "Backward Roll"
   :movement/category [#db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Backward Roll To Lying"
+  :movement/unique-name     "Backward Roll To Lying"
   :movement/category [#db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Lying To Forward Roll"
+  :movement/unique-name     "Lying To Forward Roll"
   :movement/category [#db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Backward Roll To Handstand"
+  :movement/unique-name     "Backward Roll To Handstand"
   :movement/category [#db/id[:db.part/user -3]]}
 
 

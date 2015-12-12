@@ -26,7 +26,7 @@
 
  ;; todo: legge til enklere varianter
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "L Sit"
+  :movement/unique-name     "L Sit"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -34,7 +34,7 @@
                       #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "L Straddle"
+  :movement/unique-name     "L Straddle"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -42,28 +42,28 @@
                       #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Tuck V Up"
+  :movement/unique-name     "Tuck V Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "V Up"
+  :movement/unique-name     "V Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Lying Leg Lift"
+  :movement/unique-name     "Lying Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Sitting Leg Lift"
+  :movement/unique-name     "Sitting Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -71,7 +71,7 @@
 
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Incline Bench Leg Lift"
+  :movement/unique-name     "Incline Bench Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -79,28 +79,28 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Headstand Leg Lift"
+  :movement/unique-name     "Headstand Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Headstand Straight Leg Lift"
+  :movement/unique-name     "Headstand Straight Leg Lift"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Arch Up"
+  :movement/unique-name     "Arch Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -5]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Hollow Body"
+  :movement/unique-name     "Hollow Body"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -108,28 +108,28 @@
                       #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Hollow Body Rock"
+  :movement/unique-name     "Hollow Body Rock"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Superman"
+  :movement/unique-name     "Superman"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Superman Rocking"
+  :movement/unique-name     "Superman Rocking"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Ring L Sit"
+  :movement/unique-name     "Ring L Sit"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -138,7 +138,7 @@
   :movement/equipment [#db/id[:db.part/user -5003]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Parallell Bar Tuck L Sit"
+  :movement/unique-name     "Parallell Bar Tuck L Sit"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -146,7 +146,7 @@
                       #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Parallell Bar L Sit"
+  :movement/unique-name     "Parallell Bar L Sit"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -154,35 +154,35 @@
                       #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Sit Up Pike"
+  :movement/unique-name     "Sit Up Pike"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Sit Up"
+  :movement/unique-name     "Sit Up"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Rotational Rocking"
+  :movement/unique-name     "Rotational Rocking"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Lying Leg Circle"
+  :movement/unique-name     "Lying Leg Circle"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Plank"
+  :movement/unique-name     "Plank"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -191,7 +191,7 @@
                       #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
-   :movement/name     "Side Plank"
+   :movement/unique-name     "Side Plank"
    :movement/category [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
                        #db/id[:db.part/user -3]
@@ -200,7 +200,7 @@
                        #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Inverted Plank"
+  :movement/unique-name     "Inverted Plank"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -209,7 +209,7 @@
                       #db/id[:db.part/user -6]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "One Arm Plank"
+  :movement/unique-name     "One Arm Plank"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
@@ -218,7 +218,7 @@
                       #db/id[:db.part/user -6]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Backward Sprawl"
+  :movement/unique-name      "Backward Sprawl"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]]}
 

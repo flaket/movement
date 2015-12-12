@@ -125,6 +125,31 @@
   :db/doc                "A payment is stored with a timestamp"
   :db.install/_attribute :db.part/db}
 
+ ;; group
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :group/title
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Group title"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :group/description
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A group might have a description"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :group/template
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A group consists of templates"
+  :db.install/_attribute :db.part/db}
+
  ;; template
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :template/title
@@ -164,7 +189,7 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A part has a title and is a component of a template"
+  :db/doc                "A part has a title"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -244,13 +269,22 @@
 
  ;; movement
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/name
+  :db/ident              :movement/unique-name
   :db/fulltext           true
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/unique             :db.unique/identity
-  :db/doc                "A movement has a unique name"
+  :db/doc                "Movements in the database has a unique name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/name
+  :db/fulltext           true
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement executed in a session has a name"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -318,11 +352,11 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/position-in-part
+  :db/ident              :movement/position
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A movement used in a session may be stored with a positional number used in future rendering"
+  :db/doc                "A movement used in a session may be stored with list position"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]

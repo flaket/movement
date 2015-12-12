@@ -27,20 +27,12 @@
             [buddy.hashers :as hashers]
             [hiccup.core :refer [html]]
 
-            [movement.db]
+            [movement.db :refer [tx update-tx-conn! update-tx-db!]]
             [movement.pages.landing :refer [landing]]
             [movement.pages.signup :refer [signup-page]]
-            [movement.pages.login :refer [login-page]]
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
-            [movement.activation :refer [generate-activation-id send-activation-email]]))
-
-(def uri "datomic:dev://localhost:4334/test11")
-#_(def uri "datomic:ddb://us-east-1/movementsession/test-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
-
-(def tx (atom {}))
-
-(defn update-tx-conn! [] (swap! tx assoc :conn (d/connect uri)))
-(defn update-tx-db! [] (swap! tx assoc :db (d/db (:conn @tx))))
+            [movement.activation :refer [generate-activation-id send-activation-email]]
+            [movement.templates :refer [add-standard-templates-to-user]]))
 
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
 
@@ -53,7 +45,7 @@
   "Returns the names of all movements in the database."
   (let [movements (d/q '[:find [?n ...]
                          :where
-                         [_ :movement/name ?n]]
+                         [_ :movement/unique-name ?n]]
                        (:db @tx))]
     (generate-response movements)))
 
@@ -77,7 +69,7 @@
 (defn entity-by-name [name]
   "Returns the whole entity of a named movement."
   (let [db (:db @tx)]
-    (d/pull db '[*] [:movement/name name])))
+    (d/pull db '[*] [:movement/unique-name name])))
 
 (defn entity-by-id [id]
   (let [db (:db @tx)]
@@ -245,9 +237,12 @@
         movement-data (vec (flatten (for [p parts]
                                       (for [m (:movements p)]
                                         (apply dissoc m (for [[k v] m :when (nil? v)] k))))))
-        movement-data (map #(rename-keys % {:rep      :movement/rep :set :movement/set
-                                            :distance :movement/distance :duration :movement/duration
-                                            :id       :movement/position-in-part})
+        movement-data (map #(rename-keys % {:movement/unique-name :movement/name
+                                            :rep      :movement/rep
+                                            :set      :movement/set
+                                            :distance :movement/distance
+                                            :duration :movement/duration
+                                            :id       :movement/position})
                            movement-data)
         tx-data (concat session-data part-data movement-data)]
     (d/transact conn tx-data)))
@@ -344,18 +339,18 @@
         db (:db @tx)
         user (d/pull db '[*] [:user/activation-id id])]
     (if-not (nil? (:db/id user))
-      (do
-        (let [tx-user-data [{:db/id                  #db/id[:db.part/user]
-                             :user/email             (:user/email user)
-                             :user/activated?        true
-                             :user/activation-id     (generate-activation-id)
-                             :user/sign-up-timestamp (Date.)
-                             :user/setting           [#db/id[:db.part/user -100]]}
-                            {:db/id                            #db/id[:db.part/user -100]
-                             :setting/show-standard-templates? true
-                             :setting/view                     "Standard"
-                             :setting/receive-email?           true}]]
-          (d/transact conn tx-user-data))
+      (let [tx-user-data [{:db/id                  #db/id[:db.part/user]
+                           :user/email             (:user/email user)
+                           :user/activated?        true
+                           :user/activation-id     (generate-activation-id)
+                           :user/sign-up-timestamp (Date.)
+                           :user/setting           [#db/id[:db.part/user -100]]}
+                          {:db/id                            #db/id[:db.part/user -100]
+                           :setting/show-standard-templates? true
+                           :setting/view                     "Standard"
+                           :setting/receive-email?           true}]]
+        (d/transact conn tx-user-data)
+        (add-standard-templates-to-user (:user/email user))
         {:status  302
          :headers {"Location" "/activated"}
          :body    ""})
@@ -409,12 +404,18 @@
            (HEAD "/" [] "")
            (GET "/" [] (landing))
            (GET "/signup" [] (signup-page))
-           (POST "/signup" [email password] (add-user! email password))
+           (POST "/signup" [email password] (do
+                                              (update-tx-conn!)
+                                              (update-tx-db!)
+                                              (add-user! email password)))
            (POST "/login" [email password] (do
                                              (update-tx-conn!)
                                              (update-tx-db!)
                                              (jws-login email password)))
-           (GET "/activate/:id" [id] (activate-user! id))
+           (GET "/activate/:id" [id] (do
+                                       (update-tx-conn!)
+                                       (update-tx-db!)
+                                       (activate-user! id)))
            (GET "/activated" [] (str
                                      "Account successfully activated!"
                                      "\n"

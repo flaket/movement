@@ -6,26 +6,26 @@
  ;; acrobatic
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Cartwheel"
+  :movement/unique-name     "Cartwheel"
   :movement/category [#db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user -201]
-  :movement/name     "Handstand Walk"
+  :movement/unique-name     "Handstand Walk"
   :movement/category [#db/id[:db.part/user -4]]
   :movement/easier   [#db/id[:db.part/user -200]]}
 
  {:db/id             #db/id[:db.part/user -200]
-  :movement/name     "Kick to Handstand"
+  :movement/unique-name     "Kick to Handstand"
   :movement/category [#db/id[:db.part/user -4]]
   :movement/harder   [#db/id[:db.part/user -201]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Front Flip"
+  :movement/unique-name     "Front Flip"
   :movement/category [#db/id[:db.part/user -4]
                       #db/id[:db.part/user -3]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Back Flip"
+  :movement/unique-name     "Back Flip"
   :movement/category [#db/id[:db.part/user -4]
                       #db/id[:db.part/user -3]]}
 

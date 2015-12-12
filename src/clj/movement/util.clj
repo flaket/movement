@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/test13")
+#_(def uri "datomic:dev://localhost:4334/testing")
 
 #_(def uri "datomic:ddb://us-east-1/movementsession/test-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
@@ -21,15 +21,6 @@
 
 #_(let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
   (d/transact conn schema-tx))
-
-#_(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
-  (d/transact conn templates-tx))
-
-#_(let [tx-user-data [{:db/id         #db/id[:db.part/user]
-                     :user/email    "admin@movementsession.com"
-                     :user/name     "Admin"
-                     :user/password (hashers/encrypt "pw")}]]
-  (d/transact conn tx-user-data))
 
 #_(let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/acrobatics.edn"))))
       balancing-tx (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
@@ -66,6 +57,15 @@
     (d/transact conn throwing-catching-tx)
     (d/transact conn walking-tx))
 
+#_(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
+    (d/transact conn templates-tx))
+
+#_(let [tx-user-data [{:db/id         #db/id[:db.part/user]
+                       :user/email    "admin@movementsession.com"
+                       :user/name     "Admin"
+                       :user/password (hashers/encrypt "pw")}]]
+    (d/transact conn tx-user-data))
+
 ;; Get the database value.
 #_(def db (d/db conn))
 
@@ -95,7 +95,7 @@
         x (d/q '[:find ?e
                  :in $ ?name
                  :where
-                 [?e :movement/name ?name]]
+                 [?e :movement/unique-name ?name]]
                db
                name)]
     (empty? x)))
@@ -103,7 +103,7 @@
 #_(defn find-no-image-movements []
   (let [movements (flatten (seq (d/q '[:find ?name
                                        :where
-                                       [_ :movement/name ?name]]
+                                       [_ :movement/unique-name ?name]]
                                      db)))
         no-image-movements (filter #(has-no-image? %) movements)]
     {:#                  (count no-image-movements)
@@ -119,6 +119,20 @@
      :no-data-images  (vec no-data-images)}))
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
+#_(count (d/q '[:find ?name
+                :where
+                [_ :movement/unique-name ?name]]
+              db))
+
+#_(d/q '[:find ?t
+         :in $ ?email
+         :where
+         [?u :user/email ?email]
+         [?u :user/template ?t]]
+       db
+       "admin@movementsession.com")
+
+#_(d/pull db '[*] 17592186045682)
 
 #_(d/pull db '[*] 17592186045682)
 

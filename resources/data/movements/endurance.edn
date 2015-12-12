@@ -7,11 +7,11 @@
  {:db/id #db/id[:db.part/user -1] :category/name "Endurance"}
  {:db/id #db/id[:db.part/user -2] :category/name "Jump Rope"}
  {:db/id #db/id[:db.part/user -3] :category/name "Running"}
-  {:db/id #db/id[:db.part/user -4] :category/name "Jumping"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Jumping"}
 
 
 {:db/id              #db/id[:db.part/user -99]
-  :movement/name      "Jump Rope"
+  :movement/unique-name      "Jump Rope"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
                        #db/id[:db.part/user -4]]
@@ -19,7 +19,7 @@
   :movement/harder [#db/id[:db.part/user -101]]}
 
  {:db/id              #db/id[:db.part/user -100]
-  :movement/name      "Single Under"
+  :movement/unique-name      "Single Under"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
                        #db/id[:db.part/user -4]]
@@ -27,7 +27,7 @@
   :movement/harder [#db/id[:db.part/user -101]]}
 
  {:db/id              #db/id[:db.part/user -101]
-  :movement/name      "Double Under"
+  :movement/unique-name      "Double Under"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -2]
                        #db/id[:db.part/user -4]]
@@ -35,13 +35,13 @@
   :movement/easier    [#db/id[:db.part/user -100]]}
 
  {:db/id             #db/id[:db.part/user -200]
-  :movement/name     "Run"
+  :movement/unique-name     "Run"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -3]]
   :movement/harder [#db/id[:db.part/user -201]]}
 
  {:db/id             #db/id[:db.part/user -201]
-  :movement/name     "Sprint"
+  :movement/unique-name     "Sprint"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -3]]
   :movement/easier    [#db/id[:db.part/user -200]]}

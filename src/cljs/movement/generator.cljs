@@ -114,11 +114,8 @@
 
 (defn add-session-handler [session]
   (let [new-parts (mapv #(assoc % :movements (list-to-sorted-map (:movements %)))
-                        (:parts session))
-        new-session (assoc session :parts new-parts)
-        new-session (assoc new-session :comment "")
-        ]
-    (session/put! :movement-session new-session)))
+                        (:parts session))]
+    (session/put! :movement-session (assoc session :parts new-parts :comment ""))))
 
 (defn create-session-from-template [template-name]
   (GET "template"
@@ -172,7 +169,7 @@
 
 (defn movement-component [{:keys [id category distance rep set duration] :as m}
                           {:keys [title]}]
-  (let [name (:movement/name m)
+  (let [name (:movement/unique-name m)
         graphic (image-url name)
         parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{title} (map :title parts)))
@@ -434,7 +431,7 @@
               (reset! finish-button-clicked? false)
               (reset! session-stored-successfully? false))
           [:div.pure-g
-           [:div.pure-u {:style {:color "green"}} "Session stored successfully!"]])
+           [:div.pure-u {:style {:color "green" :font-size 24}} "Session stored successfully!"]])
         [:div.pure-g
          (if @finish-button-clicked?
            [:p.pure-u.pure-u-md-2-5.button.button-secondary

@@ -6,31 +6,31 @@
 
  ;; walking
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Ostrich Walk"
+  :movement/unique-name     "Ostrich Walk"
   :movement/category [#db/id[:db.part/user -2]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Horse Stance Walk"
+  :movement/unique-name     "Horse Stance Walk"
   :movement/category [#db/id[:db.part/user -2]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Split Kneeling Walk"
+  :movement/unique-name      "Split Kneeling Walk"
   :movement/category  [#db/id[:db.part/user -2]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Duck Walk"
+  :movement/unique-name     "Duck Walk"
   :movement/category [#db/id[:db.part/user -2]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Walking Lunge"
+  :movement/unique-name     "Walking Lunge"
   :movement/category [#db/id[:db.part/user -2]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/name     "Hinged Walk"
+  :movement/unique-name     "Hinged Walk"
   :movement/category [#db/id[:db.part/user -2]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/name      "Side Shuffle"
+  :movement/unique-name      "Side Shuffle"
   :movement/category  [#db/id[:db.part/user -2]]}
 
 

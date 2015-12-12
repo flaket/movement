@@ -12,12 +12,10 @@
  {:db/id #db/id[:db.part/user -9] :category/name "Abdominal Strength"}
  {:db/id #db/id[:db.part/user -10] :category/name "Lower Back Strength"}
  {:db/id #db/id[:db.part/user -11] :category/name "Bodyweight"}
-
  {:db/id #db/id[:db.part/user -12] :category/name "Jumping"}
  {:db/id #db/id[:db.part/user -13] :category/name "Crawling"}
  {:db/id #db/id[:db.part/user -14] :category/name "Lifting"}
  {:db/id #db/id[:db.part/user -15] :category/name "Rolling"}
-
  {:db/id #db/id[:db.part/user -16] :category/name "Walking"}
 
  {:db/id #db/id[:db.part/user -1000]
