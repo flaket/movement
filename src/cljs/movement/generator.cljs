@@ -16,7 +16,8 @@
 (defonce m-counter (atom 0))
 
 (defn image-url [name]
-  (str "images/" (str/replace (str/lower-case name) " " "-") ".png"))
+  (when-not (nil? name)
+    (str "images/" (str/replace (str/lower-case name) " " "-") ".png")))
 
 (defn positions
   "Finds the integer positions of the elements in the collection, that matches the predicate."

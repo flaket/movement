@@ -21,13 +21,11 @@
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Front Flip"
-  :movement/category [#db/id[:db.part/user -4]
-                      #db/id[:db.part/user -3]]}
+  :movement/category [#db/id[:db.part/user -4]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Back Flip"
-  :movement/category [#db/id[:db.part/user -4]
-                      #db/id[:db.part/user -3]]}
+  :movement/category [#db/id[:db.part/user -4]]}
 
 
  ]

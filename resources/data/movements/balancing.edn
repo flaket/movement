@@ -1,6 +1,6 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Balance"}
+ {:db/id #db/id[:db.part/user -1] :category/name "Balancing"}
 
  {:db/id #db/id[:db.part/user -5000] :equipment/name "Beam"}
 

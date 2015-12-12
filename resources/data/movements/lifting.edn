@@ -14,6 +14,7 @@
  {:db/id #db/id[:db.part/user -8] :category/name "Grip Strength"}
  {:db/id #db/id[:db.part/user -9] :category/name "Pushing"}
  {:db/id #db/id[:db.part/user -10] :category/name "Leg Strength"}
+ {:db/id #db/id[:db.part/user -11] :category/name "Carrying"}
 
  {:db/id              #db/id[:db.part/user -200]
   :movement/unique-name      "Back Squat"
@@ -103,43 +104,44 @@
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Waist Carry"
-  :movement/category  [#db/id[:db.part/user -7]
-                       #db/id[:db.part/user -1]
-                       #db/id[:db.part/user -5]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -11]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Chest Carry"
-  :movement/category  [#db/id[:db.part/user -7]
-                       #db/id[:db.part/user -1]
-                       #db/id[:db.part/user -5]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -11]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Hand Carry"
-  :movement/category  [#db/id[:db.part/user -7]
-                       #db/id[:db.part/user -1]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -5]
                        #db/id[:db.part/user -8]
-                       #db/id[:db.part/user -5]]
-  :movement/equipment [#db/id[:db.part/user -5000]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/unique-name      "Farmers Walk"
-  :movement/category  [#db/id[:db.part/user -7]
-                       #db/id[:db.part/user -1]
-                       #db/id[:db.part/user -8]
-                       #db/id[:db.part/user -5]]
+                       #db/id[:db.part/user -11]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Shoulder Carry"
-  :movement/category  [#db/id[:db.part/user -7]
-                       #db/id[:db.part/user -1]
-                       #db/id[:db.part/user -5]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -11]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Power Clean"
+  :movement/category  [#db/id[:db.part/user -7]
+                       #db/id[:db.part/user -1]
+                       #db/id[:db.part/user -8]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -10]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/unique-name      "Hang Clean"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
                        #db/id[:db.part/user -8]
@@ -164,11 +166,20 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/unique-name      "Hang Clean"
+  :movement/unique-name      "Clean & Jerk"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]
-                       #db/id[:db.part/user -8]
                        #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -8]
+                       #db/id[:db.part/user -10]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
+  :movement/unique-name      "Snatch"
+  :movement/category  [#db/id[:db.part/user -7]
+                       #db/id[:db.part/user -1]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -8]
                        #db/id[:db.part/user -10]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
