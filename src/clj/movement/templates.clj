@@ -63,13 +63,15 @@
                  {:db/id #db/id[:db.part/user -5001] :movement/unique-name "Back Squat"}
                  {:db/id #db/id[:db.part/user -5002] :movement/unique-name "Wrist Stretches"}
                  {:db/id #db/id[:db.part/user -5003] :movement/unique-name "Dynamic Reach"}
+                 {:db/id #db/id[:db.part/user -5004] :movement/unique-name "Wall Walk"}
+                 {:db/id #db/id[:db.part/user -5005] :movement/unique-name "Straighten Into Line"}
 
                  {:db/id         #db/id[:db.part/user -999]
                   :user/email    user
                   :user/template [#db/id[:db.part/user -101]
                                   ;#db/id[:db.part/user -102]
                                   #db/id[:db.part/user -103]
-                                  ;#db/id[:db.part/user -104]
+                                  #db/id[:db.part/user -104]
                                   ;#db/id[:db.part/user -105]
                                   #db/id[:db.part/user -106]
                                   ;#db/id[:db.part/user -107]
@@ -115,7 +117,7 @@
                   :template/description
                                   "Interval work is excellent endurance training and increases aerobic capacity.
                                   Begin with a 10 minute warmup to increase your body temperature and mobilize your legs.
-                                  Do four interval runs, with three minutes of active rest between intervals."
+                                  Do four interval runs of four minutes each, with three minutes of active rest between the intervals."
                   :template/part  [#db/id[:db.part/user -1031]
                                    #db/id[:db.part/user -1032]]}
                  {:db/id                    #db/id[:db.part/user -1031]
@@ -126,17 +128,51 @@
                   :part/number-of-movements 3}
                  {:db/id              #db/id[:db.part/user -1032]
                   :part/title         "4x4"
-                  ;:part/category      []
+                  :part/category      [#db/id[:db.part/user -36]]
                   :part/specific-movement [#db/id[:db.part/user -5000]]
                   :part/duration      240
                   :part/set           4}
 
 
-                 #_{:db/id          #db/id[:db.part/user -104]
+                 {:db/id          #db/id[:db.part/user -104]
                     :template/title "Learning Handstand"
                     :template/description
-                                    ""
-                    :template/part  [#db/id[:db.part/user]]}
+                                    "Warm up the wrists and shoulders.
+                                    Then practice perfecting your body line,
+                                    supplemented with exercises improving core, shoulder and scapular control.
+                                    Finish off playing around on your hands."
+                    :template/part  [#db/id[:db.part/user -1041]
+                                     #db/id[:db.part/user -1042]
+                                     #db/id[:db.part/user -1043]
+                                     #db/id[:db.part/user -1044]]}
+                 {:db/id              #db/id[:db.part/user -1041]
+                  :part/title         "Wrist and shoulder mobility"
+                  :part/category      [#db/id[:db.part/user -26]]
+                  :part/specific-movement [#db/id[:db.part/user -5002]]
+                  :part/number-of-movements 3
+                  :part/rep      15
+                  :part/set      2}
+                 {:db/id              #db/id[:db.part/user -1042]
+                  :part/title         "Wall walk & Core (5 rounds)"
+                  :part/category      [#db/id[:db.part/user -8]]
+                  :part/specific-movement [#db/id[:db.part/user -5004]]
+                  :part/number-of-movements 1
+                  :part/rep      20
+                  :part/set      5
+                  :part/duration 10}
+                 {:db/id              #db/id[:db.part/user -1043]
+                  :part/title         "Straighten into line & scapula (5 rounds)"
+                  :part/category      [#db/id[:db.part/user -26]]
+                  :part/specific-movement [#db/id[:db.part/user -5005]]
+                  :part/number-of-movements 1
+                  :part/rep      10
+                  :part/set      5
+                  :part/duration 10}
+                 {:db/id              #db/id[:db.part/user -1044]
+                  :part/title         "Play"
+                  :part/category      [#db/id[:db.part/user -30]
+                                       #db/id[:db.part/user -17]]
+                  :part/number-of-movements 3}
 
 
                  #_{:db/id          #db/id[:db.part/user -105]

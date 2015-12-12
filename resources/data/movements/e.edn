@@ -10,13 +10,13 @@
  ;; Handstand
 
  {:db/id #db/id[:db.part/user -200]
-  :movement/unique-name "Handstand Wall Walk"
+  :movement/unique-name "Wall Walk"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]]
   :movement/harder   [#db/id[:db.part/user -201]]}
 
  {:db/id #db/id[:db.part/user -201]
-  :movement/unique-name "Handstand Straighten Into Line"
+  :movement/unique-name "Straighten Into Line"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]]
   :movement/easier   [#db/id[:db.part/user -200]
