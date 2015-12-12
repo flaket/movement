@@ -58,6 +58,7 @@
                  {:db/id #db/id[:db.part/user -54] :category/name "Throwing"}
                  {:db/id #db/id[:db.part/user -55] :category/name "Walking"}
                  {:db/id #db/id[:db.part/user -56] :category/name "Carrying"}
+                 {:db/id #db/id[:db.part/user -57] :category/name "Lower Body Bodyweight Strength"}
 
                  {:db/id #db/id[:db.part/user -5000] :movement/unique-name "Run"}
                  {:db/id #db/id[:db.part/user -5001] :movement/unique-name "Back Squat"}
@@ -69,7 +70,7 @@
                  {:db/id         #db/id[:db.part/user -999]
                   :user/email    user
                   :user/template [#db/id[:db.part/user -101]
-                                  ;#db/id[:db.part/user -102]
+                                  #db/id[:db.part/user -102]
                                   #db/id[:db.part/user -103]
                                   #db/id[:db.part/user -104]
                                   ;#db/id[:db.part/user -105]
@@ -105,12 +106,48 @@
                   :part/distance            15
                   :part/set                 4}
 
-                 #_{:db/id          #db/id[:db.part/user -102]
+                 {:db/id          #db/id[:db.part/user -102]
                     :template/title "Calisthenics"
                     :template/description
-                                    "Bodyweight movements!"
-                    :template/part  [#db/id[:db.part/user]]}
-
+                                    "Dynamic and static bodyweight strength training.
+                                    Begin the session with a quick general warmup.
+                                    Do each following part either in order or interleave them.
+                                    It can be effective to do dynamic, bent arm movements shortly after a static, straight arm hold.
+                                    Feel free to replace movements and adjust repetitions, sets and duration of holds to suit your skill level."
+                    :template/part  [#db/id[:db.part/user -1021]
+                                     #db/id[:db.part/user -1022]
+                                     #db/id[:db.part/user -1023]
+                                     #db/id[:db.part/user -1024]
+                                     #db/id[:db.part/user -1025]]}
+                 {:db/id                    #db/id[:db.part/user -1021]
+                  :part/title               "Warmup"
+                  :part/category            [#db/id[:db.part/user -2]
+                                             #db/id[:db.part/user -13]
+                                             #db/id[:db.part/user -36]]}
+                 {:db/id                    #db/id[:db.part/user -1022]
+                  :part/title               "Straight arm scapular strength"
+                  :part/category            [#db/id[:db.part/user -4]]
+                  :part/number-of-movements 4
+                  :part/duration            10
+                  :part/set                 3}
+                 {:db/id                    #db/id[:db.part/user -1023]
+                  :part/title               "Bent arm strength"
+                  :part/category            [#db/id[:db.part/user -3]]
+                  :part/number-of-movements 4
+                  :part/rep                 5
+                  :part/set                 3}
+                 {:db/id                    #db/id[:db.part/user -1024]
+                  :part/title               "Lower body strength"
+                  :part/category            [#db/id[:db.part/user -57]]
+                  :part/number-of-movements 4
+                  :part/rep                 10
+                  :part/set                 3}
+                 {:db/id                    #db/id[:db.part/user -1025]
+                  :part/title               "Core strength"
+                  :part/category            [#db/id[:db.part/user -8]]
+                  :part/number-of-movements 2
+                  :part/rep                 10
+                  :part/set                 2}
 
                  {:db/id          #db/id[:db.part/user -103]
                   :template/title "4x4 Interval Run"
@@ -147,7 +184,8 @@
                                      #db/id[:db.part/user -1044]]}
                  {:db/id              #db/id[:db.part/user -1041]
                   :part/title         "Wrist and shoulder mobility"
-                  :part/category      [#db/id[:db.part/user -26]]
+                  :part/category      [#db/id[:db.part/user -13]
+                                       #db/id[:db.part/user -26]]
                   :part/specific-movement [#db/id[:db.part/user -5002]]
                   :part/number-of-movements 3
                   :part/rep      15
@@ -157,22 +195,18 @@
                   :part/category      [#db/id[:db.part/user -8]]
                   :part/specific-movement [#db/id[:db.part/user -5004]]
                   :part/number-of-movements 1
-                  :part/rep      20
-                  :part/set      5
-                  :part/duration 10}
+                  :part/set      5}
                  {:db/id              #db/id[:db.part/user -1043]
                   :part/title         "Straighten into line & scapula (5 rounds)"
                   :part/category      [#db/id[:db.part/user -26]]
                   :part/specific-movement [#db/id[:db.part/user -5005]]
                   :part/number-of-movements 1
-                  :part/rep      10
-                  :part/set      5
-                  :part/duration 10}
+                  :part/set      5}
                  {:db/id              #db/id[:db.part/user -1044]
                   :part/title         "Play"
                   :part/category      [#db/id[:db.part/user -30]
                                        #db/id[:db.part/user -17]]
-                  :part/number-of-movements 3}
+                  :part/number-of-movements 2}
 
 
                  #_{:db/id          #db/id[:db.part/user -105]

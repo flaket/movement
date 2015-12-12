@@ -152,9 +152,6 @@
     [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
    [:div.pure-u-1-12]])
 
-(defn autocomplete-component []
-  )
-
 (defn slider-component []
   (let [data (atom 0)]
     (fn [position-in-parts id r min max step]
@@ -259,9 +256,11 @@
                                  :class       "edit"
                                  :placeholder "type to find and add movement.."
                                  :size        21
-                                 :auto-focus true
+                                 :auto-focus  true
                                  :on-save     #(when (some #{%} (session/get :all-movements))
-                                                (add-movement-from-search title %))}])]]
+                                                (do
+                                                  (reset! show-search-input? false)
+                                                  (add-movement-from-search title %)))}])]]
          [:div.pure-g {:style {:margin-bottom "30px"
                                :margin-left   "5px"}}
           [:div.pure-u-2-5]

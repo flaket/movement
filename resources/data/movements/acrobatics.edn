@@ -2,6 +2,7 @@
 
  {:db/id #db/id[:db.part/user -4] :category/name "Acrobatics"}
  {:db/id #db/id[:db.part/user -3] :category/name "Jumping"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Lower Body Bodyweight Strength"}
 
  ;; acrobatic
 
@@ -21,11 +22,13 @@
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Front Flip"
-  :movement/category [#db/id[:db.part/user -4]]}
+  :movement/category [#db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Back Flip"
-  :movement/category [#db/id[:db.part/user -4]]}
+  :movement/category [#db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
 
 
  ]
