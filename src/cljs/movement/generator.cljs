@@ -6,6 +6,7 @@
     [reagent.session :as session]
     [reagent.core :refer [atom]]
     [cljs.core.async :as async :refer [timeout <!]]
+    [cljs.reader :as reader]
     [goog.events :as events]
     [clojure.string :as str]
     [movement.util :refer [GET POST get-stored-sessions get-equipment]]
@@ -436,13 +437,11 @@
          (if @finish-button-clicked?
            [:p.pure-u.pure-u-md-2-5.button.button-secondary
             {:on-click #(do
-                         (let [min (session/get-in [:movement-session :time :minutes])
+                         (let [min (reader/read-string (session/get-in [:movement-session :time :minutes]))
                                min (if (nil? min) 0 min)
-                               sec (session/get-in [:movement-session :time :seconds])
-                               sec (if (nil? sec) 0 sec)]
-                           (session/assoc-in! [:movement-session :time]
-                                              (int (+ (* 60 min)
-                                                      sec))))
+                               sec (reader/read-string (session/get-in [:movement-session :time :seconds]))
+                               sec (if (nil? sec) 0 (int sec))]
+                           (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec)))
                          (POST "store-session"
                                {:params        {:session (session/get :movement-session)
                                                 :user    (session/get :user)}

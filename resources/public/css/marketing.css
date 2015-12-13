@@ -215,12 +215,14 @@ a.pure-button-primary {
     }
 
 .ribbon {
-    color: #fffff8;
+    color: #000;
+    background: rgb(37, 42, 58);
 }
 
 /* This is the class used for the footer */
 .footer {
-    color: #fffff8;
+    color: #000;
+    background: rgb(37, 42, 58);
 }
 
 /*

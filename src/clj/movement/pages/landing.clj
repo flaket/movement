@@ -55,51 +55,51 @@
 
 (defn ribbon []
   (html
-    [:div.ribbon.l-box-lrg.pure-g
-     [:div.l-box-lrg.is-center.pure-u-1.pure-u-md-1-2.pure-u-lg-2-5]
-     [:div.pure-u-1.pure-u-md-1-2.pure-u-lg-3-5
-      [:h2.content-head.content-head-ribbon "tempheader"]
-      [:p "temptext"]]]))
+    [:div.content
+     [:div.ribbon
+      [:h2.content-head.is-center "text"]
+      [:div.pure-g
+       [:div.l-box-lrg.pure-u-1.pure-u-md-1-4]
+       [:div.l-box-lrg.pure-u-1.pure-u-md-1-2]
+       [:div.l-box-lrg.pure-u-1.pure-u-md-1-4]]]]))
 
 (defn epilog []
   (html
     [:div.content
      [:h2.content-head.is-center "So, are you ready to start moving more?"]
      [:div.pure-g
-      [:div.l-box-lrg.pure-u-1.pure-u-md-2-5
+      [:div.l-box-lrg.pure-u-1.pure-u-md-1-4]
+      [:div.l-box-lrg.pure-u-1.pure-u-md-1-2
        (signup-form)]
-      [:div.l-box-lrg.pure-u-1.pure-u-md-3-5
-       [:h4 "Contact Us"]
-       [:i.fa.fa-envelope]
-       [:p "support@movementsession.com"]]]]))
+      [:div.l-box-lrg.pure-u-1.pure-u-md-1-4]]]))
 
 (defn footer []
   (html
     [:div.footer.l-box.is-center
      [:div.pure-g
-      [:div.pure-u
+      [:div.pure-u.pure-u-md-1-8
        [:p "Movement Session"]]
-      [:div.pure-u
+      [:div.pure-u.pure-u-md-1-8
        [:a {:title  "Movement Session"
             :href   "/"
             :target ""} "Home"]]
-      [:div.pure-u
+      #_[:div.pure-u.pure-u-md-1-8
        [:a {:title  "About Movement Session"
             :href   "/about"
             :target ""} "About"]]
-      [:div.pure-u
+      [:div.pure-u.pure-u-md-1-8
        [:a {:title  "Read our Blog"
             :href   "/blog"
             :target ""} "Blog"]]
-      [:div.pure-u
+      [:div.pure-u.pure-u-md-1-8
        [:a {:title  "Contact Us"
             :href   "/contact"
             :target ""} "Contact Us"]]
-      [:div.pure-u
+      #_[:div.pure-u.pure-u-md-1-8
        [:a {:title  "Follow MovementSession on Twitter"
             :href   "https://twitter.com/movementsessionapp"
             :target "_blank"} "Tweet"]]
-      [:div.pure-u
+      #_[:div.pure-u.pure-u-md-1-8
        [:a {:title  "Follow MovementSession on Instagram"
             :href   "https://instagram.com/movementsession"
             :target "_blank"} "Instagram"]]]]))

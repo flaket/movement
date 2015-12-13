@@ -73,9 +73,7 @@
                                   #db/id[:db.part/user -102]
                                   #db/id[:db.part/user -103]
                                   #db/id[:db.part/user -104]
-                                  ;#db/id[:db.part/user -105]
                                   #db/id[:db.part/user -106]
-                                  ;#db/id[:db.part/user -107]
                                   #db/id[:db.part/user -109]
                                   ]}
 
@@ -125,25 +123,25 @@
                                              #db/id[:db.part/user -13]
                                              #db/id[:db.part/user -36]]}
                  {:db/id                    #db/id[:db.part/user -1022]
-                  :part/title               "Straight arm scapular strength"
+                  :part/title               "Straight Arm Scapular Strength"
                   :part/category            [#db/id[:db.part/user -4]]
                   :part/number-of-movements 4
                   :part/duration            10
                   :part/set                 3}
                  {:db/id                    #db/id[:db.part/user -1023]
-                  :part/title               "Bent arm strength"
+                  :part/title               "Bent Arm Strength"
                   :part/category            [#db/id[:db.part/user -3]]
                   :part/number-of-movements 4
                   :part/rep                 5
                   :part/set                 3}
                  {:db/id                    #db/id[:db.part/user -1024]
-                  :part/title               "Lower body strength"
+                  :part/title               "Lower Body Strength"
                   :part/category            [#db/id[:db.part/user -57]]
                   :part/number-of-movements 4
                   :part/rep                 10
                   :part/set                 3}
                  {:db/id                    #db/id[:db.part/user -1025]
-                  :part/title               "Core strength"
+                  :part/title               "Core Strength"
                   :part/category            [#db/id[:db.part/user -8]]
                   :part/number-of-movements 2
                   :part/rep                 10
@@ -183,7 +181,7 @@
                                      #db/id[:db.part/user -1043]
                                      #db/id[:db.part/user -1044]]}
                  {:db/id              #db/id[:db.part/user -1041]
-                  :part/title         "Wrist and shoulder mobility"
+                  :part/title         "Wrist and Shoulder Mobility"
                   :part/category      [#db/id[:db.part/user -13]
                                        #db/id[:db.part/user -26]]
                   :part/specific-movement [#db/id[:db.part/user -5002]]
@@ -191,13 +189,13 @@
                   :part/rep      15
                   :part/set      2}
                  {:db/id              #db/id[:db.part/user -1042]
-                  :part/title         "Wall walk & Core (5 rounds)"
+                  :part/title         "Wall Walk & Core (5 rounds)"
                   :part/category      [#db/id[:db.part/user -8]]
                   :part/specific-movement [#db/id[:db.part/user -5004]]
                   :part/number-of-movements 1
                   :part/set      5}
                  {:db/id              #db/id[:db.part/user -1043]
-                  :part/title         "Straighten into line & scapula (5 rounds)"
+                  :part/title         "Straighten Into Line & Scapula (5 rounds)"
                   :part/category      [#db/id[:db.part/user -26]]
                   :part/specific-movement [#db/id[:db.part/user -5005]]
                   :part/number-of-movements 1
@@ -207,13 +205,6 @@
                   :part/category      [#db/id[:db.part/user -30]
                                        #db/id[:db.part/user -17]]
                   :part/number-of-movements 2}
-
-
-                 #_{:db/id          #db/id[:db.part/user -105]
-                    :template/title "Play On Rings"
-                    :template/description
-                                    ""
-                    :template/part  [#db/id[:db.part/user]]}
 
                  {:db/id          #db/id[:db.part/user -106]
                     :template/title "Lifting Weights 5x5"
@@ -233,7 +224,7 @@
                                      #db/id[:db.part/user -1063]
                                      #db/id[:db.part/user -1064]]}
                  {:db/id                    #db/id[:db.part/user -1061]
-                  :part/title               "General warmup"
+                  :part/title               "General Warmup"
                   :part/category            [#db/id[:db.part/user -2]]
                   :part/number-of-movements 4
                   :part/rep                 10
@@ -256,13 +247,6 @@
                   :part/number-of-movements 2
                   :part/rep                 5
                   :part/set                 5}
-
-
-                 #_{:db/id          #db/id[:db.part/user -107]
-                    :template/title "Climbing"
-                    :template/description
-                                    ""
-                    :template/part  [#db/id[:db.part/user]]}
 
                  {:db/id          #db/id[:db.part/user -109]
                   :template/title "Natural Movement"

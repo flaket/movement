@@ -91,11 +91,10 @@
   [:div.content
    [:h2.content-head.is-center "Sign up and be inspired by sessions like this"]
    [:div.pure-g
-    [:div.l-box-lrg.pure-u-1.pure-u-md-2-5
+    [:div.l-box-lrg.pure-u.pure-u-md-1-4]
+    [:div.l-box-lrg.pure-u.pure-u-md-1-2
      (signup-form)]
-    [:div.l-box-lrg.pure-u-1.pure-u-md-3-5
-     [:h4 "Contact Us"]
-     [:p "support@movementsession.com"]]]])
+    [:div.l-box-lrg.pure-u.pure-u-md-1-4]]])
 
 (defn view-session-page [session]
   (html5
@@ -113,7 +112,7 @@
        "/css/side-menu.css"
        "/css/site.css")]
     [:body
-     [:div#layout
+     [:div
       (header-menu)
       [:div.content
        [:div.logged-session

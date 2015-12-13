@@ -28,6 +28,10 @@ body {
   color: #1a1a1a;
 }
 
+input, textarea {
+  max-width:100%
+}
+
 .content {
   margin: 0 auto;
   padding: 1rem 1rem;

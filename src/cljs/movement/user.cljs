@@ -91,7 +91,7 @@
          [:h4.pure-u (str "Logged in as " (session/get :user))]]
         [logged-sessions-component]
         [change-password-component]
-        [unsubscribe-component]]])))
+        #_[unsubscribe-component]]])))
 
 (defn payment-component []
   (let []
