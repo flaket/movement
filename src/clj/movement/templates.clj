@@ -218,7 +218,7 @@
                                     focusing on perfecting the lifting technique.
                                     Then do backsquats for five reps and five sets.
                                     Finally perform two more lifts for five reps and five sets.
-                                    Remember to add which weights was used in the comment section."
+                                    Remember to add which weights were used in the comment section."
                     :template/part  [#db/id[:db.part/user -1061]
                                      #db/id[:db.part/user -1062]
                                      #db/id[:db.part/user -1063]
