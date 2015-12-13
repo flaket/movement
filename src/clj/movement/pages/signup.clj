@@ -37,9 +37,10 @@
        "/css/side-menu.css"
        "/css/site.css")]
     [:body
-     [:div.pure-g
-      [:div.pure-u
-       (signup-form)]]]))
+     [:div.content
+      [:div.pure-g
+       [:div.pure-u
+        (signup-form)]]]]))
 
 #_[div
    [:span.pure-u [:i.fa.fa-envelope-o.fa-fw]]

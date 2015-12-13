@@ -30,6 +30,7 @@
             [movement.db :refer [tx update-tx-conn! update-tx-db!]]
             [movement.pages.landing :refer [landing]]
             [movement.pages.signup :refer [signup-page]]
+            [movement.pages.contact :refer [contact-page]]
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-activation-email]]
             [movement.templates :refer [add-standard-templates-to-user]]))
@@ -405,6 +406,7 @@
            (GET "/" [] (landing))
            (GET "/blog" [] (redirect "/blog/index.html"))
            (GET "/signup" [] (signup-page))
+           (GET "/contact" [] (contact-page))
            (POST "/signup" [email password] (do
                                               (when (nil? (:conn @tx))
                                                 (update-tx-conn!))
