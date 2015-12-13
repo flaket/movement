@@ -406,16 +406,20 @@
            (GET "/blog" [] (redirect "/blog/index.html"))
            (GET "/signup" [] (signup-page))
            (POST "/signup" [email password] (do
-                                              (update-tx-conn!)
+                                              (when (nil? (:conn @tx))
+                                                (update-tx-conn!))
                                               (update-tx-db!)
                                               (add-user! email password)))
            (POST "/login" [email password] (do
-                                             (update-tx-conn!)
+                                             (when (nil? (:conn @tx))
+                                               (update-tx-conn!))
                                              (update-tx-db!)
                                              (jws-login email password)))
            (GET "/activate/:id" [id] (do
-                                       (update-tx-conn!)
-                                       (update-tx-db!)
+                                       (when (nil? (:conn @tx))
+                                         (update-tx-conn!))
+                                       (when (nil? (:db @tx))
+                                         (update-tx-db!))
                                        (activate-user! id)))
            (GET "/activated" [] (str
                                      "Account successfully activated!"

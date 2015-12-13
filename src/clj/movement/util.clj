@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/testing3")
+#_(def uri "datomic:dev://localhost:4334/testing4")
 
 #_(def uri "datomic:ddb://us-east-1/movementsession/production-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
@@ -141,7 +141,13 @@
        db
        "admin@movementsession.com")
 
-#_(d/pull db '[*] 17592186045631)
+#_(d/q '[:find ?u
+       :in $
+       :where
+       [?u :user/email _]]
+     db)
+
+#_(d/pull db '[*] 17592186045809)
 
 #_(d/pull db '[*] 17592186045682)
 
