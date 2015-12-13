@@ -139,7 +139,7 @@
          [?u :user/email ?email]
          [?u :user/template ?t]]
        db
-       "admin@movementsession.com")
+       "maybrittstorseth@gmail.com")
 
 #_(d/q '[:find ?u
        :in $
@@ -147,7 +147,7 @@
        [?u :user/email _]]
      db)
 
-#_(d/pull db '[*] 17592186045809)
+#_(d/pull db '[*] 17592186045875)
 
 #_(d/pull db '[*] 17592186045682)
 
