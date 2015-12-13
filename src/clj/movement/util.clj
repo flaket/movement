@@ -119,10 +119,23 @@
      :no-data-images  (vec no-data-images)}))
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
-#_(count (d/q '[:find ?name
-                :where
-                [_ :movement/unique-name ?name]]
-              db))
+#_(let [template-title-e (ffirst (d/q '[:find (pull ?t [*])
+                                        :in $ ?title
+                                        :where
+                                        [?t :template/title ?title]]
+                                      db
+                                      "pop"))
+        part-es (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part template-title-e)))))
+        parts (vec (for [p part-es]
+                     (let [name (:part/title p)
+                           n (:part/number-of-movements p)
+                           c (flatten (map vals (:part/category p)))
+                           category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
+                           movements []]
+                       {:title      name
+                        :categories category-names
+                        :movements  movements})))]
+    parts)
 
 #_(d/q '[:find ?name
        :in $ ?cat-name

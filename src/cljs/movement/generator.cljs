@@ -167,8 +167,9 @@
                 :on-change #(reset! data (-> % .-target .-value))}]])))
 
 (defn movement-component [{:keys [id category distance rep set duration] :as m}
-                          {:keys [title]}]
-  (let [name (:movement/unique-name m)
+                          title categories]
+  (let [unique-name (:movement/unique-name m)
+        name (if (nil? unique-name) (:movement/name m) unique-name)
         graphic (image-url name)
         parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{title} (map :title parts)))
@@ -232,9 +233,9 @@
        (when @duration-clicked?
          [slider-component position-in-parts id :duration 0 1800 10])])))
 
-(defn add-movement-component [title i]
+(defn add-movement-component []
   (let [show-search-input? (atom false)]
-    (fn []
+    (fn [title i]
       [:div.pure-u.movement.add-movement
        [:div.pure-g {:style {:margin-top    "30px"
                              :margin-bottom "30px"
@@ -273,14 +274,14 @@
 
 (defn part-component []
   (let []
-    (fn [{:keys [title movements] :as part} i]
+    (fn [{:keys [title movements categories]} i]
       [:div.part
        [:h2 title]
        [:div.pure-g.movements
         (doall
           (for [m (vals movements)]
-            ^{:key (str m (rand-int 100000))} [movement-component m part]))
-        (when-not (empty? (:categories part))
+            ^{:key (str m (rand-int 100000))} [movement-component m title categories]))
+        (when-not (empty? categories)
           [add-movement-component title i])]])))
 
 (defn header-component []
@@ -435,12 +436,11 @@
         [:div.pure-g
          (if @finish-button-clicked?
            [:p.pure-u.pure-u-md-2-5.button.button-secondary
-            {:on-click #(do
-                         (let [min (reader/read-string (session/get-in [:movement-session :time :minutes]))
-                               min (if (nil? min) 0 min)
-                               sec (reader/read-string (session/get-in [:movement-session :time :seconds]))
-                               sec (if (nil? sec) 0 (int sec))]
-                           (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec)))
+            {:on-click #(let [min (session/get-in [:movement-session :time :minutes])
+                                 min (if (nil? min) 0 (int (reader/read-string min)))
+                                 sec (session/get-in [:movement-session :time :seconds])
+                                 sec (if (nil? sec) 0 (int (reader/read-string sec)))]
+                         (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
                          (POST "store-session"
                                {:params        {:session (session/get :movement-session)
                                                 :user    (session/get :user)}
@@ -460,14 +460,15 @@
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
         (if-let [session (session/get :movement-session)]
-          [:div #_{:style {:background-image (str "url(" (:background session) ")")}}
-           [top-menu-component]
-           [header-component session]
-           (let [parts (:parts session)]
-             (doall
-               (for [i (range (count parts))]
-                 ^{:key i} [part-component (get parts i) i])))
-           [time-component]
-           [comment-component]
-           [finish-session-component]]
+          (let [] (print session)
+                  [:div #_{:style {:background-image (str "url(" (:background session) ")")}}
+                   [top-menu-component]
+                   [header-component session]
+                   (let [parts (:parts session)]
+                     (doall
+                       (for [i (range (count parts))]
+                         ^{:key i} [part-component (get parts i) i])))
+                   [time-component]
+                   [comment-component]
+                   [finish-session-component]])
           [blank-state-component])]])))
