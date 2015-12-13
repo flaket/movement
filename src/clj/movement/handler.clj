@@ -129,11 +129,12 @@
                            n (:part/number-of-movements p)
                            c (flatten (map vals (:part/category p)))
                            category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                           movements (if (zero? n) [] (vec (get-n-movements-from-categories n category-names
-                                                                                           {:rep      (:part/rep p)
-                                                                                            :set      (:part/set p)
-                                                                                            :distance (:part/distance p)
-                                                                                            :duration (:part/duration p)})))]
+                           movements (if (or (nil? n) (zero? n))
+                                       []
+                                       (vec (get-n-movements-from-categories n category-names {:rep      (:part/rep p)
+                                                                                               :set      (:part/set p)
+                                                                                               :distance (:part/distance p)
+                                                                                               :duration (:part/duration p)})))]
                        {:title      name
                         :categories category-names
                         :movements  (if-let [specific-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement p)))]

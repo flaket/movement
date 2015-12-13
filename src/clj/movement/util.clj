@@ -119,23 +119,6 @@
      :no-data-images  (vec no-data-images)}))
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
-#_(let [template-title-e (ffirst (d/q '[:find (pull ?t [*])
-                                        :in $ ?title
-                                        :where
-                                        [?t :template/title ?title]]
-                                      db
-                                      "pop"))
-        part-es (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part template-title-e)))))
-        parts (vec (for [p part-es]
-                     (let [name (:part/title p)
-                           n (:part/number-of-movements p)
-                           c (flatten (map vals (:part/category p)))
-                           category-names (vec (flatten (map vals (map #(d/pull db '[:category/name] %) c))))
-                           movements []]
-                       {:title      name
-                        :categories category-names
-                        :movements  movements})))]
-    parts)
 
 #_(d/q '[:find ?name
        :in $ ?cat-name
@@ -143,8 +126,7 @@
          [?m :movement/unique-name ?name]
          [?m :movement/category ?c]
          [?c :category/name ?cat-name]]
-     db
-       "Ring")
+     db "Ring")
 
 #_(d/q '[:find (pull ?t [*])
          :in $ ?email
@@ -163,7 +145,7 @@
 #_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
 
 
-#_(d/pull db '[*] 17592186045859)
+#_(d/pull db '[*] 17592186045824)
 
 #_(d/pull db '[*] 17592186045682)
 
