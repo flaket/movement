@@ -199,6 +199,7 @@ a.pure-button-primary {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin: 2em 0 1em;
+
 }
 
 /* This is a modifier class used when the content-head is inside a ribbon */
@@ -215,14 +216,14 @@ a.pure-button-primary {
     }
 
 .ribbon {
-    color: #000;
     background: rgb(37, 42, 58);
+    color: #1f8dd6;
 }
 
 /* This is the class used for the footer */
 .footer {
-    color: #000;
     background: rgb(37, 42, 58);
+    color: #1f8dd6;
 }
 
 /*

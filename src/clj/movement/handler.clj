@@ -403,6 +403,7 @@
 (defroutes routes
            (HEAD "/" [] "")
            (GET "/" [] (landing))
+           (GET "/blog" [] (redirect "/blog/index.html"))
            (GET "/signup" [] (signup-page))
            (POST "/signup" [email password] (do
                                               (update-tx-conn!)
