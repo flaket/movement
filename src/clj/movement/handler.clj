@@ -136,14 +136,13 @@
                                                                                             :duration (:part/duration p)})))]
                        {:title      name
                         :categories category-names
-                        :movements  (if-let [regular-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement p)))]
+                        :movements  (if-let [specific-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement p)))]
                                       (let [specific-movements (map #(assoc % :rep (:part/rep p)
                                                                               :set (:part/set p)
                                                                               :distance (:part/distance p)
-                                                                              :duration (:part/duration p)) regular-movements)]
+                                                                              :duration (:part/duration p)) specific-movements)]
                                         (concat specific-movements movements))
                                       movements)})))]
-
     (generate-response {:title       title
                         :description (:template/description title-entity)
                         :background  (:template/background title-entity)

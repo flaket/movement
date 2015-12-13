@@ -130,91 +130,86 @@
                                            (print (str "Caught exception: " e))))}]]
     [:div.pure-u "seconds"]]])
 
-(defn part-creator-component [{:keys [title n categories]} i]
-  (let [showing-categories-list (atom false)
-        r (get-in @template-state [:parts i :rep])
-        s (get-in @template-state [:parts i :set])
-        di (get-in @template-state [:parts i :distance])
-        du (get-in @template-state [:parts i :duration])
-        data {:rep r :set s :distance di :duration du :i i}
-        specific-movements (get-in @template-state [:parts i :specific-movements])
-        n (get-in @template-state [:parts i :n])]
-    [:div {:style {:margin-top "10px"
-                   :border-top "dotted 1px"}}
-     [:div.pure-g
-      [:h2.pure-u [:input {:type        "text"
-                           :placeholder "Part title"
-                           :on-change   #(swap! template-state assoc-in [:parts i :title] (-> % .-target .-value))
-                           :value       (get-in @template-state [:parts i :title])}]]]
+(defn part-creator-component []
+  (let [showing-categories-list (atom false)]
+    (fn [{:keys [title n categories]} i data specific-movements n]
+      [:div {:style {:margin-top "10px"
+                     :border-top "dotted 1px"}}
+       [:div.pure-g
+        [:h2.pure-u [:input {:type        "text"
+                             :placeholder "Part title"
+                             :on-change   #(swap! template-state assoc-in [:parts i :title] (-> % .-target .-value))
+                             :value       (get-in @template-state [:parts i :title])}]]]
 
-     [:div.pure-g.movements
-      (for [m specific-movements]
-        ^{:key (rand-int 10000)} (movement-component data
-                                                     (str m) (str "images/" (str/replace (str/lower-case m) " " "-") ".png") m))]
-     [:div.pure-g.movements
-      (for [i (range n)]
-        ^{:key (rand-int 10000)} (movement-component data "movement name" "images/push-up.png"))]
-     [:div.pure-g
-      [:div.pure-u "Movements generated in this part should be drawn from the following categories: "]]
-     [:div.pure-g
-      (for [c categories]
-        ^{:key (str c (rand-int 1000))} [:div.pure-u
-                                         [:div {:style {:margin-right "5px"}} c [:div {:style    {:cursor 'pointer}
-                                                                                       :on-click #(let [categories (vec (remove #{c} (get-in @template-state [:parts i :categories])))]
-                                                                                                   (swap! template-state assoc-in [:parts i :categories] categories))} [:i.fa.fa-times]]]])]
-     [:div.pure-g
-      (let [id (str "ctags" i)
-            categories-ac-comp (with-meta text-input-component
-                                          {:component-did-mount #(auto-complete-did-mount
-                                                                  (str "#" id)
-                                                                  (vec (session/get :all-categories)))})]
+       [:div.pure-g.movements
+        (for [m specific-movements]
+          ^{:key (rand-int 10000)} (movement-component data
+                                                       (str m) (str "images/" (str/replace (str/lower-case m) " " "-") ".png") m))]
+       [:div.pure-g.movements
+        (for [i (range n)]
+          ^{:key (rand-int 10000)} (movement-component data "movement name" "images/push-up.png"))]
+       [:div.pure-g
+        [:div.pure-u "Movements generated in this part should be drawn from the following categories: "]]
+       [:div.pure-g
+        (for [c categories]
+          ^{:key (str c (rand-int 1000))} [:div.pure-u
+                                           [:div {:style {:margin-right "5px"}} c [:div {:style    {:cursor 'pointer}
+                                                                                         :on-click #(let [categories (vec (remove #{c} (get-in @template-state [:parts i :categories])))]
+                                                                                                     (swap! template-state assoc-in [:parts i :categories] categories))} [:i.fa.fa-times]]]])]
+       [:div.pure-g
+        (let [id (str "ctags" i)
+              categories-ac-comp (with-meta text-input-component
+                                            {:component-did-mount #(auto-complete-did-mount
+                                                                    (str "#" id)
+                                                                    (vec (session/get :all-categories)))})]
+          [:div.pure-u
+           [categories-ac-comp {:id          id
+                                :class       "edit"
+                                :placeholder "type to find and add category.."
+                                :size        30
+                                :on-save     #(when (and (some #{%} (session/get :all-categories))
+                                                         (not (some #{%} (get-in @template-state [:parts i :categories]))))
+                                               (swap! template-state update-in [:parts i :categories] conj %))}]])]
+       [:div.pure-g
+        [:div.button.pure-u {:on-click #(handler-fn (reset! showing-categories-list (not @showing-categories-list)))}
+         (if @showing-categories-list "Hide list of categories" "Show list of categories")]]
+
+       [:div.pure-g
         [:div.pure-u
-         [categories-ac-comp {:id          id
-                              :class       "edit"
-                              :placeholder "type to find and add category.."
-                              :size        30
-                              :on-save     #(when (and (some #{%} (session/get :all-categories))
-                                                       (not (some #{%} (get-in @template-state [:parts i :categories]))))
-                                             (swap! template-state update-in [:parts i :categories] conj %))}]])]
-     [:div.pure-g
-      [:div.button.pure-u {:on-click #(handler-fn (reset! showing-categories-list (not @showing-categories-list)))}
-       (if @showing-categories-list "Hide list of categories" "Show list of categories")]]
+         "This part has " [:span {:style {:color "red" :font-size "24px"}} n]
+         " generated " (if (= n 1) "movement" "movements") " from the above categories"]
+        [:div.button.pure-u
+         {:on-click #(when (> n 0)
+                      (swap! template-state update-in [:parts i :n] dec))} [:i.fa.fa-minus]]
+        [:div.button.pure-u
+         {:on-click #(swap! template-state update-in [:parts i :n] inc)} [:i.fa.fa-plus]]]
 
-     [:div.pure-g
-      [:div.pure-u
-       "This part has " [:span {:style {:color "red" :font-size "24px"}} n]
-       " generated " (if (= n 1) "movement" "movements") " from the above categories"]
-      [:div.button.pure-u
-       {:on-click #(when (> n 0)
-                    (swap! template-state update-in [:parts i :n] dec))} [:i.fa.fa-minus]]
-      [:div.button.pure-u
-       {:on-click #(swap! template-state update-in [:parts i :n] inc)} [:i.fa.fa-plus]]]
+       (when @showing-categories-list
+         (for [c (sort (session/get :all-categories))]
+           ^{:key c} [:div.pure-g
+                      [:div.pure-u {:style    {:cursor     'pointer
+                                               :background (when (some #{c} (get-in @template-state [:parts i :categories]))
+                                                             "yellow")}
+                                    :on-click #(when (not (some #{c} (get-in @template-state [:parts i :categories])))
+                                                (swap! template-state update-in [:parts i :categories] conj c))} c]]))
 
-     (when @showing-categories-list
-       (for [c (sort (session/get :all-categories))]
-         ^{:key c} [:div.pure-g
-                    [:div.pure-u {:style    {:cursor     'pointer
-                                             :background (when (some #{c} (get-in @template-state [:parts i :categories]))
-                                                           "yellow")}
-                                  :on-click #(when (not (some #{c} (get-in @template-state [:parts i :categories])))
-                                              (swap! template-state update-in [:parts i :categories] conj c))} c]]))
-     [:div.pure-g
-      [:label.pure-u "Additionally, the following exercises should always be included:"]]
-     [:div.pure-g
-      [:div.pure-u
-       (let [id (str "mtags" i)
-             movements-ac-comp (with-meta text-input-component
-                                          {:component-did-mount #(auto-complete-did-mount
-                                                                  (str "#" id)
-                                                                  (vec (session/get :all-movements)))})]
-         [movements-ac-comp {:id          id
-                             :class       "edit"
-                             :placeholder "type to find and add movement.."
-                             :size        30
-                             :on-save     #(when (and (some #{%} (session/get :all-movements))
-                                                      (not (some #{%} (get-in @template-state [:parts i :specific-movements]))))
-                                            (swap! template-state update-in [:parts i :specific-movements] conj %))}])]]
-     (rep-set-distance-duration-component i)]))
+       [:div.pure-g
+        [:label.pure-u "Additionally, the following exercises should always be included:"]]
+       [:div.pure-g
+        [:div.pure-u
+         (let [id (str "mtags" i)
+               movements-ac-comp (with-meta text-input-component
+                                            {:component-did-mount #(auto-complete-did-mount
+                                                                    (str "#" id)
+                                                                    (vec (session/get :all-movements)))})]
+           [movements-ac-comp {:id          id
+                               :class       "edit"
+                               :placeholder "type to find and add movement.."
+                               :size        30
+                               :on-save     #(when (and (some #{%} (session/get :all-movements))
+                                                        (not (some #{%} (get-in @template-state [:parts i :specific-movements]))))
+                                              (swap! template-state update-in [:parts i :specific-movements] conj %))}])]]
+       (rep-set-distance-duration-component i)])))
 
 (defn description-component []
   [:div.pure-g
@@ -301,5 +296,13 @@
         (adjust-parts-component)
         (let [parts (:parts @template-state)]
           (for [i (range 0 (count parts))]
-            ^{:key (rand-int 10000)} (part-creator-component (get parts i) i)))
+            ^{:key (rand-int 10000)}
+            (let [r (get-in @template-state [:parts i :rep])
+                  s (get-in @template-state [:parts i :set])
+                  di (get-in @template-state [:parts i :distance])
+                  du (get-in @template-state [:parts i :duration])
+                  data {:rep r :set s :distance di :duration du :i i}
+                  specific-movements (get-in @template-state [:parts i :specific-movements])
+                  n (get-in @template-state [:parts i :n])]
+              [part-creator-component (get parts i) i data specific-movements n])))
         [save-template-component error]]])))

@@ -133,21 +133,24 @@
      db
        "Ring")
 
-#_(d/q '[:find ?t
+#_(d/q '[:find (pull ?t [*])
          :in $ ?email
          :where
          [?u :user/email ?email]
          [?u :user/template ?t]]
        db
-       "maybrittstorseth@gmail.com")
+       "andflak@gmail.com")
 
-#_(d/q '[:find ?u
-       :in $
-       :where
-       [?u :user/email _]]
-     db)
+#_(d/q '[:find (pull ?u [*])
+            :in $
+            :where
+            [?u :user/email _]]
+          db)
 
-#_(d/pull db '[*] 17592186045875)
+#_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
+
+
+#_(d/pull db '[*] 17592186045859)
 
 #_(d/pull db '[*] 17592186045682)
 
