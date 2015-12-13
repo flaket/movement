@@ -286,7 +286,7 @@
 (defn header-component []
   (let [date (js/Date.)
         day (.getDate date)
-        month (.getMonth date)]
+        month (+ 1 (.getMonth date))]
     (fn [{:keys [title description]}]
       [:div
        [:div.pure-g
@@ -294,7 +294,6 @@
         [:h1.pure-u.pure-u-md-3-5 title]]
        [:div.pure-g
         [:p.pure-u.subtitle description]]])))
-
 
 (defn template-component [name]
   [:div.pure-u.button {:on-click #(create-session-from-template name)} name])
