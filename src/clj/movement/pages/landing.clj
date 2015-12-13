@@ -71,7 +71,6 @@
 (defn pricing []
   (html
     [:div.ribbon
-     #_[:h2.content-head.content-head-ribbon.is-center "Pricing"]
      [:div.pure-g.content-head-ribbon
       [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4
        [:h3.content-subhead ""]
@@ -137,6 +136,12 @@
 (defn landing []
   (html5
     [:head
+     [:meta {:http-equiv "cache-control"
+             :content "no-cache"}]
+     [:meta {:http-equiv "expires"
+             :content "0"}]
+     [:meta {:http-equiv "pragma"
+             :content "no-cache"}]
      [:title ""]
      (include-js "http://code.jquery.com/ui/1.11.2/jquery-ui.min.js"
                  "https://code.jquery.com/jquery-1.11.2.min.js")
@@ -147,7 +152,6 @@
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
        "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-
        "/css/normalize.css"
        "/css/animate.min.css"
        "/css/marketing.css"

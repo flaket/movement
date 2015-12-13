@@ -16,6 +16,7 @@
  {:db/id #db/id[:db.part/user -6] :category/name "Hanging"}
  {:db/id #db/id[:db.part/user -7] :category/name "Climbing"}
  {:db/id #db/id[:db.part/user -8] :category/name "Grip Strength"}
+ {:db/id #db/id[:db.part/user -9] :category/name "Ring"}
 
  ;; movements
  {:db/id             #db/id[:db.part/user]
@@ -124,7 +125,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]]}
 
@@ -137,7 +139,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]
                        #db/id[:db.part/user -5003]]}
@@ -151,7 +154,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]]}
 
@@ -164,7 +168,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]]}
 
@@ -177,7 +182,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]]}
 
@@ -190,7 +196,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]]}
 
@@ -203,7 +210,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]]}
 
@@ -216,7 +224,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]]}
 
@@ -226,7 +235,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]]}
 
@@ -236,7 +246,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
@@ -248,7 +259,8 @@
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
@@ -270,7 +282,8 @@
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -8]]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]
                        #db/id[:db.part/user -5002]]}
 
@@ -282,7 +295,8 @@
                        #db/id[:db.part/user -4]
                        #db/id[:db.part/user -5]
                        #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -8]]
+                       #db/id[:db.part/user -8]
+                       #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
@@ -293,7 +307,8 @@
                        #db/id[:db.part/user -4]
                        #db/id[:db.part/user -5]
                        #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -8]]
+                       #db/id[:db.part/user -8]
+                       #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  ]

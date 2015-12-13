@@ -131,7 +131,7 @@
          [?m :movement/category ?c]
          [?c :category/name ?cat-name]]
      db
-       "Weights")
+       "Ring")
 
 #_(d/q '[:find ?t
          :in $ ?email
