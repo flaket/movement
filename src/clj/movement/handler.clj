@@ -181,7 +181,7 @@
   (let [conn (:conn @tx)
         description (if (nil? description) "" description)
         parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
-        user-template-data [{:db/id         #db/id[:db.part/user]
+        user-template-data [{:db/id         #db/id[:db.part/user -99]
                              :user/email    user
                              :user/template [#db/id[:db.part/user -100]]}
                             {:db/id                #db/id[:db.part/user -100]
@@ -265,15 +265,15 @@
   (let [user (:user (:params req))
         template (:template (:params req))]
     (if (nil? user)
-      (generate-response {:message "User email lacking from client data. User not logged in?"} 400)
+      (generate-response "User email lacking from client data. User not logged in?" 400)
       (if (new-unique-template? user (:title template))
         (try
           (transact-template! user template)
           (catch Exception e
-            (generate-response {:message (str "Exception: " e)}))
+            (generate-response (str "Exception: " e)))
           (finally (do (update-tx-db!)
-                       (generate-response {:template template :message "New template stored successfully."}))))
-        (generate-response {:message "You already have a template with this title. Please choose a unique title for your template."} 400)))))
+                       (generate-response "New template stored successfully."))))
+        (generate-response "You already have a template with this title. Please choose a unique title for your template." 400)))))
 
 (defn retrieve-sessions [req]
   (let [db (:db @tx)
