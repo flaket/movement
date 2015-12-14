@@ -278,9 +278,8 @@
       [:div.part
        [:h2 title]
        [:div.pure-g.movements
-        (doall
-          (for [m (vals movements)]
-            ^{:key (str m (rand-int 100000))} [movement-component m title categories]))
+        (for [m (vals movements)]
+          ^{:key (str m (rand-int 100000))} [movement-component m title categories])
         (when-not (empty? categories)
           [add-movement-component title i])]])))
 
@@ -460,15 +459,14 @@
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
         (if-let [session (session/get :movement-session)]
-          (let [] (print session)
-                  [:div #_{:style {:background-image (str "url(" (:background session) ")")}}
-                   [top-menu-component]
-                   [header-component session]
-                   (let [parts (:parts session)]
-                     (doall
-                       (for [i (range (count parts))]
-                         ^{:key i} [part-component (get parts i) i])))
-                   [time-component]
-                   [comment-component]
-                   [finish-session-component]])
+          [:div #_{:style {:background-image (str "url(" (:background session) ")")}}
+           [top-menu-component]
+           [header-component session]
+           (let [parts (:parts session)]
+             (doall
+               (for [i (range (count parts))]
+                 ^{:key i} [part-component (get parts i) i])))
+           [time-component]
+           [comment-component]
+           [finish-session-component]]
           [blank-state-component])]])))

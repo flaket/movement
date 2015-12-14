@@ -18,7 +18,7 @@
                  [ring/ring-anti-forgery "1.0.0"]
                  [fogus/ring-edn "0.3.0"]
                  [cljsjs/react "0.13.1-0"]
-                 [reagent "0.5.0"]
+                 [reagent "0.5.1"]
                  [reagent-forms "0.5.5"]
                  [reagent-utils "0.1.4"]
                  [prone "0.8.1"]

@@ -11,7 +11,9 @@
         menu-item-template " Templates"]
     (fn []
       [:div
-       [:a {:class    (str "menu-link " (when (session/get :active?) "active"))
+       [:a {:id "menu-hamburger"
+            :name "menu-hamburger"
+            :class    (str "menu-link " (when (session/get :active?) "active"))
             :on-click  #(session/put! :active? (not (session/get :active?)))}
         [:span]]
        (let [selected (session/get :selected-menu-item)]

@@ -52,6 +52,14 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/valid-subscription?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Does the user have a valid subscription?"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :user/payment
   :db/index              true
   :db/valueType          :db.type/ref

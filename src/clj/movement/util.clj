@@ -119,36 +119,16 @@
      :no-data-images  (vec no-data-images)}))
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
-#_(let [parts [{:title "part1" :categories ["Squat"]}
-               {:title "part2"}]
-      parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
-        user-data [{:db/id         #db/id[:db.part/user -99]
-                    :user/email    "123"
-                    :user/template [#db/id[:db.part/user -100]]}
-                   {:db/id                #db/id[:db.part/user -100]
-                    :template/title       "my title"
-                    :template/part        (vec (for [p parts] (:db/id p)))
-                    :template/description ""}]
-        parts (map #(rename-keys % {:n                  :part/number-of-movements
-                                    :categories         :part/category
-                                    :specific-movements :part/specific-movement
-                                    :title              :part/title
-                                    :rep                :part/rep
-                                    :set                :part/set
-                                    :distance           :part/distance
-                                    :duration           :part/duration}) parts)
-        parts (map #(assoc %
-                     :part/category (vec (for [c (:part/category %)] {:db/id         (d/tempid :db.part/user)
-                                                                      :category/name c}))
-                     :part/specific-movement (vec (for [m (:part/specific-movement %)] {:db/id         (d/tempid :db.part/user)
-                                                                                        :movement/name m}))) parts)
-        part-data (map #(assoc %
-                     :part/category (vec (for [c (:part/category %)] (:db/id c)))
-                     :part/specific-movement (vec (for [m (:part/specific-movement %)] (:db/id m)))) parts)
-        part-data (for [p part-data] (if (empty? (:part/specific-movement p)) (dissoc p :part/specific-movement) p))
-        part-data (for [p part-data] (if (empty? (:part/category p)) (dissoc p :part/category) p))]
-    parts)
 
+#_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
+Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",
+
+
+#_(def db (d/db conn))
+#_(d/pull db '[*] 17592186045872)
+#_(d/transact conn [[:db/retract 17592186045809
+                     :user/template 17592186045872]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045941]])
 
 #_(d/q '[:find ?name
        :in $ ?cat-name
@@ -164,7 +144,7 @@
          [?u :user/email ?email]
          [?u :user/template ?t]]
        db
-       "andflak@gmail.com")
+       "chrhage@gmail.com")
 
 #_(d/q '[:find (pull ?u [*])
             :in $
@@ -174,9 +154,7 @@
 
 #_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
 
-
-#_(d/pull db '[*] 17592186045809)
-
+#_(d/pull db '[*] 17592186045814)
 
 #_(d/q '[:find ?e
        :in $ ?id

@@ -275,9 +275,11 @@
                                        {:params        {:user     (session/get :user)
                                                         :template @template-state}
                                         :handler       (fn [response] (do
+                                                                        (reset! error-atom "")
                                                                         (reset! template-stored-successfully? true)
                                                                         (get-templates)))
-                                        :error-handler (fn [response] (reset! error-atom response))}))))}
+                                        :error-handler (fn [response] (do (print response)
+                                                                          (reset! error-atom response)))}))))}
           "Save Template"]]))))
 
 (defn template-creator-component []
