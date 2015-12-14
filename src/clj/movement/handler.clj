@@ -492,7 +492,7 @@
                     (wrap-params)
                     (wrap-session)
                     (wrap-defaults site-defaults)
-                    #_(wrap-frame-options {:allow-from "http://www.movementsession.com"}))]
+                    (wrap-frame-options {:allow-from "http://www.movementsession.com"}))]
     (if (env :dev?)
       (wrap-reload (wrap-exceptions handler))
       handler)))
