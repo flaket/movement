@@ -6,6 +6,7 @@
   (html5
     [:head
      [:title ""]
+     (include-js "/js/analytics.js")
      (include-css
        "http://yui.yahooapis.com/pure/0.6.0/pure-min.css"
        "http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css"

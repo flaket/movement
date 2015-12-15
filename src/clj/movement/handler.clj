@@ -407,6 +407,7 @@
            (GET "/blog" [] (redirect "/blog/index.html"))
            (GET "/signup" [] (signup-page))
            (GET "/contact" [] (contact-page))
+
            (POST "/signup" [email password] (do
                                               (when (nil? (:conn @tx))
                                                 (update-tx-conn!))
