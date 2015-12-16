@@ -7,7 +7,7 @@
   (html5
     [:head
      [:title ""]
-     (include-js "js/analytics.js")
+     (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"

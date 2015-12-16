@@ -146,11 +146,11 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
        db
        "chrhage@gmail.com")
 
-#_(d/q '[:find (pull ?u [*])
-            :in $
-            :where
-            [?u :user/email _]]
-          db)
+#_(count (d/q '[:find (pull ?u [*])
+                :in $
+                :where
+                [?u :user/email _]]
+              db))
 
 #_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
 

@@ -143,7 +143,7 @@
      [:meta {:http-equiv "pragma"
              :content "no-cache"}]
      [:title ""]
-     (include-js "js/analytics.js")
+     (include-js "analytics.js")
      (include-css
        ;"http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.min.css"
        ;"http://yui.yahooapis.com/pure/0.6.0/pure-min.css"
