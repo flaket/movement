@@ -210,6 +210,7 @@
   :movement/unique-name     "Side Swing Grip Change"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -243,6 +244,7 @@
   :movement/unique-name     "Side Swing Traverse"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -260,9 +262,9 @@
   :movement/unique-name     "Side Swing Power Traverse"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -7]]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
@@ -277,6 +279,7 @@
   :movement/unique-name     "Front Swing Traverse"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
                       #db/id[:db.part/user -7]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
@@ -285,9 +288,9 @@
   :movement/unique-name     "Front Swing Power Traverse"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -7]]
+                      #db/id[:db.part/user -7]
+                      #db/id[:db.part/user -8]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
@@ -420,7 +423,8 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -10]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -9]]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -8]]
   :movement/equipment [#db/id[:db.part/user -5000]]
   :movement/harder [#db/id[:db.part/user -303]]}
 

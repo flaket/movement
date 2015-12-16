@@ -348,8 +348,9 @@
     (fn []
       [:div
        [:div.pure-g
-        [:h3.pure-u.pure-u-md-2-5.button {:on-click pick-random-template} "Random session"]
-        [:h3.pure-u.pure-u-md-2-5.button {:className (when @templates-showing? "button-primary")
+        [:div.pure-u.pure-u-md-1-4]
+        [:div.pure-u-1-2.pure-u-md-1-4.button {:on-click pick-random-template} "Random session"]
+        [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when @templates-showing? "button-primary")
                            :on-click #(handler-fn
                                        (do
                                          (when (nil? (session/get :equipment))
@@ -357,7 +358,8 @@
                                          (when equipment-showing?
                                            (reset! equipment-showing? false))
                                          (reset! templates-showing? (not @templates-showing?))))}
-         "Session from template"]
+         "Template session"]
+        [:div.pure-u.pure-u-md-1-5]
         #_[:h3.pure-u.button {:className (when @equipment-showing? "button-primary")
                            :on-click #(handler-fn
                                        (do
@@ -378,48 +380,60 @@
             (for [e (session/get :equipment)]
               ^{:key e} (equipment-component e))))]])))
 
-(defn comment-component []
-  (let [adding-comment (atom false)]
-    (fn []
-      [:div
-       [:div.pure-g
-        [:div.button.pure-u.pure-u-md-2-5 {:on-click #(handler-fn (reset! adding-comment true))} "Add comments"]]
-       (when @adding-comment
-         [:div.pure-g
-          [:div.pure-u
-           [:textarea {:rows 4
-                       :cols 45
-                       :on-change   #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
-                       :value       (session/get-in [:movement-session :comment])}]]])])))
-
 (defn time-component []
   (let [adding-time (atom false)]
     (fn []
       [:div
        [:div.pure-g
-        [:div.button.pure-u.pure-u-md-2-5 {:on-click #(handler-fn (reset! adding-time true))} "Add time"]]
+        [:div.pure-u.pure-u-md-1-5]
+        [:p.button.pure-u-1-1.pure-u-md-3-5
+         {:on-click #(handler-fn (reset! adding-time true))} [:i.fa.fa-clock-o.fa-2x] "Log time"]
+        [:div.pure-u.pure-u-md-1-5]]
        (when @adding-time
          [:div
           [:div.pure-g
-           [:label.pure-u-1-5 "minutes"]
-           [:label.pure-u-1-5 "seconds"]]
+           [:div.pure-u.pure-u-md-1-3]
+           [:label.pure-u-1-2.pure-u-md-1-6 "minutes"]
+           [:label.pure-u-1-2.pure-u-md-1-6 "seconds"]
+           [:div.pure-u.pure-u-md-1-3]]
           [:div.pure-g
-           [:input.pure-u-1-5 {:type      "number"
-                               :value     (session/get-in [:movement-session :time :minutes])
-                               :min       0
-                               :on-change #(try
-                                            (let [value (-> % .-target .-value)]
-                                              (session/assoc-in! [:movement-session :time :minutes] value))
-                                            (catch js/Error e
-                                              (print (str "Caught exception: " e))))}]
-           [:input.pure-u-1-5 {:type      "number"
+           [:div.pure-u.pure-u-md-1-3]
+           [:input.pure-u-1-2.pure-u-md-1-6 {:type      "number"
+                                        :value     (session/get-in [:movement-session :time :minutes])
+                                        :min       0
+                                        :on-change #(try
+                                                     (let [value (-> % .-target .-value)]
+                                                       (session/assoc-in! [:movement-session :time :minutes] value))
+                                                     (catch js/Error e
+                                                       (print (str "Caught exception: " e))))}]
+           [:input.pure-u-1-2.pure-u-md-1-6 {:type      "number"
                                :value     (session/get-in [:movement-session :time :seconds])
                                :min       0
                                :on-change #(try
                                             (let [value (-> % .-target .-value)]
                                               (session/assoc-in! [:movement-session :time :seconds] value))
                                             (catch js/Error e
-                                              (print (str "Caught exception: " e))))}]]])])))
+                                              (print (str "Caught exception: " e))))}]
+           [:div.pure-u.pure-u-md-1-3]]])])))
+
+(defn comment-component []
+  (let [adding-comment (atom false)]
+    (fn []
+      [:div
+       [:div.pure-g
+        [:div.pure-u.pure-u-md-1-5]
+        [:p.button.pure-u-1-1.pure-u-md-3-5
+         {:on-click #(handler-fn (reset! adding-comment true))} [:i.fa.fa-comment-o.fa-2x] "Add comments"]
+        [:div.pure-u.pure-u-md-1-5]]
+       (when @adding-comment
+         [:div.pure-g
+          [:div.pure-u.pure-u-md-1-5]
+          [:div.pure-u.pure-u-md-3-5
+           [:textarea {:rows 4
+                       :cols 80
+                       :on-change   #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
+                       :value       (session/get-in [:movement-session :comment])}]]
+          [:div.pure-u.pure-u-md-1-5]])])))
 
 (defn finish-session-component []
   (let [finish-button-clicked? (atom false)
@@ -432,13 +446,14 @@
               (reset! session-stored-successfully? false))
           [:div.pure-g
            [:div.pure-u {:style {:color "green" :font-size 24}} "Session stored successfully!"]])
-        [:div.pure-g
-         (if @finish-button-clicked?
-           [:p.pure-u.pure-u-md-2-5.button.button-secondary
+        (if @finish-button-clicked?
+          [:div.pure-g
+           [:div.pure-u.pure-u-md-1-5]
+           [:p.pure-u-1-1.pure-u-md-3-5.button.button-secondary
             {:on-click #(let [min (session/get-in [:movement-session :time :minutes])
-                                 min (if (nil? min) 0 (int (reader/read-string min)))
-                                 sec (session/get-in [:movement-session :time :seconds])
-                                 sec (if (nil? sec) 0 (int (reader/read-string sec)))]
+                              min (if (nil? min) 0 (int (reader/read-string min)))
+                              sec (session/get-in [:movement-session :time :seconds])
+                              sec (if (nil? sec) 0 (int (reader/read-string sec)))]
                          (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
                          (POST "store-session"
                                {:params        {:session (session/get :movement-session)
@@ -448,9 +463,13 @@
                                                                 (get-stored-sessions)))
                                 :error-handler (fn [response] (print response))}))}
             "Confirm Finish Session"]
-           [:p.pure-u.pure-u-md-2-5.button.button-primary
+           [:div.pure-u.pure-u-md-1-5]]
+          [:div.pure-g
+           [:div.pure-u.pure-u-md-1-5]
+           [:p.pure-u-1-1.pure-u-md-3-5.button.button-primary
             {:on-click #(handler-fn (reset! finish-button-clicked? true))}
-            "Finish Movement Session"])]))))
+            "Finish Movement Session"]
+           [:div.pure-u.pure-u-md-1-5]])))))
 
 (defn generator-component []
   (let []

@@ -282,15 +282,8 @@
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -6]
                        #db/id[:db.part/user -7]]
-  :movement/easier    [#db/id[:db.part/user -200]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/unique-name      "Wall Rotation"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -7]]
-  :movement/harder    [#db/id[:db.part/user -201]
-                       #db/id[:db.part/user -202]]}
+  :movement/easier    [#db/id[:db.part/user -200]
+                       #db/id[:db.part/user -203]]}
 
  {:db/id              #db/id[:db.part/user -202]
   :movement/unique-name      "Rotate Into High Bridge"
@@ -298,6 +291,14 @@
                        #db/id[:db.part/user -6]
                        #db/id[:db.part/user -7]]
   :movement/easier    [#db/id[:db.part/user -201]]}
+
+ {:db/id              #db/id[:db.part/user -203]
+  :movement/unique-name      "Wall Rotation"
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -7]]
+  :movement/harder    [#db/id[:db.part/user -201]
+                       #db/id[:db.part/user -202]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "High Bridge"

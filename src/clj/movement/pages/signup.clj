@@ -25,10 +25,8 @@
   (html5
     [:head
      [:title ""]
-     (include-js "/js/analytics.js")
+     (include-js "js/analytics.js")
      (include-css
-       ;"http://yui.yahooapis.com/pure/0.6.0/pure-min.css"
-       ;"http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css"
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
        "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
@@ -40,10 +38,28 @@
        "/css/side-menu.css"
        "/css/site.css")]
     [:body
-     [:div.content
+     [:div
       [:div.pure-g
-       [:div.pure-u
-        (signup-form)]]]]))
+       [:div.pure-u-1
+        [:div.home-menu.pure-menu-horizontal
+         [:a.pure-menu-heading {:title  "Home"
+                                :href   "/"
+                                :target ""} "Movement Session"]
+         [:ul.pure-menu-list
+          [:li.pure-menu-item
+           [:a.pure-menu-link {:title  "Blog"
+                               :href   "/blog"
+                               :target ""} "Blog"]]
+          [:li.pure-menu-item
+           [:a.pure-menu-link {:title  "Log in"
+                               :href   "/app"
+                               :target ""} "Log in"]]]]]]]
+     [:div.content.is-center
+      [:div.pure-g
+       [:div.pure-u.pure-u-md-2-5]
+       [:div.pure-u.pure-u-md-1-5
+        (signup-form)]
+       [:div.pure-u.pure-u-md-2-5]]]]))
 
 #_[div
    [:span.pure-u [:i.fa.fa-envelope-o.fa-fw]]
