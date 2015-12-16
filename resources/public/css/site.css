@@ -138,13 +138,13 @@ a:hover {
 .movement {
   width: 200px;
   border-width: 1px;
-  border-color: #ffffff;
+  border-color: #fffff8;
   margin-right: 15px;
   padding: 5px;
   border-style: solid;
   position: relative;
   margin-bottom: 15px;
-  box-shadow: 0px 0px 3px rgba(50,50,50,0.5);
+  box-shadow: 0px 0px 3px rgba(150,150,150,0.4);
   background-color: #f6f5ee;
   border-radius: 15px;
 }

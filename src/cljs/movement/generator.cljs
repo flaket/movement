@@ -178,7 +178,7 @@
         distance-clicked? (atom false)
         duration-clicked? (atom false)]
     (fn []
-      [:div.pure-u.movement {:id (str "m-" id)}
+      [:div.pure-u.movement.is-center {:id (str "m-" id)}
        (buttons-component m title)
        [:h3.pure-g
         [:div.pure-u-1-12]
@@ -284,16 +284,25 @@
           [add-movement-component title i])]])))
 
 (defn header-component []
-  (let [date (js/Date.)
+  (let [months {0 "January" 1 "February" 2 "March" 3 "April" 4 "May" 5 "June"
+                6 "July" 7 "August" 8 "September" 9 "October" 10 "November" 11 "December"}
+        date (js/Date.)
         day (.getDate date)
-        month (+ 1 (.getMonth date))]
+        month (get months (.getMonth date))]
     (fn [{:keys [title description]}]
-      [:div
+      [:div {:style {:margin-top 20}}
        [:div.pure-g
-        [:div.pure-u.pure-u-md-1-5 (str day "/" month)]
-        [:h1.pure-u.pure-u-md-3-5 title]]
+        [:div.pure-u.pure-u-md-2-5]
+        [:div.pure-u-1.pure-u-md-1-5.is-center (str month " " day)]
+        [:div.pure-u.pure-u-md-2-5]]
        [:div.pure-g
-        [:p.pure-u.subtitle description]]])))
+        [:div.pure-u.pure-u-md-1-5]
+        [:h1.pure-u-1.pure-u-md-3-5 title]
+        [:p.pure-u.pure-u-md-1-5]]
+       [:div.pure-g
+        [:div.pure-u.pure-u-md-1-9]
+        [:p.pure-u-1.pure-u-md-7-9.subtitle description]
+        [:div.pure-u.pure-u-md-1-9]]])))
 
 (defn template-component [name]
   [:div.pure-u.button {:on-click #(create-session-from-template name)} name])
@@ -349,7 +358,7 @@
       [:div
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-4]
-        [:div.pure-u-1-2.pure-u-md-1-4.button {:on-click pick-random-template} "Random session"]
+        [:div.pure-u-1-2.pure-u-md-1-4.button.button-primary {:on-click pick-random-template} "Random session"]
         [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when @templates-showing? "button-primary")
                            :on-click #(handler-fn
                                        (do
@@ -386,7 +395,7 @@
       [:div
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5]
-        [:p.button.pure-u-1-1.pure-u-md-3-5
+        [:div.button.pure-u-1-1.pure-u-md-3-5
          {:on-click #(handler-fn (reset! adding-time true))} [:i.fa.fa-clock-o.fa-2x] "Log time"]
         [:div.pure-u.pure-u-md-1-5]]
        (when @adding-time
@@ -422,7 +431,7 @@
       [:div
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5]
-        [:p.button.pure-u-1-1.pure-u-md-3-5
+        [:div.button.pure-u-1-1.pure-u-md-3-5
          {:on-click #(handler-fn (reset! adding-comment true))} [:i.fa.fa-comment-o.fa-2x] "Add comments"]
         [:div.pure-u.pure-u-md-1-5]]
        (when @adding-comment
@@ -449,7 +458,7 @@
         (if @finish-button-clicked?
           [:div.pure-g
            [:div.pure-u.pure-u-md-1-5]
-           [:p.pure-u-1-1.pure-u-md-3-5.button.button-secondary
+           [:div.pure-u-1-1.pure-u-md-3-5.button.button-secondary
             {:on-click #(let [min (session/get-in [:movement-session :time :minutes])
                               min (if (nil? min) 0 (int (reader/read-string min)))
                               sec (session/get-in [:movement-session :time :seconds])
@@ -466,7 +475,7 @@
            [:div.pure-u.pure-u-md-1-5]]
           [:div.pure-g
            [:div.pure-u.pure-u-md-1-5]
-           [:p.pure-u-1-1.pure-u-md-3-5.button.button-primary
+           [:div.pure-u-1-1.pure-u-md-3-5.button.button-primary
             {:on-click #(handler-fn (reset! finish-button-clicked? true))}
             "Finish Movement Session"]
            [:div.pure-u.pure-u-md-1-5]])))))
