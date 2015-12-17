@@ -356,22 +356,22 @@
       (str "<h1>This activation-id is invalid.</h1>"))))
 
 (defn change-password! [req]
-  (let [conn (:conn @tx)
-        email (:username (:params req))
+  (let [email (:username (:params req))
         password (:password (:params req))
         new-password (:new-password (:params req))
         user (find-user email)]
     (if (valid-user? user password)
       (try
-        (let [tx-user-data [{:db/id         #db/id[:db.part/user]
+        (let [conn (:conn @tx)
+              tx-user-data [{:db/id         #db/id[:db.part/user]
                              :user/email    (:user/email user)
                              :user/password (hashers/encrypt new-password)}]]
           (d/transact conn tx-user-data))
         (catch Exception e
-          (generate-response {:message "Error changing password."}))
+          (generate-response (str "Error changing password: " e) 500))
         (finally (do (update-tx-db!)
-                     (generate-response {:message "Password changed successfully!"}))))
-      (generate-response {:message "Wrong old password."}))))
+                     (generate-response "Password changed successfully!"))))
+      (generate-response "Wrong old password." 400))))
 
 (defn show-session [url]
   (let [db (:db @tx)
@@ -438,7 +438,10 @@
                                    (add-template! req)))
            (POST "/change-password" req (if-not (authenticated? req)
                                           (throw-unauthorized)
-                                          (change-password! req)))
+                                          (do
+                                            (when (nil? (:conn @tx))
+                                              (update-tx-conn!))
+                                            (change-password! req))))
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (retrieve-sessions req)))

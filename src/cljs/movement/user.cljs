@@ -4,22 +4,9 @@
            [movement.menu :refer [menu-component]]
            [movement.util :refer [POST text-input]]))
 
-(defn update-password! [pass]
-  (let [old-pass (:old-pass @pass)
-        new-pass (:new-pass @pass)
-        repeat-pass (:repeat-pass @pass)]
-    (POST "/change-password"
-          {:params {:username     (session/get :user)
-                    :password     old-pass
-                    :new-password new-pass}
-           :handler (fn [response]
-                      (swap! pass assoc :info (:message response)))
-           :error-handler (fn [response]
-                            (swap! pass assoc :error (:message response)))})))
-
 (defn change-password-component []
   (let [show-change-password? (atom false)
-        pass (atom {})]
+        pass (atom {:info "" :error ""})]
     (fn []
       [:div
        [:div.pure-g
@@ -43,14 +30,22 @@
                            :value       (:repeat-pass @pass)
                            :on-change   #(swap! pass assoc :repeat-pass (-> % .-target .-value))}]]
           (when-let [info (:info @pass)]
-            [:div.pure-g [:div.pure-u info]])
+            [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
           (when-let [error (:error @pass)]
-            [:div.pure-g [:div.pure-u error]])
+            [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])
           (if (not= (:new-pass @pass) (:repeat-pass @pass))
             [:div.pure-g [:div.pure-u "new password mismatch"]]
             (when (and (not-empty (:old-pass @pass)) (not-empty (:new-pass @pass)))
               [:div.pure-g
-               [:a.pure-u.pure-u-md-2-5.button.button-primary {:on-click #(update-password! pass)} "Change password"]]))])])))
+               [:button.pure-u.pure-u-md-2-5.button.button-primary
+                {:on-click #(POST "/change-password"
+                                  {:params        {:username     (session/get :user)
+                                                   :password     (:old-pass @pass)
+                                                   :new-password (:new-pass pass)}
+                                   :handler       (fn [response]
+                                                    (reset! pass {:info (:response response) :error ""}))
+                                   :error-handler (fn [response]
+                                                    (reset! pass {:error (:response response) :info ""}))})} "Change password"]]))])])))
 
 (defn unsubscribe-component []
   (let [show-unsub-button? (atom false)]
