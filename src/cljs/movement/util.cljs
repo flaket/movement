@@ -10,13 +10,14 @@
      :include-macros true :refer [dispatch!]]
     [dommy.core :as dommy :refer-macros [sel1]]
     [ajax.core :as cljs-ajax :refer [to-interceptor]]
-    [ajax.edn :refer [edn-request-format edn-response-format]]))
+    [ajax.edn :refer [edn-request-format edn-response-format]]
+    [clojure.string :as str]))
 
 (def csrf-token
   (dommy/attr (sel1 :#anti-forgery-token) "value"))
 
 (defn GET [url & [opts]]
-  (let [token (str "Token " (session/get :token))
+  (let [token (str/trim (str "Token " (session/get :token)))
         base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
                    ;:with-credentials true
@@ -26,7 +27,7 @@
     (cljs-ajax/GET url (merge base-opts opts))))
 
 (defn POST [url & [opts]]
-  (let [token (str "Token " (session/get :token))
+  (let [token (str/trim (str "Token " (session/get :token)))
         base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
                    ;:with-credentials true

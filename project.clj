@@ -29,7 +29,7 @@
                  [buddy/buddy-auth "0.6.1"]
                  [buddy/buddy-hashers "0.7.0"]
                  [buddy/buddy-sign "0.7.1"]
-                 [cljs-ajax "0.5.0"]
+                 [cljs-ajax "0.5.2"]
                  [prismatic/dommy "1.1.0"]
                  [hiccup "1.0.5"]
                  [com.draines/postal "1.11.3"]
@@ -39,8 +39,7 @@
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]
             [lein-ring "0.9.1"]
-            [lein-asset-minifier "0.2.2"]
-            [lein-beanstalk "0.2.7"]]
+            [lein-asset-minifier "0.2.2"]]
   :ring {:handler movement.handler/app
          :uberwar-name "movement.war"}
 
@@ -74,7 +73,7 @@
 
                    :dependencies [[ring-mock "0.1.5"]
                                   [ring/ring-devel "1.3.2"]
-                                  [leiningen "2.5.1"]
+                                  [leiningen "2.5.3"]
                                   [figwheel "0.2.5"]
                                   [weasel "0.6.0"]
                                   [com.cemerick/piggieback "0.1.6-SNAPSHOT"]
@@ -106,4 +105,5 @@
                                              {:source-paths ["env/prod/cljs"]
                                               :compiler
                                               {:optimizations :advanced
-                                               :pretty-print false}}}}}})
+                                               :pretty-print false}}}}}}
+  )
