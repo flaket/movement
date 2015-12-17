@@ -19,7 +19,7 @@
   (let [token (str "Token " (session/get :token))
         base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
-                   :with-credentials true
+                   ;:with-credentials true
                    :interceptors    [(to-interceptor {:name    "Token Interceptor"
                                                       :request #(assoc-in % [:headers "authorization"]
                                                                           token)})]}]
@@ -29,7 +29,7 @@
   (let [token (str "Token " (session/get :token))
         base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
-                   :with-credentials true
+                   ;:with-credentials true
                    :interceptors    [(to-interceptor {:name    "Token Interceptor"
                                                       :request #(assoc-in % [:headers "authorization"] token)})]
                    :headers {:x-csrf-token csrf-token}}]

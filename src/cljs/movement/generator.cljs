@@ -12,6 +12,7 @@
     [movement.util :refer [GET POST get-stored-sessions get-equipment]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]
+    [movement.components.login :refer [footer]]
     [movement.state :refer [movement-session handler-fn log-session]]))
 
 (defonce m-counter (atom 0))

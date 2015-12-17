@@ -94,13 +94,13 @@
 
 (defn epilog []
   [:div#epilog.content
-   [:h2.content-head.is-center "Create and discover more workout sessions like this"]
+   [:h2.content-head.is-center "Create and discover more sessions like this"]
    [:div.pure-g
     [:div.pure-u.pure-u-md-2-5]
     [:a.pure-u-1.pure-u-md-1-5.pure-button.pure-button-primary
-     {:title  "Sign Up Free"
-      :href   "/signup"
-      :target ""} "Sign Up Free"]
+     {:title  "Movement Session Learn More"
+      :href   "/"
+      :target ""} "Learn more"]
     [:div.pure-u.pure-u-md-2-5]]])
 
 (defn view-session-page [session]

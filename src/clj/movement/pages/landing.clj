@@ -29,18 +29,17 @@
     [:p.splash-subhead.animated.fadeInDown "Stop searching for and creating static training programs.
       Let Movement Session generate your workout sessions and be inspired to learn new and challenging ways of moving your body."]
     [:p.animated.fadeInDown
-     [:a.pure-button.pure-button-primary {:title  "Sign Up Free"
+     [:a.pure-button.pure-button-primary {:title  "Sign Up"
                                           :href   "/signup"
-                                          :target ""} "Sign Up Free"]]]])
+                                          :target ""} "Sign Up"]]]])
 
 (defn sell []
   [:div.content
    [:h2.content-head.is-center "Movement Session"]
    [:div.pure-g
     [:div.pure-u.pure-u-md-1-2
-     [:p "You want to move more, be healthier and have fun in the process.
-       Movement Session is a workout generator and a logging tool designed to help you with these goals.
-       "]]
+     [:p "Movement Session is a workout generator and a logging tool designed to help you move more,
+     learn new skills, be healthier and have fun in the process."]]
     [:div.pure-u.pure-u-md-1-2
      [:img.pure-u {:src "movement-cards.png" :height "600" :width "600"}]]]])
 
@@ -70,11 +69,11 @@
    [:div.pure-g.content-head-ribbon
     [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-4]
     [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4
-     [:h3.content-subhead "Free for 14 days"]
-     [:p "Try Movement Session for free for two weeks"]]
+     [:h3.content-subhead "21 day free trial"]
+     [:p "Try the full application. You can cancel payment at any time."]]
     [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4
-     [:h3.content-subhead "Monthly subscription"]
-     [:p "$10/month after the first two weeks"]]
+     [:h3.content-subhead "$10 monthly subscription"]
+     [:p ""]]
     [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-4]]
    [:div.pure-g.content-head-ribbon
     [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-4]
@@ -83,7 +82,7 @@
      [:p ""]]
     [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4
      [:h3.content-subhead "30 day guarantee"]
-     [:p "If you for any reason are not satisfied we will refund you within 30 days, no questions asked."]]
+     [:p "If for any reason you're not satisfied we will refund your last monthly payment."]]
     [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-4]]])
 
 (defn epilog []
@@ -92,9 +91,9 @@
    [:div.pure-g
     [:div.pure-u.pure-u-md-2-5]
     [:a.pure-u-1.pure-u-md-1-5.pure-button.pure-button-primary
-     {:title  "Sign Up Free"
+     {:title  "Sign Up"
       :href   "/signup"
-      :target ""} "Sign Up Free"]
+      :target ""} "Sign Up"]
     [:div.pure-u.pure-u-md-2-5]]])
 
 (defn landing []
@@ -109,9 +108,6 @@
      [:title ""]
      (include-js "analytics.js")
      (include-css
-       ;"http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.min.css"
-       ;"http://yui.yahooapis.com/pure/0.6.0/pure-min.css"
-       ;"http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css"
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
        "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
@@ -132,6 +128,5 @@
        (benefits)
        (pricing)
        (epilog)
-       (footer)]
-      ]]))
+       (footer)]]]))
 
