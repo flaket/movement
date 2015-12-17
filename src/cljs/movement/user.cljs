@@ -41,11 +41,12 @@
                 {:on-click #(POST "/change-password"
                                   {:params        {:username     (session/get :user)
                                                    :password     (:old-pass @pass)
-                                                   :new-password (:new-pass pass)}
+                                                   :new-password (:new-pass @pass)}
                                    :handler       (fn [response]
-                                                    (reset! pass {:info (:response response) :error ""}))
+                                                    (reset! pass {:error "" :info response}))
                                    :error-handler (fn [response]
-                                                    (reset! pass {:error (:response response) :info ""}))})} "Change password"]]))])])))
+                                                    (reset! pass {:error (:response response) :info ""}))})}
+                "Change password"]]))])])))
 
 (defn unsubscribe-component []
   (let [show-unsub-button? (atom false)]

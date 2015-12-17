@@ -26,6 +26,7 @@
             [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
             [buddy.hashers :as hashers]
             [hiccup.core :refer [html]]
+            [taoensso.timbre :refer [info error]]
 
             [movement.db :refer [tx update-tx-conn! update-tx-db!]]
             [movement.pages.landing :refer [landing]]
@@ -366,11 +367,12 @@
               tx-user-data [{:db/id         #db/id[:db.part/user]
                              :user/email    (:user/email user)
                              :user/password (hashers/encrypt new-password)}]]
-          (d/transact conn tx-user-data))
+          (d/transact conn tx-user-data)
+          (generate-response "Password changed successfully!"))
         (catch Exception e
-          (generate-response (str "Error changing password: " e) 500))
-        (finally (do (update-tx-db!)
-                     (generate-response "Password changed successfully!"))))
+          (error e "error changing password: ")
+          (generate-response "Error changing password" 500))
+        (finally (update-tx-db!)))
       (generate-response "Wrong old password." 400))))
 
 (defn show-session [url]
@@ -438,10 +440,7 @@
                                    (add-template! req)))
            (POST "/change-password" req (if-not (authenticated? req)
                                           (throw-unauthorized)
-                                          (do
-                                            (when (nil? (:conn @tx))
-                                              (update-tx-conn!))
-                                            (change-password! req))))
+                                          (change-password! req)))
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (retrieve-sessions req)))
