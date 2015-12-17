@@ -487,7 +487,7 @@
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
         (if-let [session (session/get :movement-session)]
-          [:div #_{:style {:background-image (str "url(" (:background session) ")")}}
+          [:div
            [top-menu-component]
            [header-component session]
            (let [parts (:parts session)]

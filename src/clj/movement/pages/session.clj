@@ -2,11 +2,16 @@
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
             [clojure.string :as str]
-            [movement.pages.landing :refer [header footer]]
+            [movement.pages.components :refer [header footer]]
             [movement.pages.signup :refer [signup-form]]))
 
 (defn image-url [name]
   (str "../images/" (str/replace (str/lower-case name) " " "-") ".png"))
+
+(defn time-component [time]
+  (let [minutes (int (/ time 60))
+        seconds (mod time 60)]
+    [:div (str minutes ":" seconds)]))
 
 (defn comment-component [comment]
   [:div comment])
@@ -115,13 +120,13 @@
     [:body
      [:div
       (header)
-      [:div.content
+      [:div.content.is-center
        [:div.logged-session
         (header-component session)
-        [:div (:time session)]
         (doall
           (for [p (:parts session)]
             ^{:key p} (part-component p)))
+        (time-component (:time session))
         (comment-component (:comment session))]]
       (epilog)
       (footer)]]))

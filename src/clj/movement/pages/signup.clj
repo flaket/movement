@@ -2,26 +2,27 @@
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
+            [movement.pages.components :refer [header footer]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
 (defn signup-form []
-  (html
-    [:form.pure-form.pure-form-stacked {:method "POST"
-                                        :action "/signup"}
-     [:fieldset
-      [:input#email {:type     "email"
-                     :name     "email"
-                     :required "required"
-                     :placeholder "Your Email"}]
-      [:input#password {:type     "password"
-                        :name     "password"
-                        :placeholder "Your Password"
-                        :required "required"}]
-      [:input {:type "submit"
-               :value "Sign Up Free"}]
-      (anti-forgery-field)]]))
+  [:form.pure-form.pure-form-stacked
+   {:method "POST"
+    :action "/signup"}
+   [:fieldset
+    [:input#email {:type        "email"
+                   :name        "email"
+                   :required    "required"
+                   :placeholder "Your Email"}]
+    [:input#password {:type        "password"
+                      :name        "password"
+                      :placeholder "Your Password"
+                      :required    "required"}]
+    [:input {:type  "submit"
+             :value "Sign Up Free"}]
+    (anti-forgery-field)]])
 
-(defn signup-page []
+(defn signup-page [& error-message]
   (html5
     [:head
      [:title ""]
@@ -38,28 +39,27 @@
        "/css/side-menu.css"
        "/css/site.css")]
     [:body
-     [:div
-      [:div.pure-g
-       [:div.pure-u-1
-        [:div.home-menu.pure-menu-horizontal
-         [:a.pure-menu-heading {:title  "Home"
-                                :href   "/"
-                                :target ""} "Movement Session"]
-         [:ul.pure-menu-list
-          [:li.pure-menu-item
-           [:a.pure-menu-link {:title  "Blog"
-                               :href   "/blog"
-                               :target ""} "Blog"]]
-          [:li.pure-menu-item
-           [:a.pure-menu-link {:title  "Log in"
-                               :href   "/app"
-                               :target ""} "Log in"]]]]]]]
+     (header)
      [:div.content.is-center
+      (when error-message
+        [:div
+         [:div.pure-g
+          [:div.pure-u.pure-u-md-2-5]
+          [:div.pure-u.pure-u-md-1-5 error-message]
+          [:div.pure-u.pure-u-md-2-5]]
+         [:div.pure-g
+          [:div.pure-u.pure-u-md-2-5]
+          [:a.pure-u.pure-u-md-1-5.pure-button.pure-button-primary
+           {:title  "Log in"
+            :href   "/app"
+            :target ""} "Log in"]
+          [:div.pure-u.pure-u-md-2-5]]])
       [:div.pure-g
        [:div.pure-u.pure-u-md-2-5]
        [:div.pure-u.pure-u-md-1-5
         (signup-form)]
-       [:div.pure-u.pure-u-md-2-5]]]]))
+       [:div.pure-u.pure-u-md-2-5]]]
+     (footer)]))
 
 #_[div
    [:span.pure-u [:i.fa.fa-envelope-o.fa-fw]]

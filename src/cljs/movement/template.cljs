@@ -288,11 +288,8 @@
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
-
-        #_{:style {:background-image (str "url(" (:background @template-state) ")")}}
         (heading-component)
         (error-component error)
-        #_(upload-background-component)
         (title-component)
         (description-component)
         (adjust-parts-component)

@@ -331,9 +331,7 @@
         (send-activation-email email activation-id)
         (update-tx-db!)
         (str "An activation email has been sent to your email address.")))
-    (str "This email is already registered as a user."
-         "\n"
-         "<a href=\"http://movementsession.com/app\">Login here</a>")))
+    (signup-page (str email " is already registered as a user."))))
 
 (defn activate-user! [id]
   (let [conn (:conn @tx)

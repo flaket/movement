@@ -10,15 +10,14 @@
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
             [movement.share :refer [share-component]]
-            [movement.components.login :refer [home login]])
+            [movement.components.login :refer [login-page]])
   (:import goog.History))
 
 (enable-console-print!)
 
 ;; -------------------------
 ;; Client side routes
-(secretary/defroute "/" [] (set-page! #'home))
-#_(secretary/defroute "/login" [] (set-page! #'login))
+(secretary/defroute "/" [] (set-page! #'login-page))
 (secretary/defroute "/generator" [] (set-page! #'generator-component))
 (secretary/defroute "/user" [] (set-page! #'user-component))
 (secretary/defroute "/template" [] (set-page! #'template-creator-component))
@@ -38,7 +37,7 @@
   (secretary/set-config! :prefix "#")
   (if (session/get :user)
     ;todo: if registered more than 14 days and not payed, show payment-component
-    (set-page! #'generator-component))
+    (set-page! #'login-page))
 
   (.initializeTouchEvents js/React true)
   (mount-root))
