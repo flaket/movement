@@ -93,13 +93,15 @@
     [:p.pure-u.subtitle description]]])
 
 (defn epilog []
-  [:div.content
-   [:h2.content-head.is-center "Sign up and be inspired by sessions like this"]
+  [:div#epilog.content
+   [:h2.content-head.is-center "Create and discover more workout sessions like this"]
    [:div.pure-g
-    [:div.l-box-lrg.pure-u.pure-u-md-1-4]
-    [:div.l-box-lrg.pure-u.pure-u-md-1-2
-     (signup-form)]
-    [:div.l-box-lrg.pure-u.pure-u-md-1-4]]])
+    [:div.pure-u.pure-u-md-2-5]
+    [:a.pure-u-1.pure-u-md-1-5.pure-button.pure-button-primary
+     {:title  "Sign Up Free"
+      :href   "/signup"
+      :target ""} "Sign Up Free"]
+    [:div.pure-u.pure-u-md-2-5]]])
 
 (defn view-session-page [session]
   (html5
@@ -121,15 +123,15 @@
      [:div
       (header)
       [:div.content.is-center
-       [:div.logged-session
-        (header-component session)
-        (doall
-          (for [p (:parts session)]
-            ^{:key p} (part-component p)))
-        (time-component (:time session))
-        (comment-component (:comment session))]]
-      (epilog)
-      (footer)]]))
+       (header-component session)
+       (doall
+         (for [p (:parts session)]
+           ^{:key p} (part-component p)))
+       (when-let [time (:time session)]
+         (when (not= 0 time) (time-component time)))
+       (comment-component (:comment session))
+       (epilog)]
+      #_(footer)]]))
 
 (defn view-sub-activated-page [req]
   (html5

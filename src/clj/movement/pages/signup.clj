@@ -60,14 +60,3 @@
         (signup-form)]
        [:div.pure-u.pure-u-md-2-5]]]
      (footer)]))
-
-#_[div
-   [:span.pure-u [:i.fa.fa-envelope-o.fa-fw]]
-   [:input {:type        "email"
-            :name        "email"
-            :placeholder "Your Email"}]
-   [:span.pure-u [:i.fa.fa-key.fa-fw]]
-   [:input {:type        "password"
-            :name        "password"
-            :placeholder "Your Password"}]
-   [:button.pure-button {} "Sign Up Free"]]
