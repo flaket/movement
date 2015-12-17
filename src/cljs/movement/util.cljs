@@ -16,21 +16,20 @@
   (dommy/attr (sel1 :#anti-forgery-token) "value"))
 
 (defn GET [url & [opts]]
-  (let [base-opts {:format          (edn-request-format)
+  (let [token (str "Token " (session/get :token))
+        base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
-                   :with-credentials true
                    :interceptors    [(to-interceptor {:name    "Token Interceptor"
                                                       :request #(assoc-in % [:headers "authorization"]
-                                                                          (str "Token " (session/get :token)))})]}]
+                                                                          token)})]}]
     (cljs-ajax/GET url (merge base-opts opts))))
 
 (defn POST [url & [opts]]
-  (let [base-opts {:format          (edn-request-format)
+  (let [token (str "Token " (session/get :token))
+        base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
-                   :with-credentials true
                    :interceptors    [(to-interceptor {:name    "Token Interceptor"
-                                                      :request #(assoc-in % [:headers "authorization"]
-                                                                          (str "Token " (session/get :token)))})]
+                                                      :request #(assoc-in % [:headers "authorization"] token)})]
                    :headers {:x-csrf-token csrf-token}}]
     (cljs-ajax/POST url (merge base-opts opts))))
 
