@@ -18,6 +18,7 @@
 (defn GET [url & [opts]]
   (let [base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
+                   :with-credentials true
                    :interceptors    [(to-interceptor {:name    "Token Interceptor"
                                                       :request #(assoc-in % [:headers "authorization"]
                                                                           (str "Token " (session/get :token)))})]}]
@@ -26,6 +27,7 @@
 (defn POST [url & [opts]]
   (let [base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
+                   :with-credentials true
                    :interceptors    [(to-interceptor {:name    "Token Interceptor"
                                                       :request #(assoc-in % [:headers "authorization"]
                                                                           (str "Token " (session/get :token)))})]
