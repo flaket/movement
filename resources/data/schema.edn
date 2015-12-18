@@ -72,7 +72,23 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
-  :db/doc                "A user has several templates"
+  :db/doc                "A user may have several templates"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/group
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A user may have several groups"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/plan
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A user may have several plans"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -133,31 +149,6 @@
   :db/doc                "A payment is stored with a timestamp"
   :db.install/_attribute :db.part/db}
 
- ;; group
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :group/title
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db/doc                "Group title"
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :group/description
-  :db/index              true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db/doc                "A group might have a description"
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :group/template
-  :db/index              true
-  :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/many
-  :db/doc                "A group consists of templates"
-  :db.install/_attribute :db.part/db}
-
  ;; template
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :template/title
@@ -189,6 +180,81 @@
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
   :db/doc                "A template consists of parts"
+  :db.install/_attribute :db.part/db}
+
+ ;; group
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :group/title
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Group title"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :group/description
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A group might have a description"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :group/template
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A group consists of templates"
+  :db.install/_attribute :db.part/db}
+
+ ;; plan
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :plan/title
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Plan title"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :plan/description
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A plan might have a description"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :plan/completed?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Is the plan completed?"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :plan/template
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A plan consists of templates"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :plan/schedule
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A plan has a schedule; a list of ints. Length of list defines how many days the plan runs for.
+                          Each int defines how many sessions should be performed that day."
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :schedule/sessions-per-day
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Each day of the plan zero or more sessions should be performed."
   :db.install/_attribute :db.part/db}
 
  ;; part
@@ -404,11 +470,27 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :session/template
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A session may have been generated from a template"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :session/plan
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A session may have been part of a plan"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :session/timestamp
   :db/index              true
   :db/valueType          :db.type/instant
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A session has a timestamp"
+  :db/doc                "A session has a timestamp of when it was finished"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]

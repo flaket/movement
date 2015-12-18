@@ -125,19 +125,19 @@
                  {:db/id                    #db/id[:db.part/user -1022]
                   :part/title               "Straight Arm Scapular Strength"
                   :part/category            [#db/id[:db.part/user -4]]
-                  :part/number-of-movements 4
+                  :part/number-of-movements 3
                   :part/duration            10
                   :part/set                 3}
                  {:db/id                    #db/id[:db.part/user -1023]
                   :part/title               "Bent Arm Strength"
                   :part/category            [#db/id[:db.part/user -3]]
-                  :part/number-of-movements 4
+                  :part/number-of-movements 3
                   :part/rep                 5
                   :part/set                 3}
                  {:db/id                    #db/id[:db.part/user -1024]
                   :part/title               "Lower Body Strength"
                   :part/category            [#db/id[:db.part/user -57]]
-                  :part/number-of-movements 4
+                  :part/number-of-movements 3
                   :part/rep                 10
                   :part/set                 3}
                  {:db/id                    #db/id[:db.part/user -1025]
