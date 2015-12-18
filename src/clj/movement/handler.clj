@@ -53,18 +53,18 @@
 (def jws-auth-backend (jws-backend {:secret secret :options {:alg :hs512}}))
 
 (defn jws-login
-  [email password]
-  (let [user (db/find-user email)]
+  [username password]
+  (let [user (db/find-user username)]
     (if-not (or (nil? (:db/id user)) (false? (:user/activated? user)))
       (let [valid? (valid-user? user password)]
         (if valid?
-          (let [claims {:user (keyword email)
+          (let [claims {:user (keyword username)
                         :exp  (-> 3 hours from-now)}
                 token (jws/sign claims secret {:alg :hs512})]
             (generate-response {:token token
                                 :user (:user/email (dissoc user :user/password :db/id))}))
-          (generate-response {:message "Wrong email/password combination"} 401)))
-      (generate-response {:message "Unknown/non-activated email"} 400))))
+          (generate-response {:message "Incorrect password"} 401)))
+      (generate-response {:message "Unknown user / non-activated email"} 400))))
 
 ;;;;;;;;;;;
 
@@ -151,11 +151,11 @@
                                                 (update-tx-conn!))
                                               (update-tx-db!)
                                               (add-user! email password)))
-           (POST "/login" [email password] (do
+           (POST "/login" [username password] (do
                                              (when (nil? (:conn @tx))
                                                (update-tx-conn!))
                                              (update-tx-db!)
-                                             (jws-login email password)))
+                                             (jws-login username password)))
            (GET "/activate/:id" [id] (do
                                        (when (nil? (:conn @tx))
                                          (update-tx-conn!))

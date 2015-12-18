@@ -22,27 +22,31 @@
                             :target ""} "Log in"]]]]]]])
 
 (defn footer []
-  [:div.footer.l-box.is-center
-   [:div.pure-g
-    [:div.pure-u.pure-u-md-1-4]
-    [:div.pure-u.pure-u-md-1-8
+  [:div#footer.l-box.is-center
+   [:div#footer-links.pure-g
+    [:div.pure-u.pure-u-md-1-3]
+    [:div.pure-u.pure-u-md-1-12
      [:a {:title  "About Movement Session"
           :href   "/about"
           :target ""} "About"]]
-    [:div.pure-u.pure-u-md-1-8
+    [:div.pure-u.pure-u-md-1-12
      [:a {:title  "Contact Us"
           :href   "/contact"
           :target ""} "Contact"]]
-    [:div.pure-u.pure-u-md-1-8
+    [:div.pure-u.pure-u-md-1-12
      [:a {:title  "Read our Blog"
           :href   "/blog"
           :target ""} "Blog"]]
-    [:div.pure-u.pure-u-md-1-8
+    [:div.pure-u.pure-u-md-1-12
      [:a {:title  "Terms and agreement"
           :href   "/terms"
           :target ""} "Terms"]]
-    [:div.pure-u.pure-u-md-1-4]]
-   [:div.pure-g.copyright
-    [:div.pure-u.pure-u-md-1-4]
-    [:div.pure-u.pure-u-md-1-2 [:i.fa.fa-copyright] "2015 Movement Session"]
-    [:div.pure-u.pure-u-md-1-4]]])
+    [:div.pure-u.pure-u-md-1-3]]
+   [:div#footer-logo.pure-g
+    [:div.pure-u.pure-u-md-1-3]
+    [:div.pure-u.pure-u-md-1-3 [:img {:width 75 :height 75 :src ""}]]
+    [:div.pure-u.pure-u-md-1-3]]
+   [:div#footer-copyright.pure-g
+    [:div.pure-u.pure-u-md-1-3]
+    [:div.pure-u.pure-u-md-1-3 [:i.fa.fa-copyright] "2015 Movement Session"]
+    [:div.pure-u.pure-u-md-1-3]]])

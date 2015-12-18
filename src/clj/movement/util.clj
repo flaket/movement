@@ -128,7 +128,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 #_(d/pull db '[*] 17592186045872)
 #_(d/transact conn [[:db/retract 17592186045809
                      :user/template 17592186045872]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045941]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045994]])
 
 #_(d/q '[:find ?name
        :in $ ?cat-name
@@ -142,9 +142,9 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
          :in $ ?email
          :where
          [?u :user/email ?email]
-         [?u :user/template ?t]]
+         [?u :user/session ?t]]
        db
-       "chrhage@gmail.com")
+       "andflak@gmail.com")
 
 #_(count (d/q '[:find (pull ?u [*])
                 :in $

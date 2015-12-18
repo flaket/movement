@@ -37,29 +37,29 @@
   [:div.content
    [:h2.content-head.is-center "Movement Session"]
    [:div.pure-g
-    [:div.pure-u.pure-u-md-1-2
+    [:div.pure-u.pure-u-lg-1-2
      [:p "Movement Session is a workout generator and a logging tool designed to help you move more,
      learn new skills, be healthier and have fun in the process."]]
-    [:div.pure-u.pure-u-md-1-2
-     [:img.pure-u {:src "movement-cards.png" :height "600" :width "600"}]]]])
+    [:div.pure-u.pure-u-lg-1-2
+     [:img.pure-u {:src "movement-cards.png" :height "500" :width "500"}]]]])
 
 (defn benefits []
   [:div.content
    [:h2.content-head.is-center "Benefits"]
    [:div.pure-g
-    [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-2
+    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-2
      [:h3.content-subhead [:i.fa.fa-exclamation] "Learn new movements"]
      [:p "Sessions are generated from a growing database of 300+ movements."]]
-    [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-2
+    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-2
      [:h3.content-subhead [:i.fa.fa-diamond] "Unique sessions"]
      [:p "Create countless unique training sessions, either fully planned,
            randomly generated or a suitable combination of the two."]]]
    [:div.pure-g
-    [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-2
+    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-2
      [:h3.content-subhead [:i.fa.fa-random] "Refresh movements"]
      [:p "Your workout specifies that you perform an seemingly impossible exercise?
        No problem, refresh the movement with an easier variation or a totally different exercise."]]
-    [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-2
+    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-2
      [:h3.content-subhead [:i.fa.fa-share-alt] "Log & Share"]
      [:p "Log your sessions with repetitions, sets, time taken and your own comments.
        View logged sessions later and share them with others."]]]])
@@ -67,23 +67,18 @@
 (defn pricing []
   [:div.ribbon
    [:div.pure-g.content-head-ribbon
-    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-4]
-    [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4
-     [:h3.content-subhead "21 day free trial"]
-     [:p "Try the full application. You can cancel payment at any time."]]
-    [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4
-     [:h3.content-subhead "$10 monthly subscription"]
-     [:p ""]]
-    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-4]]
+    [:div.l-box.pure-u.pure-u-md-1-4]
+    [:div.l-box.pure-u.pure-u-md-1-4
+     [:h3 "21 day free trial, cancel payment at any time"]]
+    [:div.l-box.pure-u.pure-u-md-1-4
+     [:h3 "$10 monthly subscription"]]
+    [:div.l-box.pure-u.pure-u-md-1-4]]
    [:div.pure-g.content-head-ribbon
-    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-4]
-    [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4
-     [:h3.content-subhead ""]
-     [:p ""]]
-    [:div.l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4
-     [:h3.content-subhead "30 day guarantee"]
-     [:p "If for any reason you're not satisfied we will refund your last monthly payment."]]
-    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-4]]])
+    [:div.l-box.pure-u.pure-u-md-1-4]
+    [:div.l-box.pure-u.pure-u-md-1-4
+     [:h3 "30 day refund guarantee"]]
+    [:div.l-box.pure-u.pure-u-md-1-4]
+    [:div.l-box.pure-u.pure-u-md-1-4]]])
 
 (defn epilog []
   [:div#epilog.content
