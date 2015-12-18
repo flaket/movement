@@ -43,33 +43,6 @@
    :headers {"Content-Type" "application/edn"}
    :body    (pr-str data)})
 
-(defn add-session! [req]
-  (let [session (:session (:params req))
-        user (:user (:params req))]
-    (if (nil? user)
-      (generate-response {:message "User email lacking from client data. User not logged in?"
-                          :session session} 400)
-      (try
-        (db/transact-session! user session)
-        (catch Exception e
-          (generate-response {:message (str "Exception: " e)}))
-        (finally (do (update-tx-db!)
-                     (generate-response {:session session :message "Session stored successfully."})))))))
-
-(defn add-template! [req]
-  (let [user (:user (:params req))
-        template (:template (:params req))]
-    (if (nil? user)
-      (generate-response "User email lacking from client data. User not logged in?" 400)
-      (if (db/new-unique-template? user (:title template))
-        (try
-          (db/transact-template! user template)
-          (catch Exception e
-            (generate-response (str "Exception: " e)))
-          (finally (do (update-tx-db!)
-                       (generate-response "New template stored successfully."))))
-        (generate-response "You already have a template with this title. Please choose a unique title for your template." 400)))))
-
 ;;;;;; login ;;;;;;
 
 (defn valid-user? [user password]
@@ -93,8 +66,33 @@
           (generate-response {:message "Wrong email/password combination"} 401)))
       (generate-response {:message "Unknown/non-activated email"} 400))))
 
-
 ;;;;;;;;;;;
+
+(defn add-session! [req]
+  (let [session (:session (:params req))
+        user (:user (:params req))]
+    (if (nil? user)
+      (generate-response {:message "User email lacking from client data" :session session} 400)
+      (try
+        (db/transact-session! user session)
+        (catch Exception e
+          (error e (str "error transacting session: user: " user " session: " session)))
+        (finally (do (update-tx-db!)
+                     (generate-response {:session session :message "Session stored successfully"})))))))
+
+(defn add-template! [req]
+  (let [user (:user (:params req))
+        template (:template (:params req))]
+    (if (nil? user)
+      (generate-response "User email lacking from client data" 400)
+      (if (db/new-unique-template? user (:title template))
+        (try
+          (db/transact-template! user template)
+          (catch Exception e
+            (generate-response (str "Exception: " e)))
+          (finally (do (update-tx-db!)
+                       (generate-response "New template stored successfully."))))
+        (generate-response "You already have a template with this title. Please choose a unique title for your template." 400)))))
 
 (defn add-user! [email password]
   (if (nil? (:db/id (db/find-user email)))
@@ -107,42 +105,24 @@
     (signup-page (str email " is already registered as a user."))))
 
 (defn activate-user! [id]
-  ;todo: refactor db-stuff to correct namespace
-  (let [conn (:conn @tx)
-        db (:db @tx)
-        user (d/pull db '[*] [:user/activation-id id])]
+  (let [user (db/entity-by-lookup-ref :user/activation-id id)]
     (if-not (nil? (:db/id user))
-      (let [tx-user-data [{:db/id                  #db/id[:db.part/user]
-                           :user/email             (:user/email user)
-                           :user/activated?        true
-                           :user/activation-id     (generate-activation-id)
-                           :user/sign-up-timestamp (Date.)
-                           :user/setting           [#db/id[:db.part/user -100]]}
-                          {:db/id                            #db/id[:db.part/user -100]
-                           :setting/show-standard-templates? true
-                           :setting/view                     "Standard"
-                           :setting/receive-email?           true}]]
-        (d/transact conn tx-user-data)
+      (do
+        (db/transact-activated-user! (:user/email user))
         (add-standard-templates-to-user (:user/email user))
         {:status  302
          :headers {"Location" "/activated"}
          :body    ""})
-      (str "<h1>This activation-id is invalid.</h1>"))))
+      "<h1>This activation-id is invalid.</h1>")))
 
 (defn change-password! [req]
-  ;todo: refactor db-stuff to correct namespace
   (let [email (:username (:params req))
         password (:password (:params req))
         new-password (:new-password (:params req))
         user (db/find-user email)]
     (if (valid-user? user password)
       (try
-        (let [conn (:conn @tx)
-              tx-user-data [{:db/id         #db/id[:db.part/user]
-                             :user/email    (:user/email user)
-                             :user/password (hashers/encrypt new-password)}]]
-          (d/transact conn tx-user-data)
-          (generate-response "Password changed successfully!"))
+        (generate-response (db/transact-new-password! user new-password))
         (catch Exception e
           (error e "error changing password: ")
           (generate-response "Error changing password" 500))
@@ -154,6 +134,8 @@
 
 (defn subscription-deactivated! [req]
   (view-sub-activated-page req))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -3,9 +3,11 @@
   (:require [buddy.hashers :as hashers]
             [datomic.api :as d]
             [clojure.string :as str]
-            [clojure.set :refer [rename-keys]]))
+            [clojure.set :refer [rename-keys]]
+            [taoensso.timbre :refer [info error]]
+            [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-#_(def uri "datomic:dev://localhost:4334/testing4")
+#_(def uri "datomic:dev://localhost:4334/testing5")
 (def uri "datomic:ddb://us-east-1/movementsession/production-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
@@ -38,6 +40,11 @@
   "Returns the whole entity of some id."
   [id]
   (d/pull (:db @tx) '[*] id))
+
+(defn entity-by-lookup-ref
+  "Returns the whole entity matching a keyword-value pair."
+  [kw-ref id]
+  (d/pull (:db @tx) '[*] [kw-ref id]))
 
 (defn get-movement-from-equipment [e]
   (let [r (d/q '[:find (pull ?m [*])
@@ -253,3 +260,25 @@
                        :user/activation-id activation-id
                        :user/activated?    false}]]
     (d/transact conn tx-user-data)))
+
+(defn transact-activated-user! [email]
+  (let [conn (:conn @tx)
+        tx-user-data [{:db/id                  #db/id[:db.part/user]
+                       :user/email             email
+                       :user/activated?        true
+                       :user/activation-id     (generate-activation-id)
+                       :user/sign-up-timestamp (Date.)
+                       :user/setting           [#db/id[:db.part/user -100]]}
+                      {:db/id                          #db/id[:db.part/user -100]
+                       :setting/view                     "Standard"
+                       :setting/receive-email?           true}]]
+    (d/transact conn tx-user-data)))
+
+(defn transact-new-password! [email password]
+  (let [conn (:conn @tx)
+        tx-user-data [{:db/id         #db/id[:db.part/user]
+                       :user/email    (:user/email email)
+                       :user/password (hashers/encrypt password)}]]
+    (d/transact conn tx-user-data)
+    "Password changed successfully!"))
+

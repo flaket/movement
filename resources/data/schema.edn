@@ -15,7 +15,8 @@
   :db/index              true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
-  :db/doc                "User name, optional"
+  :db/unique             :db.unique/identity
+  :db/doc                "Optional unique user name, needed for creating new templates, groups and plans."
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -48,7 +49,7 @@
   :db/index              true
   :db/valueType          :db.type/boolean
   :db/cardinality        :db.cardinality/one
-  :db/doc                "Is the user account active?"
+  :db/doc                "Has the user account been activated?"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -57,14 +58,6 @@
   :db/valueType          :db.type/boolean
   :db/cardinality        :db.cardinality/one
   :db/doc                "Does the user have a valid subscription?"
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :user/payment
-  :db/index              true
-  :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/many
-  :db/doc                "A user has several payments"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -108,13 +101,6 @@
   :db.install/_attribute :db.part/db}
 
  ;; setting
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :setting/show-standard-templates?
-  :db/index              true
-  :db/valueType          :db.type/boolean
-  :db/cardinality        :db.cardinality/one
-  :db/doc                "Boolean setting for showing standard templates"
-  :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :setting/view
@@ -129,24 +115,7 @@
   :db/index              true
   :db/valueType          :db.type/boolean
   :db/cardinality        :db.cardinality/one
-  :db/doc                "Boolean setting for receiving email"
-  :db.install/_attribute :db.part/db}
-
- ;; payment
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :payment/amount
-  :db/index              true
-  :db/valueType          :db.type/long
-  :db/cardinality        :db.cardinality/one
-  :db/doc                "A single payment amount"
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :payment/timestamp
-  :db/index              true
-  :db/valueType          :db.type/instant
-  :db/cardinality        :db.cardinality/one
-  :db/doc                "A payment is stored with a timestamp"
+  :db/doc                "The user can opt in and out of receiving email updates"
   :db.install/_attribute :db.part/db}
 
  ;; template
@@ -156,6 +125,22 @@
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "Template title"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :template/created-by
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A template is created by a unique user, :user/name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :template/public?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Is the template publically available?"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -192,6 +177,22 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :group/created-by
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A group is created by a unique user, :user/name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :group/public?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Is the group publically available?"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :group/description
   :db/index              true
   :db/valueType          :db.type/string
@@ -214,6 +215,22 @@
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "Plan title"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :plan/created-by
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A plan is created by a unique user, :user/name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :plan/public?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Is the plan publically available?"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -524,8 +541,6 @@
   :db/cardinality        :db.cardinality/one
   :db/doc                "A session may be stored with the time taken"
   :db.install/_attribute :db.part/db}
-
-
 
  ]
 
