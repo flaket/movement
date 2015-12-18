@@ -127,7 +127,7 @@
           (error e "error changing password: ")
           (generate-response "Error changing password" 500))
         (finally (update-tx-db!)))
-      (generate-response "Wrong old password." 400))))
+      (generate-response "Wrong old password" 400))))
 
 (defn subscription-activated! [req]
   (view-sub-activated-page req))

@@ -289,7 +289,6 @@
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
         (heading-component)
-        (error-component error)
         (title-component)
         (description-component)
         (adjust-parts-component)
@@ -304,4 +303,5 @@
                   specific-movements (get-in @template-state [:parts i :specific-movements])
                   n (get-in @template-state [:parts i :n])]
               [part-creator-component (get parts i) i data specific-movements n])))
+        (error-component error)
         [save-template-component error]]])))
