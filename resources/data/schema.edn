@@ -61,6 +61,14 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/routine
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A user may have several routines"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :user/template
   :db/index              true
   :db/valueType          :db.type/ref
@@ -89,7 +97,7 @@
   :db/index              true
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
-  :db/doc                "A user has logged movement sessions"
+  :db/doc                "A user has logged sessions"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -165,6 +173,47 @@
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
   :db/doc                "A template consists of parts"
+  :db.install/_attribute :db.part/db}
+
+ ;; routine
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :routine/name
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A routine has a name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :routine/created-by
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A routine is created by a unique user, :user/name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :routine/public?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Is the routine publically available?"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :routine/description
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A routine might have a description"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :routine/movement
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A routine consists of movements"
   :db.install/_attribute :db.part/db}
 
  ;; group

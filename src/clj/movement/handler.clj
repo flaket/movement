@@ -29,8 +29,8 @@
             [taoensso.timbre :refer [info error]]
 
             [movement.db :refer [tx update-tx-conn! update-tx-db!] :as db]
-            [movement.pages.landing :refer [landing]]
-            [movement.pages.signup :refer [signup-page]]
+            [movement.pages.landing :refer [landing-page]]
+            [movement.pages.signup :refer [signup-page payment-page]]
             [movement.pages.contact :refer [contact-page]]
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-email send-activation-email]]
@@ -38,7 +38,7 @@
 
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
 
-(defn generate-response [data & [status]]
+(defn response [data & [status]]
   {:status  (or status 200)
    :headers {"Content-Type" "application/edn"}
    :body    (pr-str data)})
@@ -55,16 +55,16 @@
 (defn jws-login
   [username password]
   (let [user (db/find-user username)]
-    (if-not (or (nil? (:db/id user)) (false? (:user/activated? user)))
-      (let [valid? (valid-user? user password)]
-        (if valid?
-          (let [claims {:user (keyword username)
-                        :exp  (-> 3 hours from-now)}
-                token (jws/sign claims secret {:alg :hs512})]
-            (generate-response {:token token
-                                :user (:user/email (dissoc user :user/password :db/id))}))
-          (generate-response {:message "Incorrect password"} 401)))
-      (generate-response {:message "Unknown user / non-activated email"} 400))))
+    (cond
+      (nil? (:db/id user)) (response {:message "Unknown user"} 400)
+      (false? (:user/activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
+      (false? (:user/valid-subscription? user)) (response {:message "This account is not paying for a subscription."} 400)
+      (valid-user? user password) (let [claims {:user (keyword username)
+                                                :exp  (-> 3 hours from-now)}
+                                        token (jws/sign claims secret {:alg :hs512})]
+                                    (response {:token token
+                                               :user  (:user/email (dissoc user :user/password :db/id))}))
+      :else (response {:message "Incorrect password"} 401))))
 
 ;;;;;;;;;;;
 
@@ -72,27 +72,27 @@
   (let [session (:session (:params req))
         user (:user (:params req))]
     (if (nil? user)
-      (generate-response {:message "User email lacking from client data" :session session} 400)
+      (response {:message "User email lacking from client data" :session session} 400)
       (try
         (db/transact-session! user session)
         (catch Exception e
           (error e (str "error transacting session: user: " user " session: " session)))
         (finally (do (update-tx-db!)
-                     (generate-response {:session session :message "Session stored successfully"})))))))
+                     (response {:session session :message "Session stored successfully"})))))))
 
 (defn add-template! [req]
   (let [user (:user (:params req))
         template (:template (:params req))]
     (if (nil? user)
-      (generate-response "User email lacking from client data" 400)
+      (response "User email lacking from client data" 400)
       (if (db/new-unique-template? user (:title template))
         (try
           (db/transact-template! user template)
           (catch Exception e
-            (generate-response (str "Exception: " e)))
+            (response (str "Exception: " e)))
           (finally (do (update-tx-db!)
-                       (generate-response "New template stored successfully."))))
-        (generate-response "You already have a template with this title. Please choose a unique title for your template." 400)))))
+                       (response "New template stored successfully."))))
+        (response "You already have a template with this title. Please choose a unique title for your template." 400)))))
 
 (defn add-user! [email password]
   (if (nil? (:db/id (db/find-user email)))
@@ -111,7 +111,7 @@
         (db/transact-activated-user! (:user/email user))
         (add-standard-templates-to-user (:user/email user))
         {:status  302
-         :headers {"Location" "/activated"}
+         :headers {"Location" (str "/activated/" (:user/email user))}
          :body    ""})
       "<h1>This activation-id is invalid.</h1>")))
 
@@ -122,64 +122,53 @@
         user (db/find-user email)]
     (if (valid-user? user password)
       (try
-        (generate-response (db/transact-new-password! user new-password))
+        (response (db/transact-new-password! user new-password))
         (catch Exception e
           (error e "error changing password: ")
-          (generate-response "Error changing password" 500))
+          (response "Error changing password" 500))
         (finally (update-tx-db!)))
-      (generate-response "Wrong old password" 400))))
+      (response "Wrong old password" 400))))
 
-(defn subscription-activated! [req]
-  (let [subscription-data (:params req)]
-    (send-email "admin@movementsession.com"
-                "testing subscription-activated!"
-                (str req))
-    ))
+(defn subscription-activated! [subscription-data]
+  (let [email (:SubscriptionReferrer subscription-data)]
+    (db/transact-subscription-status! email true)))
 
-(defn subscription-deactivated! [req]
-  (let [subscription-data (:params req)]
-    (send-email "admin@movementsession.com"
-                "testing subscription-deactivated!"
-                (str req))
-    ))
-
-;URL?referrer=username
+(defn subscription-deactivated! [subscription-data]
+  (let [email (:SubscriptionReferrer subscription-data)]
+    (db/transact-subscription-status! email false)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes routes
            (HEAD "/" [] "")
-           (GET "/" [] (landing))
+           (GET "/" [] (landing-page))
            (GET "/blog" [] (redirect "/blog/index.html"))
-           (GET "/signup" [] (signup-page))
            (GET "/contact" [] (contact-page))
-
+           (GET "/signup" [] (signup-page))
            (POST "/signup" [email password] (do
                                               (when (nil? (:conn @tx))
                                                 (update-tx-conn!))
                                               (update-tx-db!)
                                               (add-user! email password)))
-           (POST "/login" [username password] (do
-                                                (when (nil? (:conn @tx))
-                                                  (update-tx-conn!))
-                                                (update-tx-db!)
-                                                (jws-login username password)))
            (GET "/activate/:id" [id] (do
                                        (when (nil? (:conn @tx))
                                          (update-tx-conn!))
                                        (when (nil? (:db @tx))
                                          (update-tx-db!))
                                        (activate-user! id)))
-           (GET "/activated" [] (str
-                                     "Account successfully activated!"
-                                     "\n"
-                                     "<a href=\"http://movementsession.com/app\">Login here</a>"))
+           (GET "/activated/:user" [user] (payment-page user "Account successfully activated!"))
 
-           (GET "/subscription-activated" req (subscription-activated! req))
-           (GET "/subscription-deactivated" req (subscription-deactivated! req))
+           (GET "/subscription-activated" req (subscription-activated! (:params req)))
+           (GET "/subscription-deactivated" req (subscription-deactivated! (:params req)))
 
            (GET "/app" [] (render-file "app.html" {:dev        (env :dev?)
                                                    :csrf-token *anti-forgery-token*}))
+           (POST "/login" [username password] (do
+                                                (when (nil? (:conn @tx))
+                                                  (update-tx-conn!))
+                                                (update-tx-db!)
+                                                (jws-login username password)))
+
            (POST "/store-session" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (add-session! req)))
@@ -191,44 +180,44 @@
                                           (change-password! req)))
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (generate-response (db/retrieve-sessions req))))
+                                  (response (db/retrieve-sessions req))))
            (GET "/session/:url" [url] (view-session-page (db/get-session url)))
            (GET "/template" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (let [template-name (:template-name (:params req))
                                         user (:user (:params req))]
-                                    (generate-response (db/create-session template-name user)))))
+                                    (response (db/create-session template-name user)))))
            (GET "/templates" req (if-not (authenticated? req)
                                    (throw-unauthorized)
-                                   (generate-response (db/all-template-titles (str (:user (:params req)))))))
+                                   (response (db/all-template-titles (str (:user (:params req)))))))
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (generate-response (db/entity-by-movement-name (:name (:params req))))))
+                                  (response (db/entity-by-movement-name (:name (:params req))))))
            (GET "/movement-by-id" req (if-not (authenticated? req)
                                         (throw-unauthorized)
-                                        (generate-response (db/entity-by-id (read-string (:entity (:params req)))))))
+                                        (response (db/entity-by-id (read-string (:entity (:params req)))))))
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
-                                   (generate-response (db/all-movement-names))))
+                                   (response (db/all-movement-names))))
            (GET "/equipment" req (if-not (authenticated? req)
                                    (throw-unauthorized)
-                                   (generate-response (db/all-equipment-names))))
+                                   (response (db/all-equipment-names))))
            (GET "/equipment-session" req (if-not (authenticated? req)
                                            (throw-unauthorized)
                                            (let [equipment (:equipment (:params req))]
-                                             (generate-response (db/create-equipment-session equipment 5)))))
+                                             (response (db/create-equipment-session equipment 5)))))
            (GET "/movement-from-equipment" req (let [e (:equipment (:params req))]
                                                  (if-not (authenticated? req)
                                                    (throw-unauthorized)
-                                                   (generate-response (db/get-movement-from-equipment e)))))
+                                                   (response (db/get-movement-from-equipment e)))))
            (GET "/singlemovement" req
              (let [categories (vec (vals (:categories (:params req))))]
                (if-not (authenticated? req)
                  (throw-unauthorized)
-                 (generate-response (db/get-n-movements-from-categories 1 categories {})))))
+                 (response (db/get-n-movements-from-categories 1 categories {})))))
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
-                                    (generate-response (db/all-category-names))))
+                                    (response (db/all-category-names))))
            (resources "/")
            (not-found "Not Found"))
 

@@ -19,8 +19,45 @@
                       :placeholder "Your Password"
                       :required    "required"}]
     [:input {:type  "submit"
-             :value "Sign Up Free"}]
+             :value "Create User"}]
     (anti-forgery-field)]])
+
+(defn fast-spring-store [ref]
+  [:div.button.button-primary
+   [:a {:href
+        (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
+             "?mode=test"
+             "&referrer="
+             ref)} "Purchase subscription"]])
+
+(defn payment-page [ref message]
+  (html5
+    [:head
+     [:title ""]
+     (include-js "analytics.js")
+     (include-css
+       "https://fonts.googleapis.com/css?family=Roboto"
+       "https://fonts.googleapis.com/css?family=Raleway"
+       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+       "/css/pure-min.css"
+       "/css/grids-responsive-min.css"
+       "/css/normalize.css"
+       "/css/animate.min.css"
+       "/css/marketing.css"
+       "/css/side-menu.css"
+       "/css/site.css")]
+    [:body
+     (header)
+     [:div.content.is-center
+      [:div.pure-g
+       [:div.pure-u.pure-u-md-2-5]
+       [:div.pure-u.pure-u-md-1-5 message]
+       [:div.pure-u.pure-u-md-2-5]]
+      [:div.pure-g
+       [:div.pure-u.pure-u-md-2-5]
+       [:div.pure-u.pure-u-md-1-5 (fast-spring-store ref)]
+       [:div.pure-u.pure-u-md-2-5]]]
+     (footer)]))
 
 (defn signup-page [& error-message]
   (html5

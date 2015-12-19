@@ -268,10 +268,18 @@
                        :user/activated?        true
                        :user/activation-id     (generate-activation-id)
                        :user/sign-up-timestamp (Date.)
+                       :user/valid-subscription? false
                        :user/setting           [#db/id[:db.part/user -100]]}
                       {:db/id                          #db/id[:db.part/user -100]
                        :setting/view                     "Standard"
                        :setting/receive-email?           true}]]
+    (d/transact conn tx-user-data)))
+
+(defn transact-subscription-status! [email value]
+  (let [conn (:conn @tx)
+        tx-user-data [{:db/id              #db/id[:db.part/user]
+                       :user/email         email
+                       :user/valid-subscription? value}]]
     (d/transact conn tx-user-data)))
 
 (defn transact-new-password! [email password]

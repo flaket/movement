@@ -14,16 +14,7 @@
      [:div.home-menu.pure-menu-horizontal
       [:a.pure-menu-heading {:title  "Home"
                              :href   "/"
-                             :target ""} "Movement Session"]
-      [:ul.pure-menu-list
-       [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Blog"
-                            :href   "/blog"
-                            :target ""} "Blog"]]
-       [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Log in"
-                            :href   "/app"
-                            :target ""} "Log in"]]]]]]])
+                             :target ""} "Movement Session"]]]]])
 
 (defn footer []
   [:div#footer.l-box.is-center
@@ -87,7 +78,7 @@
                       (reset! error "Both fields are required.")
                       (do
                         (reset! loading? true)
-                        (POST "login" {:params        {:username    @user
+                        (POST "login" {:params        {:username @user
                                                        :password @password}
                                        :handler       (fn [response] (do
                                                                        (session/put! :token (:token response))
@@ -109,9 +100,10 @@
 (defn login-page []
   [:div
    (header)
-   [:div.content.is-center
-    [:div.pure-g {:style {:margin-top 100}}
+   [:div.content.is-center {:style {:margin-top 50}}
+    [:div.pure-g
      [:div.pure-u.pure-u-md-1-3]
      [:div.pure-u.pure-u-md-1-3 [login]]
-     [:div.pure-u.pure-u-md-1-3]]]
-   (footer)])
+     [:div.pure-u.pure-u-md-1-3]]
+    (footer)]
+   ])

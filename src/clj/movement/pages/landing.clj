@@ -91,7 +91,7 @@
       :target ""} "Sign Up"]
     [:div.pure-u.pure-u-md-2-5]]])
 
-(defn landing []
+(defn landing-page []
   (html5
     [:head
      [:meta {:http-equiv "cache-control"

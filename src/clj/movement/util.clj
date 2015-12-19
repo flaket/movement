@@ -60,10 +60,13 @@
 #_(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
     (d/transact conn templates-tx))
 
-#_(let [tx-user-data [{:db/id         #db/id[:db.part/user]
-                       :user/email    "admin@movementsession.com"
-                       :user/name     "Admin"
-                       :user/password (hashers/encrypt "pw")}]]
+#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
+                       :user/email               "test@test.com"
+                       ;:user/name                "Admin"
+                       ;:user/activated?          true
+                       :user/valid-subscription? true
+                       ;:user/password (hashers/encrypt "pw")
+                       }]]
     (d/transact conn tx-user-data))
 
 ;; Get the database value.
