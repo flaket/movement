@@ -1,9 +1,9 @@
-(ns movement.pages.contact
+(ns movement.pages.about
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
             [movement.pages.components :refer [header footer]]))
 
-(defn contact-page []
+(defn about-page []
   (html5
     [:head
      [:title ""]
@@ -25,8 +25,6 @@
         [:div.pure-u.pure-u-md-1-5]
         [:div.pure-u-1.pure-u-md-3-5
          [:div.pure-g
-          [:h1.pure-u "Contact Us"]]
-         [:div.pure-g
-          [:p.pure-u "support@movementsession.com"]]]
+          [:h1.pure-u "About"]]]
         [:div.pure-u.pure-u-md-1-5]]]
       (footer)]]))

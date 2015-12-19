@@ -9,6 +9,10 @@
  * Most of these are inherited from Base, but I want to change a few.
  */
 
+html {
+  font-size: 18px;
+}
+
 body {
     background-color: #fffff8;
     color: #1a1a1a;
@@ -23,6 +27,7 @@ body {
  * -- LAYOUT STYLES --
  * These are some useful classes which I will need
  */
+
 .l-box {
     padding: 1em;
 }
@@ -40,6 +45,7 @@ body {
  * -- PURE FORM STYLES --
  * Style the form inputs and labels
  */
+
 .pure-form label {
     margin: 1em 0 0;
     font-weight: bold;
@@ -54,25 +60,6 @@ body {
     margin-bottom: 1em;
 }
 
-/*
- * -- PURE BUTTON STYLES --
- * I want my pure-button elements to look a little different
- */
-.pure-button {
-    background-color: #1f8dd6;
-    color: #fffff8;
-    padding: 0.5em 2em;
-    border-radius: 5px;
-}
-
-a.pure-button-primary {
-    background: #1f8dd6;
-    color: #fffff8;
-    padding: 0.5em 2em;
-    margin-top: 10px;
-    border-radius: 15px;
-    font-size: 120%;
-}
 
 
 /*
@@ -81,7 +68,7 @@ a.pure-button-primary {
  */
 
 .home-menu {
-    padding: 1.0em;
+    padding: 1.4em;
     text-align: center;
     box-shadow: 0 1px 1px rgba(0,0,0, 0.10);
 }
@@ -100,7 +87,7 @@ a.pure-button-primary {
 .home-menu .pure-menu-heading {
     color: #1a1a1a;
     font-weight: 400;
-    font-size: 120%;
+    font-size: 140%;
 }
 
 .home-menu .pure-menu-selected a {
@@ -117,8 +104,6 @@ a.pure-button-primary {
     color: #666;
 }
 
-
-
 /*
  * -- SPLASH STYLES --
  * This is the blue top section that appears on the page.
@@ -126,10 +111,7 @@ a.pure-button-primary {
 
 .splash-container {
     background: #2C3546;
-
-
     /* The following styles are required for the "scroll-over" effect */
-
     z-index: 1;
     overflow: hidden;
     width: 100%;
@@ -145,9 +127,8 @@ a.pure-button-primary {
     height: 50%;
     margin: auto;
     position: absolute;
-    top: 100px; left: 0; bottom: 0; right: 0;
+    top: 0; left: 0; bottom: 0; right: 0;
     text-align: center;
-
 }
 
 /* This is the main heading that appears on the blue section */
@@ -164,7 +145,7 @@ a.pure-button-primary {
 /* This is the subheading that appears on the blue section */
 .splash-subhead {
     color: #fffff8;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     opacity: 0.8;
 }
 
@@ -205,7 +186,7 @@ a.pure-button-primary {
     }
 
 .ribbon {
-    background: #9a7171;
+    background: #2C3546;
     color: #fffff8;
 }
 
@@ -234,17 +215,30 @@ a.pure-button-primary {
 }
 
 #footer-logo {
-margin-top: 30px;
+    margin-top: 30px;
 }
 
 #footer-copyright {
-margin-top: 30px;
+    margin-top: 30px;
 }
 
 #epilog {
     margin-bottom: 400px;
 }
 
+  /*
+} * -- PURE BUTTON STYLES --
+ * I want my pure-button elements to look a little different
+ */
+
+a.pure-button-primary {
+    background: #ffa500;
+    color: #fffff8;
+    padding: 0.5em 2em;
+    margin-top: 15px;
+    border-radius: 15px;
+    font-size: 140%;
+}
 
 /*
  * -- TABLET (AND UP) MEDIA QUERIES --

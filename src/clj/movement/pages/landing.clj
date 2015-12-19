@@ -14,9 +14,13 @@
                            :target ""} "Movement Session"]
     [:ul.pure-menu-list
      [:li.pure-menu-item
-      [:a.pure-menu-link {:title  "Blog"
-                          :href   "/blog"
-                          :target ""} "Blog"]]
+      [:a.pure-menu-link {:title  "Tour"
+                          :href   "/tour"
+                          :target ""} "Tour"]]
+     [:li.pure-menu-item
+      [:a.pure-menu-link {:title  "Pricing"
+                          :href   "/pricing"
+                          :target ""} "Pricing"]]
      [:li.pure-menu-item
       [:a.pure-menu-link {:title  "Log in"
                           :href   "/app"
@@ -27,14 +31,14 @@
    [:div.splash
     [:h1.splash-head.animated.fadeInDown "Plan less, move more"]
     [:p.splash-subhead.animated.fadeInDown "Stop searching for and creating static training programs.
-      Let Movement Session generate your workout sessions and be inspired to learn new and challenging ways of moving your body."]
+      Let Movement Session inspire you to learn new and challenging ways of moving your body."]
     [:p.animated.fadeInDown
      [:a.pure-button.pure-button-primary {:title  "Sign Up"
                                           :href   "/signup"
                                           :target ""} "Sign Up"]]]])
 
 (defn sell []
-  [:div.content
+  [:div#sell.content
    [:h2.content-head.is-center "Movement Session"]
    [:div.pure-g
     [:div.pure-u.pure-u-lg-1-2
@@ -47,19 +51,15 @@
   [:div.content
    [:h2.content-head.is-center "Benefits"]
    [:div.pure-g
-    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-2
-     [:h3.content-subhead [:i.fa.fa-exclamation] "Learn new movements"]
-     [:p "Sessions are generated from a growing database of 300+ movements."]]
-    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-2
+    [:div.l-box.pure-u.pure-u-md-1-3
      [:h3.content-subhead [:i.fa.fa-diamond] "Unique sessions"]
-     [:p "Create countless unique training sessions, either fully planned,
-           randomly generated or a suitable combination of the two."]]]
-   [:div.pure-g
-    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-2
+     [:p "Generate countless unique training sessions, either fully planned,
+           randomly generated or a suitable combination of the two."]]
+    [:div.l-box.pure-u.pure-u-md-1-3
      [:h3.content-subhead [:i.fa.fa-random] "Refresh movements"]
      [:p "Your workout specifies that you perform an seemingly impossible exercise?
        No problem, refresh the movement with an easier variation or a totally different exercise."]]
-    [:div.l-box.pure-u.pure-u-md-1-2.pure-u-lg-1-2
+    [:div.l-box.pure-u.pure-u-md-1-3
      [:h3.content-subhead [:i.fa.fa-share-alt] "Log & Share"]
      [:p "Log your sessions with repetitions, sets, time taken and your own comments.
        View logged sessions later and share them with others."]]]])
@@ -69,7 +69,7 @@
    [:div.pure-g.content-head-ribbon
     [:div.l-box.pure-u.pure-u-md-1-4]
     [:div.l-box.pure-u.pure-u-md-1-4
-     [:h3 "21 day free trial, cancel payment at any time"]]
+     [:h3 "30 day free trial, cancel payment at any time"]]
     [:div.l-box.pure-u.pure-u-md-1-4
      [:h3 "$10 monthly subscription"]]
     [:div.l-box.pure-u.pure-u-md-1-4]]
@@ -84,12 +84,18 @@
   [:div#epilog.content
    [:h2.content-head.is-center "So, are you ready to start moving more?"]
    [:div.pure-g
-    [:div.pure-u.pure-u-md-2-5]
-    [:a.pure-u-1.pure-u-md-1-5.pure-button.pure-button-primary
-     {:title  "Sign Up"
-      :href   "/signup"
-      :target ""} "Sign Up"]
-    [:div.pure-u.pure-u-md-2-5]]])
+    [:div.pure-u.pure-u-md-1-4]
+    [:div.pure-u.pure-u-md-1-4
+     [:p [:a.pure-button-primary
+          {:title  "Sign Up"
+           :href   "/pricing"
+           :target ""} "Sign Up"]]]
+    [:div.pure-u.pure-u-md-1-4
+     [:p [:a
+          {:title  "Take a tour"
+           :href   "/tour"
+           :target ""} "Or learn more"]]]
+    [:div.pure-u.pure-u-md-1-4]]])
 
 (defn landing-page []
   (html5

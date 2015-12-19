@@ -36,16 +36,17 @@
      [:h3.pure-g
       [:div.pure-u-1-12]
       [:div.pure-u.title name]]
-
      [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
 
      [:div
       [:div.pure-g
        [:div.pure-u-1-12]
-       [:div.pure-u-5-12 {:className (str (when-not (and rep (< 0 rep)) " no-data"))}
-        [:div.pure-u "Reps"]]
-       [:div.pure-u-5-12 {:className (str (when-not (and set (< 0 set)) " no-data"))}
-        [:div.pure-u "Set"]]
+       (if (and rep (< 0 rep))
+         [:div.pure-u-5-12 "Reps"]
+         [:div.pure-u-5-12.no-data "Reps"])
+       (if (and set (< 0 set))
+         [:div.pure-u-5-12 "Set"]
+         [:div.pure-u-5-12.no-data "Set"])
        [:div.pure-u-1-12]]
       [:div.pure-g
        [:div.pure-u-1-12]
@@ -56,14 +57,15 @@
         (when (and set (< 0 set))
           [:div.rep-set set])]
        [:div.pure-u-1-12]]]
-
      [:div
       [:div.pure-g
        [:div.pure-u-1-12]
-       [:div.pure-u-5-12 {:className (str (when-not (and distance (< 0 distance)) " no-data"))}
-        [:div "Meters"]]
-       [:div.pure-u-5-12 {:className (str (when-not (and duration (< 0 duration)) " no-data"))}
-        [:div "Seconds"]]
+       (if (and distance (< 0 distance))
+         [:div.pure-u-5-12 "Meters"]
+         [:div.pure-u-5-12.no-data "Meters"])
+       (if (and duration (< 0 duration))
+         [:div.pure-u-5-12 "Seconds"]
+         [:div.pure-u-5-12.no-data "Seconds"])
        [:div.pure-u-1-12]]
       [:div.pure-g
        [:div.pure-u-1-12]

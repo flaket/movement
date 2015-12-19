@@ -1,7 +1,5 @@
 (ns movement.handler
-  (:import java.util.Date)
-  (:require [clojure.java.io :as io]
-            [compojure.core :refer [GET POST HEAD ANY defroutes]]
+  (:require [compojure.core :refer [GET POST HEAD ANY defroutes]]
             [compojure.route :refer [not-found resources]]
             [compojure.response :refer [render]]
             [ring.util.response :refer [redirect]]
@@ -16,10 +14,8 @@
             [selmer.parser :refer [render-file]]
             [prone.middleware :refer [wrap-exceptions]]
             [environ.core :refer [env]]
-            [datomic.api :as d]
-            [clojure.string :as str]
             [clojure.set :refer [rename-keys]]
-            [clj-time.core :as time :refer [from-now hours]]
+            [clj-time.core :refer [from-now hours]]
             [buddy.sign.jws :as jws]
             [buddy.auth :refer [authenticated? throw-unauthorized]]
             [buddy.auth.backends.token :refer [jws-backend]]
@@ -32,6 +28,10 @@
             [movement.pages.landing :refer [landing-page]]
             [movement.pages.signup :refer [signup-page payment-page]]
             [movement.pages.contact :refer [contact-page]]
+            [movement.pages.pricing :refer [pricing-page]]
+            [movement.pages.about :refer [about-page]]
+            [movement.pages.terms :refer [terms-page]]
+            [movement.pages.tour :refer [tour-page]]
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-email send-activation-email]]
             [movement.templates :refer [add-standard-templates-to-user]]))
@@ -129,13 +129,9 @@
         (finally (update-tx-db!)))
       (response "Wrong old password" 400))))
 
-(defn subscription-activated! [subscription-data]
+(defn update-subscription-status! [subscription-data value]
   (let [email (:SubscriptionReferrer subscription-data)]
-    (db/transact-subscription-status! email true)))
-
-(defn subscription-deactivated! [subscription-data]
-  (let [email (:SubscriptionReferrer subscription-data)]
-    (db/transact-subscription-status! email false)))
+    (db/transact-subscription-status! email value)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -144,6 +140,10 @@
            (GET "/" [] (landing-page))
            (GET "/blog" [] (redirect "/blog/index.html"))
            (GET "/contact" [] (contact-page))
+           (GET "/terms" [] (terms-page))
+           (GET "/about" [] (about-page))
+           (GET "/tour" [] (tour-page))
+           (GET "/pricing" [] (pricing-page))
            (GET "/signup" [] (signup-page))
            (POST "/signup" [email password] (do
                                               (when (nil? (:conn @tx))
@@ -158,8 +158,8 @@
                                        (activate-user! id)))
            (GET "/activated/:user" [user] (payment-page user "Account successfully activated!"))
 
-           (GET "/subscription-activated" req (subscription-activated! (:params req)))
-           (GET "/subscription-deactivated" req (subscription-deactivated! (:params req)))
+           (GET "/subscription-activated" req (update-subscription-status! (:params req) true))
+           (GET "/subscription-deactivated" req (update-subscription-status! (:params req) false))
 
            (GET "/app" [] (render-file "app.html" {:dev        (env :dev?)
                                                    :csrf-token *anti-forgery-token*}))

@@ -141,7 +141,6 @@
 ;;;;;; Components ;;;;;;
 (defn buttons-component [m title]
   [:div.pure-g
-   [:div.pure-u-1-12]
    [:div.pure-u.refresh
     [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
    (when (:movement/easier m)
@@ -151,8 +150,7 @@
      [:div.pure-u.refresh
       [:i.fa.fa-plus {:on-click #(refresh-movement m title "harder") :title "Swap with harder movement"}]])
    [:div.pure-u.destroy
-    [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
-   [:div.pure-u-1-12]])
+    [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]])
 
 (defn slider-component []
   (let [data (atom 0)]
@@ -206,7 +204,7 @@
           (if (and set (< 0 set))
             [:div.rep-set {:on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))} set])]
          [:div.pure-u-1-12]]]
-       [:div {:style {:cursor 'pointer}}
+       [:div {:style {:cursor 'pointer :margin-bottom 10}}
         [:div.pure-g
          [:div.pure-u-1-12]
          [:div.pure-u-5-12

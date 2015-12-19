@@ -13,9 +13,13 @@
                              :target ""} "Movement Session"]
       [:ul.pure-menu-list
        [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Blog"
-                            :href   "/blog"
-                            :target ""} "Blog"]]
+        [:a.pure-menu-link {:title  "Tour"
+                            :href   "/tour"
+                            :target ""} "Tour"]]
+       [:li.pure-menu-item
+        [:a.pure-menu-link {:title  "Pricing"
+                            :href   "/pricing"
+                            :target ""} "Pricing"]]
        [:li.pure-menu-item
         [:a.pure-menu-link {:title  "Log in"
                             :href   "/app"

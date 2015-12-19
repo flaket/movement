@@ -23,11 +23,10 @@
     (anti-forgery-field)]])
 
 (defn fast-spring-store [ref]
-  [:div.button.button-primary
+  [:div.button
    [:a {:href
         (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
-             "?mode=test"
-             "&referrer="
+             "?referrer="
              ref)} "Purchase subscription"]])
 
 (defn payment-page [ref message]

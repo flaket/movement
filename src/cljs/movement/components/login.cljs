@@ -14,7 +14,20 @@
      [:div.home-menu.pure-menu-horizontal
       [:a.pure-menu-heading {:title  "Home"
                              :href   "/"
-                             :target ""} "Movement Session"]]]]])
+                             :target ""} "Movement Session"]
+      [:ul.pure-menu-list
+       [:li.pure-menu-item
+        [:a.pure-menu-link {:title  "Tour"
+                            :href   "/tour"
+                            :target ""} "Tour"]]
+       [:li.pure-menu-item
+        [:a.pure-menu-link {:title  "Pricing"
+                            :href   "/pricing"
+                            :target ""} "Pricing"]]
+       [:li.pure-menu-item
+        [:a.pure-menu-link {:title  "Log in"
+                            :href   "/app"
+                            :target ""} "Log in"]]]]]]])
 
 (defn footer []
   [:div#footer.l-box.is-center
