@@ -9,6 +9,22 @@
 (def url (if (env :dev?) "http://localhost:8000/activate/"
                           "http://www.movementsession.com/activate/"))
 
+(defn send-email [email subject body]
+  (try
+    (send-message
+      ^{:host "mail.privateemail.com"
+        :user "admin@movementsession.com"
+        :pass "13movementsession13"
+        :ssl :yes}
+      {:from    "admin@movementsession.com"
+       :to      email
+       :subject subject
+       :body    body})
+    (info "sent email to: " email)
+    true
+    (catch Exception e
+      (error e "could not send email!\n"))))
+
 (defn send-activation-email [email activation-id]
   (try
     (send-message

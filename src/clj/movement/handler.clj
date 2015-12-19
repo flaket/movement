@@ -33,7 +33,7 @@
             [movement.pages.signup :refer [signup-page]]
             [movement.pages.contact :refer [contact-page]]
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
-            [movement.activation :refer [generate-activation-id send-activation-email]]
+            [movement.activation :refer [generate-activation-id send-email send-activation-email]]
             [movement.templates :refer [add-standard-templates-to-user]]))
 
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
@@ -130,12 +130,20 @@
       (generate-response "Wrong old password" 400))))
 
 (defn subscription-activated! [req]
-  (view-sub-activated-page req))
+  (let [subscription-data (:params req)]
+    (send-email "admin@movementsession.com"
+                "testing subscription-activated!"
+                (str req))
+    ))
 
 (defn subscription-deactivated! [req]
-  (view-sub-activated-page req))
+  (let [subscription-data (:params req)]
+    (send-email "admin@movementsession.com"
+                "testing subscription-deactivated!"
+                (str req))
+    ))
 
-
+;URL?referrer=username
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -152,10 +160,10 @@
                                               (update-tx-db!)
                                               (add-user! email password)))
            (POST "/login" [username password] (do
-                                             (when (nil? (:conn @tx))
-                                               (update-tx-conn!))
-                                             (update-tx-db!)
-                                             (jws-login username password)))
+                                                (when (nil? (:conn @tx))
+                                                  (update-tx-conn!))
+                                                (update-tx-db!)
+                                                (jws-login username password)))
            (GET "/activate/:id" [id] (do
                                        (when (nil? (:conn @tx))
                                          (update-tx-conn!))
@@ -166,8 +174,10 @@
                                      "Account successfully activated!"
                                      "\n"
                                      "<a href=\"http://movementsession.com/app\">Login here</a>"))
-           (POST "/subscription-activated" req (subscription-activated! req))
-           (POST "/subscription-deactivated" req (subscription-deactivated! req))
+
+           (GET "/subscription-activated" req (subscription-activated! req))
+           (GET "/subscription-deactivated" req (subscription-deactivated! req))
+
            (GET "/app" [] (render-file "app.html" {:dev        (env :dev?)
                                                    :csrf-token *anti-forgery-token*}))
            (POST "/store-session" req (if-not (authenticated? req)
