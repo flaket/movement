@@ -18,7 +18,7 @@
                       :name        "password"
                       :placeholder "Your Password"
                       :required    "required"}]
-    [:input {:type  "submit"
+    [:input.button-secondary {:type  "submit"
              :value "Create User"}]
     (anti-forgery-field)]])
 
@@ -33,7 +33,6 @@
   (html5
     [:head
      [:title ""]
-     (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -85,7 +84,7 @@
           [:div.pure-u.pure-u-md-2-5]]
          [:div.pure-g
           [:div.pure-u.pure-u-md-2-5]
-          [:a.pure-u.pure-u-md-1-5.pure-button.pure-button-primary
+          [:a.pure-u.pure-u-md-1-5.button.button-primary
            {:title  "Log in"
             :href   "/app"
             :target ""} "Log in"]
@@ -94,5 +93,29 @@
        [:div.pure-u.pure-u-md-2-5]
        [:div.pure-u.pure-u-md-1-5
         (signup-form)]
+       [:div.pure-u.pure-u-md-2-5]]]
+     (footer)]))
+
+(defn activation-page [message]
+  (html5
+    [:head
+     [:title ""]
+     (include-css
+       "https://fonts.googleapis.com/css?family=Roboto"
+       "https://fonts.googleapis.com/css?family=Raleway"
+       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+       "/css/pure-min.css"
+       "/css/grids-responsive-min.css"
+       "/css/normalize.css"
+       "/css/animate.min.css"
+       "/css/marketing.css"
+       "/css/side-menu.css"
+       "/css/site.css")]
+    [:body
+     (header)
+     [:div.content.is-center
+      [:div.pure-g
+       [:div.pure-u.pure-u-md-2-5]
+       [:div.pure-u.pure-u-md-1-5 message]
        [:div.pure-u.pure-u-md-2-5]]]
      (footer)]))

@@ -105,7 +105,7 @@
                   :part/set                 4}
 
                  {:db/id          #db/id[:db.part/user -102]
-                    :template/title "Calisthenics"
+                    :template/title "Gymnastic Strength"
                     :template/description
                                     "Dynamic and static bodyweight strength training.
                                     Begin the session with a quick general warmup.

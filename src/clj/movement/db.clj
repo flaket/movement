@@ -7,8 +7,8 @@
             [taoensso.timbre :refer [info error]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-#_(def uri "datomic:dev://localhost:4334/testing5")
-(def uri "datomic:ddb://us-east-1/movementsession/production-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+(def uri "datomic:dev://localhost:4334/testing6")
+#_(def uri "datomic:ddb://us-east-1/movementsession/production-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
 
@@ -181,7 +181,7 @@
 
 ;;;;;;;;;;; TRANSACTIONS ;;;;;;;;;;;;;
 
-(defn transact-template! [user {:keys [title description parts] :as template}]
+(defn transact-template! [user {:keys [title description parts]}]
   (let [conn (:conn @tx)
         description (if (nil? description) "" description)
         parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
@@ -224,7 +224,7 @@
                 #(assoc %
                   :movements (map
                                (fn [e] (assoc e :db/id (d/tempid :db.part/user))) (:movements %))) parts)
-        session-data [{:db/id        #db/id[:db.part/user]
+        session-data [{:db/id        #db/id[:db.part/user -99]
                        :user/email   user
                        :user/session [#db/id[:db.part/user -100]]}
                       {:db/id               #db/id[:db.part/user -100]
@@ -263,7 +263,7 @@
 
 (defn transact-activated-user! [email]
   (let [conn (:conn @tx)
-        tx-user-data [{:db/id                  #db/id[:db.part/user]
+        tx-user-data [{:db/id                  #db/id[:db.part/user -99]
                        :user/email             email
                        :user/activated?        true
                        :user/activation-id     (generate-activation-id)

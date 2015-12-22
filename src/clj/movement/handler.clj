@@ -26,7 +26,7 @@
 
             [movement.db :refer [tx update-tx-conn! update-tx-db!] :as db]
             [movement.pages.landing :refer [landing-page]]
-            [movement.pages.signup :refer [signup-page payment-page]]
+            [movement.pages.signup :refer [signup-page payment-page activation-page]]
             [movement.pages.contact :refer [contact-page]]
             [movement.pages.pricing :refer [pricing-page]]
             [movement.pages.about :refer [about-page]]
@@ -96,18 +96,17 @@
 
 (defn add-user! [email password]
   (if (nil? (:db/id (db/find-user email)))
-    (do
-      (let [activation-id (generate-activation-id)]
-        (db/transact-new-user! email password activation-id)
-        (send-activation-email email activation-id)
-        (update-tx-db!)
-        (str "An activation email has been sent to your email address.")))
+    (let [activation-id (generate-activation-id)]
+      (db/transact-new-user! email password activation-id)
+      (send-activation-email email activation-id)
+      (update-tx-db!)
+      (activation-page "Thanks for signing up! To verify your email address we have sent you an activation email."))
     (signup-page (str email " is already registered as a user."))))
 
 (defn activate-user! [id]
   (let [user (db/entity-by-lookup-ref :user/activation-id id)]
     (if-not (nil? (:db/id user))
-      (do
+      (let []
         (db/transact-activated-user! (:user/email user))
         (add-standard-templates-to-user (:user/email user))
         {:status  302

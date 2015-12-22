@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/testing5")
+#_(def uri "datomic:dev://localhost:4334/testing6")
 
 #_(def uri "datomic:ddb://us-east-1/movementsession/production-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
@@ -131,7 +131,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 #_(d/pull db '[*] 17592186045872)
 #_(d/transact conn [[:db/retract 17592186045809
                      :user/template 17592186045872]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045994]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186046183]])
 
 #_(d/q '[:find ?name
        :in $ ?cat-name
@@ -141,13 +141,12 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
          [?c :category/name ?cat-name]]
      db "Ring")
 
-#_(d/q '[:find (pull ?t [*])
+#_(d/q '[:find (pull ?u [*])
          :in $ ?email
          :where
-         [?u :user/email ?email]
-         [?u :user/session ?t]]
+         [?u :user/email ?email]]
        db
-       "andflak@gmail.com")
+       "andreas.flakstad@gmail.com")
 
 #_(count (d/q '[:find (pull ?u [*])
                 :in $

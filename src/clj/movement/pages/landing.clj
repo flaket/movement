@@ -69,7 +69,7 @@
    [:div.pure-g.content-head-ribbon
     [:div.l-box.pure-u.pure-u-md-1-4]
     [:div.l-box.pure-u.pure-u-md-1-4
-     [:h3 "30 day free trial, cancel payment at any time"]]
+     [:h3 "30 day free trial"]]
     [:div.l-box.pure-u.pure-u-md-1-4
      [:h3 "$10 monthly subscription"]]
     [:div.l-box.pure-u.pure-u-md-1-4]]
@@ -127,7 +127,7 @@
       [:div.content-wrapper
        (sell)
        (benefits)
-       (pricing)
+       #_(pricing)
        (epilog)
        (footer)]]]))
 
