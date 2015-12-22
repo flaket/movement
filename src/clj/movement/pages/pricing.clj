@@ -1,12 +1,31 @@
 (ns movement.pages.pricing
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
+            [ring.util.anti-forgery :refer [anti-forgery-field]]
             [movement.pages.components :refer [header footer-2]]))
 
-(defn pricing-page []
+(defn signup-form []
+  [:form.pure-form.pure-form-stacked
+   {:method "POST"
+    :action "/signup"}
+   [:fieldset
+    [:input#email {:type        "email"
+                   :name        "email"
+                   :required    "required"
+                   :placeholder "Your Email"}]
+    [:input#password {:type        "password"
+                      :name        "password"
+                      :placeholder "Your Password"
+                      :required    "required"}]
+    [:input.button-primary {:type  "submit"
+                              :value "Sign Up"}]
+    (anti-forgery-field)]])
+
+(defn pricing-page [& error-message]
   (html5
     [:head
-     [:title ""]
+     [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
+     [:title "Pricing Movement Session"]
      (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
@@ -19,34 +38,27 @@
        "/css/site.css"
        "/css/pricing.css")]
     [:body
-     #_[:div
-      (header)
-      [:div.content.is-center
-       [:div.pure-g
-        [:div.pure-u.pure-u-md-1-5]
-        [:div.pure-u-1.pure-u-md-3-5
-         [:div.pure-g
-          [:h1.pure-u "Pricing"]]]
-        [:div.pure-u.pure-u-md-1-5]]]
-      (footer)]
-
      (header)
-     #_[:div.pure-menu.pure-menu-horizontal
-      [:a.pure-menu-heading {:href "#"} "Movement Session"]
-      [:ul.pure-menu-list
-       [:li.pure-menu-item [:a.pure-menu-link {:href "#"} "Home"]]
-       [:li.pure-menu-item.pure-menu-selected [:a.pure-menu-link {:href "#"} "Pricing"]]
-       [:li.pure-menu-item [:a.pure-menu-link {:href "#"} "Contact"]]]]
-
      [:div.l-content
       [:div.pricing-tables.pure-g
        [:div.pure-u-1.pure-u-md-1-3]
        [:div.pure-u-1.pure-u-md-1-3
-        [:div.pricing-table.pricing-table-biz.pricing-table-selected
+        [:div.pricing-table.pricing-table-biz
          [:div.pricing-table-header
           [:h2 ""]
           [:span.pricing-table-price "$9.95" [:span "per month"]]]
-         [:button.button-choose.pure-button [:a {:href "/signup"} "Sign up"]]]]
+         [:ul.pricing-table-list
+          [:li
+           (when error-message
+             [:div
+              [:div.pure-g
+               [:div.pure-u-1 error-message]]
+              [:div.pure-g
+               [:a.pure-u-1.button.button-secondary
+                {:title  "Launch app"
+                 :href   "/app"
+                 :target ""} "Launch app & Log in"]]])
+           (signup-form)]]]]
        [:div.pure-u-1.pure-u-md-1-3]]
       [:div.information.pure-g
        [:div.pure-u-1.pure-u-md-1-3
@@ -61,6 +73,5 @@
        [:div.pure-u-1.pure-u-md-1-3
         [:div.l-box
          [:h3.information-head "Customer support"]
-         [:p "We will get back to you within 24 hours."]]]
-       ]]
+         [:p "We will get back to you within 24 hours."]]]]]
      (footer-2)]))

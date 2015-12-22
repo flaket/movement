@@ -41,7 +41,7 @@
     [:div.pure-u.pure-u-md-1-12
      [:a {:title  "Terms and agreement"
           :href   "/terms"
-          :target ""} "Terms"]]
+          :target ""} "Terms/Privacy"]]
     [:div.pure-u.pure-u-md-1-3]]
    [:div#footer-logo.pure-g
     [:div.pure-u.pure-u-md-1-3]
@@ -71,7 +71,7 @@
     [:div.pure-u.pure-u-md-1-12
      [:a {:title  "Terms and agreement"
           :href   "/terms"
-          :target ""} "Terms"]]
+          :target ""} "Terms/Privacy"]]
     [:div.pure-u.pure-u-md-1-3]]
    [:div#footer-logo.pure-g
     [:div.pure-u.pure-u-md-1-3]

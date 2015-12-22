@@ -30,7 +30,6 @@
             [movement.pages.contact :refer [contact-page]]
             [movement.pages.pricing :refer [pricing-page]]
             [movement.pages.about :refer [about-page]]
-            [movement.pages.terms :refer [terms-page]]
             [movement.pages.tour :refer [tour-page]]
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-email send-activation-email]]
@@ -58,7 +57,8 @@
     (cond
       (nil? (:db/id user)) (response {:message "Unknown user"} 400)
       (false? (:user/activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
-      (false? (:user/valid-subscription? user)) (response {:message "This account is not paying for a subscription."} 400)
+      (false? (:user/valid-subscription? user)) (response {:message "This account does not have a valid subscription."
+                                                           :update-payment? true} 400)
       (valid-user? user password) (let [claims {:user (keyword username)
                                                 :exp  (-> 3 hours from-now)}
                                         token (jws/sign claims secret {:alg :hs512})]
@@ -100,8 +100,8 @@
       (db/transact-new-user! email password activation-id)
       (send-activation-email email activation-id)
       (update-tx-db!)
-      (activation-page "Thanks for signing up! To verify your email address we have sent you an activation email."))
-    (signup-page (str email " is already registered as a user."))))
+      (activation-page "To verify your email address we have sent you an activation email."))
+    (pricing-page (str email " is already registered as a user."))))
 
 (defn activate-user! [id]
   (let [user (db/entity-by-lookup-ref :user/activation-id id)]
@@ -139,7 +139,7 @@
            (GET "/" [] (landing-page))
            (GET "/blog" [] (redirect "/blog/index.html"))
            (GET "/contact" [] (contact-page))
-           (GET "/terms" [] (terms-page))
+           (GET "/terms" [] (render-file "privacypolicy.htm" {}))
            (GET "/about" [] (about-page))
            (GET "/tour" [] (tour-page))
            (GET "/pricing" [] (pricing-page))

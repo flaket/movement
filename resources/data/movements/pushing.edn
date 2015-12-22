@@ -5,15 +5,15 @@
 
  ;; categories
  {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
-
+ {:db/id #db/id[:db.part/user -2] :category/name "Pushing"}
  {:db/id #db/id[:db.part/user -3] :category/name "Bent Arm Strength"}
  {:db/id #db/id[:db.part/user -4] :category/name "Bodyweight"}
- {:db/id #db/id[:db.part/user -2] :category/name "Pushing"}
  {:db/id #db/id[:db.part/user -5] :category/name "Push Up"}
  {:db/id #db/id[:db.part/user -6] :category/name "Dip"}
  {:db/id #db/id[:db.part/user -7] :category/name "Ring"}
  {:db/id #db/id[:db.part/user -8] :category/name "Jumping"}
  {:db/id #db/id[:db.part/user -9] :category/name "Headstand"}
+ {:db/id #db/id[:db.part/user -10] :category/name "Crawling"}
 
  {:db/id #db/id[:db.part/user -98]
   :movement/unique-name "Burpee"
@@ -290,7 +290,8 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -8]]}
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -10]]}
 
  {:db/id #db/id[:db.part/user -129]
   :movement/unique-name "Ring Handstand Push Up"

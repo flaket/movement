@@ -63,9 +63,15 @@
   (let [user (atom "")
         password (atom "")
         error (atom "")
-        loading? (atom false)]
+        loading? (atom false)
+        show-payment? (atom false)]
     (fn []
       [:div {:style {:font-size 24}}
+       (when @show-payment?
+         [:a.pure-u-1.button.button-primary
+          {:href (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
+                      "?referrer="
+                      @user)} "Purchase subscription"])
        [:div.pure-g {:style {:padding 5}}
         [:div.pure-u.pure-u-md-1-5]
         [text-input user
@@ -103,10 +109,12 @@
                                                                        (get-stored-sessions)
                                                                        (get-equipment)
                                                                        (dispatch! "/generator")))
-                                       :error-handler (fn [response] (do
+                                       :error-handler (fn [response] (let [r (:response response)
+                                                                           update-payment? (:update-payment? r)]
                                                                        (reset! loading? false)
                                                                        (reset! error (:message (:response response)))
-                                                                       (println (str "error! " response))))})))}
+                                                                       (when update-payment?
+                                                                         (reset! show-payment? true))))})))}
          (if @loading? "Logging in..." "Log In")]
         [:div.pure-u.pure-u-md-1-5]]])))
 

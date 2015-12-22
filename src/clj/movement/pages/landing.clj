@@ -34,7 +34,7 @@
       Let Movement Session inspire you to learn new and challenging ways of moving your body."]
     [:p.animated.fadeInDown
      [:a.pure-button.pure-button-primary {:title  "Sign Up"
-                                          :href   "/signup"
+                                          :href   "/pricing"
                                           :target ""} "Sign Up"]]]])
 
 (defn sell []
@@ -100,13 +100,14 @@
 (defn landing-page []
   (html5
     [:head
+     [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
      [:meta {:http-equiv "cache-control"
              :content "no-cache"}]
      [:meta {:http-equiv "expires"
              :content "0"}]
      [:meta {:http-equiv "pragma"
              :content "no-cache"}]
-     [:title ""]
+     [:title "Movement Session"]
      (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"

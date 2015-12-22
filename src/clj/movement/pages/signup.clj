@@ -2,7 +2,7 @@
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
-            [movement.pages.components :refer [header footer]]
+            [movement.pages.components :refer [header footer footer-2]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
 (defn signup-form []
@@ -23,16 +23,16 @@
     (anti-forgery-field)]])
 
 (defn fast-spring-store [ref]
-  [:div.button
-   [:a {:href
-        (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
-             "?referrer="
-             ref)} "Purchase subscription"]])
+  [:a.pure-u-1.button.button-primary
+   {:href (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
+                  "?referrer="
+                  ref)} "Purchase subscription"])
 
 (defn payment-page [ref message]
   (html5
     [:head
-     [:title ""]
+     [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
+     [:title "Payment Movement Session"]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -40,13 +40,12 @@
        "/css/pure-min.css"
        "/css/grids-responsive-min.css"
        "/css/normalize.css"
-       "/css/animate.min.css"
        "/css/marketing.css"
-       "/css/side-menu.css"
-       "/css/site.css")]
+       "/css/site.css"
+       "/css/pricing.css")]
     [:body
      (header)
-     [:div.content.is-center
+     #_[:div.content.is-center
       [:div.pure-g
        [:div.pure-u.pure-u-md-2-5]
        [:div.pure-u.pure-u-md-1-5 message]
@@ -55,12 +54,30 @@
        [:div.pure-u.pure-u-md-2-5]
        [:div.pure-u.pure-u-md-1-5 (fast-spring-store ref)]
        [:div.pure-u.pure-u-md-2-5]]]
-     (footer)]))
+     [:div.l-content
+      [:div.information.pure-g
+       [:div.pure-u-1.pure-u-md-1-5]
+       [:div.pure-u-1.pure-u-md-3-5
+        [:div.l-box
+         [:div.pure-g [:h3.pure-u-1.information-head message]]
+         [:div.pure-g
+          [:p.pure-u-1 "To complete the sign up process you will have to register your
+         credit card with FastSpring."]]
+         [:div.pure-g (fast-spring-store ref)]]]
+       [:div.pure-u-1.pure-u-md-1-5]]
+      [:div.information.pure-g
+       [:div.pure-u-1.pure-u-md-1-3]
+       [:div.pure-u-1.pure-u-md-1-3
+        [:div.l-box
+         ]]
+       [:div.pure-u-1.pure-u-md-1-3]]]
+     (footer-2)]))
 
 (defn signup-page [& error-message]
   (html5
     [:head
-     [:title ""]
+     [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
+     [:title "Sign Up Movement Session"]
      (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
@@ -99,7 +116,7 @@
 (defn activation-page [message]
   (html5
     [:head
-     [:title ""]
+     [:title "Activation Movement Session"]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -110,12 +127,14 @@
        "/css/animate.min.css"
        "/css/marketing.css"
        "/css/side-menu.css"
-       "/css/site.css")]
+       "/css/site.css"
+       "/css/pricing.css")]
     [:body
      (header)
-     [:div.content.is-center
-      [:div.pure-g
-       [:div.pure-u.pure-u-md-2-5]
-       [:div.pure-u.pure-u-md-1-5 message]
-       [:div.pure-u.pure-u-md-2-5]]]
+     [:div.l-content
+      [:div.information.pure-g
+       [:div.pure-u-1
+        [:div.l-box
+         [:h3.information-head "Thanks!"]
+         [:p message]]]]]
      (footer)]))

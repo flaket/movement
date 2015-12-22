@@ -141,12 +141,13 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
          [?c :category/name ?cat-name]]
      db "Ring")
 
-#_(d/q '[:find (pull ?u [*])
+#_(d/q '[:find (pull ?s [*])
          :in $ ?email
          :where
-         [?u :user/email ?email]]
+         [?u :user/email ?email]
+         [?u :user/session ?s]]
        db
-       "andreas.flakstad@gmail.com")
+       "andflak@gmail.com")
 
 #_(count (d/q '[:find (pull ?u [*])
                 :in $
