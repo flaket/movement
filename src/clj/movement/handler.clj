@@ -23,7 +23,6 @@
             [buddy.hashers :as hashers]
             [hiccup.core :refer [html]]
             [taoensso.timbre :refer [info error]]
-
             [movement.db :refer [tx update-tx-conn! update-tx-db!] :as db]
             [movement.pages.landing :refer [landing-page]]
             [movement.pages.signup :refer [signup-page payment-page activation-page]]
@@ -139,15 +138,20 @@
 
 (defn update-subscription-status! [{:keys [security_data security_hash
                                            SubscriptionReferrer SubscriptionIsTest
-                                           SubscriptionEndDate]} value]
+                                           SubscriptionEndDate SubscriptionCustomerUrl
+                                           SubscriptionQuantity SubscriptionReference]} value]
   (let [private-key (if value "20e964736aa0570a261d44b8b4a5b6eb" "c503849c6b5f2783bb88b33cac3533ea")]
     (when (= (md5 (str security_data private-key)) security_hash)
       (send-email "admin@movementsession.com"
-                  "AutomaticSubscription Update"
+                  "Automatic Subscription Update"
                   (str "SubscriptionReferrer: " SubscriptionReferrer "\n"
                        "SubscriptionIsTest: " SubscriptionIsTest "\n"
-                       "SubscriptionEndDate:" SubscriptionEndDate))
-      (db/transact-subscription-status! SubscriptionReferrer value))))
+                       "SubscriptionEndDate:" SubscriptionEndDate
+                       "SubscriptionReference: " SubscriptionReference "\n"
+                       "SubscriptionQuantity: " SubscriptionQuantity "\n"
+                       "SubscriptionCustomerUrl: " SubscriptionCustomerUrl))
+      (when value
+        (db/transact-subscription-status! SubscriptionReferrer value)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 

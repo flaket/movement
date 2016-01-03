@@ -333,6 +333,14 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/description
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A part might have a description"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :part/category
   :db/index              true
   :db/valueType          :db.type/ref

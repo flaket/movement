@@ -62,7 +62,7 @@
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
                        :user/email               "andflak@gmail.com"
-                       :user/valid-subscription? false}]]
+                       :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
 
 ;; Get the database value.
@@ -145,11 +145,11 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
        db
        "andflak@gmail.com")
 
-#_(count (d/q '[:find (pull ?u [*])
-                :in $
-                :where
-                [?u :user/email _]]
-              db))
+#_(d/q '[:find (pull ?u [*])
+            :in $
+            :where
+            [?u :user/email _]]
+          db)
 
 #_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
 
