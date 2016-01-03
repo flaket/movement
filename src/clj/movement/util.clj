@@ -11,7 +11,7 @@
 
 #_(def uri "datomic:dev://localhost:4334/testing6")
 
-#_(def uri "datomic:ddb://us-east-1/movementsession/production-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+#_(def uri "datomic:ddb://us-east-1/movementsession/production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 #_(d/delete-database uri)
 
@@ -61,12 +61,8 @@
     (d/transact conn templates-tx))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "test@test.com"
-                       ;:user/name                "Admin"
-                       ;:user/activated?          true
-                       :user/valid-subscription? true
-                       ;:user/password (hashers/encrypt "pw")
-                       }]]
+                       :user/email               "andflak@gmail.com"
+                       :user/valid-subscription? false}]]
     (d/transact conn tx-user-data))
 
 ;; Get the database value.
@@ -128,7 +124,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186045872)
+#_(d/pull db '[*] 17592186045811)
 #_(d/transact conn [[:db/retract 17592186045809
                      :user/template 17592186045872]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186046183]])
