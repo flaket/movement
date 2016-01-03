@@ -33,7 +33,9 @@
             [movement.pages.tour :refer [tour-page]]
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-email send-activation-email]]
-            [movement.templates :refer [add-standard-templates-to-user]]))
+            [movement.templates :refer [add-standard-templates-to-user]])
+  (:import java.security.MessageDigest
+           java.math.BigInteger))
 
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
 
@@ -43,6 +45,14 @@
    :body    (pr-str data)})
 
 ;;;;;; login ;;;;;;
+
+(defn md5 [s]
+  (let [algorithm (MessageDigest/getInstance "MD5")
+        size (* 2 (.getDigestLength algorithm))
+        raw (.digest algorithm (.getBytes s))
+        sig (.toString (BigInteger. 1 raw) 16)
+        padding (apply str (repeat (- size (count sig)) "0"))]
+    (str padding sig)))
 
 (defn valid-user? [user password]
   (hashers/check password (:user/password user)))
@@ -57,8 +67,10 @@
     (cond
       (nil? (:db/id user)) (response {:message "Unknown user"} 400)
       (false? (:user/activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
-      (false? (:user/valid-subscription? user)) (response {:message "This account does not have a valid subscription."
-                                                           :update-payment? true} 400)
+      #_(false? (:user/valid-subscription? user))
+
+      #_(response {:message         "This account does not have a valid subscription."
+                 :update-payment? true} 400)
       (valid-user? user password) (let [claims {:user (keyword username)
                                                 :exp  (-> 3 hours from-now)}
                                         token (jws/sign claims secret {:alg :hs512})]
@@ -128,9 +140,17 @@
         (finally (update-tx-db!)))
       (response "Wrong old password" 400))))
 
-(defn update-subscription-status! [subscription-data value]
-  (let [email (:SubscriptionReferrer subscription-data)]
-    (db/transact-subscription-status! email value)))
+(defn update-subscription-status! [{:keys [security_data security_hash
+                                           SubscriptionReferrer SubscriptionIsTest
+                                           SubscriptionEndDate]} value]
+  (let [private-key (if value "20e964736aa0570a261d44b8b4a5b6eb" "c503849c6b5f2783bb88b33cac3533ea")]
+    (when (= (md5 (str security_data private-key)) security_hash)
+      (send-email "admin@movementsession.com"
+                  "AutomaticSubscription Update"
+                  (str "SubscriptionReferrer: " SubscriptionReferrer "\n"
+                       "SubscriptionIsTest: " SubscriptionIsTest "\n"
+                       "SubscriptionEndDate:" SubscriptionEndDate))
+      (db/transact-subscription-status! SubscriptionReferrer value))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
