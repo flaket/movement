@@ -36,6 +36,14 @@
                    :headers {:x-csrf-token csrf-token}}]
     (cljs-ajax/POST url (merge base-opts opts))))
 
+(defn get-user-info []
+  (if-let [email (session/get :user)]
+    (GET "user" {:params        {:email email}
+                 :handler       #(do
+                                  (session/put! :username (:username %)))
+                 :error-handler #(print (str "error retrieving user information: " %))})
+    (print "no user in session.")))
+
 (defn get-templates []
   (if-let [user (session/get :user)]
     (GET "templates" {:params        {:user user}

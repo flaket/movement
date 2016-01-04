@@ -77,7 +77,7 @@
         [text-input user
          {:class       (str "pure-u pure-u-md-3-5" (when @loading? " disabled"))
           :name        "email"
-          :placeholder "email or username"}]
+          :placeholder "email"}]
         [:div.pure-u.pure-u-md-1-5]]
        [:div.pure-g {:style {:padding 5}}
         [:div.pure-u.pure-u-md-1-5]
@@ -102,6 +102,8 @@
                                        :handler       (fn [response] (do
                                                                        (session/put! :token (:token response))
                                                                        (session/put! :user (:user response))
+                                                                       (session/put! :email (:email response))
+                                                                       (session/put! :username (:username response))
                                                                        (session/put! :m-counter (atom 0))
                                                                        (get-templates)
                                                                        (get-all-categories)

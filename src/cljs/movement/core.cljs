@@ -6,7 +6,7 @@
             [goog.history.EventType :as EventType]
             [cljsjs.react :as react]
             [movement.util :refer [get-all-categories get-all-movements get-templates hook-browser-navigation! set-page!]]
-            [movement.user :refer [user-component payment-component]]
+            [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
             [movement.share :refer [share-component]]
@@ -21,8 +21,6 @@
 (secretary/defroute "/generator" [] (set-page! #'generator-component))
 (secretary/defroute "/user" [] (set-page! #'user-component))
 (secretary/defroute "/template" [] (set-page! #'template-creator-component))
-#_(secretary/defroute "/share" [] (set-page! #'share-component))
-#_(secretary/defroute "/pay" [] (set-page! #'payment-component))
 
 ;---------------------------
 (defn page []
@@ -37,7 +35,7 @@
   (secretary/set-config! :prefix "#")
   (if (session/get :user)
     ;todo: if registered more than 14 days and not payed, show payment-component
-    (set-page! #'template-creator-component))
+    (set-page! #'user-component))
 
   (.initializeTouchEvents js/React true)
   (mount-root))

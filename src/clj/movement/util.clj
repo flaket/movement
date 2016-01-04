@@ -122,6 +122,19 @@
 #_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
 Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",
 
+#_(let []
+  (empty? (d/q '[:find [?username ...]
+                 :in $ ?username
+                 :where
+                 [?e :user/name ?username]]
+               db
+               "flaket")))
+
+(d/q '[:find [?username ...]
+       :in $
+       :where
+       [?e :user/name ?username]]
+     db)
 
 #_(def db (d/db conn))
 #_(d/pull db '[*] 17592186045811)

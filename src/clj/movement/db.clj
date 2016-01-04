@@ -176,6 +176,15 @@
                  user
                  template-title))))
 
+(defn new-unique-username? [username]
+  (let [db (:db @tx)]
+    (empty? (d/q '[:find [?username ...]
+                   :in $ ?username
+                   :where
+                   [?e :user/name ?username]]
+                 db
+                 username))))
+
 (defn find-user [email]
   (d/pull (:db @tx) '[*] [:user/email email]))
 
@@ -289,4 +298,12 @@
                        :user/password (hashers/encrypt password)}]]
     (d/transact conn tx-user-data)
     "Password changed successfully!"))
+
+(defn transact-username! [email username]
+  (let [conn (:conn @tx)
+        tx-user-data [{:db/id         #db/id[:db.part/user]
+                       :user/email    email
+                       :user/name     username}]]
+    (d/transact conn tx-user-data)
+    "Username changed successfully!"))
 

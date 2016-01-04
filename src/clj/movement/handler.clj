@@ -61,17 +61,19 @@
 (def jws-auth-backend (jws-backend {:secret secret :options {:alg :hs512}}))
 
 (defn jws-login
-  [username password]
-  (let [user (db/find-user username)]
+  [email password]
+  (let [user (db/find-user email)]
     (cond
       (nil? (:db/id user)) (response {:message "Unknown user"} 400)
       (false? (:user/activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
       (false? (:user/valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
-      (valid-user? user password) (let [claims {:user (keyword username)
+      (valid-user? user password) (let [claims {:user (keyword email)
                                                 :exp  (-> 3 hours from-now)}
                                         token (jws/sign claims secret {:alg :hs512})]
                                     (response {:token token
-                                               :user  (:user/email (dissoc user :user/password :db/id))}))
+                                               :user  (:user/email user)
+                                               :email (:user/email user)
+                                               :username (:user/name user)}))
       :else (response {:message "Incorrect password"} 401))))
 
 ;;;;;;;;;;;
@@ -136,6 +138,19 @@
         (finally (update-tx-db!)))
       (response "Wrong old password" 400))))
 
+(defn change-username! [req]
+  (let [email (:email (:params req))
+        username (:username (:params req))]
+    (if (db/new-unique-username? username)
+      (try
+        (response {:message (db/transact-username! email username)
+                   :username username})
+        (catch Exception e
+          (error e "error changing username: ")
+          (response "Error changing username" 500))
+        (finally (update-tx-db!)))
+      (response "This username is already taken" 400))))
+
 (defn update-subscription-status! [{:keys [security_data security_hash
                                            SubscriptionReferrer SubscriptionIsTest
                                            SubscriptionEndDate SubscriptionCustomerUrl
@@ -198,6 +213,17 @@
            (POST "/change-password" req (if-not (authenticated? req)
                                           (throw-unauthorized)
                                           (change-password! req)))
+           (POST "/change-username" req (if-not (authenticated? req)
+                                          (throw-unauthorized)
+                                          (change-username! req)))
+           (GET "/user" req (if-not (authenticated? req)
+                                  (throw-unauthorized)
+                                  (let [email (:email (:params req))]
+                                    (response (dissoc (db/find-user email)
+                                                      :user/password
+                                                      :user/activation-id
+                                                      :user/activated?
+                                                      :user/valid-subscription?)))))
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (response (db/retrieve-sessions req))))

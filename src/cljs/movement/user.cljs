@@ -2,7 +2,7 @@
  (:require [reagent.core :refer [atom]]
            [reagent.session :as session]
            [movement.menu :refer [menu-component]]
-           [movement.util :refer [POST text-input]]))
+           [movement.util :refer [POST text-input get-user-info]]))
 
 (defn change-password-component []
   (let [show-change-password? (atom false)
@@ -48,17 +48,41 @@
                                                     (reset! pass {:error (:response response) :info ""}))})}
                 "Change password"]]))])])))
 
-(defn unsubscribe-component []
-  (let [show-unsub-button? (atom false)]
+(defn set-username-component []
+  (let [show-change-username? (atom false)
+        username (atom {:info "" :error ""})]
     (fn []
       [:div
        [:div.pure-g
-        [:div.button.pure-u.pure-u-md-2-5 {:on-click #(reset! show-unsub-button? true)} "Unsubscribe"]]
-       (when @show-unsub-button?
-         [:div.pure-g
-          [:a.pure-u {:href "https://www.paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=7MLAKH5Y6KQA6"}
-           [:img {:src    "https://www.paypalobjects.com/en_US/i/btn/btn_unsubscribe_LG.gif"
-                  :border "0"}]]])])))
+        [:div.button.pure-u.pure-u-md-2-5 {:on-click #(reset! show-change-username? true)} "Set username"]]
+       (when @show-change-username?
+         [:div
+          [:div.pure-g
+           [:input.pure-u.pure-u-md-2-5 {:type        "text"
+                                         :placeholder "username"
+                                         :value       (:new-username @username)
+                                         :on-change   #(swap! username assoc :new-username (-> % .-target .-value))}]]
+          (when-let [info (:info @username)]
+            [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
+          (when-let [error (:error @username)]
+            [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])
+          (when (not-empty (:new-username @username))
+            [:div.pure-g
+             [:button.pure-u.pure-u-md-2-5.button.button-primary
+              {:on-click #(POST "/change-username"
+                                {:params        {:email    (session/get :user)
+                                                 :username (:new-username @username)}
+                                 :handler       (fn [response]
+                                                  (let []
+                                                    (swap! username assoc
+                                                           :error ""
+                                                           :info (:message response))
+                                                    (session/put! :username (:username response))))
+                                 :error-handler (fn [response]
+                                                  (swap! username assoc
+                                                         :error (:response response)
+                                                         :info ""))})}
+              "Set username"]])])])))
 
 (defn logged-sessions-component []
   (let [show-sessions? (atom false)
@@ -77,42 +101,20 @@
                (str (:session/timestamp s) " - " (:session/title s) " - " (:session/comment s) "\t")
                [:a {:href (str "/session/" (:session/url s)) :target "_blank"} "View"]]])))])))
 
+(defn logged-in-as []
+  (let [username (session/get :username)
+        email (session/get :user)]
+    [:div.pure-g
+     [:h4.pure-u (str "Logged in as " (if username username email))]]))
+
 (defn user-component []
   (let []
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
-        [:div.pure-g
-         [:h4.pure-u (str "Logged in as " (session/get :user))]]
+        (logged-in-as)
         [logged-sessions-component]
         [change-password-component]
-        #_[unsubscribe-component]]])))
-
-(defn payment-component []
-  (let []
-    (fn []
-      [:div#layout {:class (str "" (when (session/get :active?) "active"))}
-       [menu-component]
-       [:div.content
-        [:div.pure-g
-         [:form.pure-form {:action "https://www.paypal.com/cgi-bin/webscr"
-                 :method "post"
-                 :target "_top"}
-          [:input {:type  "hidden"
-                   :name  "cmd"
-                   :value "_s-xclick"}]
-          [:input {:type  "hidden"
-                   :name  "hosted_button_id"
-                   :value "9U8DQ9HYGV68S"}]
-          [:input {:type   "image"
-                   :src    "https://www.paypalobjects.com/en_US/NO/i/btn/btn_subscribeCC_LG.gif"
-                   :border "0"
-                   :name   "submit"
-                   :alt    "PayPal - The safer, easier way to pay online!"}]
-          [:img {:alt    ""
-                 :border "0"
-                 :src    "https://www.paypalobjects.com/no_NO/i/scr/pixel.gif"
-                 :width  "1"
-                 :height "1"}]]]]])))
+        [set-username-component]]])))
 
