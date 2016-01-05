@@ -9,7 +9,7 @@
     [cljs.reader :as reader]
     [goog.events :as events]
     [clojure.string :as str]
-    [movement.util :refer [positions GET POST get-stored-sessions get-equipment]]
+    [movement.util :refer [positions GET POST get-stored-sessions get-equipment get-groups]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]
     [movement.components.login :refer [footer]]
@@ -120,6 +120,13 @@
                         :user          (session/get :user)}
         :handler       add-session-handler
         :error-handler (fn [] (print "error getting session data from server."))}))
+
+(defn create-session-from-group [group]
+  (GET "group"
+       {:params        {:group group
+                        :email (session/get :email)}
+        :handler       add-session-handler
+        :error-handler (fn [] (print "error getting group session data from server."))}))
 
 (defn create-session-from-equipment [equipment-name]
   (GET "equipment-session"
@@ -295,12 +302,12 @@
 (defn template-component [name]
   [:div.pure-u.button {:on-click #(create-session-from-template name)} name])
 
-(defn equipment-component [name]
-  [:a.pure-u.button {:on-click #(create-session-from-equipment name)} name])
+(defn group-component [group]
+  [:a.pure-u.button {:on-click #(create-session-from-group group)} group])
 
 (defn blank-state-component []
   (let [templates-showing? (atom false)
-        equipment-showing? (atom false)]
+        groups-showing? (atom false)]
     (fn []
       [:div.blank-state
        [:div.pure-g {:style {:margin-bottom 50}}
@@ -314,30 +321,30 @@
                                                         (do
                                                           (when (nil? (session/get :equipment))
                                                             (get-equipment))
-                                                          (when equipment-showing?
-                                                            (reset! equipment-showing? false))
+                                                          (when groups-showing?
+                                                            (reset! groups-showing? false))
                                                           (reset! templates-showing? (not @templates-showing?))))}
          "Choose template"]]
-       #_[:div.pure-g
-          [:h3.pure-u [:a.button {:className (when @equipment-showing? "button-primary")
+       [:div.pure-g
+          [:h3.pure-u [:a.button {:className (when @groups-showing? "button-primary")
                                   :on-click  #(handler-fn
                                                (do
-                                                 (when (nil? (session/get :equipment))
-                                                   (get-equipment))
+                                                 (when (nil? (session/get :groups))
+                                                   (get-groups))
                                                  (when templates-showing?
                                                    (reset! templates-showing? false))
-                                                 (reset! equipment-showing? (not @equipment-showing?))))}
-                       "Or choose your available equipment and do some movements with that."]]]
+                                                 (reset! groups-showing? (not @groups-showing?))))}
+                       "Choose group"]]]
        [:div.pure-g {:style {:margin-top "10px"}}
         (when @templates-showing?
           (doall
             (for [t (session/get :templates)]
               ^{:key (str t (rand-int 1000))} (template-component t))))]
-       #_[:div.pure-g
-          (when @equipment-showing?
+       [:div.pure-g {:style {:margin-top "10px"}}
+          (when @groups-showing?
             (doall
-              (for [e (session/get :equipment)]
-                ^{:key (str e (rand-int 1000))} (equipment-component e))))]])))
+              (for [e (session/get :groups)]
+                ^{:key (str e (rand-int 1000))} (group-component e))))]])))
 
 (defn top-menu-component []
   (let [templates-showing? (atom false)
@@ -375,7 +382,7 @@
           (when @equipment-showing?
             (doall
               (for [e (session/get :equipment)]
-                ^{:key e} (equipment-component e))))]])))
+                ^{:key e} (group-component e))))]])))
 
 (defn time-component []
   (let [adding-time (atom false)]

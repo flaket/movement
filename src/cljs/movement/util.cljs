@@ -57,6 +57,13 @@
                       :error-handler #(print (str "error retrieving templates: " %))})
     (print "no user in session.")))
 
+(defn get-groups []
+  (if-let [email (session/get :email)]
+    (GET "groups" {:params        {:email email}
+                      :handler       #(session/put! :groups %)
+                      :error-handler #(print (str "error retrieving groups: " %))})
+    (print "no user in session.")))
+
 (defn get-equipment []
   (if-let [user (session/get :user)]
     (GET "equipment" {:params        {:user user}

@@ -79,6 +79,16 @@
        (:db @tx)
        email))
 
+(defn all-group-titles [email]
+  (d/q '[:find [?title ...]
+         :in $ ?email
+         :where
+         [?e :user/email ?email]
+         [?e :user/group ?g]
+         [?g :group/title ?title]]
+       (:db @tx)
+       email))
+
 (defn create-session [title user]
   ;todo: refactor, smaller functions
   (let [db (:db @tx)
@@ -116,6 +126,21 @@
      :description (:template/description title-entity)
      :background  (:template/background title-entity)
      :parts       parts}))
+
+(defn pick-template-title-from-group [email group]
+  (let [db (:db @tx)
+        templates (d/q '[:find (pull ?t [*])
+                         :in $ ?email ?title
+                         :where
+                         [?u :user/email ?email]
+                         [?u :user/group ?group]
+                         [?group :group/title ?title]
+                         [?group :group/template ?t]]
+                       db
+                       email
+                       group)
+        template-title (:template/title (ffirst (shuffle templates)))]
+    template-title))
 
 (defn create-equipment-session [name n]
   (let [db (:db @tx)
@@ -172,9 +197,17 @@
                    [?e :user/email ?user]
                    [?e :user/template ?template]
                    [?template :template/title ?template-title]]
-                 db
-                 user
-                 template-title))))
+                 db user template-title))))
+
+(defn new-unique-group? [email title]
+  (let [db (:db @tx)]
+    (empty? (d/q '[:find [?email ...]
+                   :in $ ?email ?title
+                   :where
+                   [?e :user/email ?email]
+                   [?e :user/group ?group]
+                   [?group :group/title ?title]]
+                 db email title))))
 
 (defn new-unique-username? [username]
   (let [db (:db @tx)]
@@ -187,6 +220,15 @@
 
 (defn find-user [email]
   (d/pull (:db @tx) '[*] [:user/email email]))
+
+(defn get-user-template-id [email template-title]
+  (first (d/q '[:find [?id ...]
+                :in $ ?email ?name
+                :where
+                [?u :user/email ?email]
+                [?u :user/template ?id]
+                [?id :template/title ?name]]
+              (:db @tx) email template-title)))
 
 ;;;;;;;;;;; TRANSACTIONS ;;;;;;;;;;;;;
 
@@ -224,6 +266,22 @@
         specific-movement-data (flatten (map #(:part/specific-movement %) parts))
         tx-data (concat user-template-data part-data category-data specific-movement-data)]
     (d/transact conn tx-data)))
+
+(defn transact-group! [email {:keys [title created-by public? description templates]}]
+  (let [description (if (nil? description) "" description)
+        template-ids (vec (map #(get-user-template-id email %) templates))
+        tx-data [{:db/id      #db/id[:db.part/user -99]
+                  :user/email email
+                  :user/group [#db/id[:db.part/user -100]]}
+                 {:db/id             #db/id[:db.part/user -100]
+                  :group/title       title
+                  :group/description description
+                  :group/template    template-ids
+                  :group/public?     public?
+                  :group/created-by  #db/id[:db.part/user -101]}
+                 {:db/id     #db/id[:db.part/user -101]
+                  :user/name created-by}]]
+    (d/transact (:conn @tx) tx-data)))
 
 (defn transact-session! [user {:keys [title description parts comment time]}]
   (let [conn (:conn @tx)

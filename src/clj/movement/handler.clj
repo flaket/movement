@@ -104,6 +104,20 @@
                        (response "New template stored successfully."))))
         (response "You already have a template with this title. Please choose a unique title for your template." 400)))))
 
+(defn add-group! [req]
+  (let [email (:email (:params req))
+        group (:group (:params req))]
+    (if (nil? email)
+      (response "User email lacking from client data" 400)
+      (if (db/new-unique-group? email (:title group))
+        (try
+          (db/transact-group! email group)
+          (catch Exception e
+            (response (str "Exception: " e)))
+          (finally (do (update-tx-db!)
+                       (response "New group stored successfully."))))
+        (response "You already have a group with this title. Please choose a unique title for your group." 400)))))
+
 (defn add-user! [email password]
   (if (nil? (:db/id (db/find-user email)))
     (let [activation-id (generate-activation-id)]
@@ -210,6 +224,9 @@
            (POST "/template" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (add-template! req)))
+           (POST "/group" req (if-not (authenticated? req)
+                                (throw-unauthorized)
+                                (add-group! req)))
            (POST "/change-password" req (if-not (authenticated? req)
                                           (throw-unauthorized)
                                           (change-password! req)))
@@ -236,6 +253,16 @@
            (GET "/templates" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (response (db/all-template-titles (str (:user (:params req)))))))
+           (GET "/group" req (if-not (authenticated? req)
+                                  (throw-unauthorized)
+                                  (let [group (:group (:params req))
+                                        email (:email (:params req))]
+                                    (response (db/create-session
+                                                (db/pick-template-title-from-group email group)
+                                                email)))))
+           (GET "/groups" req (if-not (authenticated? req)
+                                   (throw-unauthorized)
+                                   (response (db/all-group-titles (str (:email (:params req)))))))
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (response (db/entity-by-movement-name (:name (:params req))))))

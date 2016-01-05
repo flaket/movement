@@ -7,7 +7,7 @@
             [cljs.core.async :as async :refer [timeout <!]]
             [secretary.core :include-macros true :refer [dispatch!]]
             [movement.menu :refer [menu-component]]
-            [movement.util :refer [positions text-input POST get-templates]]
+            [movement.util :refer [positions text-input POST get-templates get-groups]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
             [movement.state :refer [handler-fn]]
             [movement.user :refer [set-username-component]]
@@ -18,7 +18,8 @@
 
 (defn heading-component []
   [:div.pure-g
-   [:h2.pure-u "Create a new Group"]])
+   [:h2.pure-u "Create a new Group"]
+   [:button.pure-u {:on-click #(print (session/get :groups))} "My Groups"]])
 
 (defn title-component []
   [:div
@@ -86,23 +87,22 @@
                             templates (:templates @group-state)]
                        (cond
                          (nil? title) (swap! error-atom assoc :message "The group needs a title.")
-                         (empty? templates) (swap! error-atom assoc :message  "A group consists of 1 or more templates.")
-                         :else (let []
-                                 (print @group-state)
-                                 #_(POST "template"
-                                         {:params        {:user     (session/get :user)
-                                                          :template @group-state}
+                         (empty? templates) (swap! error-atom assoc :message "A group consists of 1 or more templates.")
+                         :else (let [username (session/get :username)
+                                     email (session/get :email)
+                                     group (assoc @group-state
+                                             :public? true
+                                             :created-by username)]
+                                 (POST "group"
+                                         {:params        {:email (session/get :email)
+                                                          :group group}
                                           :handler       (fn [response] (do
-                                                                          (reset! error-atom "")
+                                                                          (reset! error-atom {})
                                                                           (reset! group-stored-successfully? true)
-                                                                          (get-templates)))
+                                                                          (get-groups)))
                                           :error-handler (fn [response] (do (print response)
                                                                             (reset! error-atom response)))}))))}
           "Save Group"]]))))
-
-; :public? :created-by :title :description :template
-
-
 
 (defn group-creator-component []
   (let [error (atom {:message ""})]

@@ -136,6 +136,8 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                db
                "flaket")))
 
+#_(let [templates ["Natural Movement" "Locomotion" "4x4 Interval Run"]
+        template-ids (map (pull ))])
 
 #_(def db (d/db conn))
 #_(d/pull db '[*] 17592186045455)
@@ -149,21 +151,58 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
        [?e :movement/unique-name ?name]]
      db "Elbow Pull Up")
 
-#_(d/q '[:find ?name
-       :in $ ?cat-name
-         :where
-         [?m :movement/unique-name ?name]
-         [?m :movement/category ?c]
-         [?c :category/name ?cat-name]]
-     db "Straight Arm Scapular Strength")
+#_(first (d/q '[:find [?id ...]
+              :in $ ?email ?name
+              :where
+              [?u :user/email ?email]
+              [?u :user/template ?id]
+              [?id :template/title ?name]]
+            db "admin@movementsession.com" "Locomotion"))
 
-#_(d/q '[:find (pull ?s [*])
-         :in $ ?email
-         :where
-         [?u :user/email ?email]
-         [?u :user/session ?s]]
-       db
-       "andflak@gmail.com")
+#_(defn get-user-template-id [email template-title]
+  (first (d/q '[:find [?id ...]
+                :in $ ?email ?name
+                :where
+                [?u :user/email ?email]
+                [?u :user/template ?id]
+                [?id :template/title ?name]]
+              db email template-title)))
+
+#_(def email "andflak@gmail.com")
+
+#_(def ex-group {:title      "Flakets 6"
+               :public?    true
+               :created-by "flaket"
+               :templates  '("Natural Movement" "Gymnastic Strength"
+                              "Lifting Weights 5x5" "Learning Handstand"
+                              "Locomotion" "4x4 Interval Run")})
+
+#_(defn transact-group! [email {:keys [title created-by public? description templates]}]
+  (let [description (if (nil? description) "" description)
+        template-ids (vec (map #(get-user-template-id email %) templates))
+        tx-data [{:db/id      #db/id[:db.part/user -99]
+                  :user/email email
+                  :user/group [#db/id[:db.part/user -100]]}
+                 {:db/id             #db/id[:db.part/user -100]
+                  :group/title       title
+                  :group/description description
+                  :group/template    template-ids
+                  :group/public?     public?
+                  :group/created-by  #db/id[:db.part/user -101]}
+                 {:db/id             #db/id[:db.part/user -101]
+                  :user/name created-by}]]
+    (d/transact conn tx-data)))
+
+#_(:template/title (ffirst (shuffle (d/q '[:find (pull ?t [*])
+                                           :in $ ?email ?title
+                                           :where
+                                           [?u :user/email ?email]
+                                           [?u :user/group ?group]
+                                           [?group :group/title ?title]
+                                           [?group :group/template ?t]]
+                                         db
+                                         "admin@movementsession.com"
+                                         "Standard Templates 1"))))
 
 #_(d/q '[:find (pull ?u [*])
             :in $
@@ -173,7 +212,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 
 #_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
 
-#_(d/pull db '[*] 17592186045814)
+#_(d/pull db '[*] 17592186045845)
 
 #_(d/q '[:find ?e
        :in $ ?id
