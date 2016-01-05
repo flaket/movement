@@ -9,7 +9,7 @@
     [cljs.reader :as reader]
     [goog.events :as events]
     [clojure.string :as str]
-    [movement.util :refer [GET POST get-stored-sessions get-equipment]]
+    [movement.util :refer [positions GET POST get-stored-sessions get-equipment]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]
     [movement.components.login :refer [footer]]
@@ -20,12 +20,6 @@
 (defn image-url [name]
   (when-not (nil? name)
     (str "images/" (str/replace (str/lower-case name) " " "-") ".png")))
-
-(defn positions
-  "Finds the integer positions of the elements in the collection, that matches the predicate."
-  [pred coll]
-  (keep-indexed (fn [idx x]
-                  (when (pred x) idx)) coll))
 
 (defn add-movement [part-title]
   (let [parts (session/get-in [:movement-session :parts])
@@ -42,13 +36,13 @@
                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
             :error-handler #(print "error getting movement from equipment through add.")})
       (GET "singlemovement"
-             {:params        {:categories categories}
-              :handler       #(let [id (swap! m-counter inc)
-                                    new-movement (first %)
-                                    new-movement (assoc new-movement :id id)
-                                    new-movements (assoc movements id new-movement)]
-                               (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-              :error-handler #(print "error getting single movement through add.")}))))
+           {:params        {:categories categories}
+            :handler       #(let [id (swap! m-counter inc)
+                                  new-movement (first %)
+                                  new-movement (assoc new-movement :id id)
+                                  new-movements (assoc movements id new-movement)]
+                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+            :error-handler #(print "error getting single movement through add.")}))))
 
 (defn refresh-movement
   ([m part-title]
@@ -123,7 +117,7 @@
 (defn create-session-from-template [template-name]
   (GET "template"
        {:params        {:template-name template-name
-                        :user (session/get :user)}
+                        :user          (session/get :user)}
         :handler       add-session-handler
         :error-handler (fn [] (print "error getting session data from server."))}))
 
@@ -158,8 +152,8 @@
       [:div.pure-g
        [:div.pure-u-1-5 @data]
        [:a.pure-u-1-5 {:on-click #(session/assoc-in!
-                                 [:movement-session :parts position-in-parts :movements id r]
-                                 (int @data))} "save"]
+                                   [:movement-session :parts position-in-parts :movements id r]
+                                   (int @data))} "save"]
        [:input {:className "pure-u"
                 :type      "range" :value @data :min min :max max :step step
                 :style     {:width "100%"}
@@ -187,11 +181,11 @@
         [:div.pure-g
          [:div.pure-u-1-12]
          [:div.pure-u-5-12
-          [:div.pure-u {:on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))
+          [:div.pure-u {:on-click  #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))
                         :className (str (when-not (and rep (< 0 rep)) " no-data")
                                         (when @rep-clicked? " selected"))} "Reps"]]
          [:div.pure-u-5-12
-          [:div.pure-u {:on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))
+          [:div.pure-u {:on-click  #(handler-fn (reset! set-clicked? (not @set-clicked?)))
                         :className (str (when-not (and set (< 0 set)) " no-data")
                                         (when @set-clicked? " selected"))} "Set"]]
          [:div.pure-u-1-12]]
@@ -208,10 +202,10 @@
         [:div.pure-g
          [:div.pure-u-1-12]
          [:div.pure-u-5-12
-          [:div.pure-u {:on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))
+          [:div.pure-u {:on-click  #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))
                         :className (str (when-not (and distance (< 0 distance)) " no-data"))} "Meters"]]
          [:div.pure-u-5-12
-          [:div.pure-u {:on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))
+          [:div.pure-u {:on-click  #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))
                         :className (str (when-not (and duration (< 0 duration)) " no-data"))} "Seconds"]]
          [:div.pure-u-1-12]]
         [:div.pure-g
@@ -235,18 +229,15 @@
 (defn add-movement-component []
   (let [show-search-input? (atom false)]
     (fn [title i]
-      [:div.pure-u.movement.add-movement
-       [:div.pure-g {:style {:margin-top    "30px"
-                             :margin-bottom "30px"
-                             :margin-left   "5px"}}
+      [:div.pure-u.movement
+       [:div.pure-g.add-movement
         [:div.pure-u-2-5]
         [:div.pure-u-1-5
          [:i.fa.fa-plus.fa-2x
           {:on-click #(add-movement title)
-           :style {:opacity 0.5
-                   :cursor  'pointer}}]]]
+           :style    {:cursor  'pointer}}]]]
        (if @show-search-input?
-         [:div.pure-g
+         [:div.pure-g.add-movement
           [:div.pure-u
            (let [id (str "mtags" i)
                  movements-ac-comp (with-meta text-input-component
@@ -256,20 +247,18 @@
              [movements-ac-comp {:id          id
                                  :class       "edit"
                                  :placeholder "type to find and add movement.."
-                                 :size        21
+                                 :size        32
                                  :auto-focus  true
                                  :on-save     #(when (some #{%} (session/get :all-movements))
                                                 (do
                                                   (reset! show-search-input? false)
                                                   (add-movement-from-search title %)))}])]]
-         [:div.pure-g {:style {:margin-bottom "30px"
-                               :margin-left   "5px"}}
+         [:div.pure-g.add-movement
           [:div.pure-u-2-5]
           [:div.pure-u-1-5
            [:i.fa.fa-search-plus.fa-2x
-            {:on-click #(reset! show-search-input? true)
-             :style    {:opacity 0.5
-                        :cursor  'pointer}}]]])])))
+            {:on-click #(handler-fn (reset! show-search-input? true))
+             :style    {:cursor 'pointer}}]]])])))
 
 (defn part-component []
   (let []
@@ -330,25 +319,25 @@
                                                           (reset! templates-showing? (not @templates-showing?))))}
          "Choose template"]]
        #_[:div.pure-g
-        [:h3.pure-u [:a.button {:className (when @equipment-showing? "button-primary")
-                                :on-click #(handler-fn
-                                                      (do
-                                                        (when (nil? (session/get :equipment))
-                                                          (get-equipment))
-                                                        (when templates-showing?
-                                                          (reset! templates-showing? false))
-                                                        (reset! equipment-showing? (not @equipment-showing?))))}
-                     "Or choose your available equipment and do some movements with that."]]]
+          [:h3.pure-u [:a.button {:className (when @equipment-showing? "button-primary")
+                                  :on-click  #(handler-fn
+                                               (do
+                                                 (when (nil? (session/get :equipment))
+                                                   (get-equipment))
+                                                 (when templates-showing?
+                                                   (reset! templates-showing? false))
+                                                 (reset! equipment-showing? (not @equipment-showing?))))}
+                       "Or choose your available equipment and do some movements with that."]]]
        [:div.pure-g {:style {:margin-top "10px"}}
         (when @templates-showing?
           (doall
             (for [t (session/get :templates)]
               ^{:key (str t (rand-int 1000))} (template-component t))))]
        #_[:div.pure-g
-        (when @equipment-showing?
-          (doall
-            (for [e (session/get :equipment)]
-              ^{:key (str e (rand-int 1000))} (equipment-component e))))]])))
+          (when @equipment-showing?
+            (doall
+              (for [e (session/get :equipment)]
+                ^{:key (str e (rand-int 1000))} (equipment-component e))))]])))
 
 (defn top-menu-component []
   (let [templates-showing? (atom false)
@@ -359,34 +348,34 @@
         [:div.pure-u.pure-u-md-1-4]
         [:div.pure-u-1-2.pure-u-md-1-4.button.button-primary {:on-click pick-random-template} "Random session"]
         [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when @templates-showing? "button-primary")
-                           :on-click #(handler-fn
-                                       (do
-                                         (when (nil? (session/get :equipment))
-                                           (get-equipment))
-                                         (when equipment-showing?
-                                           (reset! equipment-showing? false))
-                                         (reset! templates-showing? (not @templates-showing?))))}
+                                               :on-click  #(handler-fn
+                                                            (do
+                                                              (when (nil? (session/get :equipment))
+                                                                (get-equipment))
+                                                              (when equipment-showing?
+                                                                (reset! equipment-showing? false))
+                                                              (reset! templates-showing? (not @templates-showing?))))}
          "Template session"]
         [:div.pure-u.pure-u-md-1-5]
         #_[:h3.pure-u.button {:className (when @equipment-showing? "button-primary")
-                           :on-click #(handler-fn
-                                       (do
-                                         (when (nil? (session/get :equipment))
-                                           (get-equipment))
-                                         (when templates-showing?
-                                           (reset! templates-showing? false))
-                                         (reset! equipment-showing? (not @equipment-showing?))))}
-         "Session from equipment"]]
+                              :on-click  #(handler-fn
+                                           (do
+                                             (when (nil? (session/get :equipment))
+                                               (get-equipment))
+                                             (when templates-showing?
+                                               (reset! templates-showing? false))
+                                             (reset! equipment-showing? (not @equipment-showing?))))}
+           "Session from equipment"]]
        [:div.pure-g
         (when @templates-showing?
           (doall
             (for [t (session/get :templates)]
               ^{:key t} [template-component t])))]
        #_[:div.pure-g
-        (when @equipment-showing?
-          (doall
-            (for [e (session/get :equipment)]
-              ^{:key e} (equipment-component e))))]])))
+          (when @equipment-showing?
+            (doall
+              (for [e (session/get :equipment)]
+                ^{:key e} (equipment-component e))))]])))
 
 (defn time-component []
   (let [adding-time (atom false)]
@@ -407,21 +396,21 @@
           [:div.pure-g
            [:div.pure-u.pure-u-md-1-3]
            [:input.pure-u-1-2.pure-u-md-1-6 {:type      "number"
-                                        :value     (session/get-in [:movement-session :time :minutes])
-                                        :min       0
-                                        :on-change #(try
-                                                     (let [value (-> % .-target .-value)]
-                                                       (session/assoc-in! [:movement-session :time :minutes] value))
-                                                     (catch js/Error e
-                                                       (print (str "Caught exception: " e))))}]
+                                             :value     (session/get-in [:movement-session :time :minutes])
+                                             :min       0
+                                             :on-change #(try
+                                                          (let [value (-> % .-target .-value)]
+                                                            (session/assoc-in! [:movement-session :time :minutes] value))
+                                                          (catch js/Error e
+                                                            (print (str "Caught exception: " e))))}]
            [:input.pure-u-1-2.pure-u-md-1-6 {:type      "number"
-                               :value     (session/get-in [:movement-session :time :seconds])
-                               :min       0
-                               :on-change #(try
-                                            (let [value (-> % .-target .-value)]
-                                              (session/assoc-in! [:movement-session :time :seconds] value))
-                                            (catch js/Error e
-                                              (print (str "Caught exception: " e))))}]
+                                             :value     (session/get-in [:movement-session :time :seconds])
+                                             :min       0
+                                             :on-change #(try
+                                                          (let [value (-> % .-target .-value)]
+                                                            (session/assoc-in! [:movement-session :time :seconds] value))
+                                                          (catch js/Error e
+                                                            (print (str "Caught exception: " e))))}]
            [:div.pure-u.pure-u-md-1-3]]])])))
 
 (defn comment-component []
@@ -437,10 +426,10 @@
          [:div.pure-g
           [:div.pure-u.pure-u-md-1-5]
           [:div.pure-u.pure-u-md-3-5
-           [:textarea {:rows 4
-                       :cols 80
-                       :on-change   #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
-                       :value       (session/get-in [:movement-session :comment])}]]
+           [:textarea {:rows      4
+                       :cols      80
+                       :on-change #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
+                       :value     (session/get-in [:movement-session :comment])}]]
           [:div.pure-u.pure-u-md-1-5]])])))
 
 (defn finish-session-component []

@@ -327,4 +327,12 @@
                       #db/id[:db.part/user -5]]
   :movement/easier [#db/id[:db.part/user -100]]}
 
+ {:db/id #db/id[:db.part/user -133]
+  :movement/unique-name "Pseudo Planche Push Up"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -5]]}
+
  ]

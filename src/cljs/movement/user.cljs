@@ -1,8 +1,10 @@
 (ns movement.user
- (:require [reagent.core :refer [atom]]
-           [reagent.session :as session]
-           [movement.menu :refer [menu-component]]
-           [movement.util :refer [POST text-input get-user-info]]))
+  (:require [reagent.core :refer [atom]]
+            [reagent.session :as session]
+            [movement.menu :refer [menu-component]]
+            [movement.util :refer [POST text-input get-user-info]]))
+
+
 
 (defn change-password-component []
   (let [show-change-password? (atom false)
@@ -15,9 +17,9 @@
          [:div
           [:div.pure-g
            [:input.pure-u.pure-u-md-2-5 {:type        "password"
-                           :placeholder "old password"
-                           :value       (:old-pass @pass)
-                           :on-change   #(swap! pass assoc :old-pass (-> % .-target .-value))}]]
+                                         :placeholder "old password"
+                                         :value       (:old-pass @pass)
+                                         :on-change   #(swap! pass assoc :old-pass (-> % .-target .-value))}]]
           [:div.pure-g
            [:input.pure-u.pure-u-md-2-5 {:type        "password"
                                          :placeholder "new password"
@@ -26,9 +28,9 @@
 
           [:div.pure-g
            [:input.pure-u.pure-u-md-2-5 {:type        "password"
-                           :placeholder "confirm new password"
-                           :value       (:repeat-pass @pass)
-                           :on-change   #(swap! pass assoc :repeat-pass (-> % .-target .-value))}]]
+                                         :placeholder "confirm new password"
+                                         :value       (:repeat-pass @pass)
+                                         :on-change   #(swap! pass assoc :repeat-pass (-> % .-target .-value))}]]
           (when-let [info (:info @pass)]
             [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
           (when-let [error (:error @pass)]
@@ -49,40 +51,35 @@
                 "Change password"]]))])])))
 
 (defn set-username-component []
-  (let [show-change-username? (atom false)
-        username (atom {:info "" :error ""})]
+  (let [username (atom {:info "" :error ""})]
     (fn []
       [:div
-       [:div.pure-g
-        [:div.button.pure-u.pure-u-md-2-5 {:on-click #(reset! show-change-username? true)} "Set username"]]
-       (when @show-change-username?
-         [:div
-          [:div.pure-g
-           [:input.pure-u.pure-u-md-2-5 {:type        "text"
-                                         :placeholder "username"
-                                         :value       (:new-username @username)
-                                         :on-change   #(swap! username assoc :new-username (-> % .-target .-value))}]]
-          (when-let [info (:info @username)]
-            [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
-          (when-let [error (:error @username)]
-            [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])
-          (when (not-empty (:new-username @username))
-            [:div.pure-g
-             [:button.pure-u.pure-u-md-2-5.button.button-primary
-              {:on-click #(POST "/change-username"
-                                {:params        {:email    (session/get :user)
-                                                 :username (:new-username @username)}
-                                 :handler       (fn [response]
-                                                  (let []
-                                                    (swap! username assoc
-                                                           :error ""
-                                                           :info (:message response))
-                                                    (session/put! :username (:username response))))
-                                 :error-handler (fn [response]
-                                                  (swap! username assoc
-                                                         :error (:response response)
-                                                         :info ""))})}
-              "Set username"]])])])))
+       [:p.pure-g
+        [:input.pure-u.pure-u-md-2-5 {:type        "text"
+                                      :placeholder "Type a new username"
+                                      :value       (:new-username @username)
+                                      :on-change   #(swap! username assoc :new-username (-> % .-target .-value))}]]
+       (when-let [info (:info @username)]
+         [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
+       (when-let [error (:error @username)]
+         [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])
+       (when (not-empty (:new-username @username))
+         [:div.pure-g
+          [:button.pure-u.pure-u-md-2-5.button.button-secondary
+           {:on-click #(POST "/change-username"
+                             {:params        {:email    (session/get :user)
+                                              :username (:new-username @username)}
+                              :handler       (fn [response]
+                                               (let []
+                                                 (swap! username assoc
+                                                        :error ""
+                                                        :info (:message response))
+                                                 (session/put! :username (:username response))))
+                              :error-handler (fn [response]
+                                               (swap! username assoc
+                                                      :error (:response response)
+                                                      :info ""))})}
+           "Set username"]])])))
 
 (defn logged-sessions-component []
   (let [show-sessions? (atom false)
@@ -102,19 +99,27 @@
                [:a {:href (str "/session/" (:session/url s)) :target "_blank"} "View"]]])))])))
 
 (defn logged-in-as []
-  (let [username (session/get :username)
+  (let [set-new-username? (atom false)
+        username (session/get :username)
         email (session/get :user)]
-    [:div.pure-g
-     [:h4.pure-u (str "Logged in as " (if username username email))]]))
+    (fn []
+      [:div
+       [:div.pure-g
+        [:h4.pure-u "Logged in as " [:span {:style    {:text-decoration 'underline
+                                                       :cursor 'pointer}
+                                            :on-click #(reset! set-new-username? true)}
+                                     (if username username email)]]]
+       (when @set-new-username?
+         [set-username-component])])))
 
 (defn user-component []
   (let []
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
-       [:div.content {:style {:margin-top "20px"}}
-        (logged-in-as)
+       [:div.content
+        [logged-in-as]
         [logged-sessions-component]
         [change-password-component]
-        [set-username-component]]])))
+        ]])))
 

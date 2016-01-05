@@ -278,6 +278,22 @@
                       #db/id[:db.part/user -8]
                       #db/id[:db.part/user -10]]}
 
+ {:db/id             #db/id[:db.part/user]
+  :movement/unique-name     "Handstand Lean"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -10]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/unique-name     "Planche Lean"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -10]]}
+
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Ring Support Hold"
   :movement/category  [#db/id[:db.part/user -1]

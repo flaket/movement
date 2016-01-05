@@ -122,6 +122,12 @@
 #_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
 Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",
 
+#_(let [
+      tx-user-data [{:db/id                    #db/id[:db.part/user]
+                     :user/email               "andreas.flakstad@gmail.com"
+                     :user/valid-subscription? true}]]
+  (d/transact conn tx-user-data))
+
 #_(let []
   (empty? (d/q '[:find [?username ...]
                  :in $ ?username
@@ -130,17 +136,18 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                db
                "flaket")))
 
-(d/q '[:find [?username ...]
-       :in $
-       :where
-       [?e :user/name ?username]]
-     db)
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186045811)
-#_(d/transact conn [[:db/retract 17592186045809
-                     :user/template 17592186045872]])
+#_(d/pull db '[*] 17592186045455)
+#_(d/transact conn [[:db/retract 17592186045494
+                     :movement/category 17592186045455]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186046183]])
+
+#_(d/q '[:find (pull ?e [*])
+         :in $ ?name
+       :where
+       [?e :movement/unique-name ?name]]
+     db "Elbow Pull Up")
 
 #_(d/q '[:find ?name
        :in $ ?cat-name
@@ -148,7 +155,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
          [?m :movement/unique-name ?name]
          [?m :movement/category ?c]
          [?c :category/name ?cat-name]]
-     db "Ring")
+     db "Straight Arm Scapular Strength")
 
 #_(d/q '[:find (pull ?s [*])
          :in $ ?email

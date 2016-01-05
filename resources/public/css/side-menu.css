@@ -84,6 +84,7 @@ appears on the left side of the page.
         #menu .pure-menu li a:hover,
         #menu .pure-menu li a:focus {
             background: rgb(55, 60, 90);
+            background: inherit;
         }
 
     /*

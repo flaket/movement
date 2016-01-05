@@ -16,6 +16,12 @@
 (def csrf-token
   (dommy/attr (sel1 :#anti-forgery-token) "value"))
 
+(defn positions
+  "Finds the integer positions of the elements in the collection, that matches the predicate."
+  [pred coll]
+  (keep-indexed (fn [idx x]
+                  (when (pred x) idx)) coll))
+
 (defn GET [url & [opts]]
   (let [token (str/trim (str "Token " (session/get :token)))
         base-opts {:format          (edn-request-format)
@@ -33,7 +39,7 @@
                    ;:with-credentials true
                    :interceptors    [(to-interceptor {:name    "Token Interceptor"
                                                       :request #(assoc-in % [:headers "authorization"] token)})]
-                   :headers {:x-csrf-token csrf-token}}]
+                   :headers         {:x-csrf-token csrf-token}}]
     (cljs-ajax/POST url (merge base-opts opts))))
 
 (defn get-user-info []
@@ -69,8 +75,8 @@
 (defn get-stored-sessions []
   (if-let [user (session/get :user)]
     (GET "sessions" {:params        {:user user}
-                            :handler       #(session/put! :stored-sessions %)
-                            :error-handler #(print (str "error retrieving stored sessions: " %))})
+                     :handler       #(session/put! :stored-sessions %)
+                     :error-handler #(print (str "error retrieving stored sessions: " %))})
     (print "no user in session.")))
 
 (defn hook-browser-navigation! []
@@ -86,7 +92,7 @@
 
 (defn text-input [target & [opts]]
   [:input (merge
-            {:type "text"
+            {:type      "text"
              :on-change #(reset! target (-> % .-target .-value))
-             :value @target}
+             :value     @target}
             opts)])

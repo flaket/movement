@@ -100,9 +100,9 @@
                            movements (if (or (nil? n) (zero? n))
                                        []
                                        (vec (get-n-movements-from-categories n category-names {:rep      (:part/rep p)
-                                                                                                  :set      (:part/set p)
-                                                                                                  :distance (:part/distance p)
-                                                                                                  :duration (:part/duration p)})))]
+                                                                                               :set      (:part/set p)
+                                                                                               :distance (:part/distance p)
+                                                                                               :duration (:part/duration p)})))]
                        {:title      name
                         :categories category-names
                         :movements  (if-let [specific-movements (vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement p)))]
@@ -252,11 +252,11 @@
                                       (for [m (:movements p)]
                                         (apply dissoc m (for [[k v] m :when (nil? v)] k))))))
         movement-data (map #(rename-keys % {:movement/unique-name :movement/name
-                                            :rep      :movement/rep
-                                            :set      :movement/set
-                                            :distance :movement/distance
-                                            :duration :movement/duration
-                                            :id       :movement/position})
+                                            :rep                  :movement/rep
+                                            :set                  :movement/set
+                                            :distance             :movement/distance
+                                            :duration             :movement/duration
+                                            :id                   :movement/position})
                            movement-data)
         tx-data (concat session-data part-data movement-data)]
     (d/transact conn tx-data)))
@@ -272,22 +272,22 @@
 
 (defn transact-activated-user! [email]
   (let [conn (:conn @tx)
-        tx-user-data [{:db/id                  #db/id[:db.part/user -99]
-                       :user/email             email
-                       :user/activated?        true
-                       :user/activation-id     (generate-activation-id)
-                       :user/sign-up-timestamp (Date.)
+        tx-user-data [{:db/id                    #db/id[:db.part/user -99]
+                       :user/email               email
+                       :user/activated?          true
+                       :user/activation-id       (generate-activation-id)
+                       :user/sign-up-timestamp   (Date.)
                        :user/valid-subscription? false
-                       :user/setting           [#db/id[:db.part/user -100]]}
-                      {:db/id                          #db/id[:db.part/user -100]
-                       :setting/view                     "Standard"
-                       :setting/receive-email?           true}]]
+                       :user/setting             [#db/id[:db.part/user -100]]}
+                      {:db/id                  #db/id[:db.part/user -100]
+                       :setting/view           "Standard"
+                       :setting/receive-email? true}]]
     (d/transact conn tx-user-data)))
 
 (defn transact-subscription-status! [email value]
   (let [conn (:conn @tx)
-        tx-user-data [{:db/id              #db/id[:db.part/user]
-                       :user/email         email
+        tx-user-data [{:db/id                    #db/id[:db.part/user]
+                       :user/email               email
                        :user/valid-subscription? value}]]
     (d/transact conn tx-user-data)))
 
@@ -301,9 +301,9 @@
 
 (defn transact-username! [email username]
   (let [conn (:conn @tx)
-        tx-user-data [{:db/id         #db/id[:db.part/user]
-                       :user/email    email
-                       :user/name     username}]]
+        tx-user-data [{:db/id      #db/id[:db.part/user]
+                       :user/email email
+                       :user/name  username}]]
     (d/transact conn tx-user-data)
     "Username changed successfully!"))
 

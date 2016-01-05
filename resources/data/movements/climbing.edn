@@ -390,7 +390,7 @@
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
                       #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -8]
+                      #db/id[:db.part/user -5]
                       #db/id[:db.part/user -9]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 

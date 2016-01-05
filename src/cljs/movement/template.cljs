@@ -40,7 +40,7 @@
        [:div.pure-u.destroy
         [:i.fa.fa-remove {:on-click #(let [specific-movements (vec (remove #{m} (get-in @template-state [:parts i :specific-movements])))]
                                       (swap! template-state assoc-in [:parts i :specific-movements] specific-movements))
-                          :title "Remove movement"}]]])
+                          :title    "Remove movement"}]]])
     [:h3.pure-g
      [:div.pure-u-1-12]
      [:div.pure-u.title title]]
@@ -85,49 +85,49 @@
    [:div.pure-g
     [:label.pure-u "These movements should be done for: "]]
    [:div.pure-g
-    [:div.pure-u [:input {:type        "text"
-                          :size 10
-                          :value       (get-in @template-state [:parts i :rep])
-                          :on-change   #(try
-                                         (let [value (-> % .-target .-value read-string)]
-                                           (if (or (nil? value) (and (integer? value) (< 0 value)))
-                                             (swap! template-state assoc-in [:parts i :rep] value)))
-                                         (catch js/Error e
-                                           (print (str "Caught exception: " e))))}]]
+    [:div.pure-u [:input {:type      "number"
+                          :size      10
+                          :value     (get-in @template-state [:parts i :rep])
+                          :on-change #(try
+                                       (let [value (-> % .-target .-value read-string)]
+                                         (if (or (nil? value) (and (integer? value) (< 0 value)))
+                                           (swap! template-state assoc-in [:parts i :rep] value)))
+                                       (catch js/Error e
+                                         (print (str "Caught exception: " e))))}]]
 
     [:div.pure-u "reps"]]
    [:div.pure-g
-    [:div.pure-u [:input {:type        "text"
-                          :size 10
-                          :value       (get-in @template-state [:parts i :set])
-                          :on-change   #(try
-                                         (let [value (-> % .-target .-value read-string)]
-                                           (if (or (nil? value) (and (integer? value) (< 0 value)))
-                                             (swap! template-state assoc-in [:parts i :set] value)))
-                                         (catch js/Error e
-                                           (print (str "Caught exception: " e))))}]]
+    [:div.pure-u [:input {:type      "number"
+                          :size      10
+                          :value     (get-in @template-state [:parts i :set])
+                          :on-change #(try
+                                       (let [value (-> % .-target .-value read-string)]
+                                         (if (or (nil? value) (and (integer? value) (< 0 value)))
+                                           (swap! template-state assoc-in [:parts i :set] value)))
+                                       (catch js/Error e
+                                         (print (str "Caught exception: " e))))}]]
     [:div.pure-u "sets"]]
    [:div.pure-g
-    [:div.pure-u [:input {:type        "text"
-                          :value       (get-in @template-state [:parts i :distance])
-                          :size 10
-                          :on-change   #(try
-                                         (let [value (-> % .-target .-value read-string)]
-                                           (if (or (nil? value) (and (integer? value) (< 0 value)))
-                                             (swap! template-state assoc-in [:parts i :distance] value)))
-                                         (catch js/Error e
-                                           (print (str "Caught exception: " e))))}]]
+    [:div.pure-u [:input {:type      "number"
+                          :value     (get-in @template-state [:parts i :distance])
+                          :size      10
+                          :on-change #(try
+                                       (let [value (-> % .-target .-value read-string)]
+                                         (if (or (nil? value) (and (integer? value) (< 0 value)))
+                                           (swap! template-state assoc-in [:parts i :distance] value)))
+                                       (catch js/Error e
+                                         (print (str "Caught exception: " e))))}]]
     [:div.pure-u "meters"]]
    [:div.pure-g
-    [:div.pure-u [:input {:type        "text"
-                          :value       (get-in @template-state [:parts i :duration])
-                          :size 10
-                          :on-change   #(try
-                                         (let [value (-> % .-target .-value read-string)]
-                                           (if (or (nil? value) (and (integer? value) (< 0 value)))
-                                             (swap! template-state assoc-in [:parts i :duration] value)))
-                                         (catch js/Error e
-                                           (print (str "Caught exception: " e))))}]]
+    [:div.pure-u [:input {:type      "number"
+                          :value     (get-in @template-state [:parts i :duration])
+                          :size      10
+                          :on-change #(try
+                                       (let [value (-> % .-target .-value read-string)]
+                                         (if (or (nil? value) (and (integer? value) (< 0 value)))
+                                           (swap! template-state assoc-in [:parts i :duration] value)))
+                                       (catch js/Error e
+                                         (print (str "Caught exception: " e))))}]]
     [:div.pure-u "seconds"]]])
 
 (defn part-creator-component []
@@ -166,7 +166,7 @@
            [categories-ac-comp {:id          id
                                 :class       "edit"
                                 :placeholder "type to find and add category.."
-                                :size        30
+                                :size        32
                                 :on-save     #(when (and (some #{%} (session/get :all-categories))
                                                          (not (some #{%} (get-in @template-state [:parts i :categories]))))
                                                (swap! template-state update-in [:parts i :categories] conj %))}]])]
@@ -190,7 +190,9 @@
                       [:div.pure-u {:style    {:cursor     'pointer
                                                :background (when (some #{c} (get-in @template-state [:parts i :categories]))
                                                              "yellow")}
-                                    :on-click #(when (not (some #{c} (get-in @template-state [:parts i :categories])))
+                                    :on-click #(if (some #{c} (get-in @template-state [:parts i :categories]))
+                                                (let [new-categories (remove #{c} (get-in @template-state [:parts i :categories]))]
+                                                  (swap! template-state assoc-in [:parts i :categories] new-categories))
                                                 (swap! template-state update-in [:parts i :categories] conj c))} c]]))
 
        [:div.pure-g
@@ -205,7 +207,7 @@
            [movements-ac-comp {:id          id
                                :class       "edit"
                                :placeholder "type to find and add movement.."
-                               :size        30
+                               :size        32
                                :on-save     #(when (and (some #{%} (session/get :all-movements))
                                                         (not (some #{%} (get-in @template-state [:parts i :specific-movements]))))
                                               (swap! template-state update-in [:parts i :specific-movements] conj %))}])]]
@@ -222,8 +224,9 @@
 
 (defn title-component []
   [:div.pure-g
-   [:h1.pure-u.pure-u-md-2-5
+   [:h1.pure-u-1
     [:input {:type        "text"
+             :size        50
              :placeholder "Template Title"
              :on-change   #(swap! template-state assoc :title (-> % .-target .-value))
              :value       (:title @template-state)}]]])
