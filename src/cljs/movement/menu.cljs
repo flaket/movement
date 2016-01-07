@@ -9,7 +9,9 @@
   (let [menu-item-session " Session"
         menu-item-user " User"
         menu-item-template " Templates"
-        menu-item-group " Groups"]
+        menu-item-group " Groups"
+        menu-item-routine " Routines"
+        menu-item-plan " Plans"]
     (fn []
       [:div
        [:div {:id "menu-hamburger"
@@ -42,8 +44,21 @@
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-group)
                                (dispatch! "/group"))}
-
              [:a.pure-menu-link #_[:i.fa.fa-book] menu-item-group]]
+            [:li {:className (str "pure-menu-item"
+                                  (when (= menu-item-routine selected)
+                                    " menu-item-divided pure-menu-selected"))
+                  :on-click  #(do
+                               (session/put! :selected-menu-item menu-item-routine)
+                               (dispatch! "/routine"))}
+             [:a.pure-menu-link #_[:i.fa.fa-book] menu-item-routine]]
+            [:li {:className (str "pure-menu-item"
+                                  (when (= menu-item-plan selected)
+                                    " menu-item-divided pure-menu-selected"))
+                  :on-click  #(do
+                               (session/put! :selected-menu-item menu-item-plan)
+                               (dispatch! "/plan"))}
+             [:a.pure-menu-link #_[:i.fa.fa-book] menu-item-plan]]
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-user selected)
                                     " menu-item-divided pure-menu-selected"))

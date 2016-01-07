@@ -141,6 +141,15 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user]
+  :movement/unique-name      "Hang Power Clean"
+  :movement/category  [#db/id[:db.part/user -7]
+                       #db/id[:db.part/user -1]
+                       #db/id[:db.part/user -8]
+                       #db/id[:db.part/user -5]
+                       #db/id[:db.part/user -10]]
+  :movement/equipment [#db/id[:db.part/user -5000]]}
+
+ {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Hang Clean"
   :movement/category  [#db/id[:db.part/user -7]
                        #db/id[:db.part/user -1]

@@ -34,7 +34,7 @@
                                   new-movement (assoc new-movement :id id)
                                   new-movements (assoc movements id new-movement)]
                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-            :error-handler #(print "error getting movement from equipment through add.")})
+            :error-handler #(pr "error getting movement from equipment through add.")})
       (GET "singlemovement"
            {:params        {:categories categories}
             :handler       #(let [id (swap! m-counter inc)
@@ -42,7 +42,7 @@
                                   new-movement (assoc new-movement :id id)
                                   new-movements (assoc movements id new-movement)]
                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-            :error-handler #(print "error getting single movement through add.")}))))
+            :error-handler #(pr "error getting single movement through add.")}))))
 
 (defn refresh-movement
   ([m part-title]
@@ -58,7 +58,7 @@
                                    new-movement (assoc new-movement :id id)
                                    new-movements (assoc movements id new-movement)]
                               (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-             :error-handler #(print "error getting movement from equipment through refresh.")})
+             :error-handler #(pr "error getting movement from equipment through refresh.")})
        (GET "singlemovement"
             {:params        {:categories categories}
              :handler       #(let [id (:id m)
@@ -66,7 +66,7 @@
                                    new-movement (assoc new-movement :id id)
                                    new-movements (assoc movements id new-movement)]
                               (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-             :error-handler #(print "error getting single movement through refresh.")}))))
+             :error-handler #(pr "error getting single movement through refresh.")}))))
   ([m part-title new-difficulty]
    (let [parts (session/get-in [:movement-session :parts])
          position-in-parts (first (positions #{part-title} (map :title parts)))
@@ -80,7 +80,7 @@
                                    new-movement (assoc new-movement :id id)
                                    new-movements (assoc movements id new-movement)]
                               (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-             :error-handler #(print (str "error: " %))})))))
+             :error-handler #(pr (str "error: " %))})))))
 
 (defn add-movement-from-search [part-title movement-name]
   (let [parts (session/get-in [:movement-session :parts])
@@ -93,7 +93,7 @@
                                 new-movement (assoc new-movement :id id)
                                 new-movements (assoc movements id new-movement)]
                            (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-          :error-handler #(print "error getting single movement through add.")})))
+          :error-handler #(pr "error getting single movement through add.")})))
 
 (defn remove-movement [m part-title]
   (let [parts (session/get-in [:movement-session :parts])
@@ -119,21 +119,21 @@
        {:params        {:template-name template-name
                         :user          (session/get :user)}
         :handler       add-session-handler
-        :error-handler (fn [] (print "error getting session data from server."))}))
+        :error-handler (fn [] (pr "error getting session data from server."))}))
 
 (defn create-session-from-group [group]
   (GET "group"
        {:params        {:group group
                         :email (session/get :email)}
         :handler       add-session-handler
-        :error-handler (fn [] (print "error getting group session data from server."))}))
+        :error-handler (fn [] (pr "error getting group session data from server."))}))
 
 (defn create-session-from-equipment [equipment-name]
   (GET "equipment-session"
        {:params        {:equipment equipment-name
                         :user      (session/get :user)}
         :handler       add-session-handler
-        :error-handler (fn [e] (print (str "error getting session data from server: " e)))}))
+        :error-handler (fn [e] (pr (str "error getting session data from server: " e)))}))
 
 (defn pick-random-template []
   (let [name (first (shuffle (session/get :templates)))]
@@ -409,7 +409,7 @@
                                                           (let [value (-> % .-target .-value)]
                                                             (session/assoc-in! [:movement-session :time :minutes] value))
                                                           (catch js/Error e
-                                                            (print (str "Caught exception: " e))))}]
+                                                            (pr (str "Caught exception: " e))))}]
            [:input.pure-u-1-2.pure-u-md-1-6 {:type      "number"
                                              :value     (session/get-in [:movement-session :time :seconds])
                                              :min       0
@@ -417,7 +417,7 @@
                                                           (let [value (-> % .-target .-value)]
                                                             (session/assoc-in! [:movement-session :time :seconds] value))
                                                           (catch js/Error e
-                                                            (print (str "Caught exception: " e))))}]
+                                                            (pr (str "Caught exception: " e))))}]
            [:div.pure-u.pure-u-md-1-3]]])])))
 
 (defn comment-component []
@@ -465,7 +465,7 @@
                                 :handler       (fn [response] (do
                                                                 (reset! session-stored-successfully? true)
                                                                 (get-stored-sessions)))
-                                :error-handler (fn [response] (print response))}))}
+                                :error-handler (fn [response] (pr response))}))}
             "Confirm Finish Session"]
            [:div.pure-u.pure-u-md-1-5]]
           [:div.pure-g

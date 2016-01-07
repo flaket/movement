@@ -11,6 +11,8 @@
             [movement.generator :refer [generator-component]]
             [movement.share :refer [share-component]]
             [movement.group :refer [group-creator-component]]
+            [movement.routine :refer [routine-creator-component]]
+            [movement.plan :refer [plan-creator-component]]
             [movement.components.login :refer [login-page]])
   (:import goog.History))
 
@@ -23,6 +25,8 @@
 (secretary/defroute "/user" [] (set-page! #'user-component))
 (secretary/defroute "/template" [] (set-page! #'template-creator-component))
 (secretary/defroute "/group" [] (set-page! #'group-creator-component))
+(secretary/defroute "/routine" [] (set-page! #'routine-creator-component))
+(secretary/defroute "/plan" [] (set-page! #'plan-creator-component))
 
 ;---------------------------
 (defn page []

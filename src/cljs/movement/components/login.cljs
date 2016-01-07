@@ -2,7 +2,7 @@
   (:require [reagent.core :refer [atom]]
             [reagent.session :as session]
             [movement.util :refer [GET POST text-input get-all-movements
-                                   get-stored-sessions get-templates
+                                   get-stored-sessions get-templates get-routines
                                    get-equipment get-all-categories]]
             [secretary.core :include-macros true :refer [dispatch!]]
             [reagent.session :as session]))
@@ -105,6 +105,7 @@
                                                                        (session/put! :email (:email response))
                                                                        (session/put! :username (:username response))
                                                                        (get-templates)
+                                                                       (get-routines)
                                                                        (get-all-categories)
                                                                        (get-all-movements)
                                                                        (get-stored-sessions)

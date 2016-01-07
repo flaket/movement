@@ -3,23 +3,18 @@
     [cljs.core.async.macros :refer [go]])
   (:require [reagent.core :refer [atom]]
             [reagent.session :as session]
-            [reagent-forms.core :refer [bind-fields]]
             [cljs.core.async :as async :refer [timeout <!]]
-            [secretary.core :include-macros true :refer [dispatch!]]
             [movement.menu :refer [menu-component]]
             [movement.util :refer [positions text-input POST get-templates get-groups]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
-            [movement.state :refer [handler-fn]]
-            [movement.user :refer [set-username-component]]
-            [clojure.string :as str]
-            [cljs.reader :refer [read-string]]))
+            [movement.user :refer [set-username-component]]))
 
 (def group-state (atom {}))
 
 (defn heading-component []
   [:div.pure-g
    [:h2.pure-u "Create a new Group"]
-   [:button.pure-u {:on-click #(print (session/get :groups))} "My Groups"]])
+   [:button.pure-u {:on-click #(pr (session/get :groups))} "My Groups"]])
 
 (defn title-component []
   [:div
@@ -78,9 +73,9 @@
         (let []
           (go (<! (timeout 3000))
               (reset! group-stored-successfully? false)
-              (reset! group-state {:parts []}))
+              (reset! group-state {}))
           [:div.pure-g
-           [:div.pure-u {:style {:margin-top 15 :font-size 24 :color "green"}} "Template stored successfully!"]])
+           [:div.pure-u {:style {:margin-top 15 :font-size 24 :color "green"}} "Group stored successfully!"]])
         [:div.pure-g
          [:p.pure-u.pure-u-md-2-5.button.button-primary
           {:on-click #(let [title (:title @group-state)
@@ -94,13 +89,13 @@
                                              :public? true
                                              :created-by username)]
                                  (POST "group"
-                                         {:params        {:email (session/get :email)
+                                         {:params        {:email email
                                                           :group group}
                                           :handler       (fn [response] (do
                                                                           (reset! error-atom {})
                                                                           (reset! group-stored-successfully? true)
                                                                           (get-groups)))
-                                          :error-handler (fn [response] (do (print response)
+                                          :error-handler (fn [response] (do (pr response)
                                                                             (reset! error-atom response)))}))))}
           "Save Group"]]))))
 

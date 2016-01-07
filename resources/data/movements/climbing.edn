@@ -64,7 +64,6 @@
                       #db/id[:db.part/user -10]
                       #db/id[:db.part/user -11]]
   :movement/equipment [#db/id[:db.part/user -5001]]
-  :movement/harder [#db/id[:db.part/user -103]]
   :movement/easier [#db/id[:db.part/user -99]]}
 
  {:db/id             #db/id[:db.part/user -102]
@@ -78,20 +77,6 @@
                       #db/id[:db.part/user -11]]
   :movement/equipment [#db/id[:db.part/user -5001]]
   :movement/harder [#db/id[:db.part/user -101]]}
-
- {:db/id             #db/id[:db.part/user -103]
-  :movement/unique-name     "L Sit Muscle Up"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -7]
-                      #db/id[:db.part/user -8]
-                      #db/id[:db.part/user -9]
-                      #db/id[:db.part/user -10]
-                      #db/id[:db.part/user -11]
-                      #db/id[:db.part/user -13]]
-  :movement/equipment [#db/id[:db.part/user -5001]]
-  :movement/easier [#db/id[:db.part/user -101]]}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Pull Over"

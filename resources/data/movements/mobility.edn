@@ -13,6 +13,7 @@
  {:db/id #db/id[:db.part/user -6] :category/name "Spine Mobility"}
  {:db/id #db/id[:db.part/user -7] :category/name "Bridge"}
  {:db/id #db/id[:db.part/user -8] :category/name "Balance"}
+ {:db/id #db/id[:db.part/user -9] :category/name "Stretching"}
 
  ;; Hip
  {:db/id              #db/id[:db.part/user]
@@ -28,7 +29,8 @@
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Static Squat"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]}
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -9]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Split Squat"
@@ -83,7 +85,8 @@
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Dynamic Soleus Stretch"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]}
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -9]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Floor Hip Rotation"
@@ -93,12 +96,14 @@
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Toes Stretch"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]}
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -9]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Dynamic Toes Stretch"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]}
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -9]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Squat Sky Reach"
@@ -109,7 +114,9 @@
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Sky Reach Hold"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -2]]}
+                       #db/id[:db.part/user -2]
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -9]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Prayer Squat"
@@ -253,7 +260,8 @@
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Wrist Stretches"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -4]]}
+                       #db/id[:db.part/user -4]
+                       #db/id[:db.part/user -9]]}
 
 
 ;; Ankle
@@ -269,7 +277,8 @@
 {:db/id              #db/id[:db.part/user -199]
   :movement/unique-name      "Four Way Spine Stretch"
   :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -6]]}
+                       #db/id[:db.part/user -6]
+                       #db/id[:db.part/user -9]]}
 
  {:db/id              #db/id[:db.part/user -200]
   :movement/unique-name      "Slide Into Low Bridge"
@@ -304,7 +313,8 @@
   :movement/unique-name      "High Bridge"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -6]
-                       #db/id[:db.part/user -7]]
+                       #db/id[:db.part/user -7]
+                       #db/id[:db.part/user -9]]
   :movement/easier    [#db/id[:db.part/user -200]]
   :movement/harder    [#db/id[:db.part/user -202]]}
 

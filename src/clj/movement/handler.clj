@@ -70,9 +70,9 @@
       (valid-user? user password) (let [claims {:user (keyword email)
                                                 :exp  (-> 3 hours from-now)}
                                         token (jws/sign claims secret {:alg :hs512})]
-                                    (response {:token token
-                                               :user  (:user/email user)
-                                               :email (:user/email user)
+                                    (response {:token    token
+                                               :user     (:user/email user)
+                                               :email    (:user/email user)
                                                :username (:user/name user)}))
       :else (response {:message "Incorrect password"} 401))))
 
@@ -118,6 +118,20 @@
                        (response "New group stored successfully."))))
         (response "You already have a group with this title. Please choose a unique title for your group." 400)))))
 
+(defn add-routine! [req]
+  (let [email (:email (:params req))
+        routine (:routine (:params req))]
+    (if (nil? email)
+      (response "User email lacking from client data" 400)
+      (if (db/new-unique-routine? email (:name routine))
+        (try
+          (db/transact-routine! email routine)
+          (catch Exception e
+            (response (str "Exception: " e)))
+          (finally (do (update-tx-db!)
+                       (response "New routine stored successfully."))))
+        (response "You already have a routine with this title. Please choose a unique title for your routine." 400)))))
+
 (defn add-user! [email password]
   (if (nil? (:db/id (db/find-user email)))
     (let [activation-id (generate-activation-id)]
@@ -157,7 +171,7 @@
         username (:username (:params req))]
     (if (db/new-unique-username? username)
       (try
-        (response {:message (db/transact-username! email username)
+        (response {:message  (db/transact-username! email username)
                    :username username})
         (catch Exception e
           (error e "error changing username: ")
@@ -227,6 +241,9 @@
            (POST "/group" req (if-not (authenticated? req)
                                 (throw-unauthorized)
                                 (add-group! req)))
+           (POST "/routine" req (if-not (authenticated? req)
+                                  (throw-unauthorized)
+                                  (add-routine! req)))
            (POST "/change-password" req (if-not (authenticated? req)
                                           (throw-unauthorized)
                                           (change-password! req)))
@@ -234,13 +251,13 @@
                                           (throw-unauthorized)
                                           (change-username! req)))
            (GET "/user" req (if-not (authenticated? req)
-                                  (throw-unauthorized)
-                                  (let [email (:email (:params req))]
-                                    (response (dissoc (db/find-user email)
-                                                      :user/password
-                                                      :user/activation-id
-                                                      :user/activated?
-                                                      :user/valid-subscription?)))))
+                              (throw-unauthorized)
+                              (let [email (:email (:params req))]
+                                (response (dissoc (db/find-user email)
+                                                  :user/password
+                                                  :user/activation-id
+                                                  :user/activated?
+                                                  :user/valid-subscription?)))))
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (response (db/retrieve-sessions req))))
@@ -254,15 +271,23 @@
                                    (throw-unauthorized)
                                    (response (db/all-template-titles (str (:user (:params req)))))))
            (GET "/group" req (if-not (authenticated? req)
-                                  (throw-unauthorized)
-                                  (let [group (:group (:params req))
-                                        email (:email (:params req))]
-                                    (response (db/create-session
-                                                (db/pick-template-title-from-group email group)
-                                                email)))))
+                               (throw-unauthorized)
+                               (let [group (:group (:params req))
+                                     email (:email (:params req))]
+                                 (response (db/create-session
+                                             (db/pick-template-title-from-group email group)
+                                             email)))))
            (GET "/groups" req (if-not (authenticated? req)
-                                   (throw-unauthorized)
-                                   (response (db/all-group-titles (str (:email (:params req)))))))
+                                (throw-unauthorized)
+                                (response (db/all-group-titles (str (:email (:params req)))))))
+           (GET "/routine" req (if-not (authenticated? req)
+                                 (throw-unauthorized)
+                                 (let [routine (:routine (:params req))
+                                       email (:email (:params req))]
+                                   (response (db/get-routine email routine)))))
+           (GET "/routines" req (if-not (authenticated? req)
+                                  (throw-unauthorized)
+                                  (response (db/all-routine-titles (str (:email (:params req)))))))
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (response (db/entity-by-movement-name (:name (:params req))))))

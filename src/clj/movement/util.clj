@@ -143,13 +143,13 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 #_(d/pull db '[*] 17592186045455)
 #_(d/transact conn [[:db/retract 17592186045494
                      :movement/category 17592186045455]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186046183]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045785]])
 
 #_(d/q '[:find (pull ?e [*])
          :in $ ?name
        :where
        [?e :movement/unique-name ?name]]
-     db "Elbow Pull Up")
+     db "Tick Tock")
 
 #_(first (d/q '[:find [?id ...]
               :in $ ?email ?name
@@ -168,51 +168,54 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                 [?id :template/title ?name]]
               db email template-title)))
 
-#_(def email "andflak@gmail.com")
+#_(defn entity-by-movement-name
+  "Returns the whole entity of a named movement."
+  [name]
+  (d/pull db '[*] [:movement/unique-name name]))
 
-#_(def ex-group {:title      "Flakets 6"
-               :public?    true
-               :created-by "flaket"
-               :templates  '("Natural Movement" "Gymnastic Strength"
-                              "Lifting Weights 5x5" "Learning Handstand"
-                              "Locomotion" "4x4 Interval Run")})
+#_(def email "admin@movementsession.com")
 
-#_(defn transact-group! [email {:keys [title created-by public? description templates]}]
-  (let [description (if (nil? description) "" description)
-        template-ids (vec (map #(get-user-template-id email %) templates))
-        tx-data [{:db/id      #db/id[:db.part/user -99]
-                  :user/email email
-                  :user/group [#db/id[:db.part/user -100]]}
-                 {:db/id             #db/id[:db.part/user -100]
-                  :group/title       title
-                  :group/description description
-                  :group/template    template-ids
-                  :group/public?     public?
-                  :group/created-by  #db/id[:db.part/user -101]}
-                 {:db/id             #db/id[:db.part/user -101]
-                  :user/name created-by}]]
-    (d/transact conn tx-data)))
+#_(def ex-routine {:name      "Archers"
+                   :public?    true
+                   :created-by "movementsession"
+                   :movements  ["Archer Push Up" "Archer Pull Up" "Archer Ring Dip"]})
 
-#_(:template/title (ffirst (shuffle (d/q '[:find (pull ?t [*])
-                                           :in $ ?email ?title
-                                           :where
-                                           [?u :user/email ?email]
-                                           [?u :user/group ?group]
-                                           [?group :group/title ?title]
-                                           [?group :group/template ?t]]
-                                         db
-                                         "admin@movementsession.com"
-                                         "Standard Templates 1"))))
+#_(defn transact-routine! [email {:keys [name created-by public? description movements]}]
+    (let [description (if (nil? description) "" description)
+            movement-ids (vec (map #(:db/id (entity-by-movement-name %)) movements))
+          tx-data [{:db/id      #db/id[:db.part/user -99]
+                      :user/email email
+                      :user/routine [#db/id[:db.part/user -100]]}
+                     {:db/id             #db/id[:db.part/user -100]
+                      :routine/name       name
+                      :routine/description description
+                      :routine/movement    movement-ids
+                      :routine/public?     public?
+                      :routine/created-by  #db/id[:db.part/user -101]}
+                     {:db/id     #db/id[:db.part/user -101]
+                      :user/name created-by}]]
+      (d/transact (:conn @tx) tx-data)))
 
-#_(d/q '[:find (pull ?u [*])
+#_(d/q '[:find (pull ?t [*])
+            :in $ ?email ?title
+            :where
+            [?u :user/email ?email]
+            [?u :user/group ?group]
+            [?group :group/title ?title]
+            [?group :group/template ?t]]
+          db
+          "admin@movementsession.com"
+          "Standard Templates 1")
+
+#_(d/q '[:find (pull ?r [*])
             :in $
             :where
-            [?u :user/email _]]
+         [?u :user/routine ?r]]
           db)
 
 #_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
 
-#_(d/pull db '[*] 17592186045845)
+#_(d/pull db '[*] 17592186045646)
 
 #_(d/q '[:find ?e
        :in $ ?id

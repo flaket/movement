@@ -47,44 +47,51 @@
     (GET "user" {:params        {:email email}
                  :handler       #(do
                                   (session/put! :username (:username %)))
-                 :error-handler #(print (str "error retrieving user information: " %))})
-    (print "no user in session.")))
+                 :error-handler #(pr (str "error retrieving user information: " %))})
+    (pr "no user in session.")))
 
 (defn get-templates []
   (if-let [user (session/get :user)]
     (GET "templates" {:params        {:user user}
                       :handler       #(session/put! :templates %)
-                      :error-handler #(print (str "error retrieving templates: " %))})
-    (print "no user in session.")))
+                      :error-handler #(pr (str "error retrieving templates: " %))})
+    (pr "no user in session.")))
 
 (defn get-groups []
   (if-let [email (session/get :email)]
     (GET "groups" {:params        {:email email}
                       :handler       #(session/put! :groups %)
-                      :error-handler #(print (str "error retrieving groups: " %))})
-    (print "no user in session.")))
+                      :error-handler #(pr (str "error retrieving groups: " %))})
+    (pr "no user in session.")))
+
+(defn get-routines []
+  (if-let [email (session/get :email)]
+    (GET "routines" {:params        {:email email}
+                     :handler       #(session/put! :routines %)
+                     :error-handler #(pr (str "error retrieving routines: " %))})
+    (pr "no user in session.")))
 
 (defn get-equipment []
   (if-let [user (session/get :user)]
     (GET "equipment" {:params        {:user user}
                       :handler       #(session/put! :equipment %)
-                      :error-handler #(print (str "error retrieving equipment: " %))})
-    (print "no user in session.")))
+                      :error-handler #(pr (str "error retrieving equipment: " %))})
+    (pr "no user in session.")))
 
 (defn get-all-categories []
   (GET "categories" {:handler       #(session/put! :all-categories %)
-                     :error-handler #(print (str "error retrieving categories: " %))}))
+                     :error-handler #(pr (str "error retrieving categories: " %))}))
 
 (defn get-all-movements []
   (GET "movements" {:handler       #(session/put! :all-movements %)
-                    :error-handler #(print (str "error retrieving movements: " %))}))
+                    :error-handler #(pr (str "error retrieving movements: " %))}))
 
 (defn get-stored-sessions []
   (if-let [user (session/get :user)]
     (GET "sessions" {:params        {:user user}
                      :handler       #(session/put! :stored-sessions %)
-                     :error-handler #(print (str "error retrieving stored sessions: " %))})
-    (print "no user in session.")))
+                     :error-handler #(pr (str "error retrieving stored sessions: " %))})
+    (pr "no user in session.")))
 
 (defn hook-browser-navigation! []
   (doto (History.)

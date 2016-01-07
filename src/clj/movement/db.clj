@@ -7,8 +7,8 @@
             [taoensso.timbre :refer [info error]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-#_(def uri "datomic:dev://localhost:4334/testing6")
-(def uri "datomic:ddb://us-east-1/movementsession/production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+(def uri "datomic:dev://localhost:4334/testing6")
+#_(def uri "datomic:ddb://us-east-1/movementsession/production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
 
@@ -89,6 +89,16 @@
        (:db @tx)
        email))
 
+(defn all-routine-titles [email]
+  (d/q '[:find [?name ...]
+         :in $ ?email
+         :where
+         [?e :user/email ?email]
+         [?e :user/routine ?r]
+         [?r :routine/name ?name]]
+       (:db @tx)
+       email))
+
 (defn create-session [title user]
   ;todo: refactor, smaller functions
   (let [db (:db @tx)
@@ -141,6 +151,10 @@
                        group)
         template-title (:template/title (ffirst (shuffle templates)))]
     template-title))
+
+(defn get-routine [email routine]
+  (let [db (:db @tx)
+        ]))
 
 (defn create-equipment-session [name n]
   (let [db (:db @tx)
@@ -208,6 +222,16 @@
                    [?e :user/group ?group]
                    [?group :group/title ?title]]
                  db email title))))
+
+(defn new-unique-routine? [email name]
+  (let [db (:db @tx)]
+    (empty? (d/q '[:find [?email ...]
+                   :in $ ?email ?name
+                   :where
+                   [?e :user/email ?email]
+                   [?e :user/routine ?routine]
+                   [?routine :routine/name ?name]]
+                 db email name))))
 
 (defn new-unique-username? [username]
   (let [db (:db @tx)]
@@ -279,6 +303,22 @@
                   :group/template    template-ids
                   :group/public?     public?
                   :group/created-by  #db/id[:db.part/user -101]}
+                 {:db/id     #db/id[:db.part/user -101]
+                  :user/name created-by}]]
+    (d/transact (:conn @tx) tx-data)))
+
+(defn transact-routine! [email {:keys [name created-by public? description movements]}]
+  (let [description (if (nil? description) "" description)
+        movement-ids (vec (map #(:db/id (entity-by-movement-name %)) movements))
+        tx-data [{:db/id        #db/id[:db.part/user -99]
+                  :user/email   email
+                  :user/routine [#db/id[:db.part/user -100]]}
+                 {:db/id               #db/id[:db.part/user -100]
+                  :routine/name        name
+                  :routine/description description
+                  :routine/movement    movement-ids
+                  :routine/public?     public?
+                  :routine/created-by  #db/id[:db.part/user -101]}
                  {:db/id     #db/id[:db.part/user -101]
                   :user/name created-by}]]
     (d/transact (:conn @tx) tx-data)))

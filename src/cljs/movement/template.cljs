@@ -93,7 +93,7 @@
                                          (if (or (nil? value) (and (integer? value) (< 0 value)))
                                            (swap! template-state assoc-in [:parts i :rep] value)))
                                        (catch js/Error e
-                                         (print (str "Caught exception: " e))))}]]
+                                         (pr (str "Caught exception: " e))))}]]
 
     [:div.pure-u "reps"]]
    [:div.pure-g
@@ -105,7 +105,7 @@
                                          (if (or (nil? value) (and (integer? value) (< 0 value)))
                                            (swap! template-state assoc-in [:parts i :set] value)))
                                        (catch js/Error e
-                                         (print (str "Caught exception: " e))))}]]
+                                         (pr (str "Caught exception: " e))))}]]
     [:div.pure-u "sets"]]
    [:div.pure-g
     [:div.pure-u [:input {:type      "number"
@@ -116,7 +116,7 @@
                                          (if (or (nil? value) (and (integer? value) (< 0 value)))
                                            (swap! template-state assoc-in [:parts i :distance] value)))
                                        (catch js/Error e
-                                         (print (str "Caught exception: " e))))}]]
+                                         (pr (str "Caught exception: " e))))}]]
     [:div.pure-u "meters"]]
    [:div.pure-g
     [:div.pure-u [:input {:type      "number"
@@ -127,7 +127,7 @@
                                          (if (or (nil? value) (and (integer? value) (< 0 value)))
                                            (swap! template-state assoc-in [:parts i :duration] value)))
                                        (catch js/Error e
-                                         (print (str "Caught exception: " e))))}]]
+                                         (pr (str "Caught exception: " e))))}]]
     [:div.pure-u "seconds"]]])
 
 (defn part-creator-component []
@@ -173,7 +173,6 @@
        [:div.pure-g
         [:div.button.pure-u {:on-click #(handler-fn (reset! showing-categories-list (not @showing-categories-list)))}
          (if @showing-categories-list "Hide list of categories" "Show list of categories")]]
-
        [:div.pure-g
         [:div.pure-u
          "This part has " [:span {:style {:color "red" :font-size "24px"}} n]
@@ -281,7 +280,7 @@
                                                                         (reset! error-atom "")
                                                                         (reset! template-stored-successfully? true)
                                                                         (get-templates)))
-                                        :error-handler (fn [response] (do (print response)
+                                        :error-handler (fn [response] (do (pr response)
                                                                           (reset! error-atom response)))}))))}
           "Save Template"]]))))
 

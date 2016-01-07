@@ -207,17 +207,6 @@
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id             #db/id[:db.part/user]
-  :movement/unique-name     "Tick Tock"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -9]
-                      #db/id[:db.part/user -11]]
-  :movement/equipment [#db/id[:db.part/user -5001]]}
-
- {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Hanging To German Hang"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -2]
