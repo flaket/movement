@@ -10,6 +10,7 @@
             [movement.util :refer [text-input POST get-templates]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
             [movement.state :refer [handler-fn]]
+            [movement.components.creator :refer [heading title description error]]
             [clojure.string :as str]
             [cljs.reader :refer [read-string]]))
 
@@ -212,32 +213,6 @@
                                               (swap! template-state update-in [:parts i :specific-movements] conj %))}])]]
        (rep-set-distance-duration-component i)])))
 
-(defn description-component []
-  [:div.pure-g
-   [:div.pure-u
-    [:textarea {:rows        3
-                :cols        58
-                :placeholder "Optional description, e.g. outlining how to perform certain parts of the session, or which weights to use."
-                :on-change   #(swap! template-state assoc :description (-> % .-target .-value))
-                :value       (:description @template-state)}]]])
-
-(defn title-component []
-  [:div.pure-g
-   [:h1.pure-u-1
-    [:input {:type        "text"
-             :size        50
-             :placeholder "Template Title"
-             :on-change   #(swap! template-state assoc :title (-> % .-target .-value))
-             :value       (:title @template-state)}]]])
-
-(defn heading-component []
-  [:div.pure-g
-   [:h2.pure-u "Create a new Template"]])
-
-(defn error-component [error-atom]
-  [:div.pure-g
-   [:h3.pure-u {:style {:color "red"}} @error-atom]])
-
 (defn adjust-parts-component []
   [:div.pure-g {:style {:margin-top "10px"}}
    [:div.pure-u {:style {:margin-right "5px"}} "The session is divided into "
@@ -285,25 +260,22 @@
           "Save Template"]]))))
 
 (defn template-creator-component []
-  (let [error (atom "")]
+  (let [errors (atom "")]
     (fn []
-      [:div#layout {:class (str "" (when (session/get :active?) "active"))}
-       [menu-component]
-       [:div.content {:style {:margin-top "20px"}}
-        (heading-component)
-        (title-component)
-        (description-component)
-        (adjust-parts-component)
-        (let [parts (:parts @template-state)]
-          (for [i (range 0 (count parts))]
-            ^{:key (rand-int 10000)}
-            (let [r (get-in @template-state [:parts i :rep])
-                  s (get-in @template-state [:parts i :set])
-                  di (get-in @template-state [:parts i :distance])
-                  du (get-in @template-state [:parts i :duration])
-                  data {:rep r :set s :distance di :duration du :i i}
-                  specific-movements (get-in @template-state [:parts i :specific-movements])
-                  n (get-in @template-state [:parts i :n])]
-              [part-creator-component (get parts i) i data specific-movements n])))
-        (error-component error)
-        [save-template-component error]]])))
+      [:div {:style {:margin-top "20px"}}
+       (title template-state "Template Title")
+       (description template-state)
+       (adjust-parts-component)
+       (let [parts (:parts @template-state)]
+         (for [i (range 0 (count parts))]
+           ^{:key (rand-int 10000)}
+           (let [r (get-in @template-state [:parts i :rep])
+                 s (get-in @template-state [:parts i :set])
+                 di (get-in @template-state [:parts i :distance])
+                 du (get-in @template-state [:parts i :duration])
+                 data {:rep r :set s :distance di :duration du :i i}
+                 specific-movements (get-in @template-state [:parts i :specific-movements])
+                 n (get-in @template-state [:parts i :n])]
+             [part-creator-component (get parts i) i data specific-movements n])))
+       (error errors)
+       [save-template-component errors]])))

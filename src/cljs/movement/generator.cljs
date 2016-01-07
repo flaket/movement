@@ -242,7 +242,7 @@
         [:div.pure-u-1-5
          [:i.fa.fa-plus.fa-2x
           {:on-click #(add-movement title)
-           :style    {:cursor  'pointer}}]]]
+           :style    {:cursor 'pointer}}]]]
        (if @show-search-input?
          [:div.pure-g.add-movement
           [:div.pure-u
@@ -300,10 +300,12 @@
         [:div.pure-u.pure-u-md-1-9]]])))
 
 (defn template-component [name]
-  [:div.pure-u.button {:on-click #(create-session-from-template name)} name])
+  [:div.pure-u.button {:on-click #(create-session-from-template name)
+                       :style {:margin "0 0 5px 5px"}} name])
 
 (defn group-component [group]
-  [:a.pure-u.button {:on-click #(create-session-from-group group)} group])
+  [:a.pure-u.button {:on-click #(create-session-from-group group)
+                     :style {:margin "0 0 5px 5px"}} group])
 
 (defn blank-state-component []
   (let [templates-showing? (atom false)
@@ -314,37 +316,41 @@
         [:h1.pure-u "Let's create your next Movement Session"]]
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-8]
-        [:div.pure-u.pure-u-md-1-4.button.button-primary {:on-click pick-random-template} "Start moving"]
-        [:div.pure-u.pure-u-md-1-8]
-        [:div.pure-u.pure-u-md-1-4.button {:className (when @templates-showing? "button-primary")
-                                           :on-click  #(handler-fn
-                                                        (do
-                                                          (when (nil? (session/get :equipment))
-                                                            (get-equipment))
-                                                          (when groups-showing?
-                                                            (reset! groups-showing? false))
-                                                          (reset! templates-showing? (not @templates-showing?))))}
-         "Choose template"]]
-       [:div.pure-g
-          [:h3.pure-u [:a.button {:className (when @groups-showing? "button-primary")
-                                  :on-click  #(handler-fn
-                                               (do
-                                                 (when (nil? (session/get :groups))
-                                                   (get-groups))
-                                                 (when templates-showing?
-                                                   (reset! templates-showing? false))
-                                                 (reset! groups-showing? (not @groups-showing?))))}
-                       "Choose group"]]]
-       [:div.pure-g {:style {:margin-top "10px"}}
-        (when @templates-showing?
-          (doall
-            (for [t (session/get :templates)]
-              ^{:key (str t (rand-int 1000))} (template-component t))))]
-       [:div.pure-g {:style {:margin-top "10px"}}
+        [:div.pure-u.pure-u-md-3-4
+
+         [:div.pure-g
+          [:div.pure-u.pure-u-md-1-2.button.button-primary {:on-click pick-random-template} "Start moving"]
+          [:div.pure-u.pure-u-md-1-2.button {:className (when @templates-showing? "button-primary")
+                                             :on-click  #(handler-fn
+                                                          (do
+                                                            (when (nil? (session/get :equipment))
+                                                              (get-equipment))
+                                                            (when groups-showing?
+                                                              (reset! groups-showing? false))
+                                                            (reset! templates-showing? (not @templates-showing?))))}
+           "Choose template"]]
+         [:div.pure-g {:style {:margin-top '40}}
+          (when @templates-showing?
+            (doall
+              (for [t (session/get :templates)]
+                ^{:key (str t (rand-int 1000))} (template-component t))))]
+         [:div.pure-g {:style {:margin-top '80}}
+          [:div.pure-u.pure-u-md-1-2.button
+           {:className (when @groups-showing? "button-primary")
+            :on-click  #(handler-fn
+                         (do
+                           (when (nil? (session/get :groups))
+                             (get-groups))
+                           (when templates-showing?
+                             (reset! templates-showing? false))
+                           (reset! groups-showing? (not @groups-showing?))))}
+           "Choose group"]]
+         [:div.pure-g {:style {:margin-top '40}}
           (when @groups-showing?
             (doall
               (for [e (session/get :groups)]
-                ^{:key (str e (rand-int 1000))} (group-component e))))]])))
+                ^{:key (str e (rand-int 1000))} (group-component e))))]]
+        [:div.pure-u.pure-u-md-1-8]]])))
 
 (defn top-menu-component []
   (let [templates-showing? (atom false)
@@ -352,7 +358,7 @@
     (fn []
       [:div
        [:div.pure-g
-        [:div.pure-u.pure-u-md-1-4]
+        [:a.pure-u.pure-u-md-1-4 {:on-click #(session/remove! :movement-session)} "Back to home screen"]
         [:div.pure-u-1-2.pure-u-md-1-4.button.button-primary {:on-click pick-random-template} "Random session"]
         [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when @templates-showing? "button-primary")
                                                :on-click  #(handler-fn
@@ -373,7 +379,7 @@
                                                (reset! templates-showing? false))
                                              (reset! equipment-showing? (not @equipment-showing?))))}
            "Session from equipment"]]
-       [:div.pure-g
+       [:div.pure-g {:style {:margin-top '40}}
         (when @templates-showing?
           (doall
             (for [t (session/get :templates)]

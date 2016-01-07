@@ -3,6 +3,7 @@
             [reagent.session :as session]
             [movement.util :refer [GET POST text-input get-all-movements
                                    get-stored-sessions get-templates get-routines
+                                   get-plans get-groups
                                    get-equipment get-all-categories]]
             [secretary.core :include-macros true :refer [dispatch!]]
             [reagent.session :as session]))
@@ -106,6 +107,8 @@
                                                                        (session/put! :username (:username response))
                                                                        (get-templates)
                                                                        (get-routines)
+                                                                       (get-groups)
+                                                                       (get-plans)
                                                                        (get-all-categories)
                                                                        (get-all-movements)
                                                                        (get-stored-sessions)

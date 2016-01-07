@@ -64,6 +64,13 @@
                       :error-handler #(pr (str "error retrieving groups: " %))})
     (pr "no user in session.")))
 
+(defn get-plans []
+  (if-let [email (session/get :email)]
+    (GET "plans" {:params        {:email email}
+                   :handler       #(session/put! :plans %)
+                   :error-handler #(pr (str "error retrieving plans: " %))})
+    (pr "no user in session.")))
+
 (defn get-routines []
   (if-let [email (session/get :email)]
     (GET "routines" {:params        {:email email}

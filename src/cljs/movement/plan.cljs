@@ -15,11 +15,6 @@
 (def plan-state (atom {}))
 ;title created-by public? description completed? template schedule schedule/sessions-per-day
 
-(defn heading-component []
-  [:div.pure-g
-   [:h2.pure-u "Create a new Plan"]
-   [:button.pure-u {:on-click #(pr (session/get :plans))} "My Plans"]])
-
 (defn title-component []
   [:div
    [:div.pure-g
@@ -107,15 +102,12 @@
 (defn plan-creator-component []
   (let [error (atom {:message ""})]
     (fn []
-      [:div#layout {:class (str "" (when (session/get :active?) "active"))}
-       [menu-component]
-       [:div.content {:style {:margin-top "20px"}}
-        (heading-component)
-        (title-component)
-        (description-component)
-        [templates-component]
-        (error-component error)
-        (let [username (session/get :username)]
-          (if (nil? username)
-            (username-component)
-            [save-plan-component error]))]])))
+      [:div {:style {:margin-top "20px"}}
+       (title-component)
+       (description-component)
+       [templates-component]
+       (error-component error)
+       (let [username (session/get :username)]
+         (if (nil? username)
+           (username-component)
+           [save-plan-component error]))])))

@@ -13,6 +13,8 @@
             [movement.group :refer [group-creator-component]]
             [movement.routine :refer [routine-creator-component]]
             [movement.plan :refer [plan-creator-component]]
+            [movement.create :refer [create-component]]
+            [movement.discover :refer [discover-component]]
             [movement.components.login :refer [login-page]])
   (:import goog.History))
 
@@ -22,11 +24,9 @@
 ;; Client side routes
 (secretary/defroute "/" [] (set-page! #'login-page))
 (secretary/defroute "/generator" [] (set-page! #'generator-component))
+(secretary/defroute "/create" [] (set-page! #'create-component))
+(secretary/defroute "/discover" [] (set-page! #'discover-component))
 (secretary/defroute "/user" [] (set-page! #'user-component))
-(secretary/defroute "/template" [] (set-page! #'template-creator-component))
-(secretary/defroute "/group" [] (set-page! #'group-creator-component))
-(secretary/defroute "/routine" [] (set-page! #'routine-creator-component))
-(secretary/defroute "/plan" [] (set-page! #'plan-creator-component))
 
 ;---------------------------
 (defn page []
@@ -41,7 +41,7 @@
   (secretary/set-config! :prefix "#")
   (if (session/get :user)
     ;todo: if registered more than 14 days and not payed, show payment-component
-    (set-page! #'group-creator-component))
+    (set-page! #'create-component))
 
   (.initializeTouchEvents js/React true)
   (mount-root))

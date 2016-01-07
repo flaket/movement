@@ -7,14 +7,10 @@
             [movement.menu :refer [menu-component]]
             [movement.util :refer [positions text-input POST get-templates get-groups]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
-            [movement.user :refer [set-username-component]]))
+            [movement.user :refer [set-username-component]]
+            [movement.components.creator :refer [heading title description error]]))
 
 (def group-state (atom {}))
-
-(defn heading-component []
-  [:div.pure-g
-   [:h2.pure-u "Create a new Group"]
-   [:button.pure-u {:on-click #(pr (session/get :groups))} "My Groups"]])
 
 (defn title-component []
   [:div
@@ -99,14 +95,14 @@
                                                                             (reset! error-atom response)))}))))}
           "Save Group"]]))))
 
-(defn group-creator-component []
+#_(defn group-creator-component []
   (let [error (atom {:message ""})]
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
-        (heading-component)
-        (title-component)
+        (heading "Create a new Group")
+        (title group-state "Group Title")
         (description-component)
         (templates-component)
         (error-component error)
@@ -114,3 +110,16 @@
           (if (nil? username)
             (username-component)
             [save-group-component error]))]])))
+
+(defn group-creator-component []
+  (let [error (atom {:message ""})]
+    (fn []
+      [:div {:style {:margin-top "20px"}}
+       (title group-state "Group Title")
+       (description-component)
+       (templates-component)
+       (error-component error)
+       (let [username (session/get :username)]
+         (if (nil? username)
+           (username-component)
+           [save-group-component error]))])))

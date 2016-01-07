@@ -14,11 +14,6 @@
 
 (def routine-state (atom {:movements []}))
 
-(defn heading-component []
-  [:div.pure-g
-   [:h2.pure-u "Create a new Routine"]
-   [:button.pure-u {:on-click #(pr (session/get :routines))} "My Routines"]])
-
 (defn title-component []
   [:div
    [:div.pure-g
@@ -128,15 +123,12 @@
 (defn routine-creator-component []
   (let [error (atom {:message ""})]
     (fn []
-      [:div#layout {:class (str "" (when (session/get :active?) "active"))}
-       [menu-component]
-       [:div.content {:style {:margin-top "20px"}}
-        (heading-component)
-        (title-component)
-        (description-component)
-        [movements-component]
-        (error-component error)
-        (let [username (session/get :username)]
-          (if (nil? username)
-            (username-component)
-            [save-routine-component error]))]])))
+      [:div {:style {:margin-top "20px"}}
+       (title-component)
+       (description-component)
+       [movements-component]
+       (error-component error)
+       (let [username (session/get :username)]
+         (if (nil? username)
+           (username-component)
+           [save-routine-component error]))])))
