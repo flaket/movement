@@ -260,7 +260,7 @@
           "Save Template"]]))))
 
 (defn template-creator-component []
-  (let [errors (atom "")]
+  (let [error-atom (atom "")]
     (fn []
       [:div {:style {:margin-top "20px"}}
        (title template-state "Template Title")
@@ -277,5 +277,5 @@
                  specific-movements (get-in @template-state [:parts i :specific-movements])
                  n (get-in @template-state [:parts i :n])]
              [part-creator-component (get parts i) i data specific-movements n])))
-       (error errors)
-       [save-template-component errors]])))
+       (error @error-atom)
+       [save-template-component error-atom]])))

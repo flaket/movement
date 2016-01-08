@@ -10,30 +10,10 @@
             [movement.state :refer [handler-fn]]
             [movement.template :refer [movement-component]]
             [movement.user :refer [set-username-component]]
+            [movement.components.creator :refer [title description error username]]
             [clojure.string :as str]))
 
 (def routine-state (atom {:movements []}))
-
-(defn title-component []
-  [:div
-   [:div.pure-g
-    [:h1.pure-u-1
-     [:input {:type        "text"
-              :size        50
-              :placeholder "Routine Name"
-              :on-change   #(swap! routine-state assoc :name (-> % .-target .-value))
-              :value       (:name @routine-state)}]]]
-   [:div.pure-g
-    [:div.pure-u (str "by " (session/get :username))]]])
-
-(defn description-component []
-  [:div.pure-g
-   [:div.pure-u
-    [:textarea {:rows        3
-                :cols        58
-                :placeholder "Optional description of this routine"
-                :on-change   #(swap! routine-state assoc :description (-> % .-target .-value))
-                :value       (:description @routine-state)}]]])
 
 (defn movements-component []
   (let [show-movements-list? (atom false)]
@@ -75,19 +55,7 @@
                                                 (swap! routine-state assoc :movements new-movements))
                                               (swap! routine-state update :movements conj t))} t]])))]])))
 
-(defn error-component [error-atom]
-  (let [message (:message @error-atom)]
-    [:div
-     [:div.pure-g
-      [:h3.pure-u {:style {:color "red"}} message]]]))
-
-(defn username-component []
-  [:div
-   [:div.pure-g
-    [:div.pure-u-1 "To create new routines you must first select a username"]]
-   [set-username-component]])
-
-(defn save-routine-component [error-atom]
+(defn save-routine-component [error]
   (let [routine-stored-successfully? (atom false)]
     (fn []
       (if @routine-stored-successfully?
@@ -99,36 +67,37 @@
            [:div.pure-u {:style {:margin-top 15 :font-size 24 :color "green"}} "Routine stored successfully!"]])
         [:div.pure-g
          [:p.pure-u.pure-u-md-2-5.button.button-primary
-          {:on-click #(let [name (:name @routine-state)
+          {:on-click #(let [name (:title @routine-state)
                             movements (:movements @routine-state)]
                        (cond
-                         (nil? name) (swap! error-atom assoc :message "The routine needs a name.")
-                         (empty? movements) (swap! error-atom assoc :message "A routine consists of 1 or more movements.")
+                         (nil? name) (swap! error assoc :message "The routine needs a name")
+                         (empty? movements) (swap! error assoc :message "A routine consists of 1 or more movements")
                          :else (let [username (session/get :username)
                                      email (session/get :email)
                                      routine (assoc @routine-state
                                                :public? true
                                                :created-by username)]
-                                 (POST "routine"
+                                 (pr routine)
+                                 #_(POST "routine"
                                        {:params        {:email   email
                                                         :routine routine}
                                         :handler       (fn [response] (do
-                                                                        (reset! error-atom {})
+                                                                        (reset! error {})
                                                                         (reset! routine-stored-successfully? true)
                                                                         (get-routines)))
                                         :error-handler (fn [response] (do (pr response)
-                                                                          (reset! error-atom response)))}))))}
+                                                                          (reset! error response)))}))))}
           "Save Routine"]]))))
 
 (defn routine-creator-component []
-  (let [error (atom {:message ""})]
+  (let [error-atom (atom {:message ""})]
     (fn []
       [:div {:style {:margin-top "20px"}}
-       (title-component)
-       (description-component)
+       (title routine-state "Routine Name")
+       (description routine-state)
        [movements-component]
-       (error-component error)
+       (error (:message @error-atom))
        (let [username (session/get :username)]
          (if (nil? username)
-           (username-component)
-           [save-routine-component error]))])))
+           (username "routine")
+           [save-routine-component error-atom]))])))

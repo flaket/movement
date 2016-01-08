@@ -147,6 +147,18 @@ a:hover {
   border-radius: 15px;
 }
 
+.day {
+  width: 200px;
+  margin-top: 15px;
+  background-color: inherit;
+  color: inherit;
+}
+
+.day-selected {
+    background-color: #555;
+    color: #fffff8;
+}
+
 .add-movement {
     opacity: 0.2;
     margin: 30px 0 30px 5px;

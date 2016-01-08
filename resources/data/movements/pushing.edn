@@ -14,6 +14,8 @@
  {:db/id #db/id[:db.part/user -8] :category/name "Jumping"}
  {:db/id #db/id[:db.part/user -9] :category/name "Headstand"}
  {:db/id #db/id[:db.part/user -10] :category/name "Crawling"}
+ {:db/id #db/id[:db.part/user -11] :category/name "Bar"}
+
 
  {:db/id #db/id[:db.part/user -98]
   :movement/unique-name "Burpee"
@@ -139,7 +141,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -11]]
   :movement/easier [#db/id[:db.part/user -126]]}
 
  {:db/id #db/id[:db.part/user -112]
@@ -148,7 +151,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -11]]
   :movement/easier [#db/id[:db.part/user -111]]}
 
  {:db/id #db/id[:db.part/user -113]
@@ -157,7 +161,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -11]]
   :movement/easier [#db/id[:db.part/user -111]]}
 
  {:db/id #db/id[:db.part/user -114]
@@ -166,7 +171,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -11]]
   :movement/easier [#db/id[:db.part/user -113]]}
 
  {:db/id #db/id[:db.part/user -115]
@@ -263,7 +269,8 @@
                       #db/id[:db.part/user -2]
                       #db/id[:db.part/user -3]
                       #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -6]]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -11]]
   :movement/harder [#db/id[:db.part/user -111]]}
 
  {:db/id #db/id[:db.part/user -127]

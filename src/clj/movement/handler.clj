@@ -118,6 +118,20 @@
                        (response "New group stored successfully."))))
         (response "You already have a group with this title. Please choose a unique title for your group." 400)))))
 
+(defn add-plan! [req]
+  (let [email (:email (:params req))
+        plan (:plan (:params req))]
+    (if (nil? email)
+      (response "User email lacking from client data" 400)
+      (if (db/new-unique-plan? email (:title plan))
+        (try
+          (db/transact-plan! email plan)
+          (catch Exception e
+            (response (str "Exception: " e)))
+          (finally (do (update-tx-db!)
+                       (response "New plan stored successfully."))))
+        (response "You already have a plan with this title. Please choose a unique title for your plan." 400)))))
+
 (defn add-routine! [req]
   (let [email (:email (:params req))
         routine (:routine (:params req))]
@@ -244,6 +258,9 @@
            (POST "/routine" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (add-routine! req)))
+           (POST "/plan" req (if-not (authenticated? req)
+                                (throw-unauthorized)
+                                (add-plan! req)))
            (POST "/change-password" req (if-not (authenticated? req)
                                           (throw-unauthorized)
                                           (change-password! req)))

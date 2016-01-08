@@ -2,7 +2,8 @@
   (:require [reagent.core :refer [atom]]
             [reagent.session :as session]
             [secretary.core :include-macros true :refer [dispatch!]]
-            [reagent.session :as session]))
+            [reagent.session :as session]
+            [movement.user :refer [set-username-component]]))
 
 (defn heading [text]
   [:div.pure-g
@@ -28,6 +29,13 @@
                 :on-change   #(swap! state assoc :description (-> % .-target .-value))
                 :value       (:description @state)}]]])
 
-(defn error [error-atom]
+(defn error [message]
   [:div.pure-g
-   [:h3.pure-u {:style {:color "red"}} @error-atom]])
+   [:h3.pure-u {:style {:color "red"}} message]])
+
+(defn username [t]
+  [:div
+   [:div.pure-g
+    [:div.pure-u-1 (str "To create new " t " you must first select a username")]]
+   [set-username-component]])
+

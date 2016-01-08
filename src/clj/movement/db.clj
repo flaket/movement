@@ -223,6 +223,16 @@
                    [?group :group/title ?title]]
                  db email title))))
 
+(defn new-unique-plan? [email title]
+  (let [db (:db @tx)]
+    (empty? (d/q '[:find [?email ...]
+                   :in $ ?email ?title
+                   :where
+                   [?e :user/email ?email]
+                   [?e :user/plan ?plan]
+                   [?plan :plan/title ?title]]
+                 db email title))))
+
 (defn new-unique-routine? [email name]
   (let [db (:db @tx)]
     (empty? (d/q '[:find [?email ...]
@@ -304,6 +314,29 @@
                   :group/public?     public?
                   :group/created-by  #db/id[:db.part/user -101]}
                  {:db/id     #db/id[:db.part/user -101]
+                  :user/name created-by}]]
+    (d/transact (:conn @tx) tx-data)))
+
+#_(defn transact-plan! [email {:keys [title created-by public? description plan]}]
+  (let [description (if (nil? description) "" description)
+        template-ids (vec (map #(get-user-template-id email %) templates))
+        ;(vec (map :db/id parts))
+        days (map #(conj % (d/tempid :db.part/user)) plan)
+        tx-days (vec (for [d days]
+                       {:db/id (last d)
+                        :day/completed? false
+                        :day/template }))
+        tx-data [{:db/id      #db/id[:db.part/user -99]
+                  :user/email email
+                  :user/plan [#db/id[:db.part/user -100]]}
+                 {:db/id             #db/id[:db.part/user -100]
+                  :plan/title       title
+                  :plan/description description
+                  :plan/public?     public?
+                  :plan/completed? false
+                  :plan/day (vec (map last days))
+                  :plan/created-by  #db/id[:db.part/user -102]}
+                 {:db/id     #db/id[:db.part/user -102]
                   :user/name created-by}]]
     (d/transact (:conn @tx) tx-data)))
 

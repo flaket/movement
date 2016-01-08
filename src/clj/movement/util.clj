@@ -143,13 +143,13 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 #_(d/pull db '[*] 17592186045455)
 #_(d/transact conn [[:db/retract 17592186045494
                      :movement/category 17592186045455]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045785]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045716]])
 
 #_(d/q '[:find (pull ?e [*])
          :in $ ?name
        :where
        [?e :movement/unique-name ?name]]
-     db "Tick Tock")
+     db "False Grip Pull Up")
 
 #_(first (d/q '[:find [?id ...]
               :in $ ?email ?name

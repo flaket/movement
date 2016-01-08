@@ -16,7 +16,9 @@
             [clojure.string :as str]
             [cljs.reader :refer [read-string]]))
 
-(defn new-buttons [selection]
+(def selection (atom :temp))
+
+(defn new-buttons []
   (let []
     (fn [selection]
       [:div {:style {:margin-top '40}}
@@ -31,7 +33,7 @@
                                                :on-click #(reset! selection :plan)} "Plan"]]])))
 
 (defn create-component []
-  (let [selection (atom :temp)]
+  (let []
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]

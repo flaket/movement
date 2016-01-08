@@ -5,109 +5,116 @@
             [reagent.session :as session]
             [cljs.core.async :as async :refer [timeout <!]]
             [movement.menu :refer [menu-component]]
-            [movement.util :refer [text-input POST get-routines]]
+            [movement.util :refer [positions text-input POST get-routines]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
             [movement.state :refer [handler-fn]]
             [movement.template :refer [movement-component]]
             [movement.user :refer [set-username-component]]
+            [movement.components.creator :refer [title description error username]]
             [clojure.string :as str]))
 
-(def plan-state (atom {}))
-;title created-by public? description completed? template schedule schedule/sessions-per-day
-
-(defn title-component []
-  [:div
-   [:div.pure-g
-    [:h1.pure-u-1
-     [:input {:type        "text"
-              :size        50
-              :placeholder "Plan Title"
-              :on-change   #(swap! plan-state assoc :title (-> % .-target .-value))
-              :value       (:title @plan-state)}]]]
-   [:div.pure-g
-    [:div.pure-u (str "by " (session/get :username))]]])
-
-(defn description-component []
-  [:div.pure-g
-   [:div.pure-u
-    [:textarea {:rows        3
-                :cols        58
-                :placeholder "Optional description of this plan"
-                :on-change   #(swap! plan-state assoc :description (-> % .-target .-value))
-                :value       (:description @plan-state)}]]])
+(def plan-state (atom {:plan []
+                       :selected nil}))
+;title created-by public? description completed? day day/template day/completed?
 
 (defn templates-component []
-  [:div.pure-g
-   [:div.pure-u-1-2
-    (doall (for [t (:templates @plan-state)]
-             ^{:key (rand-int 1000)} [:div t]))]
-   [:div.pure-u-1-2
-    [:div.pure-g
-     [:h3.pure-u-1 "Your templates"]]
-    (doall (for [t (sort (session/get :templates))]
-             ^{:key (rand-int 1000)}
-             [:div.pure-u.button {:style    {:cursor     'pointer
-                                             :background (when (some #{t} (:templates @plan-state)) "yellow")}
-                                  :on-click #(if (some #{t} (:templates @plan-state))
-                                              (let [new-templates (remove #{t} (:templates @plan-state))]
-                                                (swap! plan-state assoc :templates new-templates))
-                                              (swap! plan-state update :templates conj t))} t]))]])
+  (let []
+    (fn []
+      [:div
+       (when-not (nil? (:selected @plan-state))
+         [:div
+          [:div.pure-g
+           [:h3.pure-u "Select one or several templates for this day"]]
+          [:div.pure-g
+           (doall (for [t (sort (session/get :templates))]
+                    ^{:key (rand-int 1000)}
+                    [:div.pure-u.button {:style    {:cursor 'pointer
+                                                    :margin "0 5px 5px 0"}
+                                         :on-click #(let [selected (:selected @plan-state)]
+                                                     (swap! plan-state update-in [:plan selected] conj t))} t]))]])])))
 
-(defn error-component [error-atom]
-   (let [message (:message @error-atom)]
-     [:div
-      [:div.pure-g
-       [:h3.pure-u {:style {:color "red"}} message]]]))cat
+(defn adjust-days-component []
+  [:div.pure-g {:style {:margin-top "10px"}}
+   [:div.pure-u {:style {:margin-right "5px"}} "This plan consists of "
+    [:span {:style {:color "red" :font-size "150%"}} (count (:plan @plan-state))] (if (= 1 (:days @plan-state)) " day" " days")]
+   [:button.pure-u
+    {:on-click #(when (> (count (:plan @plan-state)) 0)
+                 (swap! plan-state update :plan pop))} [:i.fa.fa-minus]]
+   [:button.pure-u
+    {:on-click #(swap! plan-state update :plan conj [])} [:i.fa.fa-plus]]])
 
-(defn username-component []
-  [:div
-   [:div.pure-g
-    [:div.pure-u-1 "To create new routines you must first select a username"]]
-   [set-username-component]])
+(defn day-component []
+  (let [selected (:selected @plan-state)]
+    (fn [day i]
+      [:div.pure-u.movement.day {:on-click  #(swap! plan-state assoc :selected i)
+                                 :style {:cursor 'pointer}
+                                 :className (str "" (when (= i selected) " day-selected"))}
+       [:h3.pure-g
+        [:div.pure-u-1-12]
+        [:div.pure-u.title (str "Day " (inc i))]]
+       (for [t (range (count day))]
+         ^{:key (rand-int 1000)}
+         [:h4.pure-g [:span.pure-u-1
+                      [:i.fa.fa-times {:on-click #(let [template (get day t)
+                                                        new-day (vec (remove #{template} day))]
+                                                   (swap! plan-state assoc-in [:plan i] new-day))
+                                       :style    {:cursor 'pointer
+                                                  :color  'red
+                                                  :margin "0 5px 0 3px"}}]
+                      (get day t)]])])))
+
+(defn plan-component [plan]
+  [:div.pure-g.movements {:style {:margin-top "10px"
+                                  :border-top "dotted 1px"}}
+   (for [day (range (count plan))]
+     ^{:key (rand-int 1000)} [day-component (get plan day) day])])
 
 (defn save-plan-component [error-atom]
-  (let [plan-stored-successfully? (atom false)]
+  (let [stored-successfully? (atom false)]
     (fn []
-      (if @plan-stored-successfully?
+      (if @stored-successfully?
         (let []
           (go (<! (timeout 3000))
-              (reset! plan-stored-successfully? false)
+              (reset! stored-successfully? false)
               (reset! plan-state {}))
           [:div.pure-g
            [:div.pure-u {:style {:margin-top 15 :font-size 24 :color "green"}} "Plan stored successfully!"]])
         [:div.pure-g
          [:p.pure-u.pure-u-md-2-5.button.button-primary
           {:on-click #(let [title (:title @plan-state)
-                            templates (:templates @plan-state)]
+                            plan (:plan @plan-state)]
                        (cond
-                         (nil? title) (swap! error-atom assoc :message "The plan needs a title.")
-                         (empty? templates) (swap! error-atom assoc :message "A plan consists of 1 or more templates.")
+                         (nil? title) (swap! error-atom assoc :message "The plan needs a title")
+                         (empty? plan) (swap! error-atom assoc :message "A plan consists of 1 or more days")
+                         (every? empty? plan) (swap! error-atom assoc :message "At least one days must contain template(s)")
                          :else (let [username (session/get :username)
                                      email (session/get :email)
                                      plan (assoc @plan-state
-                                               :public? true
-                                               :created-by username)]
+                                            :public? true
+                                            :created-by username)]
                                  (pr plan)
                                  #_(POST "plan"
-                                       {:params        {:email   email
-                                                        :plan plan}
-                                        :handler       (fn [response] (do
-                                                                        (reset! error-atom {})
-                                                                        (reset! plan-stored-successfully? true)
-                                                                        (get-routines)))
-                                        :error-handler (fn [response] (do (pr response)
-                                                                          (reset! error-atom response)))}))))}
+                                         {:params        {:email email
+                                                          :plan  plan}
+                                          :handler       (fn [response] (do
+                                                                          (reset! error-atom {})
+                                                                          (reset! stored-successfully? true)
+                                                                          (get-routines)))
+                                          :error-handler (fn [response] (do (pr response)
+                                                                            (reset! error-atom response)))}))))}
           "Save Plan"]]))))
 
 (defn plan-creator-component []
-  (let [error (atom {:message ""})]
+  (let [error-atom (atom {:message ""})]
     (fn []
       [:div {:style {:margin-top "20px"}}
-       (title-component)
-       (description-component)
+       (title plan-state "Plan Title")
+       (description plan-state)
        [templates-component]
-       (error-component error)
+       (adjust-days-component)
+       (plan-component (:plan @plan-state))
+       (error (:message @error-atom))
        (let [username (session/get :username)]
          (if (nil? username)
-           (username-component)
-           [save-plan-component error]))])))
+           (username "plan")
+           [save-plan-component error-atom]))])))

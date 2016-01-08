@@ -93,6 +93,14 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/ongoing-plan
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A user may have an ongoing plan"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :user/session
   :db/index              true
   :db/valueType          :db.type/ref
@@ -299,28 +307,36 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :plan/template
+  :db/ident              :plan/current-day
   :db/index              true
   :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/many
-  :db/doc                "A plan consists of templates"
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :plan/schedule
-  :db/index              true
-  :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/many
-  :db/doc                "A plan has a schedule; a list of ints. Length of list defines how many days the plan runs for.
-                          Each int defines how many sessions should be performed that day."
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :schedule/sessions-per-day
-  :db/index              true
-  :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
-  :db/doc                "Each day of the plan zero or more sessions should be performed."
+  :db/doc                "An ongoing plan is at a current day"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :plan/day
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A plan consists of many days"
+  :db.install/_attribute :db.part/db}
+
+ ;; day
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :day/template
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "Each day consists of zero or more templates"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :day/completed?
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Is the day completed?"
   :db.install/_attribute :db.part/db}
 
  ;; part
