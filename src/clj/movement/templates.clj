@@ -108,10 +108,8 @@
                     :template/title "Gymnastic Strength"
                     :template/description
                                     "Dynamic and static bodyweight strength training.
-                                    Begin the session with a quick general warmup.
-                                    Do each following part either in order or interleave them.
-                                    It can be effective to do dynamic, bent arm movements shortly after a static, straight arm hold.
-                                    Feel free to replace movements and adjust repetitions, sets and duration of holds to suit your skill level."
+                                    Do each part either in order or interleave them;
+                                    it can be effective to do dynamic, bent arm movements shortly after a static, straight arm hold."
                     :template/part  [#db/id[:db.part/user -1021]
                                      #db/id[:db.part/user -1022]
                                      #db/id[:db.part/user -1023]
@@ -123,25 +121,25 @@
                                              #db/id[:db.part/user -13]
                                              #db/id[:db.part/user -36]]}
                  {:db/id                    #db/id[:db.part/user -1022]
-                  :part/title               "Straight Arm Scapular Strength"
+                  :part/title               "Straight Arm"
                   :part/category            [#db/id[:db.part/user -4]]
                   :part/number-of-movements 3
                   :part/duration            10
                   :part/set                 3}
                  {:db/id                    #db/id[:db.part/user -1023]
-                  :part/title               "Bent Arm Strength"
+                  :part/title               "Bent Arm"
                   :part/category            [#db/id[:db.part/user -3]]
                   :part/number-of-movements 3
                   :part/rep                 5
                   :part/set                 3}
                  {:db/id                    #db/id[:db.part/user -1024]
-                  :part/title               "Lower Body Strength"
+                  :part/title               "Lower Body"
                   :part/category            [#db/id[:db.part/user -57]]
                   :part/number-of-movements 3
                   :part/rep                 10
                   :part/set                 3}
                  {:db/id                    #db/id[:db.part/user -1025]
-                  :part/title               "Core Strength"
+                  :part/title               "Core"
                   :part/category            [#db/id[:db.part/user -8]]
                   :part/number-of-movements 2
                   :part/rep                 10
@@ -172,10 +170,8 @@
                  {:db/id          #db/id[:db.part/user -104]
                     :template/title "Learning Handstand"
                     :template/description
-                                    "Warm up the wrists and shoulders.
-                                    Then practice perfecting your body line,
-                                    supplemented with exercises improving core, shoulder and scapular control.
-                                    Finish off playing around on your hands."
+                                    "always warm up the wrists and shoulders.
+                                    Practice perfecting your body line and finish off playing around on your hands."
                     :template/part  [#db/id[:db.part/user -1041]
                                      #db/id[:db.part/user -1042]
                                      #db/id[:db.part/user -1043]
@@ -209,16 +205,10 @@
                  {:db/id          #db/id[:db.part/user -106]
                     :template/title "Lifting Weights 5x5"
                     :template/description
-                                    "Get stronger by lifting some weights!
-                                    Make it a goal to add weight with each session.
-                                    The first of these sessions should be performed using light weights.
-                                    Increase the weights by 2-3kg/4-5lbs with each new session, for as long as possible.
-                                    \n
+                                    "Make it a goal to increase the weights by 2-3kg/4-5lbs with each new session.
                                     After the warmup, perform a couple of lifts with easy weights,
                                     focusing on perfecting the lifting technique.
-                                    Then do backsquats for five reps and five sets.
-                                    Finally perform two more lifts for five reps and five sets.
-                                    Remember to add which weights were used in the comment section."
+                                    Note which weights were used in the comment section."
                     :template/part  [#db/id[:db.part/user -1061]
                                      #db/id[:db.part/user -1062]
                                      #db/id[:db.part/user -1063]
@@ -246,7 +236,7 @@
                   :part/category            [#db/id[:db.part/user -14]]
                   :part/number-of-movements 2
                   :part/rep                 5
-                  :part/set                 5}
+                  :part/set                 3}
 
                  {:db/id          #db/id[:db.part/user -109]
                   :template/title "Natural Movement"
@@ -254,7 +244,7 @@
                                   "Practice movement skills, such as crawling, jumping, climbing and lifting.
                                   Go through the warmup and combination parts doing 10 reps of each movement before moving on to the next one.
                                   Complete all rounds without rest, focusing on quality over speed.
-                                  If possible, do manipulation movements with non-uniform objects like rocks or logs."
+                                  If possible, do lifting, carrying or throwing movements with non-uniform objects like rocks or logs."
                   :template/part  [#db/id[:db.part/user -1091]
                                    #db/id[:db.part/user -1092]
                                    #db/id[:db.part/user -1093]]}

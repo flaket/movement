@@ -89,13 +89,23 @@
        (:db @tx)
        email))
 
-(defn all-routine-titles [email]
+(defn all-routine-names [email]
   (d/q '[:find [?name ...]
          :in $ ?email
          :where
          [?e :user/email ?email]
          [?e :user/routine ?r]
          [?r :routine/name ?name]]
+       (:db @tx)
+       email))
+
+(defn all-plan-titles [email]
+  (d/q '[:find [?title ...]
+         :in $ ?email
+         :where
+         [?e :user/email ?email]
+         [?e :user/plan ?p]
+         [?p :plan/title ?title]]
        (:db @tx)
        email))
 

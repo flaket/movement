@@ -5,7 +5,7 @@
             [clojure.pprint :as pp]
             [buddy.hashers :as hashers]
             [clojure.string :as str]
-            [clojure.set :refer [rename-keys]])
+            [clojure.set :as set])
   (:import datomic.Util)
   (:import java.util.Date))
 
@@ -124,8 +124,14 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 
 #_(let [
       tx-user-data [{:db/id                    #db/id[:db.part/user]
-                     :user/email               "andreas.flakstad@gmail.com"
+                     :user/email               "chrhage@gmail.com"
                      :user/valid-subscription? true}]]
+  (d/transact conn tx-user-data))
+
+#_(let [
+      tx-user-data [{:db/id                    #db/id[:db.part/user]
+                     :user/email               "martinarnesen1@gmail.com"
+                     :user/password (hashers/encrypt "Dg86AS721Gas1")}]]
   (d/transact conn tx-user-data))
 
 #_(let []
@@ -136,20 +142,62 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                db
                "flaket")))
 
+#_d/q '[:find (pull ?s [*])
+       :where
+       [?u :user/email ?e]
+       [?u :user/session ?s]]
+     db)
+
+#_(d/q '[:find (pull ?u [*])
+       :where [?u :user/email ?n]]
+     db)
+
+#_(d/q '[:find (pull ?u [*])
+       :where [?u :category/name ?n]]
+     db)
+
+#_(d/q '[:find (pull ?u [*])
+         :where [?u :movement/unique-name ?n]]
+       db)
+
 #_(let [templates ["Natural Movement" "Locomotion" "4x4 Interval Run"]
         template-ids (map (pull ))])
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186045455)
-#_(d/transact conn [[:db/retract 17592186045494
-                     :movement/category 17592186045455]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045716]])
+#_(d/pull db '[*] 17592186045447)
+#_(d/transact conn [[:db/retract 17592186045925
+                     :movement/equipment 17592186045447]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045718]])
 
 #_(d/q '[:find (pull ?e [*])
          :in $ ?name
        :where
        [?e :movement/unique-name ?name]]
-     db "False Grip Pull Up")
+     db "Front Lever Row")
+
+#_(defn all-movements []
+    (d/q '[:find [?name ...]
+           :in $
+           :where
+           [?e :movement/unique-name ?name]]
+         db))
+
+#_(defn movements-from-category [category]
+    (d/q '[:find [?name ...]
+              :in $ ?cname
+              :where
+              [?e :movement/unique-name ?name]
+              [?e :movement/category ?c]
+              [?c :category/name ?cname]]
+            db category))
+
+#_(count (all-movements))
+#_(count (movements-from-category "Pushing"))
+
+#_(let [pushing (set (movements-from-category "Pushing"))
+      pulling (set (movements-from-category "Pulling"))
+      bas (set (movements-from-category "Bent Arm Strength"))]
+  (set/difference bas (set/union pushing pulling)))
 
 #_(first (d/q '[:find [?id ...]
               :in $ ?email ?name
@@ -168,33 +216,53 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                 [?id :template/title ?name]]
               db email template-title)))
 
-#_(defn entity-by-movement-name
-  "Returns the whole entity of a named movement."
-  [name]
-  (d/pull db '[*] [:movement/unique-name name]))
+#_(defn entity-by-template-title
+  "Returns the whole entity of a named template."
+  [email title]
+    (d/q '[:find (pull ?t [*])
+           :in $ ?email ?title
+           :where
+           [?u :user/email ?email]
+           [?u :user/template ?t]
+           [?t :template/title ?title]]
+         db email title))
 
 #_(def email "admin@movementsession.com")
 
-#_(def ex-routine {:name      "Archers"
-                   :public?    true
-                   :created-by "movementsession"
-                   :movements  ["Archer Push Up" "Archer Pull Up" "Archer Ring Dip"]})
+#_(def ex-plan [["Learning Handstand"] ["Natural Movement"]
+                ["Learning Handstand" "Gymnastic Strength"] ["Natural Movement"]
+                ["Learning Handstand"] ["Natural Movement"]
+                [""]])
 
-#_(defn transact-routine! [email {:keys [name created-by public? description movements]}]
+#_(defn transact-plan! [email {:keys [title created-by public? description plan]}]
     (let [description (if (nil? description) "" description)
-            movement-ids (vec (map #(:db/id (entity-by-movement-name %)) movements))
+          public? (if (nil? public?) true public?)
+          tx-days (vec (for [day plan]
+                         (let [template-ids (vec (map #(get-user-template-id email %) day))]
+                           {:db/id          (d/tempid :db.part/user)
+                            :day/completed? false
+                            :day/template   (if (= [nil] template-ids)
+                                              []
+                                              template-ids)})))
           tx-data [{:db/id      #db/id[:db.part/user -99]
-                      :user/email email
-                      :user/routine [#db/id[:db.part/user -100]]}
-                     {:db/id             #db/id[:db.part/user -100]
-                      :routine/name       name
-                      :routine/description description
-                      :routine/movement    movement-ids
-                      :routine/public?     public?
-                      :routine/created-by  #db/id[:db.part/user -101]}
-                     {:db/id     #db/id[:db.part/user -101]
-                      :user/name created-by}]]
-      (d/transact (:conn @tx) tx-data)))
+                    :user/email email
+                    :user/plan [#db/id[:db.part/user -100]]}
+                   {:db/id            #db/id[:db.part/user -100]
+                    :plan/title       title
+                    :plan/description description
+                    :plan/public?     public?
+                    :plan/completed?  false
+                    :plan/day         (vec (map :db/id tx-days))
+                    :plan/created-by  #db/id[:db.part/user -102]}
+                   {:db/id     #db/id[:db.part/user -102]
+                    :user/name created-by}]
+          tx-data (concat tx-data tx-days)]
+
+      tx-data
+      #_(d/transact (:conn @tx) tx-data)))
+
+#_(transact-plan! email {:title "My Plan" :public? true :created-by "movementsession"
+                         :plan ex-plan})
 
 #_(d/q '[:find (pull ?t [*])
             :in $ ?email ?title

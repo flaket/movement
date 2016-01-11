@@ -125,7 +125,7 @@
       (response "User email lacking from client data" 400)
       (if (db/new-unique-plan? email (:title plan))
         (try
-          (db/transact-plan! email plan)
+          #_(db/transact-plan! email plan)
           (catch Exception e
             (response (str "Exception: " e)))
           (finally (do (update-tx-db!)
@@ -304,7 +304,7 @@
                                    (response (db/get-routine email routine)))))
            (GET "/routines" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (response (db/all-routine-titles (str (:email (:params req)))))))
+                                  (response (db/all-routine-names (str (:email (:params req)))))))
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (response (db/entity-by-movement-name (:name (:params req))))))
