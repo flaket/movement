@@ -125,7 +125,7 @@
       (response "User email lacking from client data" 400)
       (if (db/new-unique-plan? email (:title plan))
         (try
-          #_(db/transact-plan! email plan)
+          (db/transact-plan! email plan)
           (catch Exception e
             (response (str "Exception: " e)))
           (finally (do (update-tx-db!)
@@ -222,11 +222,6 @@
            (GET "/tour" [] (tour-page))
            (GET "/pricing" [] (pricing-page))
            (GET "/signup" [] (signup-page))
-           (POST "/signup" [email password] (do
-                                              (when (nil? (:conn @tx))
-                                                (update-tx-conn!))
-                                              (update-tx-db!)
-                                              (add-user! email password)))
            (GET "/activate/:id" [id] (do
                                        (when (nil? (:conn @tx))
                                          (update-tx-conn!))
@@ -234,18 +229,19 @@
                                          (update-tx-db!))
                                        (activate-user! id)))
            (GET "/activated/:user" [user] (payment-page user "Account successfully activated!"))
-
            (GET "/subscription-activated" req (update-subscription-status! (:params req) true))
            (GET "/subscription-deactivated" req (update-subscription-status! (:params req) false))
-
-           (GET "/app" [] (render-file "app.html" {:dev        (env :dev?)
-                                                   :csrf-token *anti-forgery-token*}))
+           (GET "/app" [] (render-file "app.html" {:dev (env :dev?) :csrf-token *anti-forgery-token*}))
+           (POST "/signup" [email password] (do
+                                              (when (nil? (:conn @tx))
+                                                (update-tx-conn!))
+                                              (update-tx-db!)
+                                              (add-user! email password)))
            (POST "/login" [username password] (do
                                                 (when (nil? (:conn @tx))
                                                   (update-tx-conn!))
                                                 (update-tx-db!)
                                                 (jws-login username password)))
-
            (POST "/store-session" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (add-session! req)))
@@ -297,6 +293,14 @@
            (GET "/groups" req (if-not (authenticated? req)
                                 (throw-unauthorized)
                                 (response (db/all-group-titles (str (:email (:params req)))))))
+           (GET "/plan" req (if-not (authenticated? req)
+                               (throw-unauthorized)
+                               (let [plan (:plan (:params req))
+                                     email (:email (:params req))]
+                                 (response ""))))
+           (GET "/plans" req (if-not (authenticated? req)
+                                (throw-unauthorized)
+                                (response (db/all-plan-titles (str (:email (:params req)))))))
            (GET "/routine" req (if-not (authenticated? req)
                                  (throw-unauthorized)
                                  (let [routine (:routine (:params req))
@@ -311,6 +315,11 @@
            (GET "/movement-by-id" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (response (db/entity-by-id (read-string (:entity (:params req)))))))
+           (GET "/movements-by-category" req (if-not (authenticated? req)
+                                               (throw-unauthorized)
+                                               (response
+                                                 (db/get-movements-from-category (read-string (:n (:params req)))
+                                                                                 (:category (:params req))))))
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (response (db/all-movement-names))))

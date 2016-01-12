@@ -9,7 +9,7 @@
     [cljs.reader :as reader]
     [goog.events :as events]
     [clojure.string :as str]
-    [movement.util :refer [positions GET POST get-stored-sessions get-equipment get-groups]]
+    [movement.util :refer [positions GET POST get-plans get-stored-sessions get-equipment get-groups]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]
     [movement.components.login :refer [footer]]
@@ -345,6 +345,10 @@
                              (reset! templates-showing? false))
                            (reset! groups-showing? (not @groups-showing?))))}
            "Choose group"]]
+         [:div.pure-g {:style {:margin-top '80}}
+          [:div.pure-u.pure-u-md-1-2.button
+           {:on-click #(get-plans)}
+           (str "Plans: " (session/get :plans))]]
          [:div.pure-g {:style {:margin-top '40}}
           (when @groups-showing?
             (doall

@@ -69,6 +69,19 @@
         m (map #(assoc % :rep (:rep d) :set (:set d) :distance (:distance d) :duration (:duration d)) m)]
     m))
 
+(defn get-movements-from-category
+  "Get n movement entities of the category."
+  [n category]
+  (let [movements (d/q '[:find (pull ?m [*])
+                         :in $ ?cat
+                         :where
+                         [?c :category/name ?cat]
+                         [?m :movement/category ?c]
+                         [?m :movement/unique-name _]]
+                       (:db @tx) category)
+        m (->> movements flatten set (take n))]
+    m))
+
 (defn all-template-titles [email]
   (d/q '[:find [?title ...]
          :in $ ?email
@@ -327,28 +340,30 @@
                   :user/name created-by}]]
     (d/transact (:conn @tx) tx-data)))
 
-#_(defn transact-plan! [email {:keys [title created-by public? description plan]}]
-  (let [description (if (nil? description) "" description)
-        template-ids (vec (map #(get-user-template-id email %) templates))
-        ;(vec (map :db/id parts))
-        days (map #(conj % (d/tempid :db.part/user)) plan)
-        tx-days (vec (for [d days]
-                       {:db/id (last d)
-                        :day/completed? false
-                        :day/template }))
-        tx-data [{:db/id      #db/id[:db.part/user -99]
-                  :user/email email
-                  :user/plan [#db/id[:db.part/user -100]]}
-                 {:db/id             #db/id[:db.part/user -100]
-                  :plan/title       title
-                  :plan/description description
-                  :plan/public?     public?
-                  :plan/completed? false
-                  :plan/day (vec (map last days))
-                  :plan/created-by  #db/id[:db.part/user -102]}
-                 {:db/id     #db/id[:db.part/user -102]
-                  :user/name created-by}]]
-    (d/transact (:conn @tx) tx-data)))
+(defn transact-plan! [email {:keys [title created-by public? description plan]}]
+    (let [description (if (nil? description) "" description)
+          public? (if (nil? public?) true public?)
+          tx-days (vec (for [day plan]
+                         (let [template-ids (vec (map #(get-user-template-id email %) day))]
+                           {:db/id          (d/tempid :db.part/user)
+                            :day/completed? false
+                            :day/template   (if (= [nil] template-ids)
+                                              []
+                                              template-ids)})))
+          tx-data [{:db/id      #db/id[:db.part/user -99]
+                    :user/email email
+                    :user/plan [#db/id[:db.part/user -100]]}
+                   {:db/id            #db/id[:db.part/user -100]
+                    :plan/title       title
+                    :plan/description description
+                    :plan/public?     public?
+                    :plan/completed?  false
+                    :plan/day         (vec (map :db/id tx-days))
+                    :plan/created-by  #db/id[:db.part/user -102]}
+                   {:db/id     #db/id[:db.part/user -102]
+                    :user/name created-by}]
+          tx-data (concat tx-data tx-days)]
+      (d/transact (:conn @tx) tx-data)))
 
 (defn transact-routine! [email {:keys [name created-by public? description movements]}]
   (let [description (if (nil? description) "" description)

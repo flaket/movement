@@ -5,7 +5,7 @@
             [reagent.session :as session]
             [cljs.core.async :as async :refer [timeout <!]]
             [movement.menu :refer [menu-component]]
-            [movement.util :refer [positions text-input POST get-routines]]
+            [movement.util :refer [positions text-input POST get-plans]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
             [movement.state :refer [handler-fn]]
             [movement.template :refer [movement-component]]
@@ -92,14 +92,13 @@
                                      plan (assoc @plan-state
                                             :public? true
                                             :created-by username)]
-                                 (pr plan)
-                                 #_(POST "plan"
+                                 (POST "plan"
                                          {:params        {:email email
                                                           :plan  plan}
                                           :handler       (fn [response] (do
                                                                           (reset! error-atom {})
                                                                           (reset! stored-successfully? true)
-                                                                          (get-routines)))
+                                                                          (get-plans)))
                                           :error-handler (fn [response] (do (pr response)
                                                                             (reset! error-atom response)))}))))}
           "Save Plan"]]))))

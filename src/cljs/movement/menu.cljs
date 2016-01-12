@@ -30,19 +30,19 @@
 
              [:a.pure-menu-link #_[:i.fa.fa-home] menu-item-session]]
             [:li {:className (str "pure-menu-item"
-                                  (when (= menu-item-create selected)
-                                    " menu-item-divided pure-menu-selected"))
-                  :on-click  #(do
-                               (session/put! :selected-menu-item menu-item-create)
-                               (dispatch! "/create"))}
-             [:a.pure-menu-link #_[:i.fa.fa-book] menu-item-create]]
-            [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-discover selected)
                                     " menu-item-divided pure-menu-selected"))
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-discover)
                                (dispatch! "/discover"))}
              [:a.pure-menu-link #_[:i.fa.fa-book] menu-item-discover]]
+            [:li {:className (str "pure-menu-item"
+                                  (when (= menu-item-create selected)
+                                    " menu-item-divided pure-menu-selected"))
+                  :on-click  #(do
+                               (session/put! :selected-menu-item menu-item-create)
+                               (dispatch! "/create"))}
+             [:a.pure-menu-link #_[:i.fa.fa-book] menu-item-create]]
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-user selected)
                                     " menu-item-divided pure-menu-selected"))

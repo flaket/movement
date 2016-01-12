@@ -56,7 +56,7 @@
       [:div
        [:p.pure-g
         [:input.pure-u.pure-u-md-2-5 {:type        "text"
-                                      :placeholder "Type a new username"
+                                      :placeholder "Select a new nickname"
                                       :value       (:new-username @username)
                                       :on-change   #(swap! username assoc :new-username (-> % .-target .-value))}]]
        (when-let [info (:info @username)]
@@ -65,7 +65,7 @@
          [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])
        (when (not-empty (:new-username @username))
          [:div.pure-g
-          [:button.pure-u.pure-u-md-2-5.button.button-secondary
+          [:button.pure-u.pure-u-md-2-5.button.button-primary
            {:on-click #(POST "/change-username"
                              {:params        {:email    (session/get :user)
                                               :username (:new-username @username)}
@@ -79,7 +79,7 @@
                                                (swap! username assoc
                                                       :error (:response response)
                                                       :info ""))})}
-           "Set username"]])])))
+           "Set nickname"]])])))
 
 (defn logged-sessions-component []
   (let [show-sessions? (atom false)

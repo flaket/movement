@@ -47,18 +47,19 @@
          [:div.pricing-table-header
           [:h2 ""]
           [:span.pricing-table-price "$9.95" [:span "per month"]]]
-         [:ul.pricing-table-list
-          [:li
-           (when error-message
-             [:div
-              [:div.pure-g
-               [:div.pure-u-1 error-message]]
-              [:div.pure-g
-               [:a.pure-u-1.button.button-secondary
-                {:title  "Launch app"
-                 :href   "/app"
-                 :target ""} "Launch app & Log in"]]])
-           (signup-form)]]]]
+         #_[:ul.pricing-table-list
+          [:li]]]
+        [:div
+         (when error-message
+           [:div
+            [:div.pure-g
+             [:div.pure-u-1 error-message]]
+            [:div.pure-g
+             [:a.pure-u-1.button.button-secondary
+              {:title  "Launch app"
+               :href   "/app"
+               :target ""} "Launch app & Log in"]]])
+         (signup-form)]]
        [:div.pure-u-1.pure-u-md-1-3]]
       [:div.information.pure-g
        [:div.pure-u-1.pure-u-md-1-3

@@ -28,8 +28,7 @@
                    :response-format (edn-response-format)
                    ;:with-credentials true
                    :interceptors    [(to-interceptor {:name    "Token Interceptor"
-                                                      :request #(assoc-in % [:headers "authorization"]
-                                                                          token)})]}]
+                                                      :request #(assoc-in % [:headers "authorization"] token)})]}]
     (cljs-ajax/GET url (merge base-opts opts))))
 
 (defn POST [url & [opts]]
@@ -43,47 +42,34 @@
     (cljs-ajax/POST url (merge base-opts opts))))
 
 (defn get-user-info []
-  (if-let [email (session/get :user)]
-    (GET "user" {:params        {:email email}
-                 :handler       #(do
-                                  (session/put! :username (:username %)))
-                 :error-handler #(pr (str "error retrieving user information: " %))})
-    (pr "no user in session.")))
+  (GET "user" {:params        {:email (session/get :user)}
+               :handler       #(session/put! :username (:username %))
+               :error-handler #(pr (str "error retrieving user information: " %))}))
 
 (defn get-templates []
-  (if-let [user (session/get :user)]
-    (GET "templates" {:params        {:user user}
-                      :handler       #(session/put! :templates %)
-                      :error-handler #(pr (str "error retrieving templates: " %))})
-    (pr "no user in session.")))
+  (GET "templates" {:params        {:user (session/get :user)}
+                    :handler       #(session/put! :templates %)
+                    :error-handler #(pr (str "error retrieving templates: " %))}))
 
 (defn get-groups []
-  (if-let [email (session/get :email)]
-    (GET "groups" {:params        {:email email}
-                      :handler       #(session/put! :groups %)
-                      :error-handler #(pr (str "error retrieving groups: " %))})
-    (pr "no user in session.")))
+  (GET "groups" {:params        {:email (session/get :email)}
+                 :handler       #(session/put! :groups %)
+                 :error-handler #(pr (str "error retrieving groups: " %))}))
 
 (defn get-plans []
-  (if-let [email (session/get :email)]
-    (GET "plans" {:params        {:email email}
-                   :handler       #(session/put! :plans %)
-                   :error-handler #(pr (str "error retrieving plans: " %))})
-    (pr "no user in session.")))
+  (GET "plans" {:params        {:email (session/get :email)}
+                :handler       #(session/put! :plans %)
+                :error-handler #(pr (str "error retrieving plans: " %))}))
 
 (defn get-routines []
-  (if-let [email (session/get :email)]
-    (GET "routines" {:params        {:email email}
-                     :handler       #(session/put! :routines %)
-                     :error-handler #(pr (str "error retrieving routines: " %))})
-    (pr "no user in session.")))
+  (GET "routines" {:params        {:email (session/get :email)}
+                   :handler       #(session/put! :routines %)
+                   :error-handler #(pr (str "error retrieving routines: " %))}))
 
 (defn get-equipment []
-  (if-let [user (session/get :user)]
-    (GET "equipment" {:params        {:user user}
-                      :handler       #(session/put! :equipment %)
-                      :error-handler #(pr (str "error retrieving equipment: " %))})
-    (pr "no user in session.")))
+  (GET "equipment" {:params        {:user (session/get :user)}
+                    :handler       #(session/put! :equipment %)
+                    :error-handler #(pr (str "error retrieving equipment: " %))}))
 
 (defn get-all-categories []
   (GET "categories" {:handler       #(session/put! :all-categories %)
@@ -94,11 +80,9 @@
                     :error-handler #(pr (str "error retrieving movements: " %))}))
 
 (defn get-stored-sessions []
-  (if-let [user (session/get :user)]
-    (GET "sessions" {:params        {:user user}
-                     :handler       #(session/put! :stored-sessions %)
-                     :error-handler #(pr (str "error retrieving stored sessions: " %))})
-    (pr "no user in session.")))
+  (GET "sessions" {:params        {:user (session/get :user)}
+                   :handler       #(session/put! :stored-sessions %)
+                   :error-handler #(pr (str "error retrieving stored sessions: " %))}))
 
 (defn hook-browser-navigation! []
   (doto (History.)

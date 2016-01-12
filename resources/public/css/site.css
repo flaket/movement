@@ -147,6 +147,11 @@ a:hover {
   border-radius: 15px;
 }
 
+.small {
+  width: 200px;
+  font-size: 15px;
+}
+
 .day {
   width: 200px;
   margin-top: 15px;
@@ -205,6 +210,11 @@ a:hover {
   height: 225px;
   padding: 0px;
   margin: 15px 0px 0px 15px;
+}
+
+.small-graphic {
+    width: 150px;
+    height: 150px;
 }
 
 .refresh:hover {

@@ -45,7 +45,7 @@
     [:div.pure-u.pure-u-md-1-3]]
    [:div#footer-logo.pure-g
     [:div.pure-u.pure-u-md-1-3]
-    [:div.pure-u.pure-u-md-1-3 [:img {:width 75 :height 75 :src ""}]]
+    [:div.pure-u.pure-u-md-1-3 [:img {:width 75 :height 75 :src "images/static-air-baby.png"}]]
     [:div.pure-u.pure-u-md-1-3]]
    [:div#footer-copyright.pure-g
     [:div.pure-u.pure-u-md-1-3]
@@ -75,7 +75,7 @@
     [:div.pure-u.pure-u-md-1-3]]
    [:div#footer-logo.pure-g
     [:div.pure-u.pure-u-md-1-3]
-    [:div.pure-u.pure-u-md-1-3 [:img {:width 75 :height 75 :src ""}]]
+    [:div.pure-u.pure-u-md-1-3 [:img {:width 75 :height 75 :src "images/static-air-baby.png"}]]
     [:div.pure-u.pure-u-md-1-3]]
    [:div#footer-copyright.pure-g
     [:div.pure-u.pure-u-md-1-3]

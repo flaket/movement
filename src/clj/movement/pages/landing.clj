@@ -100,7 +100,7 @@
 (defn landing-page []
   (html5
     [:head
-     [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
+     [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
      [:meta {:http-equiv "cache-control"
              :content "no-cache"}]
      [:meta {:http-equiv "expires"

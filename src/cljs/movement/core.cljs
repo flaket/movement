@@ -41,7 +41,7 @@
   (secretary/set-config! :prefix "#")
   (if (session/get :user)
     ;todo: if registered more than 14 days and not payed, show payment-component
-    (set-page! #'create-component))
+    (set-page! #'discover-component))
 
   (.initializeTouchEvents js/React true)
   (mount-root))

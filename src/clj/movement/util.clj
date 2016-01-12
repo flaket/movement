@@ -142,11 +142,11 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                db
                "flaket")))
 
-#_d/q '[:find (pull ?s [*])
-       :where
-       [?u :user/email ?e]
-       [?u :user/session ?s]]
-     db)
+#_(d/q '[:find (pull ?s [*])
+         :where
+         [?u :user/email ?e]
+         [?u :user/plan ?s]]
+       db)
 
 #_(d/q '[:find (pull ?u [*])
        :where [?u :user/email ?n]]
@@ -164,7 +164,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
         template-ids (map (pull ))])
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186045447)
+#_(d/pull db '[*] 17592186045888)
 #_(d/transact conn [[:db/retract 17592186045925
                      :movement/equipment 17592186045447]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186045718]])
@@ -257,9 +257,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                    {:db/id     #db/id[:db.part/user -102]
                     :user/name created-by}]
           tx-data (concat tx-data tx-days)]
-
-      tx-data
-      #_(d/transact (:conn @tx) tx-data)))
+      (d/transact conn tx-data)))
 
 #_(transact-plan! email {:title "My Plan" :public? true :created-by "movementsession"
                          :plan ex-plan})
