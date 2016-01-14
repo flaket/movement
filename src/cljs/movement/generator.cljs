@@ -9,11 +9,11 @@
     [cljs.reader :as reader]
     [goog.events :as events]
     [clojure.string :as str]
-    [movement.util :refer [positions GET POST get-plans get-stored-sessions get-equipment get-groups]]
+    [movement.util :refer [handler-fn positions GET POST get-plans
+                           get-stored-sessions get-equipment get-groups]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]
-    [movement.components.login :refer [footer]]
-    [movement.state :refer [movement-session handler-fn log-session]]))
+    [movement.components.login :refer [footer]]))
 
 (defonce m-counter (atom 0))
 

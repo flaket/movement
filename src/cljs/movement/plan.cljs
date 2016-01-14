@@ -7,7 +7,6 @@
             [movement.menu :refer [menu-component]]
             [movement.util :refer [positions text-input POST get-plans]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
-            [movement.state :refer [handler-fn]]
             [movement.template :refer [movement-component]]
             [movement.user :refer [set-username-component]]
             [movement.components.creator :refer [title description error username]]

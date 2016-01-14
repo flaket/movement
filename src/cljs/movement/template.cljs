@@ -7,9 +7,8 @@
             [cljs.core.async :as async :refer [timeout <!]]
             [secretary.core :include-macros true :refer [dispatch!]]
             [movement.menu :refer [menu-component]]
-            [movement.util :refer [text-input POST get-templates]]
+            [movement.util :refer [handler-fn text-input POST get-templates]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
-            [movement.state :refer [handler-fn]]
             [movement.components.creator :refer [heading title description error]]
             [clojure.string :as str]
             [cljs.reader :refer [read-string]]))
@@ -148,7 +147,7 @@
                                                        (str m) (str "images/" (str/replace (str/lower-case m) " " "-") ".png") m))]
        [:div.pure-g.movements
         (for [i (range n)]
-          ^{:key (rand-int 10000)} (movement-component data "movement name" "images/push-up.png"))]
+          ^{:key (rand-int 10000)} (movement-component data "Movement Name" "images/static-air-baby.png"))]
        [:div.pure-g
         [:div.pure-u "Movements generated in this part should be drawn from the following categories: "]]
        [:div.pure-g

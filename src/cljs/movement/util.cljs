@@ -101,3 +101,9 @@
              :on-change #(reset! target (-> % .-target .-value))
              :value     @target}
             opts)])
+
+(defn handler-fn
+  "Wrapper function to force component handler functions to return nil.
+  This is a React requirement."
+  [func]
+  (fn [] func nil))

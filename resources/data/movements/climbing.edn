@@ -195,7 +195,6 @@
                          #db/id[:db.part/user -7]
                          #db/id[:db.part/user -14]]
   :movement/equipment   [#db/id[:db.part/user -5000]]
-  :movement/harder      [#db/id[:db.part/user -209]]
   :movement/easier      [#db/id[:db.part/user -200]]}
 
  {:db/id                #db/id[:db.part/user -205]
@@ -257,18 +256,6 @@
                          #db/id[:db.part/user -5001]]
   :movement/easier      [#db/id[:db.part/user -202]
                          #db/id[:db.part/user -207]]}
-
- {:db/id                #db/id[:db.part/user -209]
-  :movement/unique-name "Side Swing Grip Change"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -14]]
-  :movement/equipment   [#db/id[:db.part/user -5000]]
-  :movement/harder      [#db/id[:db.part/user -210]]
-  :movement/easier      [#db/id[:db.part/user -204]]}
 
  {:db/id                #db/id[:db.part/user -210]
   :movement/unique-name "Figure 8 Swing"

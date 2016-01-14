@@ -18,6 +18,7 @@
  {:db/id #db/id[:db.part/user -8] :category/name "Grip Strength"}
  {:db/id #db/id[:db.part/user -9] :category/name "Ring"}
  {:db/id #db/id[:db.part/user -10] :category/name "Bar"}
+ {:db/id #db/id[:db.part/user -11] :category/name "Rope"}
 
 
  ;; movements
@@ -298,22 +299,9 @@
                        #db/id[:db.part/user -4]
                        #db/id[:db.part/user -6]
                        #db/id[:db.part/user -7]
-                       #db/id[:db.part/user -8]]
+                       #db/id[:db.part/user -8]
+                       #db/id[:db.part/user -11]]
   :movement/equipment [#db/id[:db.part/user -5004]]}
-
- {:db/id             #db/id[:db.part/user]
-  :movement/unique-name     "Front Lever Row"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]
-                      #db/id[:db.part/user -4]
-                      #db/id[:db.part/user -5]
-                      #db/id[:db.part/user -6]
-                      #db/id[:db.part/user -8]
-                      #db/id[:db.part/user -9]
-                      #db/id[:db.part/user -10]]
-  :movement/equipment [#db/id[:db.part/user -5000]
-                       #db/id[:db.part/user -5002]]}
 
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Ring Chin Up"

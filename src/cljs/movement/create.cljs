@@ -7,7 +7,6 @@
             [movement.menu :refer [menu-component]]
             [movement.util :refer [text-input POST get-templates]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
-            [movement.state :refer [handler-fn]]
             [movement.components.creator :refer [heading title description error]]
             [movement.template :refer [template-creator-component]]
             [movement.routine :refer [routine-creator-component]]

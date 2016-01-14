@@ -108,6 +108,8 @@
     {:#                  (count no-image-movements)
      :no-image-movements (vec no-image-movements)}))
 
+#_(find-no-image-movements)
+
 #_(defn find-no-data-images []
   (let [f (io/file "resources/public/images")
         images (for [file (file-seq f)] (.getName file))
@@ -167,13 +169,13 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 #_(d/pull db '[*] 17592186045888)
 #_(d/transact conn [[:db/retract 17592186045925
                      :movement/equipment 17592186045447]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045718]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045782]])
 
 #_(d/q '[:find (pull ?e [*])
          :in $ ?name
        :where
        [?e :movement/unique-name ?name]]
-     db "Front Lever Row")
+     db "One Leg Extended Side Lever")
 
 #_(defn all-movements []
     (d/q '[:find [?name ...]

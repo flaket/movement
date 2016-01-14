@@ -6,7 +6,7 @@
   (let [tx-data [{:db/id #db/id[:db.part/user -1] :category/name "Strength"}
                  {:db/id #db/id[:db.part/user -2] :category/name "Mobility"}
                  {:db/id #db/id[:db.part/user -3] :category/name "Bent Arm Strength"}
-                 {:db/id #db/id[:db.part/user -4] :category/name "Straight Arm Scapular Strength"}
+                 {:db/id #db/id[:db.part/user -4] :category/name "Straight Arm Strength"}
                  {:db/id #db/id[:db.part/user -5] :category/name "Locomotion"}
                  {:db/id #db/id[:db.part/user -6] :category/name "Lower Body Strength"}
                  {:db/id #db/id[:db.part/user -8] :category/name "Core Strength"}

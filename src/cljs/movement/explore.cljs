@@ -1,13 +1,12 @@
-(ns movement.discover
+(ns movement.explore
   (:require [reagent.core :refer [atom]]
             [reagent.session :as session]
             [reagent-forms.core :refer [bind-fields]]
             [cljs.core.async :as async :refer [timeout <!]]
             [secretary.core :include-macros true :refer [dispatch!]]
             [movement.menu :refer [menu-component]]
-            [movement.util :refer [text-input GET POST get-templates]]
+            [movement.util :refer [handler-fn text-input GET POST get-templates]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
-            [movement.state :refer [handler-fn]]
             [movement.generator :refer [image-url]]
             [movement.components.creator :refer [heading title description error]]
             [movement.template :refer [template-creator-component]]
@@ -18,7 +17,7 @@
             [cljs.reader :refer [read-string]]))
 
 (def selection (atom :temp))
-(def search-state (atom {}))
+(def search-state (atom {:number-of-results 4}))
 
 (defn select-buttons []
   (let []
@@ -37,15 +36,16 @@
                                                :on-click  #(reset! selection :routines)} "Routines"]]])))
 
 (defn movements-component []
-  (let [show-categories? (atom false)]
+  (let [show-categories? (atom true)
+        all-results (atom false)]
     (fn []
       [:div {:style {:margin-top '20}}
        [:div.pure-g
 
         [:div.pure-u.pure-u-md-4-5
          [:div.pure-g
-          [:div.pure-u-1
-           (let [id (str "discover-mtags")
+          [:div.pure-u.pure-u-md-1-2
+           (let [id (str "explore-mtags")
                  movements-ac-comp (with-meta text-input-component
                                               {:component-did-mount #(auto-complete-did-mount
                                                                       (str "#" id)
@@ -54,7 +54,11 @@
                                  :class       "edit"
                                  :placeholder "Search for movements"
                                  :size        54
-                                 :on-save     #()}])]]
+                                 :on-save     #()}])]
+          [:div.pure-u.pure-u-md-1-2
+           [:div.pure-g
+            [:div.pure-u-1-2.button.button-primary "10 results"]
+            [:div.pure-u-1-2.button "all results"]]]]
          (let [movements (:movements @search-state)]
            [:div.pure-g.movements
             (doall
@@ -77,10 +81,14 @@
              ^{:key c}
              [:div.pure-g
               [:span.pure-u
-               {:style    {:cursor 'pointer}
+               {:style    {:cursor     'pointer
+                           :background (when (= c (:selected-category @search-state)) "gray")}
                 :on-click #(GET "movements-by-category"
-                                {:params        {:n 10 :category c}
-                                 :handler       (fn [r] (swap! search-state assoc :movements r))
+                                {:params        {:n        (:number-of-results @search-state)
+                                                 :category c}
+                                 :handler       (fn [r] (do
+                                                          (swap! search-state assoc :selected-category c)
+                                                          (swap! search-state assoc :movements r)))
                                  :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})} c]]))]]
 
        ])))
@@ -109,13 +117,13 @@
       [:div {:style {:margin-top '20}}
        "Searching routines"])))
 
-(defn discover-component []
+(defn explore-component []
   (let []
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content {:style {:margin-top '20}}
-        (heading "Discover ..")
+        (heading "Explore")
         [select-buttons selection]
         (case @selection
           :movements [movements-component]

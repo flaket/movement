@@ -9,12 +9,11 @@
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
             [movement.generator :refer [generator-component]]
-            [movement.share :refer [share-component]]
             [movement.group :refer [group-creator-component]]
             [movement.routine :refer [routine-creator-component]]
             [movement.plan :refer [plan-creator-component]]
             [movement.create :refer [create-component]]
-            [movement.discover :refer [discover-component]]
+            [movement.explore :refer [explore-component]]
             [movement.components.login :refer [login-page]])
   (:import goog.History))
 
@@ -25,7 +24,7 @@
 (secretary/defroute "/" [] (set-page! #'login-page))
 (secretary/defroute "/generator" [] (set-page! #'generator-component))
 (secretary/defroute "/create" [] (set-page! #'create-component))
-(secretary/defroute "/discover" [] (set-page! #'discover-component))
+(secretary/defroute "/explore" [] (set-page! #'explore-component))
 (secretary/defroute "/user" [] (set-page! #'user-component))
 
 ;---------------------------
@@ -41,7 +40,7 @@
   (secretary/set-config! :prefix "#")
   (if (session/get :user)
     ;todo: if registered more than 14 days and not payed, show payment-component
-    (set-page! #'discover-component))
+    (set-page! #'explore-component))
 
   (.initializeTouchEvents js/React true)
   (mount-root))
