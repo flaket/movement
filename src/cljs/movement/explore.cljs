@@ -7,7 +7,7 @@
             [movement.menu :refer [menu-component]]
             [movement.util :refer [handler-fn text-input GET POST get-templates]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
-            [movement.generator :refer [image-url]]
+            [movement.generator :refer [image-url add-movement-from-search]]
             [movement.components.creator :refer [heading title description error]]
             [movement.template :refer [template-creator-component]]
             [movement.routine :refer [routine-creator-component]]
@@ -16,34 +16,66 @@
             [clojure.string :as str]
             [cljs.reader :refer [read-string]]))
 
-(def selection (atom :temp))
-(def search-state (atom {:number-of-results 4}))
+(def explore-state (atom {:number-of-results 8
+                          :menu-selection :temp}))
+
+(defn results-slider []
+  (let [temp-data (atom (:number-of-results @explore-state))]
+    (fn []
+      [:div
+       [:div.pure-g
+        [:div.pure-u.pure-u-md-3-5 (str "Max number of results: " @temp-data)]]
+       [:div.pure-g
+        [:input.pure-u.pure-u-md-3-5 {:type        "range"
+                                      :value       @temp-data :min 1 :max 30 :step 1
+                                      :on-mouse-up #(swap! explore-state assoc :number-of-results @temp-data)
+                                      :on-change   #(reset! temp-data (-> % .-target .-value))}]
+        [:a.pure-u.pure-u-md-1-5 {:style    {:margin-left 5}
+                                  :on-click #(do
+                                              (reset! temp-data 1000)
+                                              (swap! explore-state assoc :number-of-results 1000))} "all"]]])))
 
 (defn select-buttons []
   (let []
-    (fn [selection]
+    (fn [explore-state]
       [:div {:style {:margin-top '40}}
        [:div.pure-g
-        [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :movements @selection) "button-primary")
-                                               :on-click  #(reset! selection :movements)} "Movements"]
-        [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :templates @selection) "button-primary")
-                                               :on-click  #(reset! selection :templates)} "Templates"]
-        [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :groups @selection) "button-primary")
-                                               :on-click  #(reset! selection :groups)} "Groups"]
-        [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :plans @selection) "button-primary")
-                                               :on-click  #(reset! selection :plans)} "Plans"]
-        [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :routines @selection) "button-primary")
-                                               :on-click  #(reset! selection :routines)} "Routines"]]])))
+        [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :movements (:menu-selection @explore-state)) "button-primary")
+                                               :on-click  #(swap! explore-state assoc :menu-selection :movements)} "Movements"]
+        [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :templates (:menu-selection @explore-state)) "button-primary")
+                                               :on-click  #(swap! explore-state assoc :menu-selection :templates)} "Templates"]
+        [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :groups (:menu-selection @explore-state)) "button-primary")
+                                               :on-click  #(swap! explore-state assoc :menu-selection :groups)} "Groups"]
+        [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :plans (:menu-selection @explore-state)) "button-primary")
+                                               :on-click  #(swap! explore-state assoc :menu-selection :plans)} "Plans"]
+        #_[:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :routines (:menu-selection @explore-state)) "button-primary")
+                                               :on-click  #(swap! explore-state assoc :menu-selection :routines)} "Routines"]]])))
 
 (defn movements-component []
-  (let [show-categories? (atom true)
-        all-results (atom false)]
+  (let []
     (fn []
       [:div {:style {:margin-top '20}}
        [:div.pure-g
-
+        [:div.pure-u.pure-u-md-1-5
+         [:div.pure-g
+          [:h3.pure-u "Categories"]]
+         (doall (for [c (sort (session/get :all-categories))]
+                  ^{:key c}
+                  [:div.pure-g {:style {:cursor     'pointer
+                                        :color (when (= c (:selected-category @explore-state)) "#fffff8")
+                                        :background-color (when (= c (:selected-category @explore-state)) "gray")}}
+                   [:span.pure-u-1
+                    {:on-click #(GET "movements-by-category"
+                                     {:params        {:n        (:number-of-results @explore-state)
+                                                      :category c}
+                                      :handler       (fn [r] (do
+                                                               (swap! explore-state assoc :selected-category c)
+                                                               (swap! explore-state assoc :movements r)))
+                                      :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})} c]]))]
         [:div.pure-u.pure-u-md-4-5
          [:div.pure-g
+          [:div.pure-u.pure-u-md-1-2
+           [results-slider]]
           [:div.pure-u.pure-u-md-1-2
            (let [id (str "explore-mtags")
                  movements-ac-comp (with-meta text-input-component
@@ -53,45 +85,29 @@
              [movements-ac-comp {:id          id
                                  :class       "edit"
                                  :placeholder "Search for movements"
-                                 :size        54
-                                 :on-save     #()}])]
-          [:div.pure-u.pure-u-md-1-2
+                                 :size        80
+                                 :on-save     #(when (some #{%} (session/get :all-movements))
+                                                (GET "movement"
+                                                     {:params        {:name (str %)}
+                                                      :handler       (fn [r] (swap! explore-state assoc
+                                                                                    :movements [r]
+                                                                                    :selected-category nil))
+                                                      :error-handler (pr "error getting single movement through add.")}))}])]]
+         (when-not (nil? (:movements @explore-state))
            [:div.pure-g
-            [:div.pure-u-1-2.button.button-primary "10 results"]
-            [:div.pure-u-1-2.button "all results"]]]]
-         (let [movements (:movements @search-state)]
+            [:div.pure-u-1 (str "Showing " (count (:movements @explore-state)) " results")]])
+         (let [movements (:movements @explore-state)]
            [:div.pure-g.movements
             (doall
               (for [m movements]
-                ^{:key m}
+                ^{:key (rand-int 10000)}
                 (let [name (:movement/unique-name m)]
                   [:div.pure-u.movement.small.is-center
                    [:h3.pure-g
                     [:div.pure-u-1-12]
                     [:div.pure-u.title name]]
                    [:img.graphic.small-graphic.pure-img-responsive {:src (image-url name) :title name :alt name}]
-                   [:div {:style {:margin-bottom 10}}]])))])]
-
-        [:div.pure-u.pure-u-md-1-5
-         [:div.pure-g
-          [:div.button.pure-u {:on-click #(handler-fn (reset! show-categories? (not @show-categories?)))}
-           (str (if @show-categories? "Hide" "Show") " categories")]]
-         (when @show-categories?
-           (for [c (sort (session/get :all-categories))]
-             ^{:key c}
-             [:div.pure-g
-              [:span.pure-u
-               {:style    {:cursor     'pointer
-                           :background (when (= c (:selected-category @search-state)) "gray")}
-                :on-click #(GET "movements-by-category"
-                                {:params        {:n        (:number-of-results @search-state)
-                                                 :category c}
-                                 :handler       (fn [r] (do
-                                                          (swap! search-state assoc :selected-category c)
-                                                          (swap! search-state assoc :movements r)))
-                                 :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})} c]]))]]
-
-       ])))
+                   [:div {:style {:margin-bottom 10}}]])))])]]])))
 
 (defn groups-component []
   (let []
@@ -124,11 +140,11 @@
        [menu-component]
        [:div.content {:style {:margin-top '20}}
         (heading "Explore")
-        [select-buttons selection]
-        (case @selection
+        [select-buttons explore-state]
+        (case (:menu-selection @explore-state)
           :movements [movements-component]
-          :groups [groups-component]
-          :routines [routines-component]
           :templates [templates-component]
+          :groups [groups-component]
           :plans [plans-component]
+          ;:routines [routines-component]
           "")]])))

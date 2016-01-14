@@ -36,6 +36,6 @@
 (defn username [t]
   [:div
    [:div.pure-g
-    [:div.pure-u-1 (str "To create new " t " you must first select a username")]]
+    [:div.pure-u-1 (str "To create a new " t " you must first select a username")]]
    [set-username-component]])
 

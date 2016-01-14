@@ -186,13 +186,14 @@
        (when @showing-categories-list
          (for [c (sort (session/get :all-categories))]
            ^{:key c} [:div.pure-g
-                      [:div.pure-u {:style    {:cursor     'pointer
-                                               :background (when (some #{c} (get-in @template-state [:parts i :categories]))
-                                                             "yellow")}
-                                    :on-click #(if (some #{c} (get-in @template-state [:parts i :categories]))
-                                                (let [new-categories (remove #{c} (get-in @template-state [:parts i :categories]))]
-                                                  (swap! template-state assoc-in [:parts i :categories] new-categories))
-                                                (swap! template-state update-in [:parts i :categories] conj c))} c]]))
+                      [:div.pure-u-1
+                       {:style {:cursor     'pointer
+                                :color (when (some #{c} (get-in @template-state [:parts i :categories])) "#fffff8")
+                                :background (when (some #{c} (get-in @template-state [:parts i :categories])) "gray")}
+                        :on-click #(if (some #{c} (get-in @template-state [:parts i :categories]))
+                                    (let [new-categories (remove #{c} (get-in @template-state [:parts i :categories]))]
+                                      (swap! template-state assoc-in [:parts i :categories] new-categories))
+                                    (swap! template-state update-in [:parts i :categories] conj c))} c]]))
 
        [:div.pure-g
         [:label.pure-u "Additionally, the following exercises should always be included:"]]

@@ -166,16 +166,22 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
         template-ids (map (pull ))])
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186045888)
-#_(d/transact conn [[:db/retract 17592186045925
-                     :movement/equipment 17592186045447]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045782]])
+#_(d/pull db '[*] 17592186046024)
+#_(d/transact conn [[:db/retract 17592186045494
+                     :movement/category 17592186046023]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045813]])
 
 #_(d/q '[:find (pull ?e [*])
          :in $ ?name
        :where
        [?e :movement/unique-name ?name]]
-     db "One Leg Extended Side Lever")
+     db "Elbow Pull Up")
+
+(d/q '[:find (pull ?e [*])
+       :in $ ?name
+       :where
+       [?e :category/name ?name]]
+     db "Locomotion")
 
 #_(defn all-movements []
     (d/q '[:find [?name ...]

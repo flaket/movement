@@ -48,7 +48,8 @@
                    ^{:key (rand-int 1000)}
                    [:div.pure-g
                     [:div.pure-u {:style    {:cursor     'pointer
-                                             :background (when (some #{t} (:movements @routine-state)) "yellow")}
+                                             :color (when (some #{t} (:movements @routine-state)) "#fffff8")
+                                             :background (when (some #{t} (:movements @routine-state)) "gray")}
                                   :on-click #(if (some #{t} (:movements @routine-state))
                                               (let [new-movements (remove #{t} (:movements @routine-state))]
                                                 (swap! routine-state assoc :movements new-movements))
@@ -96,7 +97,7 @@
        (description routine-state)
        [movements-component]
        (error (:message @error-atom))
-       (let [username (session/get :username)]
-         (if (nil? username)
+       (let [usr (session/get :username)]
+         (if (nil? usr)
            (username "routine")
            [save-routine-component error-atom]))])))

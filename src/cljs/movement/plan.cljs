@@ -35,10 +35,13 @@
 (defn adjust-days-component []
   [:div.pure-g {:style {:margin-top "10px"}}
    [:div.pure-u {:style {:margin-right "5px"}} "This plan consists of "
-    [:span {:style {:color "red" :font-size "150%"}} (count (:plan @plan-state))] (if (= 1 (:days @plan-state)) " day" " days")]
+    [:span {:style {:color "red" :font-size "150%"}} (count (:plan @plan-state))] (if (= 1 (count (:plan @plan-state))) " day" " days")]
    [:button.pure-u
     {:on-click #(when (> (count (:plan @plan-state)) 0)
-                 (swap! plan-state update :plan pop))} [:i.fa.fa-minus]]
+                 (do
+                   (when (= (inc (:selected @plan-state)) (count (:plan @plan-state)))
+                     (swap! plan-state assoc :selected nil))
+                   (swap! plan-state update :plan pop)))} [:i.fa.fa-minus]]
    [:button.pure-u
     {:on-click #(swap! plan-state update :plan conj [])} [:i.fa.fa-plus]]])
 
@@ -85,7 +88,7 @@
                        (cond
                          (nil? title) (swap! error-atom assoc :message "The plan needs a title")
                          (empty? plan) (swap! error-atom assoc :message "A plan consists of 1 or more days")
-                         (every? empty? plan) (swap! error-atom assoc :message "At least one days must contain template(s)")
+                         (every? empty? plan) (swap! error-atom assoc :message "At least one day must contain template(s)")
                          :else (let [username (session/get :username)
                                      email (session/get :email)
                                      plan (assoc @plan-state
@@ -112,7 +115,7 @@
        (adjust-days-component)
        (plan-component (:plan @plan-state))
        (error (:message @error-atom))
-       (let [username (session/get :username)]
-         (if (nil? username)
+       (let [usr (session/get :username)]
+         (if (nil? usr)
            (username "plan")
            [save-plan-component error-atom]))])))

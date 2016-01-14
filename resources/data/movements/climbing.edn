@@ -460,11 +460,9 @@
   :movement/unique-name "Elbow Pull Up"
   :movement/category    [#db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
                          #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -9]
-                         #db/id[:db.part/user -14]]
+                         #db/id[:db.part/user -14]
+                         #db/id[:db.part/user -15]]
   :movement/equipment   [#db/id[:db.part/user -5000]]}
 
  {:db/id                #db/id[:db.part/user -300]

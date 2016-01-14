@@ -79,7 +79,7 @@
                          [?m :movement/category ?c]
                          [?m :movement/unique-name _]]
                        (:db @tx) category)
-        m (->> movements flatten set (take n))]
+        m (->> movements flatten (sort-by :movement/unique-name) (take n))]
     m))
 
 (defn all-template-titles [email]

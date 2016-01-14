@@ -22,12 +22,13 @@
     (fn [selection]
       [:div {:style {:margin-top '40}}
        [:div.pure-g
-        [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :group @selection) "button-primary")
-                                               :on-click  #(reset! selection :group)} "Group"]
-        [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :routine @selection) "button-primary")
-                                               :on-click #(reset! selection :routine)} "Routine"]
         [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :template @selection) "button-primary")
                                                :on-click #(reset! selection :template)} "Template"]
+        [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :group @selection) "button-primary")
+                                               :on-click  #(reset! selection :group)} "Group"]
+        #_[:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :routine @selection) "button-primary")
+                                               :on-click #(reset! selection :routine)} "Routine"]
+
         [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :plan @selection) "button-primary")
                                                :on-click #(reset! selection :plan)} "Plan"]]])))
 
@@ -37,11 +38,11 @@
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
-        (heading "Create a new ..")
+        (heading "Create a new")
         [new-buttons selection]
         (case @selection
           :group [group-creator-component]
-          :routine [routine-creator-component]
+          ;:routine [routine-creator-component]
           :template [template-creator-component]
           :plan [plan-creator-component]
           "")]])))

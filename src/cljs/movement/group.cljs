@@ -24,7 +24,8 @@
              ^{:key (rand-int 1000)}
              [:div.pure-u.button {:style    {:cursor     'pointer
                                              :margin "0 0 5px 5px"
-                                             :background (when (some #{t} (:templates @group-state)) "yellow")}
+                                             :color (when (some #{t} (:templates @group-state)) "#fffff8")
+                                             :background (when (some #{t} (:templates @group-state)) "gray")}
                                   :on-click #(if (some #{t} (:templates @group-state))
                                               (let [new-templates (remove #{t} (:templates @group-state))]
                                                 (swap! group-state assoc :templates new-templates))
@@ -71,7 +72,7 @@
        (description group-state)
        (templates-component)
        (error (:message @error-atom))
-       (let [username (session/get :username)]
-         (if (nil? username)
+       (let [usr (session/get :username)]
+         (if (nil? usr)
            (username "group")
            [save-group-component error-atom]))])))
