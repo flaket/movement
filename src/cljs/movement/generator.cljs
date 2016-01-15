@@ -357,8 +357,7 @@
        [:div.pure-g
         [:a.pure-u.pure-u-md-1-4 {:on-click #(session/remove! :movement-session)} "Back to home screen"]
         [:div.pure-u-1-2.pure-u-md-1-4.button.button-primary {:on-click pick-random-template} "Random session"]
-        [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when @templates-showing? "button-primary")
-                                               :on-click  #(handler-fn
+        [:div.pure-u-1-2.pure-u-md-1-4.button {:on-click  #(handler-fn
                                                             (do
                                                               (when (nil? (session/get :equipment))
                                                                 (get-equipment))
@@ -380,7 +379,11 @@
         (when @templates-showing?
           (doall
             (for [t (session/get :templates)]
-              ^{:key t} [template-component t])))]
+              ^{:key t} [:div.pure-u.button.button-primary {:on-click #(do
+                                                                        (go (<! (timeout 500))
+                                                                            (reset! templates-showing? false))
+                                                                        (create-session-from-template t))
+                                                            :style    {:margin "0 0 5px 5px"}} t])))]
        #_[:div.pure-g
           (when @equipment-showing?
             (doall

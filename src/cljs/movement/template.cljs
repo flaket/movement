@@ -238,7 +238,7 @@
           [:div.pure-g
            [:div.pure-u {:style {:margin-top 15 :font-size 24 :color "green"}} "Template stored successfully!"]])
         [:div.pure-g
-         [:p.pure-u.pure-u-md-2-5.button.button-primary
+         [:p.pure-u-1.pure-u-md-2-5.button.button-primary
           {:on-click #(let [title (:title @template-state)
                             parts (:parts @template-state)]
                        (cond
