@@ -13,6 +13,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :user/name
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/unique             :db.unique/identity
@@ -138,6 +139,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :template/title
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "Template title"
@@ -162,6 +164,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :template/description
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A template might have a description"
@@ -187,6 +190,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :routine/name
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A routine has a name"
@@ -211,6 +215,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :routine/description
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A routine might have a description"
@@ -228,6 +233,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :group/title
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "Group title"
@@ -252,6 +258,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :group/description
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A group might have a description"
@@ -269,6 +276,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :plan/title
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "Plan title"
@@ -309,6 +317,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :plan/description
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A plan might have a description"
@@ -359,6 +368,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :part/title
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A part has a title"
@@ -367,6 +377,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :part/description
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A part might have a description"
@@ -494,6 +505,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :movement/description
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A movement may have a description"
@@ -551,6 +563,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :equipment/name
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/unique             :db.unique/identity
@@ -570,6 +583,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :session/title
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A session is stored with a title"
@@ -602,6 +616,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :session/description
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A session might be stored with a description"
@@ -618,6 +633,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :session/comment
   :db/index              true
+  :db/fulltext           true
   :db/valueType          :db.type/string
   :db/cardinality        :db.cardinality/one
   :db/doc                "A session may have comments"

@@ -160,13 +160,13 @@
          [:p.pure-g
           (search-box {:type :template :target :username :placeholder "movementsession"})]]]
        [:p.pure-g
-        [:div.pure-u-1.pure-u-md-1-3]
         [:button.pure-u-1.pure-u-md-1-3.button.button-primary
          {:on-click #(let [template (:template @explore-state)
                            template (assoc template :n 10)]
                       (pr template)
-                      (swap! explore-state assoc :templates [{:template/title "hello1"}
-                                                             {:template/title "hello2"}]))} "Search"]
+                      (GET "search/template" {:params        {:template template}
+                                              :handler       (fn [r] (swap! explore-state assoc :templates r))
+                                              :error-handler (fn [r] (pr r))}))} "Search"]
         #_[:div.pure-u-1-5]]
        [:div.pure-g
         [:div.pure-u-1

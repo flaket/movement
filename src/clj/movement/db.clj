@@ -7,7 +7,7 @@
             [taoensso.timbre :refer [info error]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-(def uri "datomic:dev://localhost:4334/testing6")
+(def uri "datomic:dev://localhost:4334/testing7")
 #_(def uri "datomic:ddb://us-east-1/movementsession/production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
@@ -81,6 +81,17 @@
                        (:db @tx) category)
         m (->> movements flatten (sort-by :movement/unique-name) (take n))]
     m))
+
+(defn templates-by [username]
+  "Finds all templates a user has created."
+  (flatten
+    (d/q '[:find (pull ?t [*])
+           :in $ ?username
+           :where
+           [?e :user/name ?username]
+           [?e :user/template ?t]
+           [?t :template/created-by ?e]]
+         (:db @tx) username)))
 
 (defn all-template-titles [email]
   (d/q '[:find [?title ...]
@@ -287,11 +298,15 @@
                 [?id :template/title ?name]]
               (:db @tx) email template-title)))
 
+(defn search-template [{:keys [n categories title description username] :as template}]
+  (if-not (nil? username) (templates-by username)))
+
 ;;;;;;;;;;; TRANSACTIONS ;;;;;;;;;;;;;
 
-(defn transact-template! [user {:keys [title description parts]}]
+(defn transact-template! [user {:keys [title description parts public? created-by]}]
   (let [conn (:conn @tx)
         description (if (nil? description) "" description)
+        public? (if (nil? public?) true public?)
         parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
         user-template-data [{:db/id         #db/id[:db.part/user -99]
                              :user/email    user
@@ -299,7 +314,11 @@
                             {:db/id                #db/id[:db.part/user -100]
                              :template/title       title
                              :template/part        (vec (for [p parts] (:db/id p)))
-                             :template/description description}]
+                             :template/description description
+                             :template/public? public?
+                             :template/created-by  #db/id[:db.part/user -101]}
+                            {:db/id     #db/id[:db.part/user -101]
+                             :user/name created-by}]
         user-template-data (remove nil? user-template-data)
         parts (map #(rename-keys % {:n                  :part/number-of-movements
                                     :categories         :part/category
@@ -326,6 +345,7 @@
 
 (defn transact-group! [email {:keys [title created-by public? description templates]}]
   (let [description (if (nil? description) "" description)
+        public? (if (nil? public?) true public?)
         template-ids (vec (map #(get-user-template-id email %) templates))
         tx-data [{:db/id      #db/id[:db.part/user -99]
                   :user/email email
@@ -367,6 +387,7 @@
 
 (defn transact-routine! [email {:keys [name created-by public? description movements]}]
   (let [description (if (nil? description) "" description)
+        public? (if (nil? public?) true public?)
         movement-ids (vec (map #(:db/id (entity-by-movement-name %)) movements))
         tx-data [{:db/id        #db/id[:db.part/user -99]
                   :user/email   email

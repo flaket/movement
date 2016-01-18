@@ -9,7 +9,7 @@
             [movement.menu :refer [menu-component]]
             [movement.util :refer [handler-fn text-input POST get-templates]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
-            [movement.components.creator :refer [heading title description error]]
+            [movement.components.creator :refer [username heading title description error]]
             [clojure.string :as str]
             [cljs.reader :refer [read-string]]))
 
@@ -242,15 +242,19 @@
           {:on-click #(let [title (:title @template-state)
                             parts (:parts @template-state)]
                        (cond
-                         (nil? title) (reset! error-atom "The template needs a title.")
-                         (empty? parts) (reset! error-atom "A session must have 1 or more parts.")
-                         (< 0 (count (filter (fn [p] (str/blank? (:title p))) parts))) (reset! error-atom "All parts must have a title.")
+                         (nil? title) (reset! error-atom "The template needs a title")
+                         (empty? parts) (reset! error-atom "A session must have 1 or more parts")
+                         (< 0 (count (filter (fn [p] (empty? (:categories p))) parts))) (reset! error-atom "All parts must have at least one category to draw new movements from")
+                         (< 0 (count (filter (fn [p] (str/blank? (:title p))) parts))) (reset! error-atom "All parts must have a title")
+
                          :else (let []
                                  (when (empty? (:categories @template-state)) (swap! template-state dissoc :categories))
                                  (when (empty? (:specific-movements @template-state)) (swap! template-state dissoc :specific-movements))
                                  (POST "template"
                                        {:params        {:user     (session/get :user)
-                                                        :template @template-state}
+                                                        :template (assoc @template-state
+                                                                    :public? true
+                                                                    :created-by (session/get :username))}
                                         :handler       (fn [response] (do
                                                                         (reset! error-atom "")
                                                                         (reset! template-stored-successfully? true)
@@ -278,4 +282,7 @@
                  n (get-in @template-state [:parts i :n])]
              [part-creator-component (get parts i) i data specific-movements n])))
        (error @error-atom)
-       [save-template-component error-atom]])))
+       (let [usr (session/get :username)]
+         (if (nil? usr)
+           (username "template")
+           [save-template-component error-atom]))])))

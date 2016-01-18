@@ -312,7 +312,7 @@
   :movement/easier      [#db/id[:db.part/user -204]]}
 
  {:db/id                #db/id[:db.part/user -215]
-  :movement/unique-name "Side Swing Power Traverse"
+  :movement/unique-name "Side Power Traverse"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]
@@ -337,7 +337,7 @@
   :movement/harder      [#db/id[:db.part/user -218]]}
 
  {:db/id                #db/id[:db.part/user -218]
-  :movement/unique-name "Front Swing Power Traverse"
+  :movement/unique-name "Front Power Traverse"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]

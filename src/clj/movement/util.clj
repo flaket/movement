@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/testing6")
+#_(def uri "datomic:dev://localhost:4334/testing7")
 
 #_(def uri "datomic:ddb://us-east-1/movementsession/production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
@@ -61,7 +61,8 @@
     (d/transact conn templates-tx))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "andflak@gmail.com"
+                       :user/email               "admin@movementsession.com"
+                       :user/password (hashers/encrypt "pw")
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
 
@@ -171,16 +172,17 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                      :movement/category 17592186046023]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186045813]])
 
-#_(d/q '[:find (pull ?e [*])
-         :in $ ?name
+#_(d/q '[:find (pull ?u [*])
+         :in $
        :where
-       [?e :movement/unique-name ?name]]
-     db "Elbow Pull Up")
+         [?u :user/email "admin@movementsession.com"]
+       ]
+     db)
 
-(d/q '[:find (pull ?e [*])
+#_(d/q '[:find (pull ?e [*])
        :in $ ?name
        :where
-       [?e :category/name ?name]]
+       [?e :template/title ?name]]
      db "Locomotion")
 
 #_(defn all-movements []
@@ -235,41 +237,6 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
            [?t :template/title ?title]]
          db email title))
 
-#_(def email "admin@movementsession.com")
-
-#_(def ex-plan [["Learning Handstand"] ["Natural Movement"]
-                ["Learning Handstand" "Gymnastic Strength"] ["Natural Movement"]
-                ["Learning Handstand"] ["Natural Movement"]
-                [""]])
-
-#_(defn transact-plan! [email {:keys [title created-by public? description plan]}]
-    (let [description (if (nil? description) "" description)
-          public? (if (nil? public?) true public?)
-          tx-days (vec (for [day plan]
-                         (let [template-ids (vec (map #(get-user-template-id email %) day))]
-                           {:db/id          (d/tempid :db.part/user)
-                            :day/completed? false
-                            :day/template   (if (= [nil] template-ids)
-                                              []
-                                              template-ids)})))
-          tx-data [{:db/id      #db/id[:db.part/user -99]
-                    :user/email email
-                    :user/plan [#db/id[:db.part/user -100]]}
-                   {:db/id            #db/id[:db.part/user -100]
-                    :plan/title       title
-                    :plan/description description
-                    :plan/public?     public?
-                    :plan/completed?  false
-                    :plan/day         (vec (map :db/id tx-days))
-                    :plan/created-by  #db/id[:db.part/user -102]}
-                   {:db/id     #db/id[:db.part/user -102]
-                    :user/name created-by}]
-          tx-data (concat tx-data tx-days)]
-      (d/transact conn tx-data)))
-
-#_(transact-plan! email {:title "My Plan" :public? true :created-by "movementsession"
-                         :plan ex-plan})
-
 #_(d/q '[:find (pull ?t [*])
             :in $ ?email ?title
             :where
@@ -310,7 +277,32 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
      db
      "Rings")
 
+#_(d/q '[:find [?e ...]
+       :in $ ?cat
+       :where
+       [?e :template/part ?p]
+         [?p :part/category ?c]
+         [?c :category/name ?cat]]
+     db
+     "Hip Mobility")
 
+(defn templates-by [username]
+  "Finds all templates a user has created."
+  (flatten (d/q '[:find (pull ?t [*])
+                  :in $ ?username
+                  :where
+                  [?e :user/name ?username]
+                  [?e :user/template ?t]
+                  [?t :template/created-by ?e]]
+                db username)))
+
+(d/q '[:find [?t ...]
+       :in $ ?username
+       :where
+       [(fulltext $ :user/name ?username) [[?e ?n]]]
+       [?e :user/template ?t]
+       [?t :template/created-by ?e]]
+     db "movementsession")
 
 #_(pp/pprint *1)
 
@@ -318,11 +310,11 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 ; The [:ns ""] vector is a "look-up ref". Anywhere in datomic where
 ; an entity is supposed to be provided, a look-up ref can be used instead.
 ; This let's us avoid dealing with entities. The attribute value must be unique.
-#_(d/pull db '[] [:equipment/name "Rings"])
+#_(d/pull db '[] [:category/name "Handstand"])
 
 ; There are three different ways of referring to an entity in datomic.
 ; By it's id
-#_(d/pull db '[*] 17592186045430)
+#_(d/pull db '[*] 17592186045811)
 ; By look-up ref
 #_(d/pull db '[*] [:category/name "Pushing"])
 ; Directly by it's programmtic name (if it has one, this does not.)

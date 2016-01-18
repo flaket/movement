@@ -160,7 +160,7 @@
     (if-not (nil? (:db/id user))
       (let []
         (db/transact-activated-user! (:user/email user))
-        (add-standard-templates-to-user (:user/email user))
+        #_(add-standard-templates-to-user (:user/email user))
         {:status  302
          :headers {"Location" (str "/activated/" (:user/email user))}
          :body    ""})
@@ -342,6 +342,9 @@
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
                                     (response (db/all-category-names))))
+           (GET "/search/template" req (if-not (authenticated? req)
+                                         (throw-unauthorized)
+                                         (response (db/search-template (:template (:params req))))))
            (resources "/")
            (not-found "Not Found"))
 

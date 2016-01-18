@@ -1,13 +1,15 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Balancing"}
+ {:db/id #db/id[:db.part/user -1] :category/name "Balance"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Walking"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Crawling"}
 
  {:db/id #db/id[:db.part/user -5000] :equipment/name "Beam"}
 
-
  {:db/id              #db/id[:db.part/user -100]
   :movement/unique-name      "Balancing Walk"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]
   :movement/equipment [#db/id[:db.part/user -5000]]
   :movement/harder   [#db/id[:db.part/user -101]
                       #db/id[:db.part/user -102]
@@ -15,48 +17,61 @@
 
  {:db/id              #db/id[:db.part/user -101]
   :movement/unique-name      "Balancing Backward Walk"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]
   :movement/equipment [#db/id[:db.part/user -5000]]
   :movement/easier [#db/id[:db.part/user -100]]}
 
  {:db/id              #db/id[:db.part/user -102]
   :movement/unique-name      "Balancing Lateral Walk"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]
   :movement/equipment [#db/id[:db.part/user -5000]]
-  :movement/easier    [#db/id[:db.part/user -101]]}
+  :movement/easier    [#db/id[:db.part/user -100]
+                       #db/id[:db.part/user -101]]}
 
  {:db/id              #db/id[:db.part/user -103]
   :movement/unique-name      "Low Walk"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]
   :movement/equipment [#db/id[:db.part/user -5000]]
+  :movement/easier    [#db/id[:db.part/user -100]]
   :movement/harder    [#db/id[:db.part/user -104]
                        #db/id[:db.part/user -105]
                        #db/id[:db.part/user -106]]}
 
  {:db/id              #db/id[:db.part/user -104]
   :movement/unique-name      "Low Backward Walk"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]
   :movement/equipment [#db/id[:db.part/user -5000]]
-  :movement/easier    [#db/id[:db.part/user -103]]}
+  :movement/easier    [#db/id[:db.part/user -101]
+                       #db/id[:db.part/user -103]]}
 
  {:db/id              #db/id[:db.part/user -105]
   :movement/unique-name      "Low Lateral Walk"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]
   :movement/equipment [#db/id[:db.part/user -5000]]
-  :movement/easier    [#db/id[:db.part/user -103]]}
+  :movement/easier    [#db/id[:db.part/user -102]
+                       #db/id[:db.part/user -103]]
+  :movement/harder    [#db/id[:db.part/user -107]]}
 
  {:db/id              #db/id[:db.part/user -106]
   :movement/unique-name      "Stealth Walk"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]
   :movement/equipment [#db/id[:db.part/user -5000]]
   :movement/easier    [#db/id[:db.part/user -103]]
   :movement/harder    [#db/id[:db.part/user -107]]}
 
  {:db/id              #db/id[:db.part/user -107]
   :movement/unique-name      "Stealth Lateral Walk"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -2]]
   :movement/equipment [#db/id[:db.part/user -5000]]
-  :movement/easier    [#db/id[:db.part/user -103]]}
+  :movement/easier    [#db/id[:db.part/user -106]
+                       #db/id[:db.part/user -105]]}
 
  {:db/id              #db/id[:db.part/user -108]
   :movement/unique-name      "Tripod Transition"
@@ -77,12 +92,14 @@
 
  {:db/id              #db/id[:db.part/user -111]
   :movement/unique-name      "Balancing Foot Hand Crawl"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user -112]
   :movement/unique-name      "Balancing Inverted Crawl"
-  :movement/category  [#db/id[:db.part/user -1]]
+  :movement/category  [#db/id[:db.part/user -1]
+                       #db/id[:db.part/user -3]]
   :movement/equipment [#db/id[:db.part/user -5000]]}
 
  {:db/id              #db/id[:db.part/user -113]

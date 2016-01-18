@@ -46,7 +46,7 @@
         [:div.pricing-table.pricing-table-biz
          [:div.pricing-table-header
           [:h2 ""]
-          [:span.pricing-table-price "$9.95" [:span "per month"]]]
+          [:span.pricing-table-price "$8" [:span "per month"]]]
          #_[:ul.pricing-table-list
           [:li]]]
         [:div
@@ -69,8 +69,7 @@
        [:div.pure-u-1.pure-u-md-1-3
         [:div.l-box
          [:h3.information-head "Cancel your plan anytime"]
-         [:p "You are free to cancel your subscription at any time. If you cancel within the first 30 days,
-         there will be no charges to your credit card."]]]
+         [:p "If you cancel within the first 30 days there will be no charges to your credit card."]]]
        [:div.pure-u-1.pure-u-md-1-3
         [:div.l-box
          [:h3.information-head "Customer support"]
