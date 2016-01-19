@@ -170,7 +170,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 #_(d/pull db '[*] 17592186046024)
 #_(d/transact conn [[:db/retract 17592186045494
                      :movement/category 17592186046023]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045813]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045819]])
 
 #_(d/q '[:find (pull ?u [*])
          :in $
@@ -286,15 +286,13 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
      db
      "Hip Mobility")
 
-(defn templates-by [username]
-  "Finds all templates a user has created."
-  (flatten (d/q '[:find (pull ?t [*])
-                  :in $ ?username
-                  :where
-                  [?e :user/name ?username]
-                  [?e :user/template ?t]
-                  [?t :template/created-by ?e]]
-                db username)))
+(flatten (d/q '[:find (pull ?t [*])
+                :in $ ?kw ?username
+                :where
+                [?e :user/name ?username]
+                [?e ?kw ?t]
+                [?t :group/created-by ?e]]
+              db :user/group "movementsession"))
 
 (d/q '[:find [?t ...]
        :in $ ?username
@@ -303,6 +301,43 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
        [?e :user/template ?t]
        [?t :template/created-by ?e]]
      db "movementsession")
+
+(flatten (map #(flatten
+                (d/q '[:find (pull ?t [*])
+                       :in $ ?category
+                       :where
+                       [?e :user/template ?t]
+                       [?t :template/created-by ?e]
+                       [?t :template/part ?p]
+                       [?p :part/category ?c]
+                       [?c :category/name ?category]]
+                     db %)) ["Crawling" "Rolling"]))
+
+(flatten
+  (d/q '[:find (pull ?t [*])
+         :in $ ?title
+         :where
+         [(fulltext $ :template/title ?title) [[?t ?n]]]
+         [?e :user/template ?t]
+         [?t :template/created-by ?e]]
+       db "5x5"))
+
+(flatten (map #(flatten
+                (d/q '[:find (pull ?t [*])
+                       :in $ ?title
+                       :where
+                       [(fulltext $ :template/title ?title) [[?t ?n]]]
+                       [?e :user/template ?t]
+                       [?t :template/created-by ?e]]
+                     db %)) (str/split "5x5 locomotion" #" ")))
+
+(flatten (map #(flatten (d/q '[:find (pull ?t [*])
+                               :in $ ?description
+                               :where
+                               [(fulltext $ :template/description ?description) [[?t ?n]]]
+                               [?e :user/template ?t]
+                               [?t :template/created-by ?e]]
+                             db %)) (str/split "practice" #" ")))
 
 #_(pp/pprint *1)
 

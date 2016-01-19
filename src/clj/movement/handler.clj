@@ -345,6 +345,12 @@
            (GET "/search/template" req (if-not (authenticated? req)
                                          (throw-unauthorized)
                                          (response (db/search-template (:template (:params req))))))
+           (GET "/search/group" req (if-not (authenticated? req)
+                                         (throw-unauthorized)
+                                         (response (db/search-group (:group (:params req))))))
+           (GET "/search/plan" req (if-not (authenticated? req)
+                                      (throw-unauthorized)
+                                      (response (db/search-plan (:plan (:params req))))))
            (resources "/")
            (not-found "Not Found"))
 

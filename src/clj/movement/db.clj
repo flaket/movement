@@ -82,17 +82,6 @@
         m (->> movements flatten (sort-by :movement/unique-name) (take n))]
     m))
 
-(defn templates-by [username]
-  "Finds all templates a user has created."
-  (flatten
-    (d/q '[:find (pull ?t [*])
-           :in $ ?username
-           :where
-           [?e :user/name ?username]
-           [?e :user/template ?t]
-           [?t :template/created-by ?e]]
-         (:db @tx) username)))
-
 (defn all-template-titles [email]
   (d/q '[:find [?title ...]
          :in $ ?email
@@ -298,8 +287,80 @@
                 [?id :template/title ?name]]
               (:db @tx) email template-title)))
 
+
+(defn templates-by-category
+  ""
+  [category]
+  (flatten
+    (d/q '[:find (pull ?t [*])
+           :in $ ?category
+           :where
+           [?e :user/template ?t]
+           [?t :template/created-by ?e]
+           [?t :template/part ?p]
+           [?p :part/category ?c]
+           [?c :category/name ?category]]
+         (:db @tx) category)))
+
+(defn templates-by-title
+  ""
+  [title]
+  (flatten
+    (d/q '[:find (pull ?t [*])
+           :in $ ?title
+           :where
+           [(fulltext $ :template/title ?title) [[?t ?n]]]
+           [?e :user/template ?t]
+           [?t :template/created-by ?e]]
+         (:db @tx) title)))
+
+(defn templates-by-description
+  ""
+  [description]
+  (flatten
+    (d/q '[:find (pull ?t [*])
+           :in $ ?description
+           :where
+           [(fulltext $ :template/description ?description) [[?t ?n]]]
+           [?e :user/template ?t]
+           [?t :template/created-by ?e]]
+         (:db @tx) description)))
+
+(defn items-by-username
+  "Finds all templates, groups or plans a user has created.
+  Input variable type must be one of the keywords :template, :group, :plan."
+  [type username]
+  (let [item (case type
+              :template :user/template
+              :group :user/group
+              :plan :user/plan)
+        created-by (case type
+                         :template :template/created-by
+                         :group :group/created-by
+                         :plan :plan/created-by)]
+    (flatten
+      (d/q '[:find (pull ?t [*])
+             :in $ ?username ?item ?created-by
+             :where
+             [?e :user/name ?username]
+             [?e ?item ?t]
+             [?t ?created-by ?e]]
+           (:db @tx) username item created-by))))
+
 (defn search-template [{:keys [n categories title description username] :as template}]
-  (if-not (nil? username) (templates-by username)))
+  (let [user-templates (if-not (nil? username) (items-by-username :template username))
+        category-templates (if-not (nil? categories) (flatten (map #(templates-by-category %) categories)))
+        title-templates (if-not (nil? title) (flatten (map #(templates-by-title %) (str/split title #" "))))
+        description-templates (if-not (nil? description) (flatten (map #(templates-by-description %) (str/split description #" "))))]
+    (concat user-templates category-templates title-templates description-templates)))
+
+(defn search-group [{:keys [n categories title description username] :as group}]
+  (let [user-groups (if-not (nil? username) (items-by-username :group username))]
+    user-groups))
+
+(defn search-plan [{:keys [n categories title description username] :as plan}]
+  (let [user-plans (if-not (nil? username) (items-by-username :plan username))]
+    user-plans))
 
 ;;;;;;;;;;; TRANSACTIONS ;;;;;;;;;;;;;
 

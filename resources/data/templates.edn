@@ -62,18 +62,22 @@
  {:db/id #db/id[:db.part/user -5004] :movement/unique-name "Wall Walk"}
  {:db/id #db/id[:db.part/user -5005] :movement/unique-name "Straighten Into Line"}
 
+ {:db/id     #db/id[:db.part/user -998]
+  :user/name "movementsession"}
+
  {:db/id         #db/id[:db.part/user -999]
-  :user/email    user
+  :user/email    "admin@movementsession.com"
   :user/template [#db/id[:db.part/user -101]
                   #db/id[:db.part/user -102]
                   #db/id[:db.part/user -103]
                   #db/id[:db.part/user -104]
                   #db/id[:db.part/user -106]
-                  #db/id[:db.part/user -109]
-                  ]}
+                  #db/id[:db.part/user -109]]}
 
  {:db/id          #db/id[:db.part/user -101]
   :template/title "Locomotion"
+  :template/public? true
+  :template/created-by #db/id[:db.part/user -998]
   :template/description
                   "Practice different crawls, walks and rolls as ways of moving across the floor. Go through the locomotion movements for between 4 and 6 rounds, keeping a controlled, even tempo and using minimal rest between each movement."
   :template/part  [#db/id[:db.part/user -1011]
@@ -97,6 +101,8 @@
 
  {:db/id          #db/id[:db.part/user -102]
   :template/title "Gymnastic Strength"
+  :template/public? true
+  :template/created-by #db/id[:db.part/user -998]
   :template/description
                   "Dynamic and static bodyweight strength training.
                   Do each part either in order or interleave them;
@@ -138,6 +144,8 @@
 
  {:db/id          #db/id[:db.part/user -103]
   :template/title "4x4 Interval Run"
+  :template/public? true
+  :template/created-by #db/id[:db.part/user -998]
   :template/description
                   "Interval work is excellent endurance training and increases aerobic capacity.
                   Begin with a 10 minute warmup to increase your body temperature and mobilize your legs.
@@ -160,9 +168,10 @@
 
  {:db/id          #db/id[:db.part/user -104]
   :template/title "Learning Handstand"
+  :template/public? true
+  :template/created-by #db/id[:db.part/user -998]
   :template/description
-                  "always warm up the wrists and shoulders.
-                  Practice perfecting your body line and finish off playing around on your hands."
+                  "Warm up the wrists and shoulders, practice perfecting your body line and finish off playing around on your hands."
   :template/part  [#db/id[:db.part/user -1041]
                    #db/id[:db.part/user -1042]
                    #db/id[:db.part/user -1043]
@@ -195,6 +204,8 @@
 
  {:db/id          #db/id[:db.part/user -106]
   :template/title "Lifting Weights 5x5"
+  :template/public? true
+  :template/created-by #db/id[:db.part/user -998]
   :template/description
                   "Make it a goal to increase the weights by 2-3kg/4-5lbs with each new session.
                   After the warmup, perform a couple of lifts with easy weights,
@@ -231,6 +242,8 @@
 
  {:db/id          #db/id[:db.part/user -109]
   :template/title "Natural Movement"
+  :template/public? true
+  :template/created-by #db/id[:db.part/user -998]
   :template/description
                   "Practice movement skills, such as crawling, jumping, climbing and lifting.
                   Go through the warmup and combination parts doing 10 reps of each movement before moving on to the next one.
