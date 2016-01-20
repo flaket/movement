@@ -136,8 +136,8 @@
         :error-handler (fn [e] (pr (str "error getting session data from server: " e)))}))
 
 (defn pick-random-template []
-  (let [name (first (shuffle (session/get :templates)))]
-    (create-session-from-template name)))
+  (let [title (:template/title (first (shuffle (session/get :templates))))]
+    (create-session-from-template title)))
 
 ;;;;;; Components ;;;;;;
 (defn buttons-component [m title]
@@ -299,9 +299,9 @@
         [:p.pure-u-1.pure-u-md-7-9.subtitle description]
         [:div.pure-u.pure-u-md-1-9]]])))
 
-(defn template-component [name]
-  [:div.pure-u.button.button-primary {:on-click #(create-session-from-template name)
-                       :style {:margin "0 0 5px 5px"}} name])
+(defn template-component [t]
+  [:div.pure-u.button.button-primary {:on-click #(create-session-from-template (:template/title t))
+                       :style {:margin "0 0 5px 5px"}} (:template/title t)])
 
 (defn group-component [group]
   [:a.pure-u.button.button-primary {:on-click #(create-session-from-group group)
@@ -331,7 +331,7 @@
            [:div.pure-g {:style {:margin "20px 0 20px 0"}}
             (doall
               (for [t (session/get :templates)]
-                ^{:key (str t (rand-int 1000))} (template-component t)))])
+                ^{:key (:db/id t)} (template-component t)))])
          [:div.pure-g
           [:div.pure-u-1.button {:on-click  #(handler-fn
                                               (do
@@ -379,11 +379,12 @@
         (when @templates-showing?
           (doall
             (for [t (session/get :templates)]
-              ^{:key t} [:div.pure-u.button.button-primary {:on-click #(do
-                                                                        (go (<! (timeout 500))
-                                                                            (reset! templates-showing? false))
-                                                                        (create-session-from-template t))
-                                                            :style    {:margin "0 0 5px 5px"}} t])))]
+              ^{:key (:db/id t)}
+              [:div.pure-u.button.button-primary {:on-click #(do
+                                                              (go (<! (timeout 500))
+                                                                  (reset! templates-showing? false))
+                                                              (create-session-from-template (:template/title t)))
+                                                  :style    {:margin "0 0 5px 5px"}} (:template/title t)])))]
        #_[:div.pure-g
           (when @equipment-showing?
             (doall

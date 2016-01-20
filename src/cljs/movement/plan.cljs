@@ -25,12 +25,13 @@
           [:div.pure-g
            [:h3.pure-u "Select one or several templates for this day"]]
           [:div.pure-g
-           (doall (for [t (sort (session/get :templates))]
-                    ^{:key (rand-int 1000)}
-                    [:div.pure-u.button {:style    {:cursor 'pointer
-                                                    :margin "0 5px 5px 0"}
-                                         :on-click #(let [selected (:selected @plan-state)]
-                                                     (swap! plan-state update-in [:plan selected] conj t))} t]))]])])))
+           (doall (for [template (sort-by :template/title (session/get :templates))]
+                    ^{:key (:db/id template)}
+                    (let [t (:template/title template)]
+                      [:div.pure-u.button {:style    {:cursor 'pointer
+                                                      :margin "0 5px 5px 0"}
+                                           :on-click #(let [selected (:selected @plan-state)]
+                                                       (swap! plan-state update-in [:plan selected] conj t))} t])))]])])))
 
 (defn adjust-days-component []
   [:div.pure-g {:style {:margin-top "10px"}}

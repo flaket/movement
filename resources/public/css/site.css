@@ -119,8 +119,9 @@ p {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: underline;
   color: #338bff;
+  color: #111111;
 }
 
 a:hover {

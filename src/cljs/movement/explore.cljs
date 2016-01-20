@@ -17,7 +17,7 @@
             [cljs.reader :refer [read-string]]))
 
 (def explore-state (atom {:number-of-results 8
-                          :menu-selection :temp}))
+                          :menu-selection    :temp}))
 
 (defn results-slider []
   (let [temp-data (atom (:number-of-results @explore-state))]
@@ -36,11 +36,11 @@
                                               (swap! explore-state assoc :number-of-results 1000))} "all"]]])))
 
 (defn search-box [{:keys [type target placeholder]}]
-  [:input.pure-u {:type      "text"
-                      :placeholder placeholder
-                      :size      32
-                      :on-change #(swap! explore-state assoc-in [type target] (-> % .-target .-value))
-                      :value     (target (type @explore-state))}])
+  [:input.pure-u {:type        "text"
+                  :placeholder placeholder
+                  :size        32
+                  :on-change   #(swap! explore-state assoc-in [type target] (-> % .-target .-value))
+                  :value       (target (type @explore-state))}])
 
 (defn select-buttons []
   (let []
@@ -56,7 +56,7 @@
         [:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :plans (:menu-selection @explore-state)) "button-primary")
                                                :on-click  #(swap! explore-state assoc :menu-selection :plans)} "Plans"]
         #_[:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :routines (:menu-selection @explore-state)) "button-primary")
-                                               :on-click  #(swap! explore-state assoc :menu-selection :routines)} "Routines"]]])))
+                                                 :on-click  #(swap! explore-state assoc :menu-selection :routines)} "Routines"]]])))
 
 (defn movements-component []
   (let []
@@ -68,8 +68,8 @@
           [:h3.pure-u "Categories"]]
          (doall (for [c (sort (session/get :all-categories))]
                   ^{:key c}
-                  [:div.pure-g {:style {:cursor     'pointer
-                                        :color (when (= c (:selected-category @explore-state)) "#fffff8")
+                  [:div.pure-g {:style {:cursor           'pointer
+                                        :color            (when (= c (:selected-category @explore-state)) "#fffff8")
                                         :background-color (when (= c (:selected-category @explore-state)) "gray")}}
                    [:span.pure-u-1
                     {:on-click #(GET "movements-by-category"
@@ -117,6 +117,47 @@
                    [:img.graphic.small-graphic.pure-img-responsive {:src (image-url name) :title name :alt name}]
                    [:div {:style {:margin-bottom 10}}]])))])]]])))
 
+(defn template-result [t]
+  (let [selected (atom false)
+        title (:template/title t)
+        created-by (:template/created-by t)
+        description (:template/description t)
+        parts (:template/part t)]
+    (fn [t]
+      [:div.pure-g {:style {:margin-top 10}}
+       [:div.pure-u-1
+        [:div.pure-g
+         (when @selected
+           [:div.pure-u [:button.button.button-secondary
+                         {:on-click #(POST "dissoc/template"
+                                           {:params        {:email (session/get :email) :id (:db/id t)}
+                                            :handler       (fn [r] (do
+                                                                     (reset! selected false)
+                                                                     (get-templates)))
+                                            :error-handler (fn [r] (pr (str "error dissoc'ing template: " (:message r))))})}
+                         "Remove"]])
+         [:div.pure-u {:style {:margin-right 5}}
+          (if (and (some #{(:template/created-by t)} (map :template/created-by (session/get :templates)))
+                   (some #{(:template/part t)} (map :template/part (session/get :templates))))
+            [:div {:style    {:color 'green :cursor 'pointer}
+                   :on-click #(handler-fn (reset! selected (not @selected)))} [:i.fa.fa-check.fa-2x]]
+            [:button.button.button-secondary
+             {:on-click #(POST "assoc/template"
+                               {:params        {:email (session/get :email) :id (:db/id t)}
+                                :handler       (fn [r] (get-templates))
+                                :error-handler (fn [r] (pr (str "error assoc'ing template: " r)))})}
+             "Add"])]
+         [:div.pure-u {:style {:margin-right 5
+                               :font-size    "150%"}} title]
+         [:div.pure-u (str "by " (:db/id created-by))]]
+        [:div.pure-g
+         [:div.pure-u-1 description]]
+        [:div.pure-g
+         [:div.pure-u (str "Template divided into " (count parts) " parts:")]
+         (for [p parts]
+           ^{:key (rand-int 10000)}
+           [:div.pure-u {:style {:margin-left 5}} (str (:db/id p))])]]])))
+
 (defn templates-component []
   (let []
     (fn []
@@ -126,7 +167,7 @@
          [:p.pure-g
           [:div.pure-u-1 "Words in the template title"]]
          [:p.pure-g
-          (search-box {:type :template :target :title :placeholder "handstand 5x5 yoga gymnastic"})]
+          (search-box {:type :template :target :title :placeholder "e.g. handstand 5x5 yoga gymnastic"})]
          [:p.pure-g
           [:div.pure-u-1 "Categories used in the template"]]
          [:p.pure-g
@@ -155,17 +196,20 @@
          [:p.pure-g
           [:div.pure-u-1 "Words in the description"]]
          [:p.pure-g
-          (search-box {:type :template :target :description :placeholder "endurance aerobic interval"})]
+          (search-box {:type :template :target :description :placeholder "e.g. endurance aerobic interval"})]
          [:p.pure-g
           [:div.pure-u-1 "Find all templates by a nickname"]]
          [:p.pure-g
-          (search-box {:type :template :target :username :placeholder "movementsession"})]]]
+          (search-box {:type :template :target :username :placeholder "e.g. movementsession"})]]]
        [:p.pure-g
         [:button.pure-u-1.pure-u-md-1-3.button.button-primary
          {:on-click #(let [t (:template @explore-state)
                            t (if (empty? (:title t)) (dissoc t :title) t)
                            t (if (empty? (:description t)) (dissoc t :description) t)
                            t (if (empty? (:categories t)) (dissoc t :categories) t)
+                           t (if-not (empty? (:categories t))
+                               (assoc t :categories (str/join (interpose " " (:categories t))))
+                               t)
                            template (assoc t :n 10)]
                       (pr template)
                       (GET "search/template" {:params        {:template template}
@@ -178,17 +222,11 @@
             [:div.pure-g
              [:div.pure-u-1 (str "Showing " (count (:templates @explore-state)) " results")]])]
          (let [templates (:templates @explore-state)]
-           [:div.pure-g.movements
+           [:div.pure-g.movements {:style {:border-top "dotted 1px"}}
             (doall
               (for [t templates]
                 ^{:key (rand-int 10000)}
-                (let [title (:template/title t)]
-                  [:div.pure-u.movement.small.is-center
-                   [:h3.pure-g
-                    [:div.pure-u-1-12]
-                    [:div.pure-u-3-4.title title]
-                    [:div.pure-u-1-12]]
-                   [:div {:style {:margin-bottom 10}}]])))])]]])))
+                [template-result t]))])]]])))
 
 (defn groups-component []
   (let []
@@ -239,11 +277,14 @@
                            g (if (empty? (:title g)) (dissoc g :title) g)
                            g (if (empty? (:categories g)) (dissoc g :categories) g)
                            g (if (empty? (:description g)) (dissoc g :description) g)
+                           g (if-not (empty? (:categories g))
+                               (assoc g :categories (str/join (interpose " " (:categories g))))
+                               g)
                            group (assoc g :n 10)]
                       (pr group)
                       (GET "search/group" {:params        {:group group}
-                                              :handler       (fn [r] (swap! explore-state assoc :groups r))
-                                              :error-handler (fn [r] (pr r))}))} "Search"]]
+                                           :handler       (fn [r] (swap! explore-state assoc :groups r))
+                                           :error-handler (fn [r] (pr r))}))} "Search"]]
        [:div.pure-g
         [:div.pure-u-1
          [:div.pure-g
@@ -312,11 +353,14 @@
                            p (if (empty? (:title p)) (dissoc p :title) p)
                            p (if (empty? (:categories p)) (dissoc p :categories) p)
                            p (if (empty? (:description p)) (dissoc p :description) p)
+                           p (if-not (empty? (:categories p))
+                               (assoc p :categories (str/join (interpose " " (:categories p))))
+                               p)
                            plan (assoc p :n 10)]
                       (pr plan)
                       (GET "search/plan" {:params        {:plan plan}
-                                           :handler       (fn [r] (swap! explore-state assoc :plans r))
-                                           :error-handler (fn [r] (pr r))}))} "Search"]]
+                                          :handler       (fn [r] (swap! explore-state assoc :plans r))
+                                          :error-handler (fn [r] (pr r))}))} "Search"]]
        [:div.pure-g
         [:div.pure-u-1
          [:div.pure-g

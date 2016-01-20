@@ -251,8 +251,16 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 #_(d/q '[:find (pull ?r [*])
             :in $
             :where
-         [?u :user/routine ?r]]
+         [?u :user/plan ?r]]
           db)
+
+(d/q '[:find (pull ?t [*])
+       :in $ ?username ?item
+       :where
+       [?e :user/name ?username]
+       [?e ?item ?t]
+       [?t ?created-by ?e]]
+     db "movementsession" :user/plan)
 
 #_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
 
@@ -291,8 +299,8 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                 :where
                 [?e :user/name ?username]
                 [?e ?kw ?t]
-                [?t :group/created-by ?e]]
-              db :user/group "movementsession"))
+                [?t :plan/created-by ?e]]
+              db :user/plan "movementsession"))
 
 (d/q '[:find [?t ...]
        :in $ ?username
@@ -302,7 +310,16 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
        [?t :template/created-by ?e]]
      db "movementsession")
 
-(flatten (map #(flatten
+(->> (d/q '[:find (pull ?t [*])
+            :in $ ?username ?item ?created-by
+            :where
+            [?e :user/name ?username]
+            [?e ?item ?t]
+            [?t ?created-by ?e]]
+          db "movementsession" :user/template :template/created-by)
+     flatten)
+
+(->> (map #(flatten
                 (d/q '[:find (pull ?t [*])
                        :in $ ?category
                        :where
@@ -311,7 +328,57 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                        [?t :template/part ?p]
                        [?p :part/category ?c]
                        [?c :category/name ?category]]
-                     db %)) ["Crawling" "Rolling"]))
+                     db %)) ["Crawling" "Rolling"])
+     flatten
+     set
+     seq)
+
+(defn items-by-category
+  ""
+  [type category]
+  (flatten
+    (case type
+      :template (d/q '[:find (pull ?t [*])
+                       :in $ ?category
+                       :where
+                       [?e :user/template ?t]
+                       [?t :template/created-by ?e]
+                       [?t :template/part ?p]
+                       [?p :part/category ?c]
+                       [?c :category/name ?category]]
+                     db category)
+      :group (d/q '[:find (pull ?g [*])
+                    :in $ ?category
+                    :where
+                    [?e :user/group ?g]
+                    [?g :group/created-by ?e]
+                    [?g :group/template ?t]
+                    [?t :template/part ?p]
+                    [?p :part/category ?c]
+                    [?c :category/name ?category]]
+                  db category)
+      :plan (d/q '[:find (pull ?plan [*])
+                   :in $ ?category
+                   :where
+                   [?e :user/plan ?plan]
+                   [?plan :plan/created-by ?e]
+                   [?plan :plan/day ?d]
+                   [?d :day/template ?t]
+                   [?t :template/part ?p]
+                   [?p :part/category ?c]
+                   [?c :category/name ?category]]
+                 db category)
+      nil)))
+
+(flatten (d/q '[:find (pull ?t [:db/id :template/title])
+                :in $ ?email
+                :where
+                [?e :user/email ?email]
+                [?e :user/template ?t]]
+              db
+              "admin@movementsession.com"))
+
+(d/pull db '[*] 17592186045838)
 
 (flatten
   (d/q '[:find (pull ?t [*])

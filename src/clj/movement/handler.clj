@@ -104,6 +104,35 @@
                        (response "New template stored successfully."))))
         (response "You already have a template with this title. Please choose a unique title for your template." 400)))))
 
+(defn assoc-template! [req]
+  (let [email (:email (:params req))
+        id (:id (:params req))
+        template (db/entity-by-id id)
+        n 0]
+    (if (nil? email)
+      (response "User email lacking from client data" 400)
+      (loop [title (:template/title template)]
+        (if (db/new-unique-template? email title)
+          (try
+            (db/assoc-template! email template title)
+            (catch Exception e
+              (response (str "Exception: " e)))
+            (finally (do (update-tx-db!)
+                         (response "Template added successfully."))))
+          (recur (str title " " (inc n))))))))
+
+(defn dissoc-template! [req]
+  (let [email (:email (:params req))
+        id (:id (:params req))]
+    (if (nil? email)
+      (response "User email lacking from client data" 400)
+      (try
+        (db/dissoc-template! email id)
+        (catch Exception e
+          (response (str "Exception: " e)))
+        (finally (do (update-tx-db!)
+                     (response "Template removed successfully.")))))))
+
 (defn add-group! [req]
   (let [email (:email (:params req))
         group (:group (:params req))]
@@ -263,6 +292,12 @@
            (POST "/change-username" req (if-not (authenticated? req)
                                           (throw-unauthorized)
                                           (change-username! req)))
+           (POST "/assoc/template" req (if-not (authenticated? req)
+                                        (throw-unauthorized)
+                                        (assoc-template! req)))
+           (POST "/dissoc/template" req (if-not (authenticated? req)
+                                        (throw-unauthorized)
+                                        (dissoc-template! req)))
            (GET "/user" req (if-not (authenticated? req)
                               (throw-unauthorized)
                               (let [email (:email (:params req))]
@@ -282,7 +317,7 @@
                                     (response (db/create-session template-name user)))))
            (GET "/templates" req (if-not (authenticated? req)
                                    (throw-unauthorized)
-                                   (response (db/all-template-titles (str (:user (:params req)))))))
+                                   (response (db/all-templates (str (:user (:params req)))))))
            (GET "/group" req (if-not (authenticated? req)
                                (throw-unauthorized)
                                (let [group (:group (:params req))
@@ -344,13 +379,13 @@
                                     (response (db/all-category-names))))
            (GET "/search/template" req (if-not (authenticated? req)
                                          (throw-unauthorized)
-                                         (response (db/search-template (:template (:params req))))))
+                                         (response (db/search :template (:template (:params req))))))
            (GET "/search/group" req (if-not (authenticated? req)
                                          (throw-unauthorized)
-                                         (response (db/search-group (:group (:params req))))))
+                                         (response (db/search :group (:group (:params req))))))
            (GET "/search/plan" req (if-not (authenticated? req)
                                       (throw-unauthorized)
-                                      (response (db/search-plan (:plan (:params req))))))
+                                      (response (db/search :plan (:plan (:params req))))))
            (resources "/")
            (not-found "Not Found"))
 

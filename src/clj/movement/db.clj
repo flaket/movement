@@ -82,15 +82,16 @@
         m (->> movements flatten (sort-by :movement/unique-name) (take n))]
     m))
 
-(defn all-template-titles [email]
-  (d/q '[:find [?title ...]
-         :in $ ?email
-         :where
-         [?e :user/email ?email]
-         [?e :user/template ?t]
-         [?t :template/title ?title]]
-       (:db @tx)
-       email))
+;; refactor the following four functions "all-x-titles"
+
+(defn all-templates [email]
+  (flatten (d/q '[:find (pull ?t [*])
+                  :in $ ?email
+                  :where
+                  [?e :user/email ?email]
+                  [?e :user/template ?t]]
+                (:db @tx)
+                email)))
 
 (defn all-group-titles [email]
   (d/q '[:find [?title ...]
@@ -226,6 +227,8 @@
      :comment     (:session/comment session)
      :time        (:session/time session)}))
 
+; refactor following five functions "new-unique-x?"
+
 (defn new-unique-template? [user template-title]
   (let [db (:db @tx)]
     (empty? (d/q '[:find [?user ...]
@@ -287,57 +290,82 @@
                 [?id :template/title ?name]]
               (:db @tx) email template-title)))
 
-
-(defn templates-by-category
-  ""
-  [category]
+(defn items-by-category
+  "Find all original templates, groups or plans that uses a category in their template parts.
+  Input variable type must be one of the keywords :template, :group, :plan."
+  [type category]
   (flatten
-    (d/q '[:find (pull ?t [*])
-           :in $ ?category
-           :where
-           [?e :user/template ?t]
-           [?t :template/created-by ?e]
-           [?t :template/part ?p]
-           [?p :part/category ?c]
-           [?c :category/name ?category]]
-         (:db @tx) category)))
+    (case type
+      :template (d/q '[:find (pull ?t [*])
+                       :in $ ?category
+                       :where
+                       [?e :user/template ?t]
+                       [?t :template/created-by ?e]
+                       [?t :template/part ?p]
+                       [?p :part/category ?c]
+                       [?c :category/name ?category]]
+                     (:db @tx) category)
+      :group (d/q '[:find (pull ?g [*])
+                    :in $ ?category
+                    :where
+                    [?e :user/group ?g]
+                    [?g :group/created-by ?e]
+                    [?g :group/template ?t]
+                    [?t :template/part ?p]
+                    [?p :part/category ?c]
+                    [?c :category/name ?category]]
+                  (:db @tx) category)
+      :plan (d/q '[:find (pull ?plan [*])
+                   :in $ ?category
+                   :where
+                   [?e :user/plan ?plan]
+                   [?plan :plan/created-by ?e]
+                   [?plan :plan/day ?d]
+                   [?d :day/template ?t]
+                   [?t :template/part ?p]
+                   [?p :part/category ?c]
+                   [?c :category/name ?category]]
+                 (:db @tx) category)
+      nil)))
 
-(defn templates-by-title
-  ""
-  [title]
-  (flatten
-    (d/q '[:find (pull ?t [*])
-           :in $ ?title
-           :where
-           [(fulltext $ :template/title ?title) [[?t ?n]]]
-           [?e :user/template ?t]
-           [?t :template/created-by ?e]]
-         (:db @tx) title)))
+(defn items-by-title
+  "Finds all original templates, groups or plans by searching for a word in the title.
+  Input variable type must be one of the keywords :template, :group, :plan."
+  [type title]
+  (let [title-relation (case type :template :template/title :group :group/title :plan :plan/title nil)
+        user-relation (case type :template :user/template :group :user/group :plan :user/plan nil)
+        created-by-relation (case type :template :template/created-by :group :group/created-by :plan :plan/created-by nil)]
+    (flatten
+      (d/q '[:find (pull ?t [*])
+             :in $ ?title-relation ?title ?user-relation ?created-by-relation
+             :where
+             [(fulltext $ ?title-relation ?title) [[?t ?n]]]
+             [?e ?user-relation ?t]
+             [?t ?created-by-relation ?e]]
+           (:db @tx) title-relation title user-relation created-by-relation))))
 
-(defn templates-by-description
-  ""
-  [description]
-  (flatten
-    (d/q '[:find (pull ?t [*])
-           :in $ ?description
-           :where
-           [(fulltext $ :template/description ?description) [[?t ?n]]]
-           [?e :user/template ?t]
-           [?t :template/created-by ?e]]
-         (:db @tx) description)))
+(defn items-by-description
+  "Finds all original templates, groups or plans by searching for a word in the description.
+  Input variable type must be one of the keywords :template, :group, :plan."
+  [type description]
+  (let [desc-item (case type :template :template/description :group :group/description :plan :plan/description nil)
+        item (case type :template :user/template :group :user/group :plan :user/plan nil)
+        created-by (case type :template :template/created-by :group :group/created-by :plan :plan/created-by nil)]
+    (flatten
+      (d/q '[:find (pull ?t [*])
+             :in $ ?desc-item ?description ?item ?created-by
+             :where
+             [(fulltext $ ?desc-item ?description) [[?t ?n]]]
+             [?e ?item ?t]
+             [?t ?created-by ?e]]
+           (:db @tx) desc-item description item created-by))))
 
 (defn items-by-username
   "Finds all templates, groups or plans a user has created.
   Input variable type must be one of the keywords :template, :group, :plan."
   [type username]
-  (let [item (case type
-              :template :user/template
-              :group :user/group
-              :plan :user/plan)
-        created-by (case type
-                         :template :template/created-by
-                         :group :group/created-by
-                         :plan :plan/created-by)]
+  (let [item (case type :template :user/template :group :user/group :plan :user/plan nil)
+        created-by (case type :template :template/created-by :group :group/created-by :plan :plan/created-by nil)]
     (flatten
       (d/q '[:find (pull ?t [*])
              :in $ ?username ?item ?created-by
@@ -347,22 +375,35 @@
              [?t ?created-by ?e]]
            (:db @tx) username item created-by))))
 
-(defn search-template [{:keys [n categories title description username] :as template}]
-  (let [user-templates (if-not (nil? username) (items-by-username :template username))
-        category-templates (if-not (nil? categories) (flatten (map #(templates-by-category %) categories)))
-        title-templates (if-not (nil? title) (flatten (map #(templates-by-title %) (str/split title #" "))))
-        description-templates (if-not (nil? description) (flatten (map #(templates-by-description %) (str/split description #" "))))]
-    (concat user-templates category-templates title-templates description-templates)))
-
-(defn search-group [{:keys [n categories title description username] :as group}]
-  (let [user-groups (if-not (nil? username) (items-by-username :group username))]
-    user-groups))
-
-(defn search-plan [{:keys [n categories title description username] :as plan}]
-  (let [user-plans (if-not (nil? username) (items-by-username :plan username))]
-    user-plans))
+(defn search
+  "Search for templates, groups or plans. The first input variable type must be one of the keywords :template, :group or :plan.
+  The second input variable is a map of search parameters."
+  [type {:keys [n categories title description username]}]
+  (let [user-templates (if-not (nil? username) (items-by-username type username))
+        category-templates (if-not (nil? categories) (flatten (map #(items-by-category type %) (str/split categories #" "))))
+        title-templates (if-not (nil? title) (flatten (map #(items-by-title type %) (str/split title #" "))))
+        description-templates (if-not (nil? description) (flatten (map #(items-by-description type %) (str/split description #" "))))]
+    (seq (set (concat user-templates title-templates description-templates category-templates)))))
 
 ;;;;;;;;;;; TRANSACTIONS ;;;;;;;;;;;;;
+
+(defn dissoc-template! [email template-id]
+  (let [db (:db @tx)
+        conn (:conn @tx)
+        user-id (:db/id (d/pull db '[:db/id] [:user/email email]))]
+    (d/transact conn [[:db/retract user-id
+                       :user/template template-id]])))
+
+(defn assoc-template! [email template new-title]
+  (let [conn (:conn @tx)
+        template (assoc template :db/id (d/tempid :db.part/user)
+                                 :template/title new-title
+                                 :template/public? false)
+        tx-data [{:db/id         #db/id[:db.part/user -99]
+                  :user/email    email
+                  :user/template (:db/id template)}
+                 template]]
+    (d/transact conn tx-data)))
 
 (defn transact-template! [user {:keys [title description parts public? created-by]}]
   (let [conn (:conn @tx)
@@ -376,7 +417,7 @@
                              :template/title       title
                              :template/part        (vec (for [p parts] (:db/id p)))
                              :template/description description
-                             :template/public? public?
+                             :template/public?     public?
                              :template/created-by  #db/id[:db.part/user -101]}
                             {:db/id     #db/id[:db.part/user -101]
                              :user/name created-by}]
@@ -422,29 +463,29 @@
     (d/transact (:conn @tx) tx-data)))
 
 (defn transact-plan! [email {:keys [title created-by public? description plan]}]
-    (let [description (if (nil? description) "" description)
-          public? (if (nil? public?) true public?)
-          tx-days (vec (for [day plan]
-                         (let [template-ids (vec (map #(get-user-template-id email %) day))]
-                           {:db/id          (d/tempid :db.part/user)
-                            :day/completed? false
-                            :day/template   (if (= [nil] template-ids)
-                                              []
-                                              template-ids)})))
-          tx-data [{:db/id      #db/id[:db.part/user -99]
-                    :user/email email
-                    :user/plan [#db/id[:db.part/user -100]]}
-                   {:db/id            #db/id[:db.part/user -100]
-                    :plan/title       title
-                    :plan/description description
-                    :plan/public?     public?
-                    :plan/completed?  false
-                    :plan/day         (vec (map :db/id tx-days))
-                    :plan/created-by  #db/id[:db.part/user -102]}
-                   {:db/id     #db/id[:db.part/user -102]
-                    :user/name created-by}]
-          tx-data (concat tx-data tx-days)]
-      (d/transact (:conn @tx) tx-data)))
+  (let [description (if (nil? description) "" description)
+        public? (if (nil? public?) true public?)
+        tx-days (vec (for [day plan]
+                       (let [template-ids (vec (map #(get-user-template-id email %) day))]
+                         {:db/id          (d/tempid :db.part/user)
+                          :day/completed? false
+                          :day/template   (if (= [nil] template-ids)
+                                            []
+                                            template-ids)})))
+        tx-data [{:db/id      #db/id[:db.part/user -99]
+                  :user/email email
+                  :user/plan  [#db/id[:db.part/user -100]]}
+                 {:db/id            #db/id[:db.part/user -100]
+                  :plan/title       title
+                  :plan/description description
+                  :plan/public?     public?
+                  :plan/completed?  false
+                  :plan/day         (vec (map :db/id tx-days))
+                  :plan/created-by  #db/id[:db.part/user -102]}
+                 {:db/id     #db/id[:db.part/user -102]
+                  :user/name created-by}]
+        tx-data (concat tx-data tx-days)]
+    (d/transact (:conn @tx) tx-data)))
 
 (defn transact-routine! [email {:keys [name created-by public? description movements]}]
   (let [description (if (nil? description) "" description)
