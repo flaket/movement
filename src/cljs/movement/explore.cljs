@@ -5,7 +5,7 @@
             [cljs.core.async :as async :refer [timeout <!]]
             [secretary.core :include-macros true :refer [dispatch!]]
             [movement.menu :refer [menu-component]]
-            [movement.util :refer [handler-fn text-input GET POST get-templates]]
+            [movement.util :refer [handler-fn text-input GET POST get-templates get-groups get-plans]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
             [movement.generator :refer [image-url add-movement-from-search]]
             [movement.components.creator :refer [heading title description error]]
@@ -122,19 +122,27 @@
         title (:template/title t)
         created-by (:template/created-by t)
         description (:template/description t)
-        parts (:template/part t)]
+        parts (:template/part t)
+        my-template-id (some #(when (and (= (:template/created-by t)
+                                            (:template/created-by %))
+                                         (= (:template/part t)
+                                            (:template/part %))) (:db/id %))
+                             (session/get :templates))
+        ]
     (fn [t]
       [:div.pure-g {:style {:margin-top 10}}
        [:div.pure-u-1
         [:div.pure-g
          (when @selected
            [:div.pure-u [:button.button.button-secondary
-                         {:on-click #(POST "dissoc/template"
-                                           {:params        {:email (session/get :email) :id (:db/id t)}
-                                            :handler       (fn [r] (do
-                                                                     (reset! selected false)
-                                                                     (get-templates)))
-                                            :error-handler (fn [r] (pr (str "error dissoc'ing template: " (:message r))))})}
+                         {:on-click #(if-not (nil? my-template-id)
+                                      (POST "dissoc/template"
+                                              {:params        {:email (session/get :email) :id my-template-id}
+                                               :handler       (fn [r] (do
+                                                                        (reset! selected false)
+                                                                        (get-templates)))
+                                               :error-handler (fn [r] (pr (str "error dissoc'ing template: " (:message r))))})
+                                      (pr my-template-id))}
                          "Remove"]])
          [:div.pure-u {:style {:margin-right 5}}
           (if (and (some #{(:template/created-by t)} (map :template/created-by (session/get :templates)))
@@ -155,7 +163,7 @@
         [:div.pure-g
          [:div.pure-u (str "Template divided into " (count parts) " parts:")]
          (for [p parts]
-           ^{:key (rand-int 10000)}
+           ^{:key (:db/id p)}
            [:div.pure-u {:style {:margin-left 5}} (str (:db/id p))])]]])))
 
 (defn templates-component []
@@ -228,6 +236,47 @@
                 ^{:key (rand-int 10000)}
                 [template-result t]))])]]])))
 
+(defn group-result [g]
+  (let [selected (atom false)
+        title (:group/title g)
+        created-by (:group/created-by g)
+        description (:group/description g)
+        templates (:group/template g)]
+    (fn [g]
+      [:div.pure-g {:style {:margin-top 10}}
+       [:div.pure-u-1
+        [:div.pure-g
+         (when @selected
+           [:div.pure-u [:button.button.button-secondary
+                         {:on-click #(POST "dissoc/group"
+                                           {:params        {:email (session/get :email) :id (:db/id g)}
+                                            :handler       (fn [r] (do
+                                                                     (reset! selected false)
+                                                                     (get-groups)))
+                                            :error-handler (fn [r] (pr (str "error dissoc'ing group: " r)))})}
+                         "Remove"]])
+         [:div.pure-u {:style {:margin-right 5}}
+          (if (and (some #{(:group/created-by g)} (map :group/created-by (session/get :groups)))
+                   (some #{(:group/template g)} (map :group/template (session/get :groups))))
+            [:div {:style    {:color 'green :cursor 'pointer}
+                   :on-click #(handler-fn (reset! selected (not @selected)))} [:i.fa.fa-check.fa-2x]]
+            [:button.button.button-secondary
+             {:on-click #(POST "assoc/group"
+                               {:params        {:email (session/get :email) :id (:db/id g)}
+                                :handler       (fn [r] (get-groups))
+                                :error-handler (fn [r] (pr (str "error assoc'ing group: " r)))})}
+             "Add"])]
+         [:div.pure-u {:style {:margin-right 5
+                               :font-size    "150%"}} title]
+         [:div.pure-u (str "by " (:db/id created-by))]]
+        [:div.pure-g
+         [:div.pure-u-1 description]]
+        [:div.pure-g
+         [:div.pure-u (str "Group contains " (count templates) " templates:")]
+         (for [t templates]
+           ^{:key (:db/id t)}
+           [:div.pure-u {:style {:margin-left 5}} (str (:db/id t))])]]])))
+
 (defn groups-component []
   (let []
     (fn []
@@ -292,17 +341,52 @@
             [:div.pure-g
              [:div.pure-u-1 (str "Showing " (count (:groups @explore-state)) " results")]])]
          (let [groups (:groups @explore-state)]
-           [:div.pure-g.movements
+           [:div.pure-g.movements {:style {:border-top "dotted 1px"}}
             (doall
               (for [g groups]
-                ^{:key (rand-int 10000)}
-                (let [title (:group/title g)]
-                  [:div.pure-u.movement.small.is-center
-                   [:h3.pure-g
-                    [:div.pure-u-1-12]
-                    [:div.pure-u-3-4.title title]
-                    [:div.pure-u-1-12]]
-                   [:div {:style {:margin-bottom 10}}]])))])]]])))
+                ^{:key (:db/id g)}
+                [group-result g]))])]]])))
+
+(defn plan-result [p]
+  (let [selected (atom false)
+        title (:plan/title p)
+        created-by (:plan/created-by p)
+        description (:plan/description p)
+        days (:plan/day p)]
+    (fn [p]
+      [:div.pure-g {:style {:margin-top 10}}
+       [:div.pure-u-1
+        [:div.pure-g
+         (when @selected
+           [:div.pure-u [:button.button.button-secondary
+                         {:on-click #(POST "dissoc/plan"
+                                           {:params        {:email (session/get :email) :id (:db/id p)}
+                                            :handler       (fn [r] (do
+                                                                     (reset! selected false)
+                                                                     (get-plans)))
+                                            :error-handler (fn [r] (pr (str "error dissoc'ing plan: " r)))})}
+                         "Remove"]])
+         [:div.pure-u {:style {:margin-right 5}}
+          (if (and (some #{(:plan/created-by p)} (map :plan/created-by (session/get :plans)))
+                   (some #{(:plan/day p)} (map :plan/day (session/get :plans))))
+            [:div {:style    {:color 'green :cursor 'pointer}
+                   :on-click #(handler-fn (reset! selected (not @selected)))} [:i.fa.fa-check.fa-2x]]
+            [:button.button.button-secondary
+             {:on-click #(POST "assoc/plan"
+                               {:params        {:email (session/get :email) :id (:db/id p)}
+                                :handler       (fn [r] (get-plans))
+                                :error-handler (fn [r] (pr (str "error assoc'ing group: " r)))})}
+             "Add"])]
+         [:div.pure-u {:style {:margin-right 5
+                               :font-size    "150%"}} title]
+         [:div.pure-u (str "by " (:db/id created-by))]]
+        [:div.pure-g
+         [:div.pure-u-1 description]]
+        [:div.pure-g
+         [:div.pure-u (str "Plan goes over " (count days) " days:")]
+         (for [d days]
+           ^{:key (:db/id d)}
+           [:div.pure-u {:style {:margin-left 5}} (str (:db/id d))])]]])))
 
 (defn plans-component []
   (let []
@@ -368,17 +452,11 @@
             [:div.pure-g
              [:div.pure-u-1 (str "Showing " (count (:plans @explore-state)) " results")]])]
          (let [plans (:plans @explore-state)]
-           [:div.pure-g.movements
+           [:div.pure-g.movements {:style {:border-top "dotted 1px"}}
             (doall
               (for [p plans]
-                ^{:key (rand-int 10000)}
-                (let [title (:plan/title p)]
-                  [:div.pure-u.movement.small.is-center
-                   [:h3.pure-g
-                    [:div.pure-u-1-12]
-                    [:div.pure-u-3-4.title title]
-                    [:div.pure-u-1-12]]
-                   [:div {:style {:margin-bottom 10}}]])))])]]])))
+                ^{:key (:db/id p)}
+                [plan-result p]))])]]])))
 
 (defn routines-component []
   (let []

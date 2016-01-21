@@ -133,6 +133,64 @@
         (finally (do (update-tx-db!)
                      (response "Template removed successfully.")))))))
 
+(defn assoc-group! [req]
+  (let [email (:email (:params req))
+        id (:id (:params req))
+        group (db/entity-by-id id)
+        n 0]
+    (if (nil? email)
+      (response "User email lacking from client data" 400)
+      (loop [title (:group/title group)]
+        (if (db/new-unique-group? email title)
+          (try
+            (db/assoc-group! email group title)
+            (catch Exception e
+              (response (str "Exception: " e)))
+            (finally (do (update-tx-db!)
+                         (response "Group added successfully."))))
+          (recur (str title " " (inc n))))))))
+
+(defn dissoc-group! [req]
+  (let [email (:email (:params req))
+        id (:id (:params req))]
+    (if (nil? email)
+      (response "User email lacking from client data" 400)
+      (try
+        (db/dissoc-group! email id)
+        (catch Exception e
+          (response (str "Exception: " e)))
+        (finally (do (update-tx-db!)
+                     (response "Group removed successfully.")))))))
+
+(defn assoc-plan! [req]
+  (let [email (:email (:params req))
+        id (:id (:params req))
+        plan (db/entity-by-id id)
+        n 0]
+    (if (nil? email)
+      (response "User email lacking from client data" 400)
+      (loop [title (:plan/title plan)]
+        (if (db/new-unique-plan? email title)
+          (try
+            (db/assoc-plan! email plan title)
+            (catch Exception e
+              (response (str "Exception: " e)))
+            (finally (do (update-tx-db!)
+                         (response "Plan added successfully."))))
+          (recur (str title " " (inc n))))))))
+
+(defn dissoc-plan! [req]
+  (let [email (:email (:params req))
+        id (:id (:params req))]
+    (if (nil? email)
+      (response "User email lacking from client data" 400)
+      (try
+        (db/dissoc-plan! email id)
+        (catch Exception e
+          (response (str "Exception: " e)))
+        (finally (do (update-tx-db!)
+                     (response "Plan removed successfully.")))))))
+
 (defn add-group! [req]
   (let [email (:email (:params req))
         group (:group (:params req))]
@@ -298,6 +356,18 @@
            (POST "/dissoc/template" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (dissoc-template! req)))
+           (POST "/assoc/group" req (if-not (authenticated? req)
+                                         (throw-unauthorized)
+                                         (assoc-group! req)))
+           (POST "/dissoc/group" req (if-not (authenticated? req)
+                                          (throw-unauthorized)
+                                          (dissoc-group! req)))
+           (POST "/assoc/plan" req (if-not (authenticated? req)
+                                         (throw-unauthorized)
+                                         (assoc-plan! req)))
+           (POST "/dissoc/plan" req (if-not (authenticated? req)
+                                          (throw-unauthorized)
+                                          (dissoc-plan! req)))
            (GET "/user" req (if-not (authenticated? req)
                               (throw-unauthorized)
                               (let [email (:email (:params req))]

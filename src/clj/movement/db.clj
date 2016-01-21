@@ -391,8 +391,23 @@
   (let [db (:db @tx)
         conn (:conn @tx)
         user-id (:db/id (d/pull db '[:db/id] [:user/email email]))]
-    (d/transact conn [[:db/retract user-id
+    (d/transact conn [[:db.fn/retractEntity template-id]])
+    #_(d/transact conn [[:db/retract user-id
                        :user/template template-id]])))
+
+(defn dissoc-group! [email group-id]
+  (let [db (:db @tx)
+        conn (:conn @tx)
+        user-id (:db/id (d/pull db '[:db/id] [:user/email email]))]
+    (d/transact conn [[:db/retract user-id
+                       :user/group group-id]])))
+
+(defn dissoc-plan! [email plan-id]
+  (let [db (:db @tx)
+        conn (:conn @tx)
+        user-id (:db/id (d/pull db '[:db/id] [:user/email email]))]
+    (d/transact conn [[:db/retract user-id
+                       :user/plan plan-id]])))
 
 (defn assoc-template! [email template new-title]
   (let [conn (:conn @tx)
@@ -403,6 +418,28 @@
                   :user/email    email
                   :user/template (:db/id template)}
                  template]]
+    (d/transact conn tx-data)))
+
+(defn assoc-group! [email group new-title]
+  (let [conn (:conn @tx)
+        group (assoc group :db/id (d/tempid :db.part/user)
+                           :group/title new-title
+                           :group/public? false)
+        tx-data [{:db/id      #db/id[:db.part/user -99]
+                  :user/email email
+                  :user/group (:db/id group)}
+                 group]]
+    (d/transact conn tx-data)))
+
+(defn assoc-plan! [email plan new-title]
+  (let [conn (:conn @tx)
+        plan (assoc plan :db/id (d/tempid :db.part/user)
+                         :plan/title new-title
+                         :plan/public? false)
+        tx-data [{:db/id      #db/id[:db.part/user -99]
+                  :user/email email
+                  :user/plan  (:db/id plan)}
+                 plan]]
     (d/transact conn tx-data)))
 
 (defn transact-template! [user {:keys [title description parts public? created-by]}]
