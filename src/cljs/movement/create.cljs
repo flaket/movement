@@ -22,14 +22,18 @@
     (fn [selection]
       [:div {:style {:margin-top '40}}
        [:div.pure-g
-        [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :template @selection) "button-primary")
+        [:div.pure-u-1-2.pure-u-md-1-4.button {:style {:margin-right 5}
+                                               :className (when (= :template @selection) "button-primary")
                                                :on-click #(reset! selection :template)} "Template"]
-        [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :group @selection) "button-primary")
+        [:div.pure-u-1-2.pure-u-md-1-4.button {:style {:margin-right 5}
+                                               :className (when (= :group @selection) "button-primary")
                                                :on-click  #(reset! selection :group)} "Group"]
-        #_[:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :routine @selection) "button-primary")
+        #_[:div.pure-u-1-2.pure-u-md-1-4.button {:style {:margin-right 5}
+                                                 :className (when (= :routine @selection) "button-primary")
                                                :on-click #(reset! selection :routine)} "Routine"]
 
-        [:div.pure-u-1-2.pure-u-md-1-4.button {:className (when (= :plan @selection) "button-primary")
+        [:div.pure-u-1-2.pure-u-md-1-4.button {:style {:margin-right 5}
+                                               :className (when (= :plan @selection) "button-primary")
                                                :on-click #(reset! selection :plan)} "Plan"]]])))
 
 (defn create-component []

@@ -94,14 +94,22 @@
                 email)))
 
 (defn all-group-titles [email]
-  (d/q '[:find [?title ...]
-         :in $ ?email
-         :where
-         [?e :user/email ?email]
-         [?e :user/group ?g]
-         [?g :group/title ?title]]
-       (:db @tx)
-       email))
+  (flatten (d/q '[:find (pull ?g [*])
+                  :in $ ?email
+                  :where
+                  [?e :user/email ?email]
+                  [?e :user/group ?g]]
+                (:db @tx)
+                email)))
+
+(defn all-plan-titles [email]
+  (flatten (d/q '[:find (pull ?p [*])
+                  :in $ ?email
+                  :where
+                  [?e :user/email ?email]
+                  [?e :user/plan ?p]]
+                (:db @tx)
+                email)))
 
 (defn all-routine-names [email]
   (d/q '[:find [?name ...]
@@ -113,15 +121,7 @@
        (:db @tx)
        email))
 
-(defn all-plan-titles [email]
-  (d/q '[:find [?title ...]
-         :in $ ?email
-         :where
-         [?e :user/email ?email]
-         [?e :user/plan ?p]
-         [?p :plan/title ?title]]
-       (:db @tx)
-       email))
+
 
 (defn create-session [title user]
   ;todo: refactor, smaller functions

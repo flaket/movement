@@ -167,7 +167,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
         template-ids (map (pull ))])
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186045892)
+#_(d/pull db '[*] 17592186045853)
 #_(d/transact conn [[:db/retract 17592186045494
                      :movement/category 17592186046023]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186045819]])

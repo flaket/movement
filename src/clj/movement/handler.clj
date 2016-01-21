@@ -31,8 +31,7 @@
             [movement.pages.about :refer [about-page]]
             [movement.pages.tour :refer [tour-page]]
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
-            [movement.activation :refer [generate-activation-id send-email send-activation-email]]
-            [movement.templates :refer [add-standard-templates-to-user]])
+            [movement.activation :refer [generate-activation-id send-email send-activation-email]])
   (:import java.security.MessageDigest
            java.math.BigInteger))
 
@@ -108,10 +107,10 @@
   (let [email (:email (:params req))
         id (:id (:params req))
         template (db/entity-by-id id)
-        n 0]
+        title (:template/title template)]
     (if (nil? email)
       (response "User email lacking from client data" 400)
-      (loop [title (:template/title template)]
+      (loop [title title]
         (if (db/new-unique-template? email title)
           (try
             (db/assoc-template! email template title)
@@ -119,7 +118,7 @@
               (response (str "Exception: " e)))
             (finally (do (update-tx-db!)
                          (response "Template added successfully."))))
-          (recur (str title " " (inc n))))))))
+          (recur (str title "*")))))))
 
 (defn dissoc-template! [req]
   (let [email (:email (:params req))
@@ -137,10 +136,10 @@
   (let [email (:email (:params req))
         id (:id (:params req))
         group (db/entity-by-id id)
-        n 0]
+        title (:group/title group)]
     (if (nil? email)
       (response "User email lacking from client data" 400)
-      (loop [title (:group/title group)]
+      (loop [title title]
         (if (db/new-unique-group? email title)
           (try
             (db/assoc-group! email group title)
@@ -148,7 +147,7 @@
               (response (str "Exception: " e)))
             (finally (do (update-tx-db!)
                          (response "Group added successfully."))))
-          (recur (str title " " (inc n))))))))
+          (recur (str title "*")))))))
 
 (defn dissoc-group! [req]
   (let [email (:email (:params req))
@@ -166,10 +165,10 @@
   (let [email (:email (:params req))
         id (:id (:params req))
         plan (db/entity-by-id id)
-        n 0]
+        title (:plan/title plan)]
     (if (nil? email)
       (response "User email lacking from client data" 400)
-      (loop [title (:plan/title plan)]
+      (loop [title title]
         (if (db/new-unique-plan? email title)
           (try
             (db/assoc-plan! email plan title)
@@ -177,7 +176,7 @@
               (response (str "Exception: " e)))
             (finally (do (update-tx-db!)
                          (response "Plan added successfully."))))
-          (recur (str title " " (inc n))))))))
+          (recur (str title "*")))))))
 
 (defn dissoc-plan! [req]
   (let [email (:email (:params req))
