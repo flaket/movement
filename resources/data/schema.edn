@@ -117,8 +117,74 @@
   :db/doc                "A user has settings"
   :db.install/_attribute :db.part/db}
 
- ;; setting
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/interest
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A user can set interests"
+  :db.install/_attribute :db.part/db}
 
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/goal
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A user can set goals"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/max-heart-rate
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A user may set their maximum heart rate"
+  :db.install/_attribute :db.part/db}
+
+ ;; goal
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :goal/name
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A goal has a name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :goal/started
+  :db/index              true
+  :db/valueType          :db.type/instant
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Timestamp of when this goal was set"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :goal/ended
+  :db/index              true
+  :db/valueType          :db.type/instant
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Timestamp of when this goal was completed"
+  :db.install/_attribute :db.part/db}
+
+ ;; interest
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :interest/name
+  :db/index              true
+  :db/valueType          :db.type/string
+  :db/cardinality        :db.cardinality/one
+  :db/unique             :db.unique/identity
+  :db/doc                "An interest is named uniquely"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :interest/priority
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "An interest has an intereger priority"
+  :db.install/_attribute :db.part/db}
+
+ ;; setting
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :setting/view
   :db/index              true
@@ -357,6 +423,14 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :day/group
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "Each session of the day may draw the template from a group"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :day/completed?
   :db/index              true
   :db/valueType          :db.type/boolean
@@ -389,6 +463,14 @@
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/many
   :db/doc                "A part can have several categories"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/time
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Each part may store may be stored with the time taken"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -437,6 +519,14 @@
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
   :db/doc                "Optionally the duration for each movement can be given"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/weight
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Optionally the weight for each movement can be given"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -512,6 +602,14 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/difficulty
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "The user may set a subjective movement difficulty"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :movement/rep
   :db/index              true
   :db/valueType          :db.type/long
@@ -541,6 +639,14 @@
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
   :db/doc                "A movement used in a session may be stored with distance information"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/weight
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement used in a session may be stored with weight information"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -645,6 +751,31 @@
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
   :db/doc                "A session may be stored with the time taken"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :session/heart-rate
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A session may be stored with heart rate data"
+  :db.install/_attribute :db.part/db}
+
+ ;; heart rate
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :heart-rate/max
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Max heart rate"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :heart-rate/average
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Average heart rate"
   :db.install/_attribute :db.part/db}
 
  ]

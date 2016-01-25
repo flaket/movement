@@ -166,7 +166,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 #_(let [templates ["Natural Movement" "Locomotion" "4x4 Interval Run"]
         template-ids (map (pull ))])
 
-(flatten (d/q '[:find (pull ?t [*])
+#_(flatten (d/q '[:find (pull ?t [*])
                 :in $ ?email
                 :where
                 [?t :group/created-by ?u]
@@ -174,7 +174,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
               db
               "andflak@gmail.com"))
 
-(flatten (d/q '[:find (pull ?t [*])
+#_(flatten (d/q '[:find (pull ?t [*])
                 :in $ ?email
                 :where
                 [?e :user/email ?email]
@@ -183,7 +183,47 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
               "andflak@gmail.com"))
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186046081)
+#_(d/pull db '[*] 17592186046127)
+
+;; begin-plan!
+#_(let [user-id 17592186045808
+      plan-id 17592186046127
+      plan (d/pull db '[*] plan-id)
+      current-day (:db/id (first (:plan/day plan)))
+      tx-data [[:db/add plan-id :plan/started (Date.)]
+               [:db/add plan-id :plan/current-day current-day]
+               [:db/add user-id :user/ongoing-plan plan-id]]]
+  (d/transact conn tx-data))
+
+(defn positions [pred coll]
+  (keep-indexed (fn [idx x]
+                  (when (pred x) idx)) coll))
+;; progress-plan!
+#_(let [                                                      ;conn (:conn @tx)
+      user-id 17592186045808
+      plan-id 17592186046127
+      plan (d/pull db '[*] plan-id)
+      days (:plan/day plan)
+      current-day (:plan/current-day plan)
+      day-id (:db/id current-day)
+      current-day-pos (first (positions #{current-day} days))
+      new-current-day (:db/id (get days (inc current-day-pos)))
+      tx-data [[:db/add day-id :day/completed? true]
+               [:db/add plan-id :plan/current-day new-current-day]]]
+  tx-data
+  #_(d/transact conn tx-data))
+
+;; end-plan!
+#_(let [user-id 17592186045808
+        plan-id 17592186046127
+      plan (d/pull db '[*] plan-id)
+      days (map #(d/pull db '[*] (:db/id %)) (:plan/day plan))
+      all-completed? (every? #(true? (:day/completed? %)) days)
+      tx-data [[:db/add plan-id :plan/ended (Date.)]
+               [:db/add plan-id :plan/completed? all-completed?]
+               [:db/retract user-id :user/ongoing-plan plan-id]]]
+  (d/transact conn tx-data))
+
 #_(d/transact conn [[:db/retract 17592186045494
                      :movement/category 17592186046023]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186045819]])
@@ -270,7 +310,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
          [?u :user/name _]]
           db)
 
-(d/q '[:find (pull ?t [*])
+#_(d/q '[:find (pull ?t [*])
        :in $ ?username ?item
        :where
        [?e :user/name ?username]
@@ -310,7 +350,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
      db
      "Hip Mobility")
 
-(flatten (d/q '[:find (pull ?t [*])
+#_(flatten (d/q '[:find (pull ?t [*])
                 :in $ ?kw ?username
                 :where
                 [?e :user/name ?username]
@@ -318,7 +358,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                 [?t :plan/created-by ?e]]
               db :user/plan "movementsession"))
 
-(d/q '[:find [?t ...]
+#_(d/q '[:find [?t ...]
        :in $ ?username
        :where
        [(fulltext $ :user/name ?username) [[?e ?n]]]
@@ -326,7 +366,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
        [?t :template/created-by ?e]]
      db "movementsession")
 
-(->> (d/q '[:find (pull ?t [*])
+#_(->> (d/q '[:find (pull ?t [*])
             :in $ ?username ?item ?created-by
             :where
             [?e :user/name ?username]
@@ -335,7 +375,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
           db "movementsession" :user/template :template/created-by)
      flatten)
 
-(->> (map #(flatten
+#_(->> (map #(flatten
                 (d/q '[:find (pull ?t [*])
                        :in $ ?category
                        :where
@@ -349,7 +389,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
      set
      seq)
 
-(defn items-by-category
+#_(defn items-by-category
   ""
   [type category]
   (flatten
@@ -386,7 +426,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                  db category)
       nil)))
 
-(flatten (d/q '[:find (pull ?t [:db/id :template/title])
+#_(flatten (d/q '[:find (pull ?t [:db/id :template/title])
                 :in $ ?email
                 :where
                 [?e :user/email ?email]
@@ -394,9 +434,9 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
               db
               "admin@movementsession.com"))
 
-(d/pull db '[*] 17592186045838)
+#_(d/pull db '[*] 17592186045838)
 
-(flatten
+#_(flatten
   (d/q '[:find (pull ?t [*])
          :in $ ?title
          :where
@@ -405,7 +445,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
          [?t :template/created-by ?e]]
        db "5x5"))
 
-(flatten (map #(flatten
+#_(flatten (map #(flatten
                 (d/q '[:find (pull ?t [*])
                        :in $ ?title
                        :where
@@ -414,7 +454,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                        [?t :template/created-by ?e]]
                      db %)) (str/split "5x5 locomotion" #" ")))
 
-(flatten (map #(flatten (d/q '[:find (pull ?t [*])
+#_(flatten (map #(flatten (d/q '[:find (pull ?t [*])
                                :in $ ?description
                                :where
                                [(fulltext $ :template/description ?description) [[?t ?n]]]

@@ -283,7 +283,7 @@
         day (.getDate date)
         month (get months (.getMonth date))]
     (fn [{:keys [title description]}]
-      [:div {:style {:margin-top 20}}
+      [:div {:style {:margin-top 50}}
        [:div.pure-g
         [:div.pure-u.pure-u-md-2-5]
         [:div.pure-u-1.pure-u-md-1-5.is-center (str month " " day)]
@@ -305,9 +305,14 @@
   [:a.pure-u.button.button-primary {:on-click #(create-session-from-group (:group/title group))
                                     :style    {:margin "0 0 5px 5px"}} (:group/title group)])
 
+(defn plan-component [plan]
+  [:a.pure-u.button.button-primary {:on-click #()
+                                    :style    {:margin "0 0 5px 5px"}} (:plan/title plan)])
+
 (defn blank-state-component []
   (let [templates-showing? (atom false)
-        groups-showing? (atom false)]
+        groups-showing? (atom false)
+        plans-showing? (atom false)]
     (fn []
       [:div.blank-state
        [:div.pure-g {:style {:margin-bottom 50}}
@@ -316,6 +321,10 @@
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-8]
         [:div.pure-u.pure-u-md-3-4
+         (when-not (nil? (session/get :ongoing-plan))
+           [:div.pure-g
+            [:div.pure-u-1.button {:style    {:margin-bottom 5}
+                                   :on-click #()} (str "Continue plan " (:plan/title (session/get :ongoing-plan)))]])
          [:div.pure-g
           [:div.pure-u-1.button.button-primary {:style    {:margin-bottom 5}
                                                 :on-click pick-random-template} "From random template"]]
@@ -323,13 +332,13 @@
           [:div.pure-u-1.button {:style    {:margin-bottom 5}
                                  :on-click #(handler-fn
                                              (do
-                                               (when (nil? (session/get :equipment))
-                                                 (get-equipment))
                                                (when groups-showing?
                                                  (reset! groups-showing? false))
+                                               (when plans-showing?
+                                                 (reset! plans-showing? false))
                                                (reset! templates-showing? (not @templates-showing?))))} "From template"]]
          (when @templates-showing?
-           [:div.pure-g {:style {:margin "20px 0 20px 0"}}
+           [:div.pure-g.animated.fadeIn {:style {:margin "20px 0 20px 0"}}
             (doall
               (for [t (session/get :templates)]
                 ^{:key (:db/id t)} (template-component t)))])
@@ -337,19 +346,31 @@
           [:div.pure-u-1.button {:style    {:margin-bottom 5}
                                  :on-click #(handler-fn
                                              (do
-                                               (when (nil? (session/get :groups))
-                                                 (get-groups))
                                                (when templates-showing?
                                                  (reset! templates-showing? false))
+                                               (when plans-showing?
+                                                 (reset! plans-showing? false))
                                                (reset! groups-showing? (not @groups-showing?))))} "From group"]]
          (when @groups-showing?
-           [:div.pure-g {:style {:margin "20px 0 20px 0"}}
+           [:div.pure-g.animated.fadeIn {:style {:margin "20px 0 20px 0"}}
             (doall
               (for [e (session/get :groups)]
                 ^{:key (:db/id e)} (group-component e)))])
-         [:div.pure-g
-          [:div.pure-u-1.button {:style    {:margin-bottom 5}
-                                 :on-click #(get-plans)} (str "# plans: " (count (session/get :plans)))]]]
+         (when (< 0 (count (session/get :plans)))
+           [:div.pure-g
+            [:div.pure-u-1.button {:style    {:margin-bottom 5}
+                                   :on-click #(handler-fn
+                                               (do
+                                                 (when groups-showing?
+                                                   (reset! groups-showing? false))
+                                                 (when templates-showing?
+                                                   (reset! templates-showing? false))
+                                                 (reset! plans-showing? (not @plans-showing?))))} "Begin a new plan"]])
+         (when @plans-showing?
+           [:div.pure-g.animated.fadeIn {:style {:margin "20px 0 20px 0"}}
+            (doall
+              (for [e (session/get :plans)]
+                ^{:key (:db/id e)} (plan-component e)))])]
         [:div.pure-u.pure-u-md-1-8]]])))
 
 (defn top-menu-component []
@@ -372,8 +393,8 @@
                                                              (reset! templates-showing? (not @templates-showing?))))}
          "Template session"]
         [:div.pure-u.pure-u-md-1-5]]
-       [:div.pure-g {:style {:margin-top '40}}
-        (when @templates-showing?
+       (when @templates-showing?
+         [:div.pure-g.animated.fadeIn {:style {:margin-top '20}}
           (doall
             (for [t (session/get :templates)]
               ^{:key (:db/id t)}
@@ -381,7 +402,7 @@
                                                               (go (<! (timeout 500))
                                                                   (reset! templates-showing? false))
                                                               (create-session-from-template (:db/id t)))
-                                                  :style    {:margin "0 0 5px 5px"}} (:template/title t)])))]])))
+                                                  :style    {:margin "0 0 5px 5px"}} (:template/title t)]))])])))
 
 (defn time-comment-component []
   (let [adding-time (atom false)

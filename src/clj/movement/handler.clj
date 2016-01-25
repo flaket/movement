@@ -217,6 +217,30 @@
       (activation-page "To verify your email address we have sent you an activation email."))
     (pricing-page (str email " is already registered as a user."))))
 
+(defn begin-plan! [user-id plan-id]
+  (try
+    (db/begin-plan! user-id plan-id)
+    (catch Exception e
+      (response (str "Exception: " e)))
+    (finally (do (update-tx-db!)
+                 (response "Plan started successfully.")))))
+
+(defn progress-plan! [plan-id]
+  (try
+    (db/progress-plan! plan-id)
+    (catch Exception e
+      (response (str "Exception: " e)))
+    (finally (do (update-tx-db!)
+                 (response "Plan progressed successfully.")))))
+
+(defn end-plan! [user-id plan-id]
+  (try
+    (db/end-plan! user-id plan-id)
+    (catch Exception e
+      (response (str "Exception: " e)))
+    (finally (do (update-tx-db!)
+                 (response "Plan ended successfully.")))))
+
 (defn activate-user! [id]
   (let [user (db/entity-by-lookup-ref :user/activation-id id)]
     (if-not (nil? (:db/id user))
@@ -340,6 +364,19 @@
            (POST "/assoc/plan" req (if-not (authenticated? req)
                                      (throw-unauthorized)
                                      (assoc-plan! req)))
+           (POST "/begin-plan" req (if-not (authenticated? req)
+                                     (throw-unauthorized)
+                                     (let [user-id (db/find-user (:email (:params req)))
+                                           plan-id (:id (:params req))]
+                                       (begin-plan! user-id plan-id))))
+           (POST "/progress-plan" req (if-not (authenticated? req)
+                                     (throw-unauthorized)
+                                     (progress-plan! (:id (:params req)))))
+           (POST "/end-plan" req (if-not (authenticated? req)
+                                     (throw-unauthorized)
+                                     (let [user-id (db/find-user (:email (:params req)))
+                                           plan-id (:id (:params req))]
+                                       (end-plan! user-id plan-id))))
            (GET "/user" req (if-not (authenticated? req)
                               (throw-unauthorized)
                               (let [email (:email (:params req))]

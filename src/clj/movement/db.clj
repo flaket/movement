@@ -16,6 +16,10 @@
 
 (defn update-tx-db! [] (swap! tx assoc :db (d/db (:conn @tx))))
 
+(defn positions [pred coll]
+  (keep-indexed (fn [idx x]
+                  (when (pred x) idx)) coll))
+
 (defn all-movement-names
   "Returns the names of all movements in the database."
   []
@@ -454,6 +458,43 @@
                   :user/email email
                   :user/plan  (:db/id plan)}
                  plan]]
+    (d/transact conn tx-data)))
+
+(defn begin-plan!
+  "Sets a given plan as the currently ongoing plan, logs the start date and stores which day is the next one."
+  [user-id plan-id]
+  (let [conn (:conn @tx)
+        plan (entity-by-id plan-id)
+        current-day (:db/id (first (:plan/day plan)))
+        tx-data [[:db/add plan-id :plan/started (Date.)]
+                 [:db/add plan-id :plan/current-day current-day]
+                 [:db/add user-id :user/ongoing-plan plan-id]]]
+    (d/transact conn tx-data)))
+
+(defn progress-plan!
+  "Completes a day of a plan and sets the current day to the next day."
+  [plan-id]
+  (let [conn (:conn @tx)
+        plan (entity-by-id plan-id)
+        days (:plan/day plan)
+        current-day (:plan/current-day plan)
+        day-id (:db/id current-day)
+        current-day-pos (first (positions #{current-day} days))
+        new-current-day (:db/id (get days (inc current-day-pos)))
+        tx-data [[:db/add day-id :day/completed? true]
+                 [:db/add plan-id :plan/current-day new-current-day]]]
+    (d/transact conn tx-data)))
+
+(defn end-plan!
+  "Removes the plan as the users ongoing plan. Logs the date and sets the plan as completed if all the plan days where completed."
+  [user-id plan-id]
+  (let [conn (:conn @tx)
+        plan (d/pull db '[*] plan-id)
+        days (map #(d/pull db '[*] (:db/id %)) (:plan/day plan))
+        all-completed? (every? #(true? (:day/completed? %)) days)
+        tx-data [[:db/add plan-id :plan/ended (Date.)]
+                 [:db/add plan-id :plan/completed? all-completed?]
+                 [:db/retract user-id :user/ongoing-plan plan-id]]]
     (d/transact conn tx-data)))
 
 (defn transact-template!
