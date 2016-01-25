@@ -251,7 +251,7 @@
                                  (when (empty? (:categories @template-state)) (swap! template-state dissoc :categories))
                                  (when (empty? (:specific-movements @template-state)) (swap! template-state dissoc :specific-movements))
                                  (POST "template"
-                                       {:params        {:user     (session/get :user)
+                                       {:params        {:email     (session/get :user)
                                                         :template (assoc @template-state
                                                                     :public? true
                                                                     :created-by (session/get :username))}

@@ -166,18 +166,34 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 #_(let [templates ["Natural Movement" "Locomotion" "4x4 Interval Run"]
         template-ids (map (pull ))])
 
+(flatten (d/q '[:find (pull ?t [*])
+                :in $ ?email
+                :where
+                [?t :group/created-by ?u]
+                [?u :user/email ?email]]
+              db
+              "andflak@gmail.com"))
+
+(flatten (d/q '[:find (pull ?t [*])
+                :in $ ?email
+                :where
+                [?e :user/email ?email]
+                [?e :user/group ?t]]
+              db
+              "andflak@gmail.com"))
+
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186045853)
+#_(d/pull db '[*] 17592186046081)
 #_(d/transact conn [[:db/retract 17592186045494
                      :movement/category 17592186046023]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186045819]])
 
-#_(d/q '[:find (pull ?u [*])
-         :in $
-       :where
-         [?u :user/email "andflak@gmail.com"]
-       ]
-     db)
+#_(empty? (d/q '[:find [?u ...]
+                 :in $
+                 :where
+                 [?u :user/email "admin@movementsession.com"]
+                 [?u :user/template 17592186045829]]
+               db))
 
 #_(d/q '[:find (pull ?e [*])
        :in $ ?name
@@ -248,10 +264,10 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
           "admin@movementsession.com"
           "Standard Templates 1")
 
-#_(d/q '[:find (pull ?r [*])
+#_(d/q '[:find (pull ?u [*])
             :in $
             :where
-         [?u :user/plan ?r]]
+         [?u :user/name _]]
           db)
 
 (d/q '[:find (pull ?t [*])
@@ -264,7 +280,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 
 #_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
 
-#_(d/pull db '[*] 17592186045646)
+#_(d/pull db '[*] 17592186045808)
 
 #_(d/q '[:find ?e
        :in $ ?id

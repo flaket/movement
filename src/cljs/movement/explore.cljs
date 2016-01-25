@@ -47,16 +47,16 @@
     (fn [explore-state]
       [:div {:style {:margin-top '40}}
        [:div.pure-g
-        [:div.pure-u-1-2.pure-u-md-1-5.button {:style {:margin-right 5}
+        [:div.pure-u-1-2.pure-u-md-1-5.button {:style     {:margin-right 5}
                                                :className (when (= :movements (:menu-selection @explore-state)) "button-primary")
                                                :on-click  #(swap! explore-state assoc :menu-selection :movements)} "Movements"]
-        [:div.pure-u-1-2.pure-u-md-1-5.button {:style {:margin-right 5}
+        [:div.pure-u-1-2.pure-u-md-1-5.button {:style     {:margin-right 5}
                                                :className (when (= :templates (:menu-selection @explore-state)) "button-primary")
                                                :on-click  #(swap! explore-state assoc :menu-selection :templates)} "Templates"]
-        [:div.pure-u-1-2.pure-u-md-1-5.button {:style {:margin-right 5}
+        [:div.pure-u-1-2.pure-u-md-1-5.button {:style     {:margin-right 5}
                                                :className (when (= :groups (:menu-selection @explore-state)) "button-primary")
                                                :on-click  #(swap! explore-state assoc :menu-selection :groups)} "Groups"]
-        [:div.pure-u-1-2.pure-u-md-1-5.button {:style {:margin-right 5}
+        [:div.pure-u-1-2.pure-u-md-1-5.button {:style     {:margin-right 5}
                                                :className (when (= :plans (:menu-selection @explore-state)) "button-primary")
                                                :on-click  #(swap! explore-state assoc :menu-selection :plans)} "Plans"]
         #_[:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :routines (:menu-selection @explore-state)) "button-primary")
@@ -96,7 +96,7 @@
              [movements-ac-comp {:id          id
                                  :class       "edit"
                                  :placeholder "Search for movement"
-                                 :size        80
+                                 :size        32
                                  :on-save     #(when (some #{%} (session/get :all-movements))
                                                 (GET "movement"
                                                      {:params        {:name (str %)}
@@ -127,66 +127,65 @@
         created-by (:template/created-by t)
         description (:template/description t)
         parts (:template/part t)
-        my-template-id (some #(when (and (= (:template/created-by t)
-                                            (:template/created-by %))
-                                         (= (:template/part t)
-                                            (:template/part %))) (:db/id %))
-                             (session/get :templates))]
+        template-id (some #(when (= (:db/id t)
+                                    (:db/id %)) (:db/id %))
+                          (session/get :templates))]
     (fn [t]
-      [:div.pure-g {:style {:margin-top 10}}
-       [:div.pure-u-1
-        [:div.pure-g
-         (when @selected
-           [:div.pure-u [:button.button.button-secondary
-                         {:on-click #(when-not (nil? my-template-id)
-                                      (POST "dissoc/template"
-                                              {:params        {:email (session/get :email) :id my-template-id}
-                                               :handler       (fn [r] (do
-                                                                        (reset! selected false)
-                                                                        (get-templates)))
-                                               :error-handler (fn [r] (pr (str "error dissoc'ing template: " (:message r))))}))}
-                         "Remove"]])
-         [:div.pure-u {:style {:margin-right 5}}
-          (if-not (nil? my-template-id)
-            [:div {:style    {:color 'green :cursor 'pointer}
-                   :on-click #(handler-fn (reset! selected (not @selected)))} [:i.fa.fa-check.fa-2x]]
-            [:button.button.button-secondary
-             {:on-click #(POST "assoc/template"
-                               {:params        {:email (session/get :email) :id (:db/id t)}
-                                :handler       (fn [r] (get-templates))
-                                :error-handler (fn [r] (pr (str "error assoc'ing template: " r)))})}
-             "Add"])]
-         [:div.pure-u {:style {:margin-right 5
-                               :font-size    "150%"}} title]
-         [:div.pure-u (str "by " (:db/id created-by))]]
-        [:div.pure-g
-         [:div.pure-u-1 description]]
-        [:div.pure-g
-         [:div.pure-u (str "Template divided into " (count parts) " parts:")]
-         (for [p parts]
-           ^{:key (:db/id p)}
-           [:div.pure-u {:style {:margin-left 5}} (str (:db/id p))])]]])))
+      [:div.pure-u-1 {:style {:margin-top 10}}
+       [:div.pure-g
+        (when @selected
+          [:div.pure-u [:button.button.button-secondary
+                        {:on-click #(when-not (nil? template-id)
+                                     (POST "dissoc/template"
+                                           {:params        {:email (session/get :email) :id template-id}
+                                            :handler       (fn [r] (do
+                                                                     (reset! selected false)
+                                                                     (get-templates)))
+                                            :error-handler (fn [r] (pr (str "error dissoc'ing template: " (:message r))))}))}
+                        "Remove"]])
+        [:div.pure-u {:style {:margin-right 5}}
+         (if-not (nil? template-id)
+           [:div {:style    {:color 'green :cursor 'pointer}
+                  :on-click #(handler-fn (reset! selected (not @selected)))} [:i.fa.fa-check.fa-2x]]
+           [:button.button.button-secondary
+            {:on-click #(POST "assoc/template"
+                              {:params        {:email (session/get :email) :id (:db/id t)}
+                               :handler       (fn [r] (get-templates))
+                               :error-handler (fn [r] (pr (str "error assoc'ing template: " r)))})}
+            "Add"])]
+        [:div.pure-u {:style {:margin-right 5
+                              :font-size    "150%"}} title]
+        [:div.pure-u "by "
+         [:span {:style    {:cursor 'pointer :text-decoration 'underline}
+                 :on-click #(GET "search/template"
+                                 {:params        {:template {:n 100 :username created-by}}
+                                  :handler       (fn [r] (swap! explore-state assoc :templates r))
+                                  :error-handler (fn [r] (pr r))})}
+          created-by]]]
+       [:div.pure-g
+        [:div.pure-u-1 description]]
+       [:div.pure-g
+        [:div.pure-u (str "Template divided into " (count parts) " parts, named: "
+                          (str/join (interpose ", " parts)))]]])))
 
 (defn templates-component []
   (let []
     (fn []
       [:div {:style {:margin-top '20}}
        [:div.pure-g
-        [:div.pure-u-1-2.pure-u-md-1-3
+        [:div.pure-u.pure-u-md-1-3
          [:p.pure-g
           [:div.pure-u-1 "Words in the template title"]]
          [:p.pure-g
-          (search-box {:type :template :target :title :placeholder "e.g. handstand 5x5 yoga gymnastic"})]
+          (search-box {:type :template :target :title :placeholder "e.g. handstand 5x5 yoga gymnastic"})]]
+        [:div.pure-u.pure-u-md-1-3
+         [:p.pure-g
+          [:div.pure-u-1 "Words in the template description"]]
+         [:p.pure-g
+          (search-box {:type :template :target :description :placeholder "e.g. endurance aerobic interval"})]]
+        [:div.pure-u.pure-u-md-1-3
          [:p.pure-g
           [:div.pure-u-1 "Categories used in the template"]]
-         [:p.pure-g
-          (for [c (get-in @explore-state [:template :categories])]
-            ^{:key (str c (rand-int 10000))}
-            [:span.pure-u {:style {:margin-right "5px"}}
-             [:i.fa.fa-times {:style    {:cursor 'pointer :color 'red}
-                              :on-click #(let [categories (vec (remove #{c} (get-in @explore-state [:template :categories])))]
-                                          (swap! explore-state assoc-in [:template :categories] categories))}]
-             c])]
          [:p.pure-g
           (let [id "category-tags"
                 categories-ac-comp (with-meta text-input-component
@@ -200,18 +199,16 @@
                                  :size        32
                                  :on-save     #(when (and (some #{%} (session/get :all-categories))
                                                           (not (some #{%} (get-in @explore-state [:template :categories]))))
-                                                (swap! explore-state update-in [:template :categories] conj %))}])]]
-        [:div.pure-u-1-2.pure-u-md-1-3
+                                                (swap! explore-state update-in [:template :categories] conj %))}])]
          [:p.pure-g
-          [:div.pure-u-1 "Words in the description"]]
-         [:p.pure-g
-          (search-box {:type :template :target :description :placeholder "e.g. endurance aerobic interval"})]
-         [:p.pure-g
-          [:div.pure-u-1 "Find all templates by a nickname"]]
-         [:p.pure-g
-          (search-box {:type :template :target :username :placeholder "e.g. movementsession"})]]]
-       [:p.pure-g
-        [:button.pure-u-1-2.pure-u-md-1-3.button.button-primary
+          (for [c (get-in @explore-state [:template :categories])]
+            ^{:key (str c (rand-int 10000))}
+            [:span.pure-u {:style {:margin-right "5px"}}
+             [:i.fa.fa-times {:style    {:cursor 'pointer :color 'red}
+                              :on-click #(let [categories (vec (remove #{c} (get-in @explore-state [:template :categories])))]
+                                          (swap! explore-state assoc-in [:template :categories] categories))}] c])]]]
+       [:div.pure-g
+        [:button.pure-u.pure-u-md-1-3.button.button-primary
          {:on-click #(let [t (:template @explore-state)
                            t (if (empty? (:title t)) (dissoc t :title) t)
                            t (if (empty? (:description t)) (dissoc t :description) t)
@@ -219,26 +216,39 @@
                            t (if-not (empty? (:categories t))
                                (assoc t :categories (str/join (interpose " " (:categories t))))
                                t)
-                           template (assoc t :n 10)]
+                           template (assoc t :n 100)]
                       (pr template)
                       (GET "search/template" {:params        {:template template}
                                               :handler       (fn [r] (swap! explore-state assoc :templates r))
                                               :error-handler (fn [r] (pr r))}))} "Search"]
-        [:button.pure-u-1-2.pure-u-md-1-3.button
-         {:style {:margin-left 5}
-          :on-click #(swap! explore-state assoc :templates (session/get :templates))} "My templates"]]
-       [:div.pure-g
-        [:div.pure-u-1
+        [:div.pure-u.pure-u-md-1-3 {:style {:margin-left 5}}
          [:div.pure-g
-          (when-not (nil? (:templates @explore-state))
-            [:div.pure-g
-             [:div.pure-u-1 (str "Showing " (count (:templates @explore-state)) " results")]])]
-         (let [templates (:templates @explore-state)]
-           [:div.pure-g.movements {:style {:border-top "dotted 1px"}}
-            (doall
-              (for [t templates]
-                ^{:key (:db/id t)}
-                [template-result t]))])]]])))
+          [:a.pure-u
+           {:style    {:text-decoration 'underline :margin-bottom 5}
+            :on-click #(GET "search/template"
+                            {:params        {:template {:n 100 :username "movementsession"}}
+                             :handler       (fn [r] (swap! explore-state assoc :templates r))
+                             :error-handler (fn [r] (pr r))})} "Templates created by movementsession"]]
+         [:div.pure-g
+          [:a.pure-u
+           {:style    {:text-decoration 'underline :margin-bottom 5}
+            :on-click #(GET "search/template"
+                            {:params        {:template {:n 100 :username (session/get :username)}}
+                             :handler       (fn [r] (swap! explore-state assoc :templates r))
+                             :error-handler (fn [r] (pr r))})} "Templates you have created"]]
+         [:div.pure-g
+          [:a.pure-u
+           {:style    {:text-decoration 'underline :margin-bottom 5}
+            :on-click #(swap! explore-state assoc :templates (session/get :templates))} "Your current templates"]]]]
+       (when-not (nil? (:templates @explore-state))
+         [:div.pure-g
+          [:div.pure-u-1 (str "Showing " (count (:templates @explore-state)) " results")]])
+       (let [templates (:templates @explore-state)]
+         [:div.pure-g.movements {:style {:border-top "dotted 1px"}}
+          (doall
+            (for [t templates]
+              ^{:key (:db/id t)}
+              [template-result t]))])])))
 
 (defn group-result [g]
   (let [selected (atom false)
@@ -246,34 +256,32 @@
         created-by (:group/created-by g)
         description (:group/description g)
         templates (:group/template g)
-        my-group-id (some #(when (and (= (:group/created-by g)
-                                            (:group/created-by %))
-                                         (= (:group/template g)
-                                            (:group/template %))) (:db/id %))
-                             (session/get :groups))]
+        group-id (some #(when (= (:db/id g)
+                                 (:db/id %)) (:db/id %))
+                       (session/get :groups))]
     (fn [g]
       [:div.pure-g {:style {:margin-top 10}}
        [:div.pure-u-1
         [:div.pure-g
          (when @selected
            [:div.pure-u [:button.button.button-secondary
-                         {:on-click #(when-not (nil? my-group-id)
+                         {:on-click #(when-not (nil? group-id)
                                       (POST "dissoc/group"
-                                            {:params        {:email (session/get :email) :id my-group-id}
+                                            {:params        {:email (session/get :email) :id group-id}
                                              :handler       (fn [r] (do
                                                                       (reset! selected false)
                                                                       (get-groups)))
                                              :error-handler (fn [r] (pr (str "error dissoc'ing group: " r)))}))}
                          "Remove"]])
          [:div.pure-u {:style {:margin-right 5}}
-          (if-not (nil? my-group-id)
+          (if-not (nil? group-id)
             [:div {:style    {:color 'green :cursor 'pointer}
                    :on-click #(handler-fn (reset! selected (not @selected)))} [:i.fa.fa-check.fa-2x]]
             [:button.button.button-secondary
              {:on-click #(POST "assoc/group"
-                          {:params        {:email (session/get :email) :id (:db/id g)}
-                           :handler       (fn [r] (get-groups))
-                           :error-handler (fn [r] (pr (str "error assoc'ing group: " r)))})}
+                               {:params        {:email (session/get :email) :id (:db/id g)}
+                                :handler       (fn [r] (get-groups))
+                                :error-handler (fn [r] (pr (str "error assoc'ing group: " r)))})}
              "Add"])]
          [:div.pure-u {:style {:margin-right 5
                                :font-size    "150%"}} title]
@@ -291,21 +299,19 @@
     (fn []
       [:div {:style {:margin-top '20}}
        [:div.pure-g
-        [:div.pure-u-1-2.pure-u-md-1-3
+        [:div.pure-u.pure-u-md-1-3
          [:p.pure-g
           [:div.pure-u-1 "Words in the group title"]]
          [:p.pure-g
-          (search-box {:type :group :target :title :placeholder ""})]
+          (search-box {:type :group :target :title :placeholder ""})]]
+        [:div.pure-u.pure-u-md-1-3
+         [:p.pure-g
+          [:div.pure-u-1 "Words in the group description"]]
+         [:p.pure-g
+          (search-box {:type :group :target :description :placeholder ""})]]
+        [:div.pure-u.pure-u-md-1-3
          [:p.pure-g
           [:div.pure-u-1 "Categories used by templates of the group"]]
-         [:p.pure-g
-          (for [c (get-in @explore-state [:group :categories])]
-            ^{:key (str c (rand-int 10000))}
-            [:span.pure-u {:style {:margin-right "5px"}}
-             [:i.fa.fa-times {:style    {:cursor 'pointer :color 'red}
-                              :on-click #(let [categories (vec (remove #{c} (get-in @explore-state [:group :categories])))]
-                                          (swap! explore-state assoc-in [:group :categories] categories))}]
-             c])]
          [:p.pure-g
           (let [id "category-tags"
                 categories-ac-comp (with-meta text-input-component
@@ -319,18 +325,16 @@
                                  :size        32
                                  :on-save     #(when (and (some #{%} (session/get :all-categories))
                                                           (not (some #{%} (get-in @explore-state [:group :categories]))))
-                                                (swap! explore-state update-in [:group :categories] conj %))}])]]
-        [:div.pure-u-1-2.pure-u-md-1-3
+                                                (swap! explore-state update-in [:group :categories] conj %))}])]
          [:p.pure-g
-          [:div.pure-u-1 "Words in the group description"]]
-         [:p.pure-g
-          (search-box {:type :group :target :description :placeholder ""})]
-         [:p.pure-g
-          [:div.pure-u-1 "Find all groups by a nickname"]]
-         [:p.pure-g
-          (search-box {:type :group :target :username :placeholder "movementsession"})]]]
-       [:p.pure-g
-        [:button.pure-u-1-2.pure-u-md-1-3.button.button-primary
+          (for [c (get-in @explore-state [:group :categories])]
+            ^{:key (str c (rand-int 10000))}
+            [:span.pure-u {:style {:margin-right "5px"}}
+             [:i.fa.fa-times {:style    {:cursor 'pointer :color 'red}
+                              :on-click #(let [categories (vec (remove #{c} (get-in @explore-state [:group :categories])))]
+                                          (swap! explore-state assoc-in [:group :categories] categories))}] c])]]]
+       [:div.pure-g
+        [:button.pure-u.pure-u-md-1-3.button.button-primary
          {:on-click #(let [g (:group @explore-state)
                            g (if (empty? (:title g)) (dissoc g :title) g)
                            g (if (empty? (:categories g)) (dissoc g :categories) g)
@@ -338,61 +342,62 @@
                            g (if-not (empty? (:categories g))
                                (assoc g :categories (str/join (interpose " " (:categories g))))
                                g)
-                           group (assoc g :n 10)]
+                           group (assoc g :n 1000)]
                       (pr group)
                       (GET "search/group" {:params        {:group group}
                                            :handler       (fn [r] (swap! explore-state assoc :groups r))
                                            :error-handler (fn [r] (pr r))}))} "Search"]
-        [:button.pure-u-1-2.pure-u-md-1-3.button
-         {:style {:margin-left 5}
-          :on-click #(swap! explore-state assoc :groups (session/get :groups))} "My groups"]]
-       [:div.pure-g
-        [:div.pure-u-1
+        [:div.pure-u.pure-u-md-1-3 {:style {:margin-left 5}}
          [:div.pure-g
-          (when-not (nil? (:groups @explore-state))
-            [:div.pure-g
-             [:div.pure-u-1 (str "Showing " (count (:groups @explore-state)) " results")]])]
-         (let [groups (:groups @explore-state)]
-           [:div.pure-g.movements {:style {:border-top "dotted 1px"}}
-            (doall
-              (for [g groups]
-                ^{:key (:db/id g)}
-                [group-result g]))])]]])))
+          [:a.pure-u
+           {:style    {:margin-bottom 5 :text-decoration 'underline}
+            :on-click #(GET "search/group"
+                            {:params        {:group {:n 1000 :username "movementsession"}}
+                             :handler       (fn [r] (swap! explore-state assoc :groups r))
+                             :error-handler (fn [r] (pr r))})} "Groups created by movementsession"]]
+         [:div.pure-g
+          [:a.pure-u
+           {:style    {:margin-bottom 5 :text-decoration 'underline}
+            :on-click #(GET "search/group"
+                            {:params        {:group {:n 1000 :username (session/get :username)}}
+                             :handler       (fn [r] (swap! explore-state assoc :groups r))
+                             :error-handler (fn [r] (pr r))})} "Groups you have created"]]
+         [:div.pure-g
+          [:a.pure-u
+           {:style    {:text-decoration 'underline :margin-bottom 5}
+            :on-click #(swap! explore-state assoc :groups (session/get :groups))} "Your current groups"]]]]
+       (when-not (nil? (:groups @explore-state))
+         [:div.pure-g
+          [:div.pure-u-1 (str "Showing " (count (:groups @explore-state)) " results")]])
+       (let [groups (:groups @explore-state)]
+         [:div.pure-g.movements {:style {:border-top "dotted 1px"}}
+          (doall
+            (for [g groups]
+              ^{:key (:db/id g)}
+              [group-result g]))])])))
 
 (defn plan-result [p]
-  (let [selected (atom false)
-        title (:plan/title p)
+  (let [title (:plan/title p)
         created-by (:plan/created-by p)
         description (:plan/description p)
         days (:plan/day p)
         my-plan-id (some #(when (and (= (:plan/created-by p)
-                                         (:plan/created-by %))
-                                      (= (:plan/day p)
-                                         (:plan/day %))) (:db/id %))
-                          (session/get :plans))]
+                                        (:plan/created-by %))
+                                     (= (:plan/day p)
+                                        (:plan/day %))) (:db/id %))
+                         (session/get :plans))]
     (fn [p]
       [:div.pure-g {:style {:margin-top 10}}
        [:div.pure-u-1
         [:div.pure-g
-         (when @selected
-           [:div.pure-u [:button.button.button-secondary
-                         {:on-click #(when-not (nil? my-plan-id)
-                                      (POST "dissoc/plan"
-                                            {:params        {:email (session/get :email) :id my-plan-id}
-                                             :handler       (fn [r] (do
-                                                                      (reset! selected false)
-                                                                      (get-plans)))
-                                             :error-handler (fn [r] (pr (str "error dissoc'ing plan: " r)))}))}
-                         "Remove"]])
          [:div.pure-u {:style {:margin-right 5}}
           (if-not (nil? my-plan-id)
-            [:div {:style    {:color 'green :cursor 'pointer}
-                   :on-click #(handler-fn (reset! selected (not @selected)))} [:i.fa.fa-check.fa-2x]]
+            [:div {:style    {:color 'green}} [:i.fa.fa-check.fa-2x]]
             [:button.button.button-secondary
              {:on-click #(POST "assoc/plan"
                                {:params        {:email (session/get :email) :id (:db/id p)}
                                 :handler       (fn [r] (get-plans))
-                                :error-handler (fn [r] (pr (str "error assoc'ing group: " r)))})}
+                                :error-handler (fn [r] (pr (str "error assoc'ing plan: " r)))})}
              "Add"])]
          [:div.pure-u {:style {:margin-right 5
                                :font-size    "150%"}} title]
@@ -410,21 +415,19 @@
     (fn []
       [:div {:style {:margin-top '20}}
        [:div.pure-g
-        [:div.pure-u-1-2.pure-u-md-1-3
+        [:div.pure-u.pure-u-md-1-3
          [:p.pure-g
           [:div.pure-u-1 "Words in the plan title"]]
          [:p.pure-g
-          (search-box {:type :plan :target :title :placeholder ""})]
+          (search-box {:type :plan :target :title :placeholder ""})]]
+        [:div.pure-u.pure-u-md-1-3
+         [:p.pure-g
+          [:div.pure-u-1 "Words in the plan description"]]
+         [:p.pure-g
+          (search-box {:type :plan :target :description :placeholder ""})]]
+        [:div.pure-u.pure-u-md-1-3
          [:p.pure-g
           [:div.pure-u-1 "Categories used by templates in the plan"]]
-         [:p.pure-g
-          (for [c (get-in @explore-state [:plan :categories])]
-            ^{:key (str c (rand-int 10000))}
-            [:span.pure-u {:style {:margin-right "5px"}}
-             [:i.fa.fa-times {:style    {:cursor 'pointer :color 'red}
-                              :on-click #(let [categories (vec (remove #{c} (get-in @explore-state [:plan :categories])))]
-                                          (swap! explore-state assoc-in [:plan :categories] categories))}]
-             c])]
          [:p.pure-g
           (let [id "category-tags"
                 categories-ac-comp (with-meta text-input-component
@@ -438,18 +441,16 @@
                                  :size        32
                                  :on-save     #(when (and (some #{%} (session/get :all-categories))
                                                           (not (some #{%} (get-in @explore-state [:plan :categories]))))
-                                                (swap! explore-state update-in [:plan :categories] conj %))}])]]
-        [:div.pure-u-1-2.pure-u-md-1-3
+                                                (swap! explore-state update-in [:plan :categories] conj %))}])]
          [:p.pure-g
-          [:div.pure-u-1 "Words in the plan description"]]
-         [:p.pure-g
-          (search-box {:type :plan :target :description :placeholder ""})]
-         [:p.pure-g
-          [:div.pure-u-1 "Find all plans by a nickname"]]
-         [:p.pure-g
-          (search-box {:type :plan :target :username :placeholder "movementsession"})]]]
-       [:p.pure-g
-        [:button.pure-u-1-2.pure-u-md-1-3.button.button-primary
+          (for [c (get-in @explore-state [:plan :categories])]
+            ^{:key (str c (rand-int 10000))}
+            [:span.pure-u {:style {:margin-right "5px"}}
+             [:i.fa.fa-times {:style    {:cursor 'pointer :color 'red}
+                              :on-click #(let [categories (vec (remove #{c} (get-in @explore-state [:plan :categories])))]
+                                          (swap! explore-state assoc-in [:plan :categories] categories))}] c])]]]
+       [:div.pure-g
+        [:button.pure-u.pure-u-md-1-3.button.button-primary
          {:on-click #(let [p (:plan @explore-state)
                            p (if (empty? (:title p)) (dissoc p :title) p)
                            p (if (empty? (:categories p)) (dissoc p :categories) p)
@@ -457,26 +458,39 @@
                            p (if-not (empty? (:categories p))
                                (assoc p :categories (str/join (interpose " " (:categories p))))
                                p)
-                           plan (assoc p :n 10)]
+                           plan (assoc p :n 100)]
                       (pr plan)
                       (GET "search/plan" {:params        {:plan plan}
                                           :handler       (fn [r] (swap! explore-state assoc :plans r))
                                           :error-handler (fn [r] (pr r))}))} "Search"]
-        [:button.pure-u-1-2.pure-u-md-1-3.button
-         {:style {:margin-left 5}
-          :on-click #(swap! explore-state assoc :plans (session/get :plans))} "My plans"]]
-       [:div.pure-g
-        [:div.pure-u-1
+        [:div.pure-u.pure-u-md-1-3 {:style {:margin-left 5}}
          [:div.pure-g
-          (when-not (nil? (:plans @explore-state))
-            [:div.pure-g
-             [:div.pure-u-1 (str "Showing " (count (:plans @explore-state)) " results")]])]
-         (let [plans (:plans @explore-state)]
-           [:div.pure-g.movements {:style {:border-top "dotted 1px"}}
-            (doall
-              (for [p plans]
-                ^{:key (:db/id p)}
-                [plan-result p]))])]]])))
+          [:a.pure-u
+           {:style    {:text-decoration 'underline :margin-bottom 5}
+            :on-click #(GET "search/plan"
+                            {:params        {:plan {:n 100 :username "movementsession"}}
+                             :handler       (fn [r] (swap! explore-state assoc :plans r))
+                             :error-handler (fn [r] (pr r))})} "Plans created by movementsession"]]
+         [:div.pure-g
+          [:a.pure-u
+           {:style    {:text-decoration 'underline :margin-bottom 5}
+            :on-click #(GET "search/plan"
+                            {:params        {:plan {:n 100 :username (session/get :username)}}
+                             :handler       (fn [r] (swap! explore-state assoc :plans r))
+                             :error-handler (fn [r] (pr r))})} "Plans you have created"]]
+         [:div.pure-g
+          [:a.pure-u
+           {:style    {:text-decoration 'underline :margin-bottom 5}
+            :on-click #(swap! explore-state assoc :plans (session/get :plans))} "Your current ongoing plans"]]]]
+       (when-not (nil? (:plans @explore-state))
+         [:div.pure-g
+          [:div.pure-u-1 (str "Showing " (count (:plans @explore-state)) " results")]])
+       (let [plans (:plans @explore-state)]
+         [:div.pure-g.movements {:style {:border-top "dotted 1px"}}
+          (doall
+            (for [p plans]
+              ^{:key (:db/id p)}
+              [plan-result p]))])])))
 
 (defn routines-component []
   (let []

@@ -27,11 +27,11 @@
           [:div.pure-g
            (doall (for [template (sort-by :template/title (session/get :templates))]
                     ^{:key (:db/id template)}
-                    (let [t (:template/title template)]
-                      [:div.pure-u.button {:style    {:cursor 'pointer
-                                                      :margin "0 5px 5px 0"}
-                                           :on-click #(let [selected (:selected @plan-state)]
-                                                       (swap! plan-state update-in [:plan selected] conj t))} t])))]])])))
+                    [:div.pure-u.button {:style    {:cursor 'pointer
+                                                    :margin "0 5px 5px 0"}
+                                         :on-click #(let [selected (:selected @plan-state)]
+                                                     (swap! plan-state update-in [:plan selected] conj template))}
+                     (:template/title template)]))]])])))
 
 (defn adjust-days-component []
   [:div.pure-g {:style {:margin-top "10px"}}
@@ -64,7 +64,7 @@
                                        :style    {:cursor 'pointer
                                                   :color  'red
                                                   :margin "0 5px 0 3px"}}]
-                      (get day t)]])])))
+                      (:template/title (get day t))]])])))
 
 (defn plan-component [plan]
   [:div.pure-g.movements {:style {:margin-top "10px"
@@ -79,7 +79,8 @@
         (let []
           (go (<! (timeout 3000))
               (reset! stored-successfully? false)
-              (reset! plan-state {}))
+              (reset! plan-state {:plan []
+                                  :selected nil}))
           [:div.pure-g
            [:div.pure-u {:style {:margin-top 15 :font-size 24 :color "green"}} "Plan stored successfully!"]])
         [:div.pure-g

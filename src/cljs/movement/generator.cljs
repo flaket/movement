@@ -114,10 +114,9 @@
                         (:parts session))]
     (session/put! :movement-session (assoc session :parts new-parts :comment ""))))
 
-(defn create-session-from-template [template-name]
+(defn create-session-from-template [id]
   (GET "template"
-       {:params        {:template-name template-name
-                        :user          (session/get :user)}
+       {:params        {:template-id id}
         :handler       add-session-handler
         :error-handler (fn [] (pr "error getting session data from server."))}))
 
@@ -136,8 +135,7 @@
         :error-handler (fn [e] (pr (str "error getting session data from server: " e)))}))
 
 (defn pick-random-template []
-  (let [title (:template/title (first (shuffle (session/get :templates))))]
-    (create-session-from-template title)))
+  (create-session-from-template (:db/id (first (shuffle (session/get :templates))))))
 
 ;;;;;; Components ;;;;;;
 (defn buttons-component [m title]
@@ -300,7 +298,7 @@
         [:div.pure-u.pure-u-md-1-9]]])))
 
 (defn template-component [t]
-  [:div.pure-u.button.button-primary {:on-click #(create-session-from-template (:template/title t))
+  [:div.pure-u.button.button-primary {:on-click #(create-session-from-template (:db/id t))
                                       :style    {:margin "0 0 5px 5px"}} (:template/title t)])
 
 (defn group-component [group]
@@ -313,7 +311,8 @@
     (fn []
       [:div.blank-state
        [:div.pure-g {:style {:margin-bottom 50}}
-        [:h1.pure-u "Create your next Movement Session"]]
+        [:div.pure-u.pure-u-md-1-8]
+        [:h1.pure-u.pure-u-md-3-4 "Create your next Movement Session"]]
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-8]
         [:div.pure-u.pure-u-md-3-4
@@ -359,7 +358,8 @@
     (fn []
       [:div
        [:div.pure-g
-        [:a.pure-u.pure-u-md-1-4 {:on-click #(session/remove! :movement-session)} "Back to home screen"]
+        [:a.pure-u.pure-u-md-1-4 {:style {:text-decoration 'underline}
+                                  :on-click #(session/remove! :movement-session)} "Back to home screen"]
         [:div.pure-u-1-2.pure-u-md-1-4.button.button-primary {:style    {:margin-right 5}
                                                               :on-click pick-random-template} "Random session"]
         [:div.pure-u-1-2.pure-u-md-1-4.button {:style    {:margin-right 5}
@@ -380,7 +380,7 @@
               [:div.pure-u.button.button-primary {:on-click #(do
                                                               (go (<! (timeout 500))
                                                                   (reset! templates-showing? false))
-                                                              (create-session-from-template (:template/title t)))
+                                                              (create-session-from-template (:db/id t)))
                                                   :style    {:margin "0 0 5px 5px"}} (:template/title t)])))]])))
 
 (defn time-comment-component []

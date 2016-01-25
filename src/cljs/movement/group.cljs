@@ -16,21 +16,20 @@
   [:div.pure-g
    [:div.pure-u-1-2
     (doall (for [t (:templates @group-state)]
-             ^{:key (rand-int 1000)} [:div t]))]
+             ^{:key (:db/id t)} [:div (:template/title t)]))]
    [:div.pure-u-1-2
     [:div.pure-g
      [:h3.pure-u-1 "Your templates"]]
     (doall (for [template (sort-by :template/title (session/get :templates))]
              ^{:key (:db/id template)}
-             (let [t (:template/title template)]
-               [:div.pure-u.button {:style    {:cursor     'pointer
-                                               :margin     "0 0 5px 5px"
-                                               :color      (when (some #{t} (:templates @group-state)) "#fffff8")
-                                               :background (when (some #{t} (:templates @group-state)) "gray")}
-                                    :on-click #(if (some #{t} (:templates @group-state))
-                                                (let [new-templates (remove #{t} (:templates @group-state))]
-                                                  (swap! group-state assoc :templates new-templates))
-                                                (swap! group-state update :templates conj t))} t])))]])
+             [:div.pure-u.button {:style    {:cursor     'pointer
+                                             :margin     "0 0 5px 5px"
+                                             :color      (when (some #{template} (:templates @group-state)) "#fffff8")
+                                             :background (when (some #{template} (:templates @group-state)) "gray")}
+                                  :on-click #(if (some #{template} (:templates @group-state))
+                                              (let [new-templates (remove #{template} (:templates @group-state))]
+                                                (swap! group-state assoc :templates new-templates))
+                                              (swap! group-state update :templates conj template))} (:template/title template)]))]])
 
 (defn save-group-component [error-atom]
   (let [group-stored-successfully? (atom false)]
@@ -54,6 +53,7 @@
                                      group (assoc @group-state
                                              :public? true
                                              :created-by username)]
+                                 (pr group)
                                  (POST "group"
                                          {:params        {:email email
                                                           :group group}

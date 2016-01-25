@@ -46,6 +46,16 @@
   [kw-ref id]
   (d/pull (:db @tx) '[*] [kw-ref id]))
 
+(defn template-entity-by-title [email template-title]
+  (d/q '[:find (pull ?t [*])
+         :in $ ?email ?template-title
+         :where
+         [?t :template/title ?template-title]
+         [?t :template/created-by ?u]
+         [?u :user/template ?t]
+         [?u :user/email ?email]]
+       (:db @tx) email template-title))
+
 (defn get-movement-from-equipment [e]
   (let [r (d/q '[:find (pull ?m [*])
                  :in $ ?name
@@ -82,7 +92,7 @@
         m (->> movements flatten (sort-by :movement/unique-name) (take n))]
     m))
 
-;; refactor the following four functions "all-x-titles"
+;; refactor the following four functions "all-x"
 
 (defn all-templates [email]
   (flatten (d/q '[:find (pull ?t [*])
@@ -93,7 +103,7 @@
                 (:db @tx)
                 email)))
 
-(defn all-group-titles [email]
+(defn all-groups [email]
   (flatten (d/q '[:find (pull ?g [*])
                   :in $ ?email
                   :where
@@ -102,7 +112,7 @@
                 (:db @tx)
                 email)))
 
-(defn all-plan-titles [email]
+(defn all-plans [email]
   (flatten (d/q '[:find (pull ?p [*])
                   :in $ ?email
                   :where
@@ -111,31 +121,19 @@
                 (:db @tx)
                 email)))
 
-(defn all-routine-names [email]
-  (d/q '[:find [?name ...]
-         :in $ ?email
-         :where
-         [?e :user/email ?email]
-         [?e :user/routine ?r]
-         [?r :routine/name ?name]]
-       (:db @tx)
-       email))
+(defn all-routines [email]
+  (flatten (d/q '[:find (pull ?r [*])
+                  :in $ ?email
+                  :where
+                  [?e :user/email ?email]
+                  [?e :user/routine ?r]]
+                (:db @tx)
+                email)))
 
-
-
-(defn create-session [title user]
+(defn create-session [template]
   ;todo: refactor, smaller functions
   (let [db (:db @tx)
-        title-entity (ffirst (d/q '[:find (pull ?t [*])
-                                    :in $ ?title ?email
-                                    :where
-                                    [?e :user/email ?email]
-                                    [?e :user/template ?t]
-                                    [?t :template/title ?title]]
-                                  db
-                                  title
-                                  user))
-        part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part title-entity)))))
+        part-entities (map #(d/pull db '[*] %) (vec (flatten (map vals (:template/part template)))))
         parts (vec (for [p part-entities]
                      (let [name (:part/title p)
                            n (:part/number-of-movements p)
@@ -156,12 +154,12 @@
                                                                               :duration (:part/duration p)) specific-movements)]
                                         (concat specific-movements movements))
                                       movements)})))]
-    {:title       title
-     :description (:template/description title-entity)
-     :background  (:template/background title-entity)
+    {:title       (:template/title template)
+     :description (:template/description template)
+     :background  (:template/background template)
      :parts       parts}))
 
-(defn pick-template-title-from-group [email group]
+(defn random-template-from-group [email group]
   (let [db (:db @tx)
         templates (d/q '[:find (pull ?t [*])
                          :in $ ?email ?title
@@ -172,9 +170,8 @@
                          [?group :group/template ?t]]
                        db
                        email
-                       group)
-        template-title (:template/title (ffirst (shuffle templates)))]
-    template-title))
+                       group)]
+    (ffirst (shuffle templates))))
 
 (defn get-routine [email routine]
   (let [db (:db @tx)
@@ -227,7 +224,7 @@
      :comment     (:session/comment session)
      :time        (:session/time session)}))
 
-; refactor following five functions "new-unique-x?"
+; refactor following five functions "new-unique-x?", (defn unique-title? [email type title])
 
 (defn new-unique-template? [user template-title]
   (let [db (:db @tx)]
@@ -290,6 +287,24 @@
                 [?id :template/title ?name]]
               (:db @tx) email template-title)))
 
+(defn user-has-template? [email template-id]
+  (let [template (entity-by-id template-id)]
+    (first
+      (flatten
+        (d/q '[:find (pull ?t [:db/id])
+               :in $ ?email ?created-by ?part ?desc
+               :where
+               [?u :user/email ?email]
+               [?u :user/template ?t]
+               [?t :template/created-by ?created-by]
+               [?t :template/part ?part]
+               [?t :template/description ?desc]]
+             (:db @tx)
+             email
+             (:db/id (:template/created-by template))
+             (:template/part template)
+             (:template/description template))))))
+
 (defn items-by-category
   "Find all original templates, groups or plans that uses a category in their template parts.
   Input variable type must be one of the keywords :template, :group, :plan."
@@ -299,7 +314,7 @@
       :template (d/q '[:find (pull ?t [*])
                        :in $ ?category
                        :where
-                       [?e :user/template ?t]
+                       #_[?e :user/template ?t]
                        [?t :template/created-by ?e]
                        [?t :template/part ?p]
                        [?p :part/category ?c]
@@ -308,7 +323,7 @@
       :group (d/q '[:find (pull ?g [*])
                     :in $ ?category
                     :where
-                    [?e :user/group ?g]
+                    #_[?e :user/group ?g]
                     [?g :group/created-by ?e]
                     [?g :group/template ?t]
                     [?t :template/part ?p]
@@ -318,7 +333,7 @@
       :plan (d/q '[:find (pull ?plan [*])
                    :in $ ?category
                    :where
-                   [?e :user/plan ?plan]
+                   #_[?e :user/plan ?plan]
                    [?plan :plan/created-by ?e]
                    [?plan :plan/day ?d]
                    [?d :day/template ?t]
@@ -340,7 +355,7 @@
              :in $ ?title-relation ?title ?user-relation ?created-by-relation
              :where
              [(fulltext $ ?title-relation ?title) [[?t ?n]]]
-             [?e ?user-relation ?t]
+             #_[?e ?user-relation ?t]
              [?t ?created-by-relation ?e]]
            (:db @tx) title-relation title user-relation created-by-relation))))
 
@@ -356,7 +371,7 @@
              :in $ ?desc-item ?description ?item ?created-by
              :where
              [(fulltext $ ?desc-item ?description) [[?t ?n]]]
-             [?e ?item ?t]
+             #_[?e ?item ?t]
              [?t ?created-by ?e]]
            (:db @tx) desc-item description item created-by))))
 
@@ -371,7 +386,7 @@
              :in $ ?username ?item ?created-by
              :where
              [?e :user/name ?username]
-             [?e ?item ?t]
+             #_[?e ?item ?t]
              [?t ?created-by ?e]]
            (:db @tx) username item created-by))))
 
@@ -382,59 +397,58 @@
   (let [user-templates (if-not (nil? username) (items-by-username type username))
         category-templates (if-not (nil? categories) (flatten (map #(items-by-category type %) (str/split categories #" "))))
         title-templates (if-not (nil? title) (flatten (map #(items-by-title type %) (str/split title #" "))))
-        description-templates (if-not (nil? description) (flatten (map #(items-by-description type %) (str/split description #" "))))]
-    (seq (set (concat user-templates title-templates description-templates category-templates)))))
+        description-templates (if-not (nil? description) (flatten (map #(items-by-description type %) (str/split description #" "))))
+        templates (take (read-string n) (seq (set (concat user-templates title-templates description-templates category-templates))))
+        templates (for [t templates]
+                    (assoc t :template/created-by (:user/name (d/pull (:db @tx)
+                                                                      '[:user/name] (:db/id (:template/created-by t))))
+                             :template/part (map #(:part/title
+                                                   (d/pull (:db @tx) '[:part/title] (:db/id %)))
+                                                 (:template/part t))))]
+    templates))
 
 ;;;;;;;;;;; TRANSACTIONS ;;;;;;;;;;;;;
 
-(defn dissoc-template! [email template-id]
-  (let [db (:db @tx)
-        conn (:conn @tx)
-        user-id (:db/id (d/pull db '[:db/id] [:user/email email]))]
-    (d/transact conn [[:db.fn/retractEntity template-id]])
-    #_(d/transact conn [[:db/retract user-id
-                       :user/template template-id]])))
+;; need new dissoc-functions. Update user info by creating a new transaction of templates/groups/plans.
+(defn retract-entity! [id]
+  (d/transact (:conn @tx) [[:db.fn/retractEntity id]]))
 
-(defn dissoc-group! [email group-id]
-  (let [db (:db @tx)
-        conn (:conn @tx)
-        user-id (:db/id (d/pull db '[:db/id] [:user/email email]))]
-    (d/transact conn [[:db/retract user-id
-                       :user/group group-id]])))
+(defn dissoc-template! [email id]
+  (let [user-entity-id (:db/id (entity-by-lookup-ref :user/email email))]
+    (d/transact (:conn @tx)
+                [[:db/retract user-entity-id :user/template id]])))
 
-(defn dissoc-plan! [email plan-id]
-  (let [db (:db @tx)
-        conn (:conn @tx)
-        user-id (:db/id (d/pull db '[:db/id] [:user/email email]))]
-    (d/transact conn [[:db/retract user-id
-                       :user/plan plan-id]])))
+(defn dissoc-group! [email id]
+  (let [user-entity-id (:db/id (entity-by-lookup-ref :user/email email))]
+    (d/transact (:conn @tx)
+                [[:db/retract user-entity-id :user/group id]])))
 
-(defn assoc-template! [email template new-title]
+(defn assoc-template!
+  "Links a template to a user entity."
+  [email template]
   (let [conn (:conn @tx)
-        template (assoc template :db/id (d/tempid :db.part/user)
-                                 :template/title new-title
-                                 :template/public? false)
         tx-data [{:db/id         #db/id[:db.part/user -99]
                   :user/email    email
                   :user/template (:db/id template)}
                  template]]
     (d/transact conn tx-data)))
 
-(defn assoc-group! [email group new-title]
+(defn assoc-group!
+  "Links a group to a user entity."
+  [email group]
   (let [conn (:conn @tx)
-        group (assoc group :db/id (d/tempid :db.part/user)
-                           :group/title new-title
-                           :group/public? false)
         tx-data [{:db/id      #db/id[:db.part/user -99]
                   :user/email email
                   :user/group (:db/id group)}
                  group]]
     (d/transact conn tx-data)))
 
-(defn assoc-plan! [email plan new-title]
+(defn assoc-plan!
+  "Links a plan by a new id to a user entity. This is done because the plan will be
+  updated as the user progresses."
+  [email plan]
   (let [conn (:conn @tx)
         plan (assoc plan :db/id (d/tempid :db.part/user)
-                         :plan/title new-title
                          :plan/public? false)
         tx-data [{:db/id      #db/id[:db.part/user -99]
                   :user/email email
@@ -442,23 +456,22 @@
                  plan]]
     (d/transact conn tx-data)))
 
-(defn transact-template! [user {:keys [title description parts public? created-by]}]
+(defn transact-template!
+  "Adds a template to the database."
+  [{:keys [title description parts public? created-by]}]
   (let [conn (:conn @tx)
         description (if (nil? description) "" description)
         public? (if (nil? public?) true public?)
         parts (map #(assoc % :db/id (d/tempid :db.part/user)) parts)
-        user-template-data [{:db/id         #db/id[:db.part/user -99]
-                             :user/email    user
-                             :user/template [#db/id[:db.part/user -100]]}
-                            {:db/id                #db/id[:db.part/user -100]
-                             :template/title       title
-                             :template/part        (vec (for [p parts] (:db/id p)))
-                             :template/description description
-                             :template/public?     public?
-                             :template/created-by  #db/id[:db.part/user -101]}
-                            {:db/id     #db/id[:db.part/user -101]
-                             :user/name created-by}]
-        user-template-data (remove nil? user-template-data)
+        template-data [{:db/id                #db/id[:db.part/user -100]
+                        :template/title       title
+                        :template/part        (vec (for [p parts] (:db/id p)))
+                        :template/description description
+                        :template/public?     public?
+                        :template/created-by  #db/id[:db.part/user -101]}
+                       {:db/id     #db/id[:db.part/user -101]
+                        :user/name created-by}]
+        template-data (remove nil? template-data)
         parts (map #(rename-keys % {:n                  :part/number-of-movements
                                     :categories         :part/category
                                     :specific-movements :part/specific-movement
@@ -479,17 +492,16 @@
         part-data (for [p part-data] (if (empty? (:part/category p)) (dissoc p :part/category) p))
         category-data (flatten (map #(:part/category %) parts))
         specific-movement-data (flatten (map #(:part/specific-movement %) parts))
-        tx-data (concat user-template-data part-data category-data specific-movement-data)]
+        tx-data (concat template-data part-data category-data specific-movement-data)]
     (d/transact conn tx-data)))
 
-(defn transact-group! [email {:keys [title created-by public? description templates]}]
+(defn transact-group!
+  "Adds a group to the database."
+  [{:keys [title created-by public? description templates]}]
   (let [description (if (nil? description) "" description)
         public? (if (nil? public?) true public?)
-        template-ids (vec (map #(get-user-template-id email %) templates))
-        tx-data [{:db/id      #db/id[:db.part/user -99]
-                  :user/email email
-                  :user/group [#db/id[:db.part/user -100]]}
-                 {:db/id             #db/id[:db.part/user -100]
+        template-ids (map :db/id templates)
+        tx-data [{:db/id             #db/id[:db.part/user -100]
                   :group/title       title
                   :group/description description
                   :group/template    template-ids
@@ -499,20 +511,19 @@
                   :user/name created-by}]]
     (d/transact (:conn @tx) tx-data)))
 
-(defn transact-plan! [email {:keys [title created-by public? description plan]}]
+(defn transact-plan!
+  "Adds a plan to the database."
+  [{:keys [title created-by public? description plan]}]
   (let [description (if (nil? description) "" description)
         public? (if (nil? public?) true public?)
         tx-days (vec (for [day plan]
-                       (let [template-ids (vec (map #(get-user-template-id email %) day))]
+                       (let [template-ids (vec (map :db/id day))]
                          {:db/id          (d/tempid :db.part/user)
                           :day/completed? false
                           :day/template   (if (= [nil] template-ids)
                                             []
                                             template-ids)})))
-        tx-data [{:db/id      #db/id[:db.part/user -99]
-                  :user/email email
-                  :user/plan  [#db/id[:db.part/user -100]]}
-                 {:db/id            #db/id[:db.part/user -100]
+        tx-data [{:db/id            #db/id[:db.part/user -100]
                   :plan/title       title
                   :plan/description description
                   :plan/public?     public?
@@ -524,14 +535,13 @@
         tx-data (concat tx-data tx-days)]
     (d/transact (:conn @tx) tx-data)))
 
-(defn transact-routine! [email {:keys [name created-by public? description movements]}]
+(defn transact-routine!
+  "Adds a routine to the database."
+  [{:keys [name created-by public? description movements]}]
   (let [description (if (nil? description) "" description)
         public? (if (nil? public?) true public?)
         movement-ids (vec (map #(:db/id (entity-by-movement-name %)) movements))
-        tx-data [{:db/id        #db/id[:db.part/user -99]
-                  :user/email   email
-                  :user/routine [#db/id[:db.part/user -100]]}
-                 {:db/id               #db/id[:db.part/user -100]
+        tx-data [{:db/id               #db/id[:db.part/user -100]
                   :routine/name        name
                   :routine/description description
                   :routine/movement    movement-ids
@@ -541,7 +551,9 @@
                   :user/name created-by}]]
     (d/transact (:conn @tx) tx-data)))
 
-(defn transact-session! [user {:keys [title description parts comment time]}]
+(defn transact-session!
+  "Adds a completed session to the database."
+  [user {:keys [title description parts comment time]}]
   (let [conn (:conn @tx)
         parts (map #(assoc % :movements (vals (:movements %))
                              :db/id (d/tempid :db.part/user)) parts)
@@ -577,7 +589,9 @@
         tx-data (concat session-data part-data movement-data)]
     (d/transact conn tx-data)))
 
-(defn transact-new-user! [email password activation-id]
+(defn transact-new-user!
+  "Adds a new user to the database."
+  [email password activation-id]
   (let [conn (:conn @tx)
         tx-user-data [{:db/id              #db/id[:db.part/user]
                        :user/email         email
@@ -586,7 +600,9 @@
                        :user/activated?    false}]]
     (d/transact conn tx-user-data)))
 
-(defn transact-activated-user! [email]
+(defn transact-activated-user!
+  "Updates a user to activated status."
+  [email]
   (let [conn (:conn @tx)
         tx-user-data [{:db/id                    #db/id[:db.part/user -99]
                        :user/email               email
@@ -600,14 +616,18 @@
                        :setting/receive-email? true}]]
     (d/transact conn tx-user-data)))
 
-(defn transact-subscription-status! [email value]
+(defn transact-subscription-status!
+  "Updates a user subscription status. Sets the valid-subscription? value to true or false."
+  [email value]
   (let [conn (:conn @tx)
         tx-user-data [{:db/id                    #db/id[:db.part/user]
                        :user/email               email
                        :user/valid-subscription? value}]]
     (d/transact conn tx-user-data)))
 
-(defn transact-new-password! [email password]
+(defn transact-new-password!
+  "Change user password."
+  [email password]
   (let [conn (:conn @tx)
         tx-user-data [{:db/id         #db/id[:db.part/user]
                        :user/email    (:user/email email)
@@ -615,7 +635,9 @@
     (d/transact conn tx-user-data)
     "Password changed successfully!"))
 
-(defn transact-username! [email username]
+(defn transact-username!
+  "Change user username."
+  [email username]
   (let [conn (:conn @tx)
         tx-user-data [{:db/id      #db/id[:db.part/user]
                        :user/email email
