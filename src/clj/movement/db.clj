@@ -489,6 +489,7 @@
   "Removes the plan as the users ongoing plan. Logs the date and sets the plan as completed if all the plan days where completed."
   [user-id plan-id]
   (let [conn (:conn @tx)
+        db (:db @tx)
         plan (d/pull db '[*] plan-id)
         days (map #(d/pull db '[*] (:db/id %)) (:plan/day plan))
         all-completed? (every? #(true? (:day/completed? %)) days)

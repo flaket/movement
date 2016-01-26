@@ -28,12 +28,25 @@
        [:div.pure-g
         [:input.pure-u.pure-u-md-3-5 {:type        "range"
                                       :value       @temp-data :min min :max max :step step
-                                      :on-mouse-up #(swap! explore-state assoc :number-of-results @temp-data)
+                                      :on-mouse-up #(do
+                                                     (swap! explore-state assoc :number-of-results @temp-data)
+                                                     (when-let [c (:selected-category @explore-state)]
+                                                       (GET "movements-by-category"
+                                                            {:params        {:n        (:number-of-results @explore-state)
+                                                                             :category c}
+                                                             :handler       (fn [r] (swap! explore-state assoc :movements r))
+                                                             :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})))
                                       :on-change   #(reset! temp-data (-> % .-target .-value))}]
         [:a.pure-u.pure-u-md-1-5 {:style    {:margin-left 5}
                                   :on-click #(do
                                               (reset! temp-data 1000)
-                                              (swap! explore-state assoc :number-of-results 1000))} "all"]]])))
+                                              (swap! explore-state assoc :number-of-results 1000)
+                                              (when-let [c (:selected-category @explore-state)]
+                                                (GET "movements-by-category"
+                                                     {:params        {:n        (:number-of-results @explore-state)
+                                                                      :category c}
+                                                      :handler       (fn [r] (swap! explore-state assoc :movements r))
+                                                      :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})))} "all"]]])))
 
 (defn search-box [{:keys [type target placeholder]}]
   [:input.pure-u {:type        "text"
