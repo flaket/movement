@@ -183,7 +183,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
               "andflak@gmail.com"))
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186046127)
+#_(d/pull db '[*] 17592186046151)
 
 ;; begin-plan!
 #_(let [user-id 17592186045808
@@ -224,8 +224,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                [:db/retract user-id :user/ongoing-plan plan-id]]]
   (d/transact conn tx-data))
 
-#_(d/transact conn [[:db/retract 17592186045494
-                     :movement/category 17592186046023]])
+#_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186045819]])
 
 #_(empty? (d/q '[:find [?u ...]

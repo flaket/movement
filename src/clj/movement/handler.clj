@@ -43,6 +43,10 @@
    :headers {"Content-Type" "application/edn"}
    :body    (pr-str data)})
 
+(defn positions [pred coll]
+  (keep-indexed (fn [idx x]
+                  (when (pred x) idx)) coll))
+
 ;;;;;; login ;;;;;;
 
 (defn md5 [s]
@@ -80,11 +84,15 @@
 
 (defn add-session! [req]
   (let [session (:session (:params req))
-        user (:user (:params req))]
+        user (:user (:params req))
+        last-session-of-the-day? (:last-session? session)]
     (if (nil? user)
       (response {:message "User email lacking from client data" :session session} 400)
       (try
-        (db/transact-session! user session)
+        (do
+          (when last-session-of-the-day?
+            (db/progress-plan! (:plan-id session)))
+          (db/transact-session! user session))
         (catch Exception e
           (error e (str "error transacting session: user: " user " session: " session)))
         (finally (do (update-tx-db!)
@@ -221,9 +229,9 @@
   (try
     (db/begin-plan! user-id plan-id)
     (catch Exception e
-      (response (str "Exception: " e)))
+      (response "An error occured trying to begin this plan."))
     (finally (do (update-tx-db!)
-                 (response "Plan started successfully.")))))
+                 (response "Plan started successfully!")))))
 
 (defn progress-plan! [plan-id]
   (try
@@ -231,7 +239,7 @@
     (catch Exception e
       (response (str "Exception: " e)))
     (finally (do (update-tx-db!)
-                 (response "Plan progressed successfully.")))))
+                 (response "Plan progressed successfully!")))))
 
 (defn end-plan! [user-id plan-id]
   (try
@@ -239,7 +247,55 @@
     (catch Exception e
       (response (str "Exception: " e)))
     (finally (do (update-tx-db!)
-                 (response "Plan ended successfully.")))))
+                 (response "Plan ended successfully!")))))
+
+(defn next-session-from-plan [req]
+  (let [user-entity (db/find-user (:email (:params req)))
+        plan (db/entity-by-id (:db/id (:user/ongoing-plan user-entity)))
+        current-day (db/entity-by-id (:db/id (:plan/current-day plan)))
+        templates (:day/template current-day)
+        ;;todo: group (:day/group current-day)
+
+        current (:plan/current-day plan)
+        days (:plan/day plan)
+        ]
+    ; if finished (current is last day and day is completed): end-plan, return stats
+    (if (and (= current (last days)) (:day/completed? current-day))
+      (do
+        (end-plan! (:db/id user-entity) (:db/id plan))
+        {:title "Plan completed!"
+         :plan-completed? true})
+      (cond
+        ; if no templates today; progress plan and return rest day
+        (nil? templates) (do
+                           (db/progress-plan! (:db/id plan))
+                           (db/update-tx-conn!)
+                           (db/update-tx-db!)
+                           {:title       "A Rest Day"
+                            :description "The plan calls for a rest day. How about playing some sports or going for a hike?"})
+        ; if one template; return session with last-session? flag true
+        (= 1 (count templates)) (let [template (db/entity-by-id (:db/id (first templates)))
+                                      template (assoc template :plan-id (:db/id plan) :last-session? true)]
+                                  (db/create-session template))
+        ; else; it gets tricky..
+        :else (let [last-session (atom false)
+              last-planned-session (last (filter #(= (:db/id plan)
+                                                     (:db/id (:session/plan (db/entity-by-id (:db/id %)))))
+                                                 (:user/session user-entity)))
+              template-id (if (nil? last-planned-session)
+                            (first templates)
+                            (let [s (:session/title (db/entity-by-id (:db/id last-planned-session)))
+                                  pos (vec (positions #{s} (map (fn [t] (:template/title (db/entity-by-id (:db/id t)))) templates)))]
+                              (if-not (empty? pos)
+                                (do
+                                  (when (= (get templates (first pos)) (last templates))
+                                    (reset! last-session true))
+                                  (get templates (inc (first pos))))
+                                (first templates))))
+              template (db/entity-by-id (:db/id template-id))
+              template (assoc template :plan-id (:db/id plan)
+                                       :last-session? @last-session)]
+          (db/create-session template))))))
 
 (defn activate-user! [id]
   (let [user (db/entity-by-lookup-ref :user/activation-id id)]
@@ -366,7 +422,7 @@
                                      (assoc-plan! req)))
            (POST "/begin-plan" req (if-not (authenticated? req)
                                      (throw-unauthorized)
-                                     (let [user-id (db/find-user (:email (:params req)))
+                                     (let [user-id (:db/id (db/find-user (:email (:params req))))
                                            plan-id (:id (:params req))]
                                        (begin-plan! user-id plan-id))))
            (POST "/progress-plan" req (if-not (authenticated? req)
@@ -374,7 +430,7 @@
                                      (progress-plan! (:id (:params req)))))
            (POST "/end-plan" req (if-not (authenticated? req)
                                      (throw-unauthorized)
-                                     (let [user-id (db/find-user (:email (:params req)))
+                                     (let [user-id (:db/id (db/find-user (:email (:params req))))
                                            plan-id (:id (:params req))]
                                        (end-plan! user-id plan-id))))
            (GET "/user" req (if-not (authenticated? req)
@@ -393,6 +449,9 @@
                                   (throw-unauthorized)
                                   (let [template (db/entity-by-id (read-string (:template-id (:params req))))]
                                     (response (db/create-session template)))))
+           (GET "/next-session-from-plan" req (if-not (authenticated? req)
+                                                (throw-unauthorized)
+                                                (response (next-session-from-plan req))))
            (GET "/templates" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (response (db/all-templates (str (:user (:params req)))))))
@@ -413,6 +472,9 @@
            (GET "/plans" req (if-not (authenticated? req)
                                (throw-unauthorized)
                                (response (db/all-plans (str (:email (:params req)))))))
+           (GET "/ongoing-plan" req (if-not (authenticated? req)
+                                     (throw-unauthorized)
+                                     (response (db/ongoing-plan (str (:email (:params req)))))))
            (GET "/routine" req (if-not (authenticated? req)
                                  (throw-unauthorized)
                                  (let [routine (:routine (:params req))

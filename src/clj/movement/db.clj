@@ -125,6 +125,15 @@
                 (:db @tx)
                 email)))
 
+(defn ongoing-plan [email]
+  (ffirst (d/q '[:find (pull ?p [*])
+                  :in $ ?email
+                  :where
+                  [?e :user/email ?email]
+                  [?e :user/ongoing-plan ?p]]
+                (:db @tx)
+                email)))
+
 (defn all-routines [email]
   (flatten (d/q '[:find (pull ?r [*])
                   :in $ ?email
@@ -161,7 +170,9 @@
     {:title       (:template/title template)
      :description (:template/description template)
      :background  (:template/background template)
-     :parts       parts}))
+     :parts       parts
+     :last-session? (:last-session? template)
+     :plan-id     (:plan-id template)}))
 
 (defn random-template-from-group [email group]
   (let [db (:db @tx)
@@ -481,8 +492,10 @@
         day-id (:db/id current-day)
         current-day-pos (first (positions #{current-day} days))
         new-current-day (:db/id (get days (inc current-day-pos)))
-        tx-data [[:db/add day-id :day/completed? true]
-                 [:db/add plan-id :plan/current-day new-current-day]]]
+        tx-data (if (nil? new-current-day)
+                  [[:db/add day-id :day/completed? true]]
+                  [[:db/add day-id :day/completed? true]
+                   [:db/add plan-id :plan/current-day new-current-day]])]
     (d/transact conn tx-data)))
 
 (defn end-plan!
@@ -595,7 +608,7 @@
 
 (defn transact-session!
   "Adds a completed session to the database."
-  [user {:keys [title description parts comment time]}]
+  [user {:keys [title description parts comment time plan-id]}]
   (let [conn (:conn @tx)
         parts (map #(assoc % :movements (vals (:movements %))
                              :db/id (d/tempid :db.part/user)) parts)
@@ -613,7 +626,8 @@
                        :session/comment     comment
                        :session/timestamp   (Date.)
                        :session/part        (vec (map :db/id parts))
-                       :session/time        time}]
+                       :session/time        time
+                       :session/plan        plan-id}]
         part-data (vec (for [p parts]
                          {:db/id                 (:db/id p)
                           :part/title            (:title p)
@@ -628,7 +642,8 @@
                                             :duration             :movement/duration
                                             :id                   :movement/position})
                            movement-data)
-        tx-data (concat session-data part-data movement-data)]
+        tx-data (concat session-data part-data movement-data)
+        tx-data (map #(into {} (remove (comp nil? second) %)) tx-data)]
     (d/transact conn tx-data)))
 
 (defn transact-new-user!

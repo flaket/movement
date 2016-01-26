@@ -9,7 +9,7 @@
     [cljs.reader :as reader]
     [goog.events :as events]
     [clojure.string :as str]
-    [movement.util :refer [handler-fn positions GET POST get-plans
+    [movement.util :refer [handler-fn positions GET POST get-plans get-ongoing-plan
                            get-stored-sessions get-equipment get-groups]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]
@@ -306,8 +306,18 @@
                                     :style    {:margin "0 0 5px 5px"}} (:group/title group)])
 
 (defn plan-component [plan]
-  [:a.pure-u.button.button-primary {:on-click #()
-                                    :style    {:margin "0 0 5px 5px"}} (:plan/title plan)])
+  [:div.pure-g {:style {:margin-bottom 10 :padding-bottom 10 :border-bottom "dotted 1px"}}
+   [:div.pure-u-1-2
+    [:div.pure-g
+     [:p.pure-u-1 (:plan/title plan)]]
+    [:div.pure-g
+     [:span.pure-u-1 (str (count (:plan/day plan)) " day plan")]]]
+   [:p.pure-u.button.button-primary
+    {:on-click #(POST "begin-plan"
+                      {:params        {:email (session/get :email)
+                                       :id    (:db/id plan)}
+                       :handler       (fn [r] (session/put! :ongoing-plan plan))
+                       :error-handler (fn [r] (pr r))})} "Begin plan"]])
 
 (defn blank-state-component []
   (let [templates-showing? (atom false)
@@ -321,10 +331,15 @@
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-8]
         [:div.pure-u.pure-u-md-3-4
-         (when-not (nil? (session/get :ongoing-plan))
+         (when-let [plan (session/get :ongoing-plan)]
            [:div.pure-g
-            [:div.pure-u-1.button {:style    {:margin-bottom 5}
-                                   :on-click #()} (str "Continue plan " (:plan/title (session/get :ongoing-plan)))]])
+            [:div.pure-u-1.button
+             {:style    {:margin-bottom 5}
+              :on-click #(GET "next-session-from-plan"
+                              {:params  {:email (session/get :email)}
+                               :handler add-session-handler
+                               :error-handler (fn [r] (pr "error getting session data from server."))})}
+             (str "Continue " (:plan/title plan))]])
          [:div.pure-g
           [:div.pure-u-1.button.button-primary {:style    {:margin-bottom 5}
                                                 :on-click pick-random-template} "From random template"]]
@@ -356,7 +371,8 @@
             (doall
               (for [e (session/get :groups)]
                 ^{:key (:db/id e)} (group-component e)))])
-         (when (< 0 (count (session/get :plans)))
+         (when (and (< 0 (count (session/get :plans)))
+                    (nil? (session/get :ongoing-plan)))
            [:div.pure-g
             [:div.pure-u-1.button {:style    {:margin-bottom 5}
                                    :on-click #(handler-fn
@@ -366,11 +382,12 @@
                                                  (when templates-showing?
                                                    (reset! templates-showing? false))
                                                  (reset! plans-showing? (not @plans-showing?))))} "Begin a new plan"]])
-         (when @plans-showing?
+         (when (and @plans-showing? (nil? (session/get :ongoing-plan)))
            [:div.pure-g.animated.fadeIn {:style {:margin "20px 0 20px 0"}}
-            (doall
-              (for [e (session/get :plans)]
-                ^{:key (:db/id e)} (plan-component e)))])]
+            [:div.pure-u-1
+             (doall
+               (for [e (session/get :plans)]
+                 ^{:key (:db/id e)} (plan-component e)))]])]
         [:div.pure-u.pure-u-md-1-8]]])))
 
 (defn top-menu-component []
@@ -479,6 +496,8 @@
                               sec (session/get-in [:movement-session :time :seconds])
                               sec (if (nil? sec) 0 (int (reader/read-string sec)))]
                          (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
+                         #_(pr (str "last-session? " (:last-session? (session/get :movement-session))
+                                  " plan-id: " (:plan-id (session/get :movement-session))))
                          (POST "store-session"
                                {:params        {:session (session/get :movement-session)
                                                 :user    (session/get :user)}
@@ -495,6 +514,21 @@
             "Finish Movement Session"]
            [:div.pure-u.pure-u-md-1-5]])))))
 
+(defn plan-completed []
+  [:div
+   [top-menu-component]
+   [:div {:style {:margin-top 50}}
+    [:div.pure-g
+     [:div.pure-u.pure-u-md-1-5]
+     [:h1.pure-u-1.pure-u-md-3-5 "Plan completed!"]
+     [:p.pure-u.pure-u-md-1-5]]
+    [:div.pure-g
+     [:div.pure-u.pure-u-md-1-9]
+     [:p.pure-u-1.pure-u-md-7-9.subtitle "Congratulations on completing your plan!
+              All the data from your training is stored in the database.
+              We're hard at work to create a statistics page where you soon can explore the details of your training."]
+     [:div.pure-u.pure-u-md-1-9]]]])
+
 (defn generator-component []
   (let []
     (fn []
@@ -502,13 +536,19 @@
        [menu-component]
        [:div.content {:style {:margin-top "20px"}}
         (if-let [session (session/get :movement-session)]
-          [:div
-           [top-menu-component]
-           [header-component session]
-           (let [parts (:parts session)]
-             (doall
-               (for [i (range (count parts))]
-                 ^{:key i} [part-component (get parts i) i])))
-           [time-comment-component]
-           [finish-session-component]]
+          (if (:plan-completed? session)
+            (do
+              (get-ongoing-plan)
+              (plan-completed))
+            [:div
+             [top-menu-component]
+             [header-component session]
+             (let [parts (:parts session)]
+               (doall
+                 (for [i (range (count parts))]
+                   ^{:key i} [part-component (get parts i) i])))
+             (when-not (= "A Rest Day" (:title session))
+               [:div
+                [time-comment-component]
+                [finish-session-component]])])
           [blank-state-component])]])))
