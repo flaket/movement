@@ -15,7 +15,7 @@ html {
 
 body {
     background-color: #fffff8;
-    color: #1a1a1a;
+    color: #111111;
 }
 
 .pure-img-responsive {
@@ -85,17 +85,17 @@ body {
 }
 
 .home-menu .pure-menu-heading {
-    color: #1a1a1a;
+    color: #111;
     font-weight: 400;
     font-size: 140%;
 }
 
 .home-menu .pure-menu-selected a {
-    color: #1a1a1a;
+    color: #111;
 }
 
 .home-menu a {
-    color: #1a1a1a;
+    color: #111;
 }
 .home-menu li a:hover,
 .home-menu li a:focus {
@@ -208,6 +208,7 @@ body {
 #footer-links a {
     color: rgb(200, 200, 200);
     margin-right: 7px;
+    text-decoration: none;
 }
 
 #footer-links a:hover {
@@ -238,6 +239,7 @@ a.pure-button-primary {
     margin-top: 15px;
     border-radius: 15px;
     font-size: 140%;
+    text-decoration: none;
 }
 
 /*

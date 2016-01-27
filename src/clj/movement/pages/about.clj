@@ -23,23 +23,16 @@
      (header)
      [:div.l-content
       [:div.information.pure-g
-       [:div.pure-u-1.pure-u-md-1-2
+       [:div.pure-u-1
         [:div.l-box
-         [:h3.information-head "30 day free trial"]
-         [:p "After registering your credit card you have access for 30 days without any fees."]]]
-       [:div.pure-u-1.pure-u-md-1-2
-        [:div.l-box
-         [:h3.information-head "Cancel your plan anytime"]
-         [:p "You are free to cancel your subscription at any time. If you cancel within the first 30 days,
-         there will be no charges to your credit card."]]]]
+         [:h3.information-head "About"]
+         [:p "Movement Session is an online tool for generating brand, spanking new workouts and logging your progress."]]]]
       [:div.information.pure-g
-       [:div.pure-u-1.pure-u-md-1-2
+       [:div.pure-u.pure-u-md-1-5
         [:div.l-box
-         [:h3.information-head "30 day free trial"]
-         [:p "After registering your credit card you have access for 30 days without any fees."]]]
-       [:div.pure-u-1.pure-u-md-1-2
+         [:img {:width 150 :height 150 :src "images/static-air-baby.png"}]]]
+       [:div.pure-u.pure-u-md-4-5
         [:div.l-box
-         [:h3.information-head "Cancel your plan anytime"]
-         [:p "You are free to cancel your subscription at any time. If you cancel within the first 30 days,
-         there will be no charges to your credit card."]]]]]
-     (footer-2)]))
+         [:p "Movement Session is created by me, Andreas Flakstad. I'm a software developer and small business owner from Norway."]
+         [:p "You can contact me at admin (at) movementsession.com, or through Twitter at @andreasflakstad."]]]]]
+     (footer)]))

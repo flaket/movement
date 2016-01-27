@@ -55,29 +55,21 @@
 (defn footer []
   [:div#footer.l-box.is-center
    [:div#footer-links.pure-g
-    [:div.pure-u.pure-u-md-1-3]
-    [:div.pure-u.pure-u-md-1-12
-     [:a {:title  "About Movement Session"
-          :href   "/about"
-          :target ""} "About"]]
-    [:div.pure-u.pure-u-md-1-12
-     [:a {:title  "Contact Us"
-          :href   "/contact"
-          :target ""} "Contact"]]
-    [:div.pure-u.pure-u-md-1-12
-     [:a {:title  "Read our Blog"
-          :href   "/blog"
-          :target ""} "Blog"]]
-    [:div.pure-u.pure-u-md-1-12
-     [:a {:title  "Terms and agreement"
-          :href   "/terms"
-          :target ""} "Terms/Privacy"]]
-    [:div.pure-u.pure-u-md-1-3]]
+    [:div.pure-u.pure-u-md-1-4]
+    [:div.pure-u.pure-u-md-1-2
+     [:div.pure-g
+      [:div.pure-u-1-5 [:a {:title "About Movement Session" :href "/about" :target ""} "About"]]
+      [:div.pure-u-1-5 [:a {:title "Contact Us" :href "/contact" :target ""} "Contact"]]
+      [:div.pure-u-1-5 [:a {:title "Read our Blog" :href "/blog" :target ""} "Blog"]]
+      [:div.pure-u-1-5 [:a {:title "Terms and agreement" :href "/terms" :target ""} "Terms/Privacy"]]
+      [:div.pure-u-1-5 [:a {:title "Follow Movement Session on Twitter" :href "https://twitter.com/SessionMovement"
+                            :target "" :class "twitter-follow-button" :data-show-count "false"} "@SessionMovement"]]]]
+    [:div.pure-u.pure-u-md-1-4]]
    [:div#footer-logo.pure-g
     [:div.pure-u.pure-u-md-1-3]
     [:div.pure-u.pure-u-md-1-3 [:img {:width 75 :height 75 :src "images/static-air-baby.png"}]]
     [:div.pure-u.pure-u-md-1-3]]
    [:div#footer-copyright.pure-g
     [:div.pure-u.pure-u-md-1-3]
-    [:div.pure-u.pure-u-md-1-3 [:i.fa.fa-copyright] "2015 Movement Session"]
+    [:div.pure-u.pure-u-md-1-3 [:i.fa.fa-copyright] "2016 Movement Session"]
     [:div.pure-u.pure-u-md-1-3]]])

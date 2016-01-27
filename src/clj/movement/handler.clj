@@ -363,7 +363,6 @@
            (GET "/about" [] (about-page))
            (GET "/tour" [] (tour-page))
            (GET "/pricing" [] (pricing-page))
-           (GET "/signup" [] (signup-page))
            (GET "/activate/:id" [id] (do
                                        (when (nil? (:conn @tx))
                                          (update-tx-conn!))

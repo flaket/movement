@@ -2,24 +2,8 @@
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
-            [movement.pages.components :refer [header footer-2]]))
-
-(defn signup-form []
-  [:form.pure-form.pure-form-stacked
-   {:method "POST"
-    :action "/signup"}
-   [:fieldset
-    [:input#email {:type        "email"
-                   :name        "email"
-                   :required    "required"
-                   :placeholder "Your Email"}]
-    [:input#password {:type        "password"
-                      :name        "password"
-                      :placeholder "Your Password"
-                      :required    "required"}]
-    [:input.button-primary {:type  "submit"
-                              :value "Sign Up"}]
-    (anti-forgery-field)]])
+            [movement.pages.components :refer [header footer footer-2]]
+            [movement.pages.signup :refer [signup-form]]))
 
 (defn pricing-page [& error-message]
   (html5
@@ -41,14 +25,29 @@
      (header)
      [:div.l-content
       [:div.pricing-tables.pure-g
-       [:div.pure-u-1.pure-u-md-1-3]
-       [:div.pure-u-1.pure-u-md-1-3
+       [:div.pure-u.pure-u-md-1-3]
+       [:div.pure-u.pure-u-md-1-3
         [:div.pricing-table.pricing-table-biz
          [:div.pricing-table-header
           [:h2 ""]
-          [:span.pricing-table-price "$8" [:span "per month"]]]
-         #_[:ul.pricing-table-list
-          [:li]]]
+          [:span.pricing-table-price "$8" [:span "per month"]]]]]
+       [:div.pure-u.pure-u-md-1-3]]
+      [:div.information.pure-g
+       [:div.pure-u.pure-u-md-1-3
+        [:div.l-box
+         [:h3.information-head "30 day free trial"]
+         [:p "After registering your credit card you have access for 30 days without any fees."]]]
+       [:div.pure-u.pure-u-md-1-3
+        [:div.l-box
+         [:h3.information-head "Cancel your plan anytime"]
+         [:p "If you cancel within the first 30 days there will be no charges to your credit card."]]]
+       [:div.pure-u.pure-u-md-1-3
+        [:div.l-box
+         [:h3.information-head "Customer support"]
+         [:p "We will get back to you within 24 hours."]]]]
+      [:div.information.pure-g
+       [:div.pure-u.pure-u-md-1-3]
+       [:div.pure-u.pure-u-md-1-3
         [:div
          (when error-message
            [:div
@@ -58,20 +57,8 @@
              [:a.pure-u-1.button.button-secondary
               {:title  "Launch app"
                :href   "/app"
-               :target ""} "Launch app & Log in"]]])
-         (signup-form)]]
-       [:div.pure-u-1.pure-u-md-1-3]]
-      [:div.information.pure-g
-       [:div.pure-u-1.pure-u-md-1-3
-        [:div.l-box
-         [:h3.information-head "30 day free trial"]
-         [:p "After registering your credit card you have access for 30 days without any fees."]]]
-       [:div.pure-u-1.pure-u-md-1-3
-        [:div.l-box
-         [:h3.information-head "Cancel your plan anytime"]
-         [:p "If you cancel within the first 30 days there will be no charges to your credit card."]]]
-       [:div.pure-u-1.pure-u-md-1-3
-        [:div.l-box
-         [:h3.information-head "Customer support"]
-         [:p "We will get back to you within 24 hours."]]]]]
+               :target ""} "Launch app & Log in"]]])]
+        (signup-form)]
+       [:div.pure-u.pure-u-md-1-3]]
+      ]
      (footer-2)]))

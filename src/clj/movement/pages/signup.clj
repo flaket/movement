@@ -18,8 +18,8 @@
                       :name        "password"
                       :placeholder "Your Password"
                       :required    "required"}]
-    [:input.button-secondary {:type  "submit"
-             :value "Create User"}]
+    [:input.button-primary {:type  "submit"
+                            :value "Sign Up"}]
     (anti-forgery-field)]])
 
 (defn fast-spring-store [ref]
@@ -71,7 +71,7 @@
         [:div.l-box
          ]]
        [:div.pure-u-1.pure-u-md-1-3]]]
-     (footer-2)]))
+     (footer)]))
 
 (defn signup-page [& error-message]
   (html5
@@ -133,8 +133,10 @@
      (header)
      [:div.l-content
       [:div.information.pure-g
-       [:div.pure-u-1
+       [:div.pure-u.pure-u-md-1-5]
+       [:div.pure-u.pure-u-md-3-5
         [:div.l-box
          [:h3.information-head "Thanks!"]
-         [:p message]]]]]
+         [:p message]]]
+       [:div.pure-u.pure-u-md-1-5]]]
      (footer)]))
