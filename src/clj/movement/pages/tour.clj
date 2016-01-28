@@ -111,10 +111,10 @@
         [:p [:img {:src "explore-templates.png" :height "462" :width "595"}]]]
        [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
-         [:p.pure-u-1 "Templates, groups and plans can be found by searching for words or by categories used. You might for example
-         search for templates related to climbing by searching for 'climbing' in the title and description, and uses the category 'Climbing'"]]
+         [:p.pure-u-1 "Templates, groups and plans can be found by searching for words or by categories used. For example, you might
+         search for templates related to climbing by searching for the word 'climbing' in the title and description, or by setting the category to 'Climbing'"]]
         [:div.pure-g
-         [:p.pure-u-1 "You can also see content you have created, content movementsession has created and the content
+         [:p.pure-u-1 "You can always find content you have created, content movementsession has created and the content
          that is currently linked to your account."]]]]
       [:div.pure-g
        [:p.pure-u-1.is-center

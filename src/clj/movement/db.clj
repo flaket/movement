@@ -424,7 +424,23 @@
 
 ;;;;;;;;;;; TRANSACTIONS ;;;;;;;;;;;;;
 
-;; need new dissoc-functions. Update user info by creating a new transaction of templates/groups/plans.
+(defn add-standard-templates-to-user!
+  ""
+  [email]
+  (let [db (:db @tx)
+        conn (:conn @tx)
+        templates (flatten (d/q '[:find (pull ?t [*])
+                                    :in $ ?name
+                                    :where
+                                    [?t :template/created-by ?u]
+                                    [?u :user/name ?name]]
+                                  db
+                                  "movementsession"))
+        tx-data [{:db/id         #db/id[:db.part/user -99]
+                  :user/email    email
+                  :user/template (vec (map :db/id templates))}]]
+    (d/transact conn (concat tx-data templates))))
+
 (defn retract-entity! [id]
   (d/transact (:conn @tx) [[:db.fn/retractEntity id]]))
 

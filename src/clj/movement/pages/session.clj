@@ -11,10 +11,10 @@
 (defn time-component [time]
   (let [minutes (int (/ time 60))
         seconds (mod time 60)]
-    [:div (str minutes ":" seconds)]))
+    [:p (str minutes ":" seconds)]))
 
 (defn comment-component [comment]
-  [:div comment])
+  [:p comment])
 
 (defn header-menu []
   (html
@@ -123,7 +123,7 @@
        "/css/site.css")]
     [:body
      [:div
-      (header)
+      #_(header)
       [:div.content.is-center
        (header-component session)
        (doall

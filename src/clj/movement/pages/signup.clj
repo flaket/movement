@@ -45,15 +45,6 @@
        "/css/pricing.css")]
     [:body
      (header)
-     #_[:div.content.is-center
-      [:div.pure-g
-       [:div.pure-u.pure-u-md-2-5]
-       [:div.pure-u.pure-u-md-1-5 message]
-       [:div.pure-u.pure-u-md-2-5]]
-      [:div.pure-g
-       [:div.pure-u.pure-u-md-2-5]
-       [:div.pure-u.pure-u-md-1-5 (fast-spring-store ref)]
-       [:div.pure-u.pure-u-md-2-5]]]
      [:div.l-content
       [:div.information.pure-g
        [:div.pure-u-1.pure-u-md-1-5]

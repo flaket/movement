@@ -125,8 +125,7 @@
 #_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
 Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",
 
-#_(let [
-      tx-user-data [{:db/id                    #db/id[:db.part/user]
+#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
                      :user/email               "chrhage@gmail.com"
                      :user/valid-subscription? true}]]
   (d/transact conn tx-user-data))
@@ -137,6 +136,11 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                      :user/password (hashers/encrypt "Dg86AS721Gas1")}]]
   (d/transact conn tx-user-data))
 
+#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
+                     :user/email               "andreas.flakstad@gmail.com"
+                     :user/valid-subscription? true}]]
+  (d/transact conn tx-user-data))
+
 #_(let []
   (empty? (d/q '[:find [?username ...]
                  :in $ ?username
@@ -145,11 +149,10 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                db
                "flaket")))
 
-#_(d/q '[:find (pull ?s [*])
-         :where
-         [?u :user/email ?e]
-         [?u :user/plan ?s]]
-       db)
+#_(flatten (d/q '[:find (pull ?u [*])
+                  :where
+                  [?u :user/email ?e]]
+                db))
 
 #_(d/q '[:find (pull ?u [*])
        :where [?u :user/email ?n]]
@@ -167,12 +170,12 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
         template-ids (map (pull ))])
 
 #_(flatten (d/q '[:find (pull ?t [*])
-                :in $ ?email
+                :in $ ?name
                 :where
-                [?t :group/created-by ?u]
-                [?u :user/email ?email]]
+                [?t :template/created-by ?u]
+                [?u :user/name ?name]]
               db
-              "andflak@gmail.com"))
+              "movementsession"))
 
 #_(flatten (d/q '[:find (pull ?t [*])
                 :in $ ?email
@@ -183,7 +186,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
               "andflak@gmail.com"))
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186046151)
+#_(d/pull db '[*] 17592186046002)
 
 ;; begin-plan!
 #_(let [user-id 17592186045808
@@ -225,7 +228,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
   (d/transact conn tx-data))
 
 #_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045819]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186046002]])
 
 #_(empty? (d/q '[:find [?u ...]
                  :in $

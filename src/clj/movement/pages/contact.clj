@@ -23,11 +23,8 @@
      (header)
      [:div.l-content
       [:div.information.pure-g
-       [:div.pure-u.pure-u-md-1-5]
-       [:div.pure-u.pure-u-md-3-5
+       [:div.pure-u-1.is-center
         [:div.pure-g
-         [:p.pure-u-1 "For support questions or feature suggestions, send an email to"]]
-        [:div.pure-g
-         [:p.pure-u-1 "support (at) movementsession.com"]]]
-       [:div.pure-u.pure-u-md-1-5]]]
+         [:p.pure-u-1 "For support questions or feature suggestions, send an email to"]
+         [:p.pure-u-1 "support (at) movementsession.com"]]]]]
      (footer)]))

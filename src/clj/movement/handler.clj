@@ -302,7 +302,7 @@
     (if-not (nil? (:db/id user))
       (let []
         (db/transact-activated-user! (:user/email user))
-        #_(add-standard-templates-to-user (:user/email user))
+        (db/add-standard-templates-to-user! (:user/email user))
         {:status  302
          :headers {"Location" (str "/activated/" (:user/email user))}
          :body    ""})
