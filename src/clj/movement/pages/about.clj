@@ -33,6 +33,6 @@
          [:img {:width 150 :height 150 :src "images/static-air-baby.png"}]]]
        [:div.pure-u.pure-u-md-4-5
         [:div.l-box
-         [:p "Movement Session is created by me, Andreas Flakstad. I'm a software developer and small business owner from Norway."]
-         [:p "You can contact me at admin (at) movementsession.com, or through Twitter at @andreasflakstad."]]]]]
+         [:p "Movement Session was created by me, Andreas Flakstad. I'm a software engineer and small business owner from Trondheim, Norway."]
+         [:p "You can contact me at admin (at) movementsession.com, or reach me through Twitter @AndreasFlakstad."]]]]]
      (footer)]))
