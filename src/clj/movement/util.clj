@@ -67,6 +67,12 @@
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
 
+#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
+                     :user/email               "andflak@gmail.com"
+                       :user/name "andreasflakstad"
+                     :user/valid-subscription? true}]]
+  (d/transact conn tx-user-data))
+
 ;; Get the database value.
 #_(def db (d/db conn))
 
