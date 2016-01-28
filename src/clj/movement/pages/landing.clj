@@ -14,6 +14,10 @@
                            :target ""} "Movement Session"]
     [:ul.pure-menu-list
      [:li.pure-menu-item
+      [:a.pure-menu-link {:title  "Home"
+                          :href   "/"
+                          :target ""} "Home"]]
+     [:li.pure-menu-item
       [:a.pure-menu-link {:title  "Tour"
                           :href   "/tour"
                           :target ""} "Tour"]]
@@ -22,80 +26,76 @@
                           :href   "/pricing"
                           :target ""} "Pricing"]]
      [:li.pure-menu-item
-      [:a.pure-menu-link {:title  "Log in"
+      [:a.pure-menu-link {:title  "Sign in"
                           :href   "/app"
-                          :target ""} "Log in"]]]]])
+                          :target ""} "Sign In"]]]]])
 
-(defn prolog []
+(defn splash []
   [:div.splash-container
    [:div.splash
     [:h1.splash-head.animated.fadeInDown "Plan less, move more"]
-    [:p.splash-subhead.animated.fadeInDown "Stop searching for and creating static training programs.
-      Let Movement Session inspire you to learn new and challenging ways of moving your body."]
-    [:p.animated.fadeInDown
+    [:p.splash-subhead.animated.fadeInDown "Spend less time searching for and creating static training programs
+      and spend more time moving your body."]
+    [:div.animated.fadeInDown
      [:a.pure-button.pure-button-primary {:title  "Sign Up"
                                           :href   "/pricing"
                                           :target ""} "Sign Up"]]]])
 
 (defn sell []
   [:div#sell.content
-   [:h2.content-head.is-center "Movement Session"]
+   [:div.pure-g [:p.pure-u-1 "
+   Working out. So many ways of moving the body, so little time.
+   "]]
+   [:div.pure-g [:p.pure-u-1 "
+   Maybe you spend a lot of time pondering what to do each time you go to the gym or work out in your back yard.
+   "]]
+   [:div.pure-g [:p.pure-u-1 [:b "
+   You know a lot of movements, but have trouble recalling them all and often end up doing the same things as yesterday.
+   "]]]
+   [:div.pure-g [:p.pure-u-1 "
+   If that's the case, you're going to love Movement Session.
+   "]]
+   [:div.pure-g [:p.pure-u-1 "
+   With Movement Session you can create or find templates that define the structure of the workout. When it comes time to move
+   you will get a generated workout session from this template. You can stop roaming the internet searching for static workout plans,
+   and instead generate thousands of unique and beautifully presented sessions.
+   "]]
    [:div.pure-g
-    [:div.pure-u.pure-u-lg-1-2
-     [:p "Movement Session is a workout generator and a logging tool designed to help you move more,
-     learn new skills, be healthier and have fun in the process."]]
-    [:div.pure-u.pure-u-lg-1-2
-     [:img.pure-u {:src "movement-cards.png" :height "500" :width "500"}]]]])
-
-(defn benefits []
-  [:div.content
-   [:h2.content-head.is-center "Benefits"]
+    [:div.pure-u-1
+     [:img {:src "old-style-to-new.png" :height "1200" :width "800"}]]]
+   [:div.pure-g [:p.pure-u-1 "
+   At this time there are more than 300 movements in the database. We have created the database with a focus on bodyweight exercises
+    typically seen in gymnastics and calisthenics. There are also some weighted exercises related to crossfit and olympic lifting.
+   We want the Movement Session database to grow large and to encompass all sorts of varied movements and activities. Therefore we're exploring
+    many disciplines, including gymnastics, calisthenics, crossfit, olympic lifting, parkour,
+     yoga, dance, martial arts and other sports. We will be adding ten new movements every week.
+   "]]
    [:div.pure-g
-    [:div.l-box.pure-u.pure-u-md-1-3
-     [:h3.content-subhead [:i.fa.fa-diamond] "Unique sessions"]
-     [:p "Generate countless unique training sessions, either fully planned,
-           randomly generated or a suitable combination of the two."]]
-    [:div.l-box.pure-u.pure-u-md-1-3
-     [:h3.content-subhead [:i.fa.fa-random] "Refresh movements"]
-     [:p "Your workout specifies that you perform an seemingly impossible exercise?
-       No problem, refresh the movement with an easier variation or a totally different exercise."]]
-    [:div.l-box.pure-u.pure-u-md-1-3
-     [:h3.content-subhead [:i.fa.fa-share-alt] "Log & Share"]
-     [:p "Log your sessions with repetitions, sets, time taken and your own comments.
-       View logged sessions later and share them with others."]]]])
-
-(defn pricing []
-  [:div.ribbon
-   [:div.pure-g.content-head-ribbon
-    [:div.l-box.pure-u.pure-u-md-1-4]
-    [:div.l-box.pure-u.pure-u-md-1-4
-     [:h3 "30 day free trial"]]
-    [:div.l-box.pure-u.pure-u-md-1-4
-     [:h3 "$10 monthly subscription"]]
-    [:div.l-box.pure-u.pure-u-md-1-4]]
-   [:div.pure-g.content-head-ribbon
-    [:div.l-box.pure-u.pure-u-md-1-4]
-    [:div.l-box.pure-u.pure-u-md-1-4
-     [:h3 "30 day refund guarantee"]]
-    [:div.l-box.pure-u.pure-u-md-1-4]
-    [:div.l-box.pure-u.pure-u-md-1-4]]])
+    [:div.pure-u.pure-u-lg-1-4]
+    [:div.pure-u
+     [:img {:src "movement-cards.png" :height "500" :width "500"}]]]
+   [:div.pure-g
+    [:div.pure-u-1
+     [:div.pure-g
+      [:p.pure-u.pure-u-md-1-3.is-center [:b "Generate"]]
+      [:p.pure-u.pure-u-md-1-3.is-center [:b "Swap"]]
+      [:p.pure-u.pure-u-md-1-3.is-center [:b "Log & Share"]]]
+     [:div.pure-g
+      [:p.pure-u.pure-u-md-1-3 "Create your own unique sessions and workout plans or explore what others have created. Find sessions and workout plans to help reach your movement goals."]
+      [:p.pure-u.pure-u-md-1-3
+       "Adjust the difficulty of a workout by swapping exercises with easier or harder variations."]
+      [:p.pure-u.pure-u-md-1-3 "Log your workouts with rich data, view past sessions and share sessions with your friends"]]]]])
 
 (defn epilog []
   [:div#epilog.content
    [:h2.content-head.is-center "So, are you ready to start moving more?"]
    [:div.pure-g
-    [:div.pure-u.pure-u-md-1-4]
-    [:div.pure-u.pure-u-md-1-4
-     [:p [:a.pure-button-primary
-          {:title  "Sign Up"
-           :href   "/pricing"
-           :target ""} "Sign Up"]]]
-    [:div.pure-u.pure-u-md-1-4
-     [:p [:a
-          {:title  "Take a tour"
-           :href   "/tour"
-           :target ""} "Or learn more"]]]
-    [:div.pure-u.pure-u-md-1-4]]])
+    [:div.pure-u.pure-u-md-1-12.pure-u-lg-1-4]
+    [:p.pure-u.pure-u-md-1-3.pure-u-lg-1-4
+     [:a.pure-button-primary {:title  "Sign Up" :href   "/pricing" :target ""} "Sign Up"]]
+    [:p.pure-u.pure-u-md-1-3.pure-u-lg-1-4
+     [:a {:title  "Take a tour" :href   "/tour" :target ""} "Or take a tour"]]
+    [:div.pure-u.pure-u-md-1-12.pure-u-lg-1-4]]])
 
 (defn landing-page []
   (html5
@@ -124,11 +124,9 @@
     [:body
      [:div
       (landing-header)
-      (prolog)
+      (splash)
       [:div.content-wrapper
        (sell)
-       (benefits)
-       #_(pricing)
        (epilog)
        (footer)]]]))
 

@@ -25,13 +25,13 @@
      (header)
      [:div.l-content
       [:div.pricing-tables.pure-g
-       [:div.pure-u.pure-u-md-1-3]
-       [:div.pure-u.pure-u-md-1-3
+       [:div.pure-u-1-12.pure-u-md-1-3]
+       [:div.pure-u-5-6.pure-u-md-1-3
         [:div.pricing-table.pricing-table-biz
          [:div.pricing-table-header
           [:h2 ""]
           [:span.pricing-table-price "$8" [:span "per month"]]]]]
-       [:div.pure-u.pure-u-md-1-3]]
+       [:div.pure-u-1-12.pure-u-md-1-3]]
       [:div.information.pure-g
        [:div.pure-u.pure-u-md-1-3
         [:div.l-box
@@ -46,8 +46,8 @@
          [:h3.information-head "Customer support"]
          [:p "We will get back to you within 24 hours."]]]]
       [:div.information.pure-g
-       [:div.pure-u.pure-u-md-1-3]
-       [:div.pure-u.pure-u-md-1-3
+       [:div.pure-u-1-12.pure-u-md-1-5]
+       [:div.pure-u-5-6.pure-u-md-3-5
         [:div
          (when error-message
            [:div
@@ -59,6 +59,6 @@
                :href   "/app"
                :target ""} "Launch app & Log in"]]])]
         (signup-form)]
-       [:div.pure-u.pure-u-md-1-3]]
+       [:div.pure-u-1-12.pure-u-md-1-5]]
       ]
      (footer-2)]))

@@ -44,6 +44,7 @@
  {:db/id #db/id[:db.part/user -45] :category/name "Pulling"}
  {:db/id #db/id[:db.part/user -46] :category/name "Pull Up"}
 
+
  {:db/id #db/id[:db.part/user -48] :category/name "Push Up"}
  {:db/id #db/id[:db.part/user -49] :category/name "Dip"}
  {:db/id #db/id[:db.part/user -50] :category/name "Back Lever"}
@@ -191,7 +192,7 @@
   :part/number-of-movements 1
   :part/set      5}
  {:db/id              #db/id[:db.part/user -1043]
-  :part/title         "Straighten Into Line & Scapula (5 rounds)"
+  :part/title         "Straighten Into Line & Shoulder (5 rounds)"
   :part/category      [#db/id[:db.part/user -26]]
   :part/specific-movement [#db/id[:db.part/user -5005]]
   :part/number-of-movements 1
@@ -203,38 +204,37 @@
   :part/number-of-movements 2}
 
  {:db/id          #db/id[:db.part/user -106]
-  :template/title "Lifting Weights 5x5"
+  :template/title "Back Squat 5x5"
   :template/public? true
   :template/created-by #db/id[:db.part/user -998]
   :template/description
-                  "Make it a goal to increase the weights by 2-3kg/4-5lbs with each new session.
-                  After the warmup, perform a couple of lifts with easy weights,
-                  focusing on perfecting the lifting technique.
-                  Note which weights were used in the comment section."
+                  "The back squat is an excellent exercise to increase overall strength.
+                  Make it a goal to increase the weights of the back squat by 2-3kg/4-5lbs with each new session,
+                  and you will quickly see improvements."
   :template/part  [#db/id[:db.part/user -1061]
                    #db/id[:db.part/user -1062]
                    #db/id[:db.part/user -1063]
                    #db/id[:db.part/user -1064]]}
  {:db/id                    #db/id[:db.part/user -1061]
-  :part/title               "General Warmup"
-  :part/category            [#db/id[:db.part/user -2]]
-  :part/number-of-movements 4
+  :part/title               "Hip Mobility Warmup"
+  :part/category            [#db/id[:db.part/user -44]]
+  :part/number-of-movements 5
   :part/rep                 10
-  :part/set                 3}
+  :part/set                 2}
  {:db/id                    #db/id[:db.part/user -1062]
-  :part/title               "Technical Work"
+  :part/title               "Technical Warmup"
   :part/category            [#db/id[:db.part/user -14]]
   :part/number-of-movements 2
   :part/rep                 10
   :part/set                 3}
  {:db/id                    #db/id[:db.part/user -1063]
-  :part/title               "Squat"
+  :part/title               "Back Squat"
   :part/category            [#db/id[:db.part/user -14]]
   :part/specific-movement   [#db/id[:db.part/user -5001]]
   :part/rep                 5
   :part/set                 5}
  {:db/id                    #db/id[:db.part/user -1064]
-  :part/title               "Lifting"
+  :part/title               "Practice Other Lifts"
   :part/category            [#db/id[:db.part/user -14]]
   :part/number-of-movements 2
   :part/rep                 5
@@ -246,21 +246,20 @@
   :template/created-by #db/id[:db.part/user -998]
   :template/description
                   "Practice movement skills, such as crawling, jumping, climbing and lifting.
-                  Go through the warmup and combination parts doing 10 reps of each movement before moving on to the next one.
                   Complete all rounds without rest, focusing on quality over speed.
                   If possible, do lifting, carrying or throwing movements with non-uniform objects like rocks or logs."
   :template/part  [#db/id[:db.part/user -1091]
                    #db/id[:db.part/user -1092]
                    #db/id[:db.part/user -1093]]}
  {:db/id                    #db/id[:db.part/user -1091]
-  :part/title               "Warmup/Mobility (3 rounds)"
+  :part/title               "Warmup for 3 rounds"
   :part/category            [#db/id[:db.part/user -43]
                              #db/id[:db.part/user -44]]
   :part/number-of-movements 4
   :part/rep                 10
   :part/set                 3}
  {:db/id                    #db/id[:db.part/user -1092]
-  :part/title               "Skill"
+  :part/title               "Practice a skill"
   :part/category            [#db/id[:db.part/user -12]
                              #db/id[:db.part/user -13]
                              #db/id[:db.part/user -14]
@@ -277,7 +276,7 @@
   :part/rep                 30
   :part/set                 1}
  {:db/id                    #db/id[:db.part/user -1093]
-  :part/title               "Combination (3-5 rounds)"
+  :part/title               "Combination for 3-5 rounds"
   :part/category            [#db/id[:db.part/user -12]
                              #db/id[:db.part/user -13]
                              #db/id[:db.part/user -14]
@@ -291,7 +290,6 @@
                              #db/id[:db.part/user -55]
                              #db/id[:db.part/user -56]]
   :part/number-of-movements 5
-  :part/rep                 10
-  :part/set                 3}
+  :part/set                 4}
 
  ]

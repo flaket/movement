@@ -142,8 +142,8 @@ a:hover {
   position: relative;
   margin-bottom: 15px;
   box-shadow: 0px 0px 3px rgba(150,150,150,0.4);
-  background-color: #f6f5ee;
   background-color: rgba(220,220,220,0.4);
+  background-color: #f6f5ee;
   border-radius: 15px;
 }
 

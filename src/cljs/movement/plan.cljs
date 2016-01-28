@@ -23,7 +23,7 @@
        (when-not (nil? (:selected @plan-state))
          [:div
           [:div.pure-g
-           [:h3.pure-u "Select one or several templates for this day"]]
+           [:h3.pure-u "Select one or several templates for the selected day"]]
           [:div.pure-g
            (doall (for [template (sort-by :template/title (session/get :templates))]
                     ^{:key (:db/id template)}

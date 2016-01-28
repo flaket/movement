@@ -190,6 +190,10 @@ body {
     color: #fffff8;
 }
 
+.highlight {
+    background-color: lightyellow;
+}
+
 #footer {
     background: #2C3546;
     color: rgb(170, 170, 160);
@@ -207,7 +211,6 @@ body {
 
 #footer-links a {
     color: rgb(200, 200, 200);
-    margin-right: 7px;
     text-decoration: none;
 }
 

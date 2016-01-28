@@ -18,6 +18,10 @@
                              :target ""} "Movement Session"]
       [:ul.pure-menu-list
        [:li.pure-menu-item
+        [:a.pure-menu-link {:title  "Home"
+                            :href   "/"
+                            :target ""} "Home"]]
+       [:li.pure-menu-item
         [:a.pure-menu-link {:title  "Tour"
                             :href   "/tour"
                             :target ""} "Tour"]]
@@ -26,9 +30,9 @@
                             :href   "/pricing"
                             :target ""} "Pricing"]]
        [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Log in"
+        [:a.pure-menu-link {:title  "Sign in"
                             :href   "/app"
-                            :target ""} "Log in"]]]]]]])
+                            :target ""} "Sign in"]]]]]]])
 
 (defn footer []
   [:div#footer.l-box.is-center
@@ -69,10 +73,11 @@
     (fn []
       [:div {:style {:font-size 24}}
        (when @show-payment?
-         [:a.pure-u-1.button.button-primary
-          {:href (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
-                      "?referrer="
-                      @user)} "Purchase subscription"])
+         [:div.pure-g
+          [:a.pure-u-1.button.button-primary
+           {:href (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
+                       "?referrer="
+                       @user)} "Purchase subscription"]])
        [:div.pure-g {:style {:padding 5}}
         [:div.pure-u.pure-u-md-1-5]
         [text-input user
@@ -126,10 +131,10 @@
 (defn login-page []
   [:div
    (header)
-   [:div.content.is-center {:style {:margin-top 50}}
+   [:div.content.is-center {:style {:margin-top 200}}
     [:div.pure-g
-     [:div.pure-u.pure-u-md-1-3]
-     [:div.pure-u.pure-u-md-1-3 [login]]
-     [:div.pure-u.pure-u-md-1-3]]
-    (footer)]
-   ])
+     [:div.pure-u-1-12.pure-u-md-1-5]
+     [:div.pure-u-5-12.pure-u-md-3-5
+      [login]]
+     [:div.pure-u-1-12.pure-u-md-1-5]]
+    #_(footer)]])

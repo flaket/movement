@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/testing7")
+#_(def uri "datomic:dev://localhost:4334/testing8")
 
 #_(def uri "datomic:ddb://us-east-1/movementsession/production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
@@ -61,7 +61,7 @@
     (d/transact conn templates-tx))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "admin@movementsession.com"
+                       :user/email               "andflak@gmail.com"
                        :user/password (hashers/encrypt "pw")
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
