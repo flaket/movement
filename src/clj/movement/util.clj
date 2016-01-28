@@ -57,6 +57,7 @@
     (d/transact conn throwing-catching-tx)
     (d/transact conn walking-tx))
 
+;; Update "movementsession" templates
 #_(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
     (d/transact conn templates-tx))
 
@@ -76,7 +77,13 @@
 ;; Get the database value.
 #_(def db (d/db conn))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Number of users
+#_(count (d/q '[:find [?u ...]
+                :where
+                [?u :user/email ?e]]
+              db))
+
+#_(d/pull db '[*] 17592186045849)
 
 #_(defn image-url [name]
   (str "public/images/" (str/replace (str/lower-case name) " " "-") ".png"))
@@ -116,8 +123,6 @@
     {:#                  (count no-image-movements)
      :no-image-movements (vec no-image-movements)}))
 
-#_(find-no-image-movements)
-
 #_(defn find-no-data-images []
   (let [f (io/file "resources/public/images")
         images (for [file (file-seq f)] (.getName file))
@@ -126,6 +131,9 @@
     {:#images          (count images)
      :#no-data-images (count no-data-images)
      :no-data-images  (vec no-data-images)}))
+
+#_(find-no-image-movements)
+#_(find-no-data-images)
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -144,8 +152,8 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
   (d/transact conn tx-user-data))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                     :user/email               "andreas.flakstad@gmail.com"
-                     :user/valid-subscription? true}]]
+                       :user/email               "chrhage@gmail.com"
+                       :user/valid-subscription? true}]]
   (d/transact conn tx-user-data))
 
 #_(let []
@@ -235,7 +243,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
   (d/transact conn tx-data))
 
 #_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186046002]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045849]])
 
 #_(empty? (d/q '[:find [?u ...]
                  :in $
