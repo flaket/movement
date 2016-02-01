@@ -9,30 +9,27 @@
             [reagent.session :as session]))
 
 (defn header []
-  [:div
-   [:div.pure-g
-    [:div.pure-u-1
-     [:div.home-menu.pure-menu-horizontal
-      [:a.pure-menu-heading {:title  "Home"
-                             :href   "/"
-                             :target ""} "Movement Session"]
-      [:ul.pure-menu-list
-       [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Home"
-                            :href   "/"
-                            :target ""} "Home"]]
-       [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Tour"
-                            :href   "/tour"
-                            :target ""} "Tour"]]
-       [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Pricing"
-                            :href   "/pricing"
-                            :target ""} "Pricing"]]
-       [:li.pure-menu-item
-        [:a.pure-menu-link {:title  "Sign in"
-                            :href   "/app"
-                            :target ""} "Sign in"]]]]]]])
+  [:div.home-menu.pure-menu-horizontal
+   [:a.pure-menu-heading {:title  "Home"
+                          :href   "/"
+                          :target ""} "Movement Session"]
+   [:ul.pure-menu-list
+    [:li.pure-menu-item
+     [:a.pure-menu-link {:title  "Home"
+                         :href   "/"
+                         :target ""} "Home"]]
+    [:li.pure-menu-item
+     [:a.pure-menu-link {:title  "Tour"
+                         :href   "/tour"
+                         :target ""} "Tour"]]
+    [:li.pure-menu-item
+     [:a.pure-menu-link {:title  "Pricing"
+                         :href   "/pricing"
+                         :target ""} "Pricing"]]
+    [:li.pure-menu-item
+     [:a.pure-menu-link {:title  "Sign in"
+                         :href   "/app"
+                         :target ""} "Sign in"]]]])
 
 (defn footer []
   [:div#footer.l-box.is-center
@@ -97,7 +94,7 @@
          [:div.notice e])
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5]
-        [:button.pure-u.pure-u-md-3-5.button.button-primary
+        [:a.pure-u.pure-u-md-3-5.button.button-primary
          {:class    (when @loading? " disabled")
           :on-click #(if-not (and (seq @user) (seq @password))
                       (reset! error "Both fields are required.")
