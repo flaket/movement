@@ -33,6 +33,7 @@
     [:head
      [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
      [:title "Payment Movement Session"]
+     (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -108,6 +109,7 @@
   (html5
     [:head
      [:title "Activation Movement Session"]
+     (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"

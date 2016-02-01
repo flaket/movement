@@ -69,8 +69,7 @@
     (d/transact conn tx-user-data))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                     :user/email               "andflak@gmail.com"
-                       :user/name "andreasflakstad"
+                     :user/email               "ivar.flakstad@gmail.com"
                      :user/valid-subscription? true}]]
   (d/transact conn tx-user-data))
 
@@ -82,6 +81,11 @@
                 :where
                 [?u :user/email ?e]]
               db))
+
+#_(d/q '[:find (pull ?u [*])
+       :where
+       [?u :user/email ?e]]
+     db)
 
 #_(d/pull db '[*] 17592186045849)
 

@@ -225,7 +225,7 @@
        (when @rep-clicked?
          [slider-component position-in-parts id :rep 0 50 1])
        (when @set-clicked?
-         [slider-component position-in-parts id :set 0 10 1])
+         [slider-component position-in-parts id :set 0 20 1])
        (when @distance-clicked?
          [slider-component position-in-parts id :distance 0 400 5])
        (when @duration-clicked?

@@ -138,6 +138,7 @@
 (defn view-sub-activated-page [req]
   (html5
     [:head
-     [:title ""]]
+     [:title ""]
+     (include-js "analytics.js")]
     [:body
      [:div (str req)]]))
