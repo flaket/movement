@@ -129,7 +129,7 @@ a:hover {
 }
 
 .movement {
-  width: 275px;
+  width: 265px;
   border-width: 1px;
   border-color: #fffff8;
   margin-right: 15px;
@@ -207,8 +207,8 @@ a:hover {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 225px;
-  height: 225px;
+  width: 200px;
+  height: 200px;
   padding: 0px;
   margin: 15px 0px 0px 15px;
 }
