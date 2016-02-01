@@ -56,19 +56,18 @@
    If that's the case, you're going to love Movement Session.
    "]]
    [:div.pure-g [:p.pure-u-1 "
-   With Movement Session you can create or find templates that define the structure of the workout. When it comes time to move
-   you will get a generated workout session from this template. You can stop roaming the internet searching for static workout plans,
+   With Movement Session you can create workouts that are either fully planned or randomly generated. You can stop roaming the internet, searching for workout plans,
    and instead generate thousands of unique and beautifully presented sessions.
    "]]
    [:div.pure-g
     [:div.pure-u-1
      [:img {:src "old-style-to-new.png" :height "1200" :width "800"}]]]
    [:div.pure-g [:p.pure-u-1 "
-   At this time there are more than 300 movements in the database. We have created the database with a focus on bodyweight exercises
-    typically seen in gymnastics and calisthenics. There are also some weighted exercises related to crossfit and olympic lifting.
+   We have created a database of over 300 movements with a focus on bodyweight exercises
+    typically seen in gymnastics and calisthenics. There are also weighted exercises related to crossfit and olympic lifting.
    We want the Movement Session database to grow large and to encompass all sorts of varied movements and activities. Therefore we're exploring
     many disciplines, including gymnastics, calisthenics, crossfit, olympic lifting, parkour,
-     yoga, dance, martial arts and other sports. We will be adding ten new movements every week.
+     yoga, dance, martial arts and other sports. Ten new movements will be added to the database every week.
    "]]
    [:div.pure-g
     [:div.pure-u.pure-u-lg-1-4]
@@ -94,7 +93,7 @@
     [:p.pure-u.pure-u-md-1-3.pure-u-lg-1-4
      [:a.pure-button-primary {:title  "Sign Up" :href   "/pricing" :target ""} "Sign Up"]]
     [:p.pure-u.pure-u-md-1-3.pure-u-lg-1-4
-     [:a {:title  "Take a tour" :href   "/tour" :target ""} "Or take a tour"]]
+     [:a {:title  "Learn more" :href   "/tour" :target ""} "Or learn more"]]
     [:div.pure-u.pure-u-md-1-12.pure-u-lg-1-4]]])
 
 (defn landing-page []
