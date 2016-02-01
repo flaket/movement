@@ -268,7 +268,7 @@
 (defn part-component []
   (let []
     (fn [{:keys [title movements categories]} i]
-      [:div.part
+      [:div
        [:h2 title]
        [:div.pure-g.movements
         (for [m (vals movements)]
@@ -392,24 +392,32 @@
 
 (defn top-menu-component []
   (let [templates-showing? (atom false)
-        equipment-showing? (atom false)]
+        groups-showing? (atom false)]
     (fn []
       [:div
        [:div.pure-g
-        [:a.pure-u.pure-u-md-1-4 {:style {:text-decoration 'underline}
-                                  :on-click #(session/remove! :movement-session)} "Back to home screen"]
-        [:div.pure-u-1-2.pure-u-md-1-4.button.button-primary {:style    {:margin-right 5}
-                                                              :on-click pick-random-template} "Random session"]
-        [:div.pure-u-1-2.pure-u-md-1-4.button {:style    {:margin-right 5}
+        [:div.pure-u.pure-u-md-1-5]
+        [:div.pure-u.pure-u-md-1-5.button.button-primary {:style    {:margin-right 5}
+                                                              :on-click pick-random-template} "Random"]
+        [:div.pure-u.pure-u-md-1-5.button {:style    {:margin-right 5}
                                                :on-click #(handler-fn
                                                            (do
                                                              (when (nil? (session/get :equipment))
                                                                (get-equipment))
-                                                             (when equipment-showing?
-                                                               (reset! equipment-showing? false))
+                                                             (when groups-showing?
+                                                               (reset! groups-showing? false))
                                                              (reset! templates-showing? (not @templates-showing?))))}
-         "Template session"]
-        [:div.pure-u.pure-u-md-1-5]]
+         "Template"]
+        [:div.pure-u.pure-u-md-1-5.button {:style {:margin-right 5}
+                                                   :on-click #(handler-fn
+                                                               (do
+                                                                 (when (nil? (session/get :equipment))
+                                                                   (get-equipment))
+                                                                 (when templates-showing?
+                                                                   (reset! templates-showing? false))
+                                                                 (reset! groups-showing? (not @groups-showing?))))} "Group"]
+        [:a.pure-u.pure-u-md-1-5 {:style {:text-decoration 'underline}
+                                  :on-click #(session/remove! :movement-session)} "Clear session"]]
        (when @templates-showing?
          [:div.pure-g.animated.fadeIn {:style {:margin-top '20}}
           (doall
@@ -419,7 +427,17 @@
                                                               (go (<! (timeout 500))
                                                                   (reset! templates-showing? false))
                                                               (create-session-from-template (:db/id t)))
-                                                  :style    {:margin "0 0 5px 5px"}} (:template/title t)]))])])))
+                                                  :style    {:margin "0 0 5px 5px"}} (:template/title t)]))])
+       (when @groups-showing?
+         [:div.pure-g.animated.fadeIn {:style {:margin-top '20}}
+          (doall
+            (for [g (session/get :groups)]
+              ^{:key (:db/id g)}
+              [:div.pure-u.button.button-primary {:on-click #(do
+                                                              (go (<! (timeout 500))
+                                                                  (reset! groups-showing? false))
+                                                              (create-session-from-group (:group/title g)))
+                                                  :style    {:margin "0 0 5px 5px"}} (:group/title g)]))])])))
 
 (defn time-comment-component []
   (let [adding-time (atom false)
@@ -483,10 +501,11 @@
       (if @session-stored-successfully?
         (let []
           (go (<! (timeout 3000))
+              (session/remove! :movement-session)
               (reset! finish-button-clicked? false)
               (reset! session-stored-successfully? false))
           [:div.pure-g
-           [:div.pure-u {:style {:color "green" :font-size 24}} "Session stored successfully!"]])
+           [:div.pure-u-1.is-center {:style {:color "green" :font-size 24}} "Session stored successfully!"]])
         (if @finish-button-clicked?
           [:div.pure-g
            [:div.pure-u.pure-u-md-1-5]
