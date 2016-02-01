@@ -140,15 +140,32 @@
 ;;;;;; Components ;;;;;;
 (defn buttons-component [m title]
   [:div.pure-g
-   [:div.pure-u.refresh
+   [:div.pure-u-1-6.refresh
     [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
-   (when (:movement/easier m)
+   [:div.pure-u-1-12]
+   (if (:movement/easier m)
+     [:div.pure-u-1-6.refresh
+      [:i.fa.fa-minus {:on-click #(refresh-movement m title "easier") :title "Swap with easier movement"}]]
+     [:div.pure-u-1-6])
+   [:div.pure-u-1-12]
+   (if (:movement/harder m)
+     [:div.pure-u-1-6.refresh
+      [:i.fa.fa-plus {:on-click #(refresh-movement m title "harder") :title "Swap with harder movement"}]]
+     [:div.pure-u-1-6])
+   [:div.pure-u-1-12]
+   [:div.pure-u-1-6.destroy
+    [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
+
+
+   #_[:div.pure-u.refresh
+    [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
+   #_(when (:movement/easier m)
      [:div.pure-u.refresh
       [:i.fa.fa-minus {:on-click #(refresh-movement m title "easier") :title "Swap with easier movement"}]])
-   (when (:movement/harder m)
+   #_(when (:movement/harder m)
      [:div.pure-u.refresh
       [:i.fa.fa-plus {:on-click #(refresh-movement m title "harder") :title "Swap with harder movement"}]])
-   [:div.pure-u.destroy
+   #_[:div.pure-u.destroy
     [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]])
 
 (defn slider-component []

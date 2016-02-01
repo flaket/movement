@@ -77,7 +77,7 @@
        [:div.pure-u.pure-u-lg-1-2 [:img {:src "time-comment.png" :height "220" :width "544"}]]]
 
       [:div.pure-g
-       [:h2.content-head.is-center.pure-u-1 "Create templates, groups and plans"]]
+       [:h2.content-head.is-center.pure-u-1 "Create your own workouts and plans"]]
       [:div.pure-g
        [:div.pure-u.pure-u-lg-1-2
         [:p [:img {:src "create-plan.png" :height "436" :width "511"}]]]

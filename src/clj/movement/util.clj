@@ -205,7 +205,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
               "andflak@gmail.com"))
 
 #_(def db (d/db conn))
-#_(d/pull db '[*] 17592186046002)
+#_(d/pull db '[*] 17592186045815)
 
 ;; begin-plan!
 #_(let [user-id 17592186045808

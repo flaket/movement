@@ -23,7 +23,7 @@
        "/css/pricing.css")]
     [:body
      (header)
-     [:div.l-content
+     [:div.content
       [:div.pricing-tables.pure-g
        [:div.pure-u-1-12.pure-u-md-1-3]
        [:div.pure-u-5-6.pure-u-md-1-3
@@ -59,6 +59,5 @@
                :href   "/app"
                :target ""} "Launch app & Log in"]]])]
         (signup-form)]
-       [:div.pure-u-1-12.pure-u-md-1-5]]
-      ]
+       [:div.pure-u-1-12.pure-u-md-1-5]]]
      (footer-2)]))

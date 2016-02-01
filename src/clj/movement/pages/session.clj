@@ -32,12 +32,11 @@
         set (:movement/set m)
         distance (:movement/distance m)
         duration (:movement/duration m)]
-    [:div.pure-u.movement {:id (str "m-" id)}
+    [:div.pure-u.movement.is-center {:id (str "m-" id)}
      [:h3.pure-g
       [:div.pure-u-1-12]
       [:div.pure-u.title name]]
      [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
-
      [:div
       [:div.pure-g
        [:div.pure-u-1-12]
@@ -78,7 +77,7 @@
        [:div.pure-u-1-12]]]]))
 
 (defn part-component [{:keys [title movements]}]
-  [:div.part
+  [:div
    [:h2 title]
    [:div.pure-g.movements
     (doall
@@ -90,9 +89,12 @@
   [:div
    [:div.pure-g
     [:div.pure-u.pure-u-md-1-5]
-    [:h1.pure-u.pure-u-md-3-5 title]]
+    [:h1.pure-u-1.pure-u-md-3-5 title]
+    [:div.pure-u.pure-u-md-1-5]]
    [:div.pure-g
-    [:p.pure-u.subtitle description]]])
+    [:div.pure-u.pure-u-md-1-9]
+    [:p.pure-u-1.pure-u-md-7-9.subtitle description]
+    [:div.pure-u.pure-u-md-1-9]]])
 
 (defn epilog []
   [:div#epilog.content
@@ -124,7 +126,7 @@
     [:body
      [:div
       #_(header)
-      [:div.content.is-center
+      [:div.content
        (header-component session)
        (doall
          (for [p (:parts session)]
