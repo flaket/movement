@@ -28,7 +28,7 @@
       [:div.pure-g
        [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
-         [:p.pure-u-1 "The next workout is a click of a button away. Continue a plan your enrolled in or create a new inspiring session."]
+         [:p.pure-u-1 "The next workout is a click of a button away. Continue a plan you're enrolled in or create a new inspiring session."]
          [:p.pure-u-1 "You can get a session picked randomly, or you can select something you or others have created."]
          [:p.pure-u-1 "If a generated session is not to your liking you can quickly replace it with another."]]]
        [:div.pure-u.pure-u-lg-1-2
@@ -91,7 +91,7 @@
          [:p.pure-u-1 "
          You can browse through the different categories.
          By selecting the category 'Handstand' we can see all the movements in the database that are related to this category.
-         You can also search for and view a specific movement with the autocomplete-enabled search box.
+         You can also search for and view a specific movement.
          "]]]
        [:div.pure-u.pure-u-lg-1-2
         [:p [:img {:src "explore-movements.png" :height "522" :width "556"}]]]]
@@ -100,8 +100,7 @@
         [:p [:img {:src "explore-templates.png" :height "462" :width "595"}]]]
        [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
-         [:p.pure-u-1 "Templates, groups and plans can be found by searching for words or by categories used. For example, you might
-         search for templates related to climbing by searching for the word 'climbing' in the title and description, or by setting the category to 'Climbing'"]]
+         [:p.pure-u-1 "Templates, groups and plans can be found by searching for words or by categories used."]]
         [:div.pure-g
          [:p.pure-u-1 "You can always find content you have created, content movementsession has created and all the content
          that is currently linked to your account."]]]]

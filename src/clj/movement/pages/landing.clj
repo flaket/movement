@@ -56,12 +56,21 @@
    If that's the case, you're going to love Movement Session.
    "]]
    [:div.pure-g [:p.pure-u-1 "
-   With Movement Session you can create workouts that are either fully planned or randomly generated. You can stop roaming the internet, searching for workout plans,
-   and instead generate thousands of unique and beautifully presented sessions.
+   With Movement Session you will find workouts that you are interested in, either fully planned or randomly generated.
+   You can stop roaming the internet, searching for workout plans, and instead generate thousands of unique, interactive and beautifully presented sessions.
    "]]
    [:div.pure-g
     [:div.pure-u-1
      [:img {:src "old-style-to-new.png" :height "1200" :width "800"}]]]
+   [:div.pure-g [:p.pure-u-1 "
+   Movement Session is about learning new skills and training hard and training with great variety. Why? Because it's more fun
+   and because we want to build strong, healthy bodies that can play hard, will not let us down if we need to perform
+    and that will last us a good, long life."]]
+   [:div.pure-g [:p.pure-u-1
+                 [:b.highlight "Moving your body should be a playful and fun experience."]
+                 " Searching for training programs is not fun. Going to the gym and doing fitness is not fun.
+   Playing and learning new skills is fun!"]]
+
    [:div.pure-g [:p.pure-u-1 "
    We have created a database of over 300 movements with a focus on bodyweight exercises
     typically seen in gymnastics and calisthenics. There are also weighted exercises related to crossfit and olympic lifting.
@@ -119,7 +128,9 @@
        "/css/animate.min.css"
        "/css/marketing.css"
        "/css/side-menu.css"
-       "/css/site.css")]
+       "/css/site.css")
+     [:meta {:name "google-site-verification"
+             :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]]
     [:body
      [:div
       (landing-header)
