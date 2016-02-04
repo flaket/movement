@@ -1,8 +1,7 @@
 (ns movement.pages.about
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
-            [movement.pages.components :refer [header footer footer-2]]
-            [movement.auth :refer [google-analytics-string]]))
+            [movement.pages.components :refer [header footer footer-2]]))
 
 (defn about-page []
   (html5
@@ -18,8 +17,7 @@
        "/css/normalize.css"
        "/css/marketing.css"
        "/css/site.css"
-       "/css/pricing.css")
-     [:script google-analytics-string]]
+       "/css/pricing.css")]
     [:body
      (header)
      [:div.l-content
@@ -36,4 +34,13 @@
         [:div.l-box
          [:p "Movement Session was created by me, Andreas Flakstad. I'm a software engineer and small business owner from Trondheim, Norway."]
          [:p "You can contact me at admin (at) movementsession.com, or reach me through Twitter @AndreasFlakstad."]]]]]
-     (footer-2)]))
+     (footer-2)
+
+     [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
+     [:script {:type "text/javascript" :src "clicky.js"}]
+     [:noscript
+      [:p
+       [:img {:alt "Clicky" :width 1 :height 1
+              :src "//in.getclicky.com/100920866ns.gif"}]]]
+
+     ]))

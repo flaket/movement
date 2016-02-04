@@ -3,8 +3,7 @@
             [hiccup.page :refer [include-css include-js html5]]
             [clojure.string :as str]
             [movement.pages.components :refer [header footer]]
-            [movement.pages.signup :refer [signup-form]]
-            [movement.auth :refer [google-analytics-string]]))
+            [movement.pages.signup :refer [signup-form]]))
 
 (defn image-url [name]
   (str "../images/" (str/replace (str/lower-case name) " " "-") ".png"))
@@ -122,8 +121,7 @@
        "/css/animate.min.css"
        "/css/marketing.css"
        "/css/side-menu.css"
-       "/css/site.css")
-     [:script google-analytics-string]]
+       "/css/site.css")]
     [:body
      [:div
       #_(header)
@@ -136,12 +134,29 @@
          (when (not= 0 time) (time-component time)))
        (comment-component (:comment session))
        (epilog)]
-      #_(footer)]]))
+      #_(footer)]
+
+     [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
+     [:script {:type "text/javascript" :src "clicky.js"}]
+     [:noscript
+      [:p
+       [:img {:alt "Clicky" :width 1 :height 1
+              :src "//in.getclicky.com/100920866ns.gif"}]]]
+
+     ]))
 
 (defn view-sub-activated-page [req]
   (html5
     [:head
-     [:title ""]
-     [:script google-analytics-string]]
+     [:title ""]]
     [:body
-     [:div (str req)]]))
+     [:div (str req)]
+
+     [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
+     [:script {:type "text/javascript" :src "clicky.js"}]
+     [:noscript
+      [:p
+       [:img {:alt "Clicky" :width 1 :height 1
+              :src "//in.getclicky.com/100920866ns.gif"}]]]
+
+     ]))

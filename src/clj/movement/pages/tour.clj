@@ -1,15 +1,13 @@
 (ns movement.pages.tour
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
-            [movement.pages.components :refer [header footer footer-2]]
-            [movement.auth :refer [google-analytics-string]]))
+            [movement.pages.components :refer [header footer footer-2]]))
 
 (defn tour-page []
   (html5
     [:head
      [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
      [:title "Tour Movement Session"]
-     [:script google-analytics-string]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -108,4 +106,14 @@
       [:div.pure-g
        [:p.pure-u-1.is-center
         [:a.pure-button-primary {:title  "See Pricing" :href   "/pricing" :target ""} "See Pricing"]]]]
-     (footer-2)]))
+     (footer-2)
+
+     [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
+     [:script {:type "text/javascript" :src "clicky.js"}]
+     [:noscript
+      [:p
+       [:img {:alt "Clicky" :width 1 :height 1
+              :src "//in.getclicky.com/100920866ns.gif"}]]]
+
+
+     ]))

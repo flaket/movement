@@ -3,8 +3,7 @@
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [movement.pages.components :refer [header footer footer-2]]
-            [movement.pages.signup :refer [signup-form]]
-            [movement.auth :refer [google-analytics-string]]))
+            [movement.pages.signup :refer [signup-form]]))
 
 (defn pricing-page [& error-message]
   (html5
@@ -20,8 +19,7 @@
        "/css/normalize.css"
        "/css/marketing.css"
        "/css/site.css"
-       "/css/pricing.css")
-     [:script google-analytics-string]]
+       "/css/pricing.css")]
     [:body
      (header)
      [:div.content
@@ -61,4 +59,13 @@
                :target ""} "Launch app & Log in"]]])]
         (signup-form)]
        [:div.pure-u-1-12.pure-u-md-1-5]]]
-     (footer-2)]))
+     (footer-2)
+
+     [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
+     [:script {:type "text/javascript" :src "clicky.js"}]
+     [:noscript
+      [:p
+       [:img {:alt "Clicky" :width 1 :height 1
+              :src "//in.getclicky.com/100920866ns.gif"}]]]
+
+     ]))

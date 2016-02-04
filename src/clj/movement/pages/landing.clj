@@ -4,8 +4,7 @@
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [movement.pages.signup :refer [signup-form]]
             [movement.pages.components :refer [header footer]]
-            [movement.activation :refer [generate-activation-id send-activation-email]]
-            [movement.auth :refer [google-analytics-string]]))
+            [movement.activation :refer [generate-activation-id send-activation-email]]))
 
 (defn landing-header []
   [:div.header
@@ -128,7 +127,6 @@
        "/css/marketing.css"
        "/css/side-menu.css"
        "/css/site.css")
-     [:script google-analytics-string]
      [:meta {:name "google-site-verification"
              :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]]
     [:body
@@ -138,5 +136,14 @@
       [:div.content-wrapper
        (sell)
        (epilog)
-       (footer)]]]))
+       (footer)]]
+
+     [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
+     [:script {:type "text/javascript" :src "clicky.js"}]
+     [:noscript
+      [:p
+       [:img {:alt "Clicky" :width 1 :height 1
+              :src "//in.getclicky.com/100920866ns.gif"}]]]
+
+     ]))
 

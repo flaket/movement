@@ -2,7 +2,6 @@
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
             [movement.pages.components :refer [header footer footer-2]]
-            [movement.auth :refer [google-analytics-string]]
             ))
 
 (defn contact-page []
@@ -19,8 +18,7 @@
        "/css/normalize.css"
        "/css/marketing.css"
        "/css/site.css"
-       "/css/pricing.css")
-     [:script google-analytics-string]]
+       "/css/pricing.css")]
     [:body
      (header)
      [:div.l-content
@@ -29,4 +27,13 @@
         [:div.pure-g
          [:p.pure-u-1 "For support questions or feature suggestions, send an email to"]
          [:p.pure-u-1 "support (at) movementsession.com"]]]]]
-     (footer)]))
+     (footer)
+
+     [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
+     [:script {:type "text/javascript" :src "clicky.js"}]
+     [:noscript
+      [:p
+       [:img {:alt "Clicky" :width 1 :height 1
+              :src "//in.getclicky.com/100920866ns.gif"}]]]
+
+     ]))
