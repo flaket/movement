@@ -111,6 +111,7 @@
   (html5
     [:head
      [:title ""]
+     [:script {:src "analytics.js" :type "text/javascript"}]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -148,7 +149,8 @@
 (defn view-sub-activated-page [req]
   (html5
     [:head
-     [:title ""]]
+     [:title ""]
+     [:script {:src "analytics.js" :type "text/javascript"}]]
     [:body
      [:div (str req)]
 

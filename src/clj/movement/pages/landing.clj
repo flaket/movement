@@ -105,12 +105,6 @@
      [:a {:title  "Learn more" :href   "/tour" :target ""} "Or learn more"]]
     [:div.pure-u.pure-u-md-1-12.pure-u-lg-1-4]]])
 
-(def tag-manager-script "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NXTLXV');")
-
 (defn landing-page []
   (html5
     [:head
@@ -122,6 +116,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      [:meta {:http-equiv "pragma"
              :content "no-cache"}]
      [:title "Movement Session"]
+     [:script {:src "analytics.js" :type "text/javascript"}]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -136,12 +131,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      [:meta {:name "google-site-verification"
              :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]]
     [:body
-
      [:noscript
       [:ifram {:src    "//www.googletagmanager.com/ns.html?id=GTM-NXTLXV"
                :height "0" :width "0" :style "display:none;visibility:hidden"}]]
-     [:script {:src tag-manager-script}]
-     
+     [:script {:src "tag-manager.js"}]
      [:div
       (landing-header)
       (splash)

@@ -78,6 +78,7 @@
     [:head
      [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
      [:title "Sign Up Movement Session"]
+     [:script {:src "analytics.js" :type "text/javascript"}]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -116,6 +117,7 @@
   (html5
     [:head
      [:title "Activation Movement Session"]
+     [:script {:src "analytics.js" :type "text/javascript"}]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"

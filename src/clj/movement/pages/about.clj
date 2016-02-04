@@ -8,6 +8,7 @@
     [:head
      [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
      [:title "About Movement Session"]
+     [:script {:src "analytics.js" :type "text/javascript"}]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
