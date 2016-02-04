@@ -94,7 +94,7 @@
          [:div.notice e])
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5]
-        [:a.pure-u.pure-u-md-3-5.button.button-primary
+        [:button.pure-u.pure-u-md-3-5.button.button-primary
          {:class    (when @loading? " disabled")
           :on-click #(if-not (and (seq @user) (seq @password))
                       (reset! error "Both fields are required.")

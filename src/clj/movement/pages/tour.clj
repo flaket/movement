@@ -1,26 +1,13 @@
 (ns movement.pages.tour
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
-            [movement.pages.components :refer [header footer footer-2]]))
+            [movement.pages.components :refer [html-head top-menu footer-always-bottom footer-after-content]]))
 
 (defn tour-page []
   (html5
-    [:head
-     [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
-     [:title "Tour Movement Session"]
-     [:script {:src "analytics.js" :type "text/javascript"}]
-     (include-css
-       "https://fonts.googleapis.com/css?family=Roboto"
-       "https://fonts.googleapis.com/css?family=Raleway"
-       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-       "/css/pure-min.css"
-       "/css/grids-responsive-min.css"
-       "/css/normalize.css"
-       "/css/marketing.css"
-       "/css/site.css"
-       "/css/pricing.css")]
+    (html-head "Tour")
     [:body
-     (header)
+     (top-menu)
      [:div.content
 
       [:div.pure-g
@@ -32,8 +19,7 @@
          [:p.pure-u-1 "You can get a session picked randomly, or you can select something you or others have created."]
          [:p.pure-u-1 "If a generated session is not to your liking you can quickly replace it with another."]]]
        [:div.pure-u.pure-u-lg-1-2
-        [:p [:img {:src "tour-session.png" :height "806" :width "699"}]]]
-       ]
+        [:p [:img {:src "tour-session.png" :height "806" :width "699"}]]]]
 
       [:div.pure-g
        [:h2.content-head.is-center.pure-u-1 "Interactivity"]]
@@ -107,7 +93,7 @@
       [:div.pure-g
        [:p.pure-u-1.is-center
         [:a.pure-button-primary {:title  "See Pricing" :href   "/pricing" :target ""} "See Pricing"]]]]
-     (footer-2)
+     (footer-after-content)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]
@@ -115,6 +101,5 @@
       [:p
        [:img {:alt "Clicky" :width 1 :height 1
               :src "//in.getclicky.com/100920866ns.gif"}]]]
-
 
      ]))

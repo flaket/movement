@@ -140,6 +140,7 @@
 ;;;;;; Components ;;;;;;
 (defn buttons-component [m title]
   [:div.pure-g
+   [:div.pure-u-1-12]
    [:div.pure-u-1-6.refresh
     [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
    [:div.pure-u-1-12]
@@ -154,18 +155,6 @@
      [:div.pure-u-1-6])
    [:div.pure-u-1-12]
    [:div.pure-u-1-6.destroy
-    [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
-
-
-   #_[:div.pure-u.refresh
-    [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
-   #_(when (:movement/easier m)
-     [:div.pure-u.refresh
-      [:i.fa.fa-minus {:on-click #(refresh-movement m title "easier") :title "Swap with easier movement"}]])
-   #_(when (:movement/harder m)
-     [:div.pure-u.refresh
-      [:i.fa.fa-plus {:on-click #(refresh-movement m title "harder") :title "Swap with harder movement"}]])
-   #_[:div.pure-u.destroy
     [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]])
 
 (defn slider-component []
@@ -195,10 +184,14 @@
     (fn []
       [:div.pure-u.movement.is-center {:id (str "m-" id)}
        (buttons-component m title)
-       [:h3.pure-g
+       [:div.pure-g
         [:div.pure-u-1-12]
-        [:div.pure-u.title name]]
-       [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
+        [:h3.pure-u.title name]
+        [:div.pure-u-1-12]]
+       [:div.pure-g
+        [:div.pure-u-1-12]
+        [:img.pure-u.graphic.pure-img-responsive {:src graphic :title name :alt name}]
+        [:div.pure-u-1-12]]
        [:div {:style {:cursor 'pointer}}
         [:div.pure-g
          [:div.pure-u-1-12]

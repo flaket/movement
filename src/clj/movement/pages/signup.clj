@@ -2,7 +2,7 @@
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
-            [movement.pages.components :refer [header footer footer-2]]
+            [movement.pages.components :refer [html-head top-menu footer-always-bottom footer-after-content]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
 (defn signup-form []
@@ -30,21 +30,9 @@
 
 (defn payment-page [ref message]
   (html5
-    [:head
-     [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
-     [:title "Payment Movement Session"]
-     (include-css
-       "https://fonts.googleapis.com/css?family=Roboto"
-       "https://fonts.googleapis.com/css?family=Raleway"
-       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-       "/css/pure-min.css"
-       "/css/grids-responsive-min.css"
-       "/css/normalize.css"
-       "/css/marketing.css"
-       "/css/site.css"
-       "/css/pricing.css")]
+    (html-head "Payment")
     [:body
-     (header)
+     (top-menu)
      [:div.l-content
       [:div.information.pure-g
        [:div.pure-u-1.pure-u-md-1-5]
@@ -62,7 +50,7 @@
         [:div.l-box
          ]]
        [:div.pure-u-1.pure-u-md-1-3]]]
-     (footer)
+     (footer-always-bottom)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]
@@ -75,23 +63,9 @@
 
 (defn signup-page [& error-message]
   (html5
-    [:head
-     [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
-     [:title "Sign Up Movement Session"]
-     [:script {:src "analytics.js" :type "text/javascript"}]
-     (include-css
-       "https://fonts.googleapis.com/css?family=Roboto"
-       "https://fonts.googleapis.com/css?family=Raleway"
-       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-       "/css/pure-min.css"
-       "/css/grids-responsive-min.css"
-       "/css/normalize.css"
-       "/css/animate.min.css"
-       "/css/marketing.css"
-       "/css/side-menu.css"
-       "/css/site.css")]
+    (html-head "Sign Up")
     [:body
-     (header)
+     (top-menu)
      [:div.content.is-center
       (when error-message
         [:div
@@ -111,27 +85,13 @@
        [:div.pure-u.pure-u-md-1-5
         (signup-form)]
        [:div.pure-u.pure-u-md-2-5]]]
-     (footer)]))
+     (footer-always-bottom)]))
 
 (defn activation-page [message]
   (html5
-    [:head
-     [:title "Activation Movement Session"]
-     [:script {:src "analytics.js" :type "text/javascript"}]
-     (include-css
-       "https://fonts.googleapis.com/css?family=Roboto"
-       "https://fonts.googleapis.com/css?family=Raleway"
-       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-       "/css/pure-min.css"
-       "/css/grids-responsive-min.css"
-       "/css/normalize.css"
-       "/css/animate.min.css"
-       "/css/marketing.css"
-       "/css/side-menu.css"
-       "/css/site.css"
-       "/css/pricing.css")]
+    (html-head "Activation")
     [:body
-     (header)
+     (top-menu)
      [:div.l-content
       [:div.information.pure-g
        [:div.pure-u.pure-u-md-1-5]
@@ -140,7 +100,7 @@
          [:h3.information-head "Thanks!"]
          [:p message]]]
        [:div.pure-u.pure-u-md-1-5]]]
-     (footer)
+     (footer-always-bottom)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]

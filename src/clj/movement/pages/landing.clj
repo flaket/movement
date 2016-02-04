@@ -3,7 +3,7 @@
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [movement.pages.signup :refer [signup-form]]
-            [movement.pages.components :refer [header footer]]
+            [movement.pages.components :refer [html-head top-menu footer-always-bottom]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
 (defn landing-header []
@@ -107,29 +107,7 @@
 
 (defn landing-page []
   (html5
-    [:head
-     [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
-     [:meta {:http-equiv "cache-control"
-             :content "no-cache"}]
-     [:meta {:http-equiv "expires"
-             :content "0"}]
-     [:meta {:http-equiv "pragma"
-             :content "no-cache"}]
-     [:title "Movement Session"]
-     [:script {:src "analytics.js" :type "text/javascript"}]
-     (include-css
-       "https://fonts.googleapis.com/css?family=Roboto"
-       "https://fonts.googleapis.com/css?family=Raleway"
-       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-       "/css/pure-min.css"
-       "/css/grids-responsive-min.css"
-       "/css/normalize.css"
-       "/css/animate.min.css"
-       "/css/marketing.css"
-       "/css/side-menu.css"
-       "/css/site.css")
-     [:meta {:name "google-site-verification"
-             :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]]
+    (html-head "Movement Session")
     [:body
      [:div
       (landing-header)
@@ -137,7 +115,7 @@
       [:div.content-wrapper
        (sell)
        (epilog)
-       (footer)]]
+       (footer-always-bottom)]]
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]

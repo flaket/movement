@@ -166,10 +166,6 @@ a:hover {
 }
 
 .refresh {
-  /*
-  left: 10px;
-  top: 10px;
-  */
   padding: 5px;
   position: relative;
   -webkit-transition: all 0.2s;
@@ -178,15 +174,9 @@ a:hover {
   transition: all 0.2s;
   color: #99cc99;
   opacity: 0.8;
-
 }
 
 .destroy {
-/*
-    position: absolute;
-	top: 10px;
-    right: 10px;
-  */
     padding: 5px;
 	font-size: 2.0em;
 	color: #CC9999;

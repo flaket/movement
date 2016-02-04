@@ -2,7 +2,7 @@
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
             [clojure.string :as str]
-            [movement.pages.components :refer [header footer]]
+            [movement.pages.components :refer [html-head top-menu footer-always-bottom]]
             [movement.pages.signup :refer [signup-form]]))
 
 (defn image-url [name]
@@ -109,23 +109,10 @@
 
 (defn view-session-page [session]
   (html5
-    [:head
-     [:title ""]
-     [:script {:src "analytics.js" :type "text/javascript"}]
-     (include-css
-       "https://fonts.googleapis.com/css?family=Roboto"
-       "https://fonts.googleapis.com/css?family=Raleway"
-       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-       "/css/pure-min.css"
-       "/css/grids-responsive-min.css"
-       "/css/normalize.css"
-       "/css/animate.min.css"
-       "/css/marketing.css"
-       "/css/side-menu.css"
-       "/css/site.css")]
+    (html-head "View Session")
     [:body
      [:div
-      #_(header)
+      #_(top-menu)
       [:div.content
        (header-component session)
        (doall
@@ -135,7 +122,7 @@
          (when (not= 0 time) (time-component time)))
        (comment-component (:comment session))
        (epilog)]
-      #_(footer)]
+      #_(footer-always-bottom)]
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]
@@ -148,9 +135,7 @@
 
 (defn view-sub-activated-page [req]
   (html5
-    [:head
-     [:title ""]
-     [:script {:src "analytics.js" :type "text/javascript"}]]
+    (html-head "")
     [:body
      [:div (str req)]
 

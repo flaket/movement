@@ -3,9 +3,25 @@
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
+(defn html-head [title]
+  [:head
+   [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
+   [:title title]
+   [:script {:src "analytics.js" :type "text/javascript"}]
+   (include-css
+     "https://fonts.googleapis.com/css?family=Roboto"
+     "https://fonts.googleapis.com/css?family=Raleway"
+     "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+     "/css/pure-min.css"
+     "/css/grids-responsive-min.css"
+     "/css/normalize.css"
+     "/css/marketing.css"
+     "/css/site.css"
+     "/css/pricing.css")
+   [:meta {:name "google-site-verification"
+           :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]])
 
-
-(defn header []
+(defn top-menu []
   [:div.home-menu.pure-menu-horizontal
    [:a.pure-menu-heading.pure-u {:title  "Home"
                                  :href   "/"
@@ -28,7 +44,7 @@
                          :href   "/app"
                          :target ""} "Sign in"]]]])
 
-(defn footer-2 []
+(defn footer-after-content []
   [:div.footer.l-box.is-center
    [:div#footer-links.pure-g
     [:div.pure-u.pure-u-md-1-4]
@@ -50,7 +66,7 @@
     [:div.pure-u.pure-u-md-1-3 [:i.fa.fa-copyright] "2016 Movement Session"]
     [:div.pure-u.pure-u-md-1-3]]])
 
-(defn footer []
+(defn footer-always-bottom []
   [:div#footer.l-box.is-center
    [:div#footer-links.pure-g
     [:div.pure-u.pure-u-md-1-4]

@@ -2,27 +2,14 @@
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
-            [movement.pages.components :refer [header footer footer-2]]
+            [movement.pages.components :refer [html-head top-menu footer-always-bottom footer-after-content]]
             [movement.pages.signup :refer [signup-form]]))
 
 (defn pricing-page [& error-message]
   (html5
-    [:head
-     [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
-     [:title "Pricing Movement Session"]
-     [:script {:src "analytics.js" :type "text/javascript"}]
-     (include-css
-       "https://fonts.googleapis.com/css?family=Roboto"
-       "https://fonts.googleapis.com/css?family=Raleway"
-       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-       "/css/pure-min.css"
-       "/css/grids-responsive-min.css"
-       "/css/normalize.css"
-       "/css/marketing.css"
-       "/css/site.css"
-       "/css/pricing.css")]
+    (html-head "Pricing")
     [:body
-     (header)
+     (top-menu)
      [:div.content
       [:div.pricing-tables.pure-g
        [:div.pure-u-1-12.pure-u-md-1-3]
@@ -60,7 +47,7 @@
                :target ""} "Launch app & Log in"]]])]
         (signup-form)]
        [:div.pure-u-1-12.pure-u-md-1-5]]]
-     (footer-2)
+     (footer-after-content)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]
