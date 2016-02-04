@@ -1,14 +1,15 @@
 (ns movement.pages.contact
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
-            [movement.pages.components :refer [header footer footer-2]]))
+            [movement.pages.components :refer [header footer footer-2]]
+            [movement.auth :refer [google-analytics-string]]
+            ))
 
 (defn contact-page []
   (html5
     [:head
      [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
      [:title "Contact Movement Session"]
-     (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -18,7 +19,8 @@
        "/css/normalize.css"
        "/css/marketing.css"
        "/css/site.css"
-       "/css/pricing.css")]
+       "/css/pricing.css")
+     [:script google-analytics-string]]
     [:body
      (header)
      [:div.l-content

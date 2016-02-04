@@ -3,7 +3,8 @@
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [movement.pages.components :refer [header footer footer-2]]
-            [movement.activation :refer [generate-activation-id send-activation-email]]))
+            [movement.activation :refer [generate-activation-id send-activation-email]]
+            [movement.auth :refer [google-analytics-string]]))
 
 (defn signup-form []
   [:form.pure-form.pure-form-stacked
@@ -33,7 +34,7 @@
     [:head
      [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
      [:title "Payment Movement Session"]
-     (include-js "analytics.js")
+     [:script google-analytics-string]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -70,7 +71,7 @@
     [:head
      [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
      [:title "Sign Up Movement Session"]
-     (include-js "analytics.js")
+     [:script google-analytics-string]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -109,7 +110,7 @@
   (html5
     [:head
      [:title "Activation Movement Session"]
-     (include-js "analytics.js")
+     [:script google-analytics-string]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"

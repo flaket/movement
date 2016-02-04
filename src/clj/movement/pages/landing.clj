@@ -4,7 +4,8 @@
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [movement.pages.signup :refer [signup-form]]
             [movement.pages.components :refer [header footer]]
-            [movement.activation :refer [generate-activation-id send-activation-email]]))
+            [movement.activation :refer [generate-activation-id send-activation-email]]
+            [movement.auth :refer [google-analytics-string]]))
 
 (defn landing-header []
   [:div.header
@@ -116,12 +117,10 @@
      [:meta {:http-equiv "pragma"
              :content "no-cache"}]
      [:title "Movement Session"]
-     (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
        "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-
        "/css/pure-min.css"
        "/css/grids-responsive-min.css"
        "/css/normalize.css"
@@ -129,6 +128,7 @@
        "/css/marketing.css"
        "/css/side-menu.css"
        "/css/site.css")
+     [:script google-analytics-string]
      [:meta {:name "google-site-verification"
              :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]]
     [:body

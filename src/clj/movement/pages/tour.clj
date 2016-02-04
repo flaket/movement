@@ -1,14 +1,15 @@
 (ns movement.pages.tour
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-css include-js html5]]
-            [movement.pages.components :refer [header footer footer-2]]))
+            [movement.pages.components :refer [header footer footer-2]]
+            [movement.auth :refer [google-analytics-string]]))
 
 (defn tour-page []
   (html5
     [:head
      [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
      [:title "Tour Movement Session"]
-     (include-js "analytics.js")
+     [:script google-analytics-string]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"

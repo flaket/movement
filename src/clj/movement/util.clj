@@ -69,7 +69,7 @@
     (d/transact conn tx-user-data))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                     :user/email               "ivar.flakstad@gmail.com"
+                     :user/email               "nils.flakstad@kartverket.no"
                      :user/valid-subscription? true}]]
   (d/transact conn tx-user-data))
 
@@ -87,7 +87,7 @@
        [?u :user/email ?e]]
      db)
 
-#_(d/pull db '[*] 17592186045849)
+#_(d/pull db '[*] 17592186045838)
 
 #_(defn image-url [name]
   (str "public/images/" (str/replace (str/lower-case name) " " "-") ".png"))
@@ -194,7 +194,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                 [?t :template/created-by ?u]
                 [?u :user/name ?name]]
               db
-              "movementsession"))
+                "andreasflakstad"))
 
 #_(flatten (d/q '[:find (pull ?t [*])
                 :in $ ?email
@@ -247,7 +247,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
   (d/transact conn tx-data))
 
 #_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045849]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045973]])
 
 #_(empty? (d/q '[:find [?u ...]
                  :in $

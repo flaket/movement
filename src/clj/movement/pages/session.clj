@@ -3,7 +3,8 @@
             [hiccup.page :refer [include-css include-js html5]]
             [clojure.string :as str]
             [movement.pages.components :refer [header footer]]
-            [movement.pages.signup :refer [signup-form]]))
+            [movement.pages.signup :refer [signup-form]]
+            [movement.auth :refer [google-analytics-string]]))
 
 (defn image-url [name]
   (str "../images/" (str/replace (str/lower-case name) " " "-") ".png"))
@@ -111,7 +112,6 @@
   (html5
     [:head
      [:title ""]
-     (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -122,7 +122,8 @@
        "/css/animate.min.css"
        "/css/marketing.css"
        "/css/side-menu.css"
-       "/css/site.css")]
+       "/css/site.css")
+     [:script google-analytics-string]]
     [:body
      [:div
       #_(header)
@@ -141,6 +142,6 @@
   (html5
     [:head
      [:title ""]
-     (include-js "analytics.js")]
+     [:script google-analytics-string]]
     [:body
      [:div (str req)]]))

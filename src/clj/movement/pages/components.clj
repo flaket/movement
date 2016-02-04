@@ -3,6 +3,8 @@
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
+
+
 (defn header []
   [:div.home-menu.pure-menu-horizontal
    [:a.pure-menu-heading.pure-u {:title  "Home"

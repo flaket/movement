@@ -3,14 +3,14 @@
             [hiccup.page :refer [include-css include-js html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [movement.pages.components :refer [header footer footer-2]]
-            [movement.pages.signup :refer [signup-form]]))
+            [movement.pages.signup :refer [signup-form]]
+            [movement.auth :refer [google-analytics-string]]))
 
 (defn pricing-page [& error-message]
   (html5
     [:head
      [:link {:rel "shortcut icon" :href "images/pull-up.png"}]
      [:title "Pricing Movement Session"]
-     (include-js "analytics.js")
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
        "https://fonts.googleapis.com/css?family=Raleway"
@@ -20,7 +20,8 @@
        "/css/normalize.css"
        "/css/marketing.css"
        "/css/site.css"
-       "/css/pricing.css")]
+       "/css/pricing.css")
+     [:script google-analytics-string]]
     [:body
      (header)
      [:div.content
