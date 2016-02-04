@@ -131,10 +131,6 @@
      [:meta {:name "google-site-verification"
              :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]]
     [:body
-     [:noscript
-      [:ifram {:src    "//www.googletagmanager.com/ns.html?id=GTM-NXTLXV"
-               :height "0" :width "0" :style "display:none;visibility:hidden"}]]
-     [:script {:src "tag-manager.js"}]
      [:div
       (landing-header)
       (splash)
