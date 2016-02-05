@@ -100,16 +100,28 @@
   [:div#epilog.content
    [:h2.content-head.is-center "Create and discover more sessions like this"]
    [:div.pure-g
-    [:div.pure-u.pure-u-md-2-5]
-    [:a.pure-u-1.pure-u-md-1-5.pure-button.pure-button-primary
+    [:div.pure-u.pure-u-md-1-5]
+    [:a.pure-u-1.pure-u-md-3-5.pure-button.pure-button-primary
      {:title  "Movement Session Learn More"
       :href   "/"
       :target ""} "Learn more"]
-    [:div.pure-u.pure-u-md-2-5]]])
+    [:div.pure-u.pure-u-md-1-5]]])
 
 (defn view-session-page [session]
   (html5
-    (html-head "View Session")
+    [:head
+     [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
+     [:title "View session"]
+     [:script {:src "analytics.js" :type "text/javascript"}]
+     (include-css
+       "https://fonts.googleapis.com/css?family=Roboto"
+       "https://fonts.googleapis.com/css?family=Raleway"
+       "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+       "/css/pure-min.css"
+       "/css/grids-responsive-min.css"
+       "/css/normalize.css"
+       "/css/marketing.css"
+       "/css/site.css")]
     [:body
      [:div
       #_(top-menu)

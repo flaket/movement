@@ -19,7 +19,9 @@
      "/css/site.css"
      "/css/pricing.css")
    [:meta {:name "google-site-verification"
-           :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]])
+           :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]
+   [:meta {:name "msvalidate.01"
+           :content "2B704D213DB4E877B4F06C35F4FADFC4"}]])
 
 (defn top-menu []
   [:div.home-menu.pure-menu-horizontal

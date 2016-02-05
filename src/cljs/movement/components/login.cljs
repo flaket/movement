@@ -115,6 +115,7 @@
                                                                        (get-all-categories)
                                                                        (get-all-movements)
                                                                        (get-stored-sessions)
+                                                                       (session/put! :selected-menu-item " Session")
                                                                        (dispatch! "/generator")))
                                        :error-handler (fn [response] (let [r (:response response)
                                                                            update-payment? (:update-payment? r)]
