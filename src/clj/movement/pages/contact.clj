@@ -17,7 +17,7 @@
 
 (defn contact-page []
   (html5
-    (html-head "Contact")
+    (html-head "Contact | Movement Session")
     [:body
      (contact-content)
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]

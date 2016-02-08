@@ -111,7 +111,7 @@
   (html5
     [:head
      [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
-     [:title "View session"]
+     [:title "View your session | Movement Session"]
      [:script {:src "analytics.js" :type "text/javascript"}]
      (include-css
        "https://fonts.googleapis.com/css?family=Roboto"
@@ -120,7 +120,7 @@
        "/css/pure-min.css"
        "/css/grids-responsive-min.css"
        "/css/normalize.css"
-       "/css/marketing.css"
+       #_"/css/marketing.css"
        "/css/site.css")]
     [:body
      [:div

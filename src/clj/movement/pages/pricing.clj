@@ -7,19 +7,11 @@
 
 (defn pricing-page [& error-message]
   (html5
-    (html-head "Pricing")
+    (html-head "Pricing | Movement Session")
     [:body
      (top-menu)
      [:div.content
-      [:div.pricing-tables.pure-g
-       [:div.pure-u-1-12.pure-u-md-1-3]
-       [:div.pure-u-5-6.pure-u-md-1-3
-        [:div.pricing-table.pricing-table-biz
-         [:div.pricing-table-header
-          [:h2 ""]
-          [:span.pricing-table-price "$8" [:span "per month"]]]]]
-       [:div.pure-u-1-12.pure-u-md-1-3]]
-      [:div.information.pure-g
+      [:div.pure-g
        [:div.pure-u.pure-u-md-1-3
         [:div.l-box
          [:h3.information-head "30 day free trial"]
@@ -31,22 +23,34 @@
        [:div.pure-u.pure-u-md-1-3
         [:div.l-box
          [:h3.information-head "Customer support"]
-         [:p "We will get back to you within 24 hours."]]]]
-      [:div.information.pure-g
-       [:div.pure-u-1-12.pure-u-md-1-5]
-       [:div.pure-u-5-6.pure-u-md-3-5
-        [:div
-         (when error-message
-           [:div
+         [:p "We will always get back to you within 24 hours."]]]]
+      [:div.pure-g
+       [:div.pure-u-1
+        [:div.pure-g
+         [:div.pure-u.pure-u-md-1-3]
+         [:div.pure-u-1.pure-u-md-1-3
+          [:div.pricing-table.pricing-table-biz
+           [:div.pricing-table-header.center
+            [:h2 ""]
+            [:span.pricing-table-price "$8" [:span "per month"]]]]]
+         [:div.pure-u.pure-u-md-1-3]]
+        (when error-message
+          [:div.pure-g
+           [:div.pure-u.pure-u-md-1-3]
+           [:div.pure-u-1.pure-u-md-1-3
             [:div.pure-g
-             [:div.pure-u-1 error-message]]
+             [:div.pure-u-1.center error-message]]
             [:div.pure-g
-             [:a.pure-u-1.button.button-secondary
+             [:a.pure-u-1.button.center
               {:title  "Launch app"
                :href   "/app"
-               :target ""} "Launch app & Log in"]]])]
-        (signup-form)]
-       [:div.pure-u-1-12.pure-u-md-1-5]]]
+               :target ""} "Launch app & Log in"]]]
+           [:div.pure-u.pure-u-md-1-3]])
+        [:div.pure-g
+         [:div.pure-u.pure-u-md-1-3]
+         [:div.pure-u-1.pure-u-md-1-3
+          (signup-form)]
+         [:div.pure-u.pure-u-md-1-3]]]]]
      (footer-after-content)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]

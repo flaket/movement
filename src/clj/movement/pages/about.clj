@@ -5,7 +5,7 @@
 
 (defn about-page []
   (html5
-    (html-head "About")
+    (html-head "About | Movement Session")
     [:body
      (top-menu)
      [:div.l-content

@@ -1,34 +1,37 @@
 [
 
  {:db/id #db/id[:db.part/user -1] :category/name "Jumping"}
- {:db/id #db/id[:db.part/user -5] :category/name "Lower Body Bodyweight Strength"}
+
  ;; jumping
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Leg Swing Jump"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Broad Jump"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -5]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Split Jump"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Vertical Jump"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Depth Jump"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Lateral Jump"
-  :movement/category [#db/id[:db.part/user -1]]}
-
-
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions}
 
 
  ]

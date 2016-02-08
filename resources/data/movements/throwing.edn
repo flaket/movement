@@ -18,5 +18,9 @@
   :movement/unique-name      "Rotational Throw"
   :movement/category  [#db/id[:db.part/user -1]]}
 
+ ;; spear throw
+
+ ;; small rock throw
+
  ]
 

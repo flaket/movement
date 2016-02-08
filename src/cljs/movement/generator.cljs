@@ -182,7 +182,7 @@
         distance-clicked? (atom false)
         duration-clicked? (atom false)]
     (fn []
-      [:div.pure-u.movement.is-center {:id (str "m-" id)}
+      [:div.pure-u.movement.center {:id (str "m-" id)}
        (buttons-component m title)
        [:div.pure-g
         [:div.pure-u-1-12]
@@ -296,7 +296,7 @@
       [:div {:style {:margin-top 50}}
        [:div.pure-g
         [:div.pure-u.pure-u-md-2-5]
-        [:div.pure-u-1.pure-u-md-1-5.is-center (str month " " day)]
+        [:div.pure-u-1.pure-u-md-1-5.center (str month " " day)]
         [:div.pure-u.pure-u-md-2-5]]
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5]
@@ -406,9 +406,14 @@
     (fn []
       [:div
        [:div.pure-g
-        [:div.pure-u.pure-u-md-1-5]
+        [:a.pure-u.pure-u-md-1-5 {:style {:text-decoration 'underline
+                                          :text-align 'right
+                                          :margin-right 5}
+                                  :on-click #(session/remove! :movement-session)}
+         "Clear session"]
         [:div.pure-u.pure-u-md-1-5.button.button-primary {:style    {:margin-right 5}
-                                                              :on-click pick-random-template} "Random"]
+                                                              :on-click pick-random-template}
+         "Random"]
         [:div.pure-u.pure-u-md-1-5.button {:style    {:margin-right 5}
                                                :on-click #(handler-fn
                                                            (do
@@ -417,7 +422,7 @@
                                                              (when groups-showing?
                                                                (reset! groups-showing? false))
                                                              (reset! templates-showing? (not @templates-showing?))))}
-         "Template"]
+         "Select"]
         [:div.pure-u.pure-u-md-1-5.button {:style {:margin-right 5}
                                                    :on-click #(handler-fn
                                                                (do
@@ -425,9 +430,9 @@
                                                                    (get-equipment))
                                                                  (when templates-showing?
                                                                    (reset! templates-showing? false))
-                                                                 (reset! groups-showing? (not @groups-showing?))))} "Group"]
-        [:a.pure-u.pure-u-md-1-5 {:style {:text-decoration 'underline}
-                                  :on-click #(session/remove! :movement-session)} "Clear session"]]
+                                                                 (reset! groups-showing? (not @groups-showing?))))}
+         "Group"]
+        ]
        (when @templates-showing?
          [:div.pure-g.animated.fadeIn {:style {:margin-top '20}}
           (doall
@@ -456,7 +461,7 @@
       [:div
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5]
-        [:div.pure-u.pure-u-md-3-5.is-center
+        [:div.pure-u.pure-u-md-3-5.center
          [:i.fa.fa-clock-o.fa-4x {:style    {:cursor 'pointer :opacity 0.5 :margin-right 10}
                                   :on-click #(handler-fn (reset! adding-time (not @adding-time)))}]
          [:i.fa.fa-comment-o.fa-4x {:style    {:cursor 'pointer :opacity 0.5}
@@ -490,7 +495,7 @@
         [:div.pure-u.pure-u-md-1-5]]
        [:div.pure-g {:style {:margin-bottom 20}}
         [:div.pure-u.pure-u-md-1-5]
-        [:div.pure-u.pure-u-md-3-5.is-center
+        [:div.pure-u.pure-u-md-3-5.center
          (when @adding-comment
            [:div.pure-g {:style {:margin-top 5}}
             [:div.pure-u.pure-u-md-1-5]
@@ -515,7 +520,7 @@
               (reset! finish-button-clicked? false)
               (reset! session-stored-successfully? false))
           [:div.pure-g
-           [:div.pure-u-1.is-center {:style {:color "green" :font-size 24}} "Session stored successfully!"]])
+           [:div.pure-u-1.center {:style {:color "green" :font-size 24}} "Session stored successfully!"]])
         (if @finish-button-clicked?
           [:div.pure-g
            [:div.pure-u.pure-u-md-1-5]

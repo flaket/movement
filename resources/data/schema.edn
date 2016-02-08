@@ -577,6 +577,15 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/measurement
+  :db/index              true
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement has a standard way of logging progress.
+                          :measurement/repetitions :measurement/distance :measurement/time"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :movement/easier
   :db/index              true
   :db/valueType          :db.type/ref
@@ -607,6 +616,17 @@
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
   :db/doc                "The user may set a subjective movement difficulty"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db -1]
+  :db/ident              :movement/zone
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A given movement belongs to a mastery zone for the user.
+                          No data (:zone/one) and :zone/one is the learning phase, a new skill.
+                          :zone/two is when the skill is known, but not perfected. The user is effective, but not efficient.
+                          :zone/three is when the skill has been mastered. The user is both effective and efficient.
+                          :zone/none is used if the user never wants to see a movement."
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]

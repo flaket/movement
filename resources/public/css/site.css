@@ -25,7 +25,7 @@ html {
 
 body {
   background-color: #fffff8;
-  color: #1a1a1a;
+  color: #111;
 }
 
 input, textarea {
@@ -265,9 +265,11 @@ button.button-primary,
 input[type="submit"].button-primary,
 input[type="reset"].button-primary,
 input[type="button"].button-primary {
-  color: #FFF;
+  color: #fffff8;
   background: #1f8dd6;
-  border-color:  #1f8dd6; }
+  border-color:  #1f8dd6;
+  background: #4a5976;
+  border-color: #4a5976;}
 
 .button.button-primary:hover,
 button.button-primary:hover,
@@ -279,18 +281,20 @@ button.button-primary:focus,
 input[type="submit"].button-primary:focus,
 input[type="reset"].button-primary:focus,
 input[type="button"].button-primary:focus {
-  color: #FFF;
+  color: #fffff8;
   background-color: #4ba3de;
-  border-color: #4ba3de;}
+  border-color: #4ba3de;
+  background: #2c3546;
+  border-color: #2c3546;}
 
 .button.button-secondary,
 button.button-secondary,
 input[type="submit"].button-secondary,
 input[type="reset"].button-secondary,
 input[type="button"].button-secondary {
-  color: #FFF;
-  background: #ffa500;
-  border-color:  #ffa500; }
+  color: #fffff8;
+  background: #f9a82f;
+  border-color:  #f9a82f; }
 
  .button.button-secondary:hover,
  button.button-secondary:hover,
@@ -302,6 +306,6 @@ input[type="button"].button-secondary {
  input[type="submit"].button-secondary:focus,
  input[type="reset"].button-secondary:focus,
  input[type="button"].button-secondary:focus {
-   color: #FFF;
-   background-color: #ffb732;
-   border-color: #ffb732; }
+   color: #fffff8;
+   background-color: #b56d02;
+   border-color: #b56d02; }

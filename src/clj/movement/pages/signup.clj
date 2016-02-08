@@ -10,16 +10,19 @@
    {:method "POST"
     :action "/signup"}
    [:fieldset
-    [:input#email {:type        "email"
-                   :name        "email"
-                   :required    "required"
-                   :placeholder "Your Email"}]
-    [:input#password {:type        "password"
-                      :name        "password"
-                      :placeholder "Your Password"
-                      :required    "required"}]
-    [:input.button-primary {:type  "submit"
-                            :value "Sign Up"}]
+    [:input#email.pure-input-1
+     {:type        "email"
+      :name        "email"
+      :required    "required"
+      :placeholder "Your Email"}]
+    [:input#password.pure-input-1
+     {:type        "password"
+      :name        "password"
+      :placeholder "Your Password"
+      :required    "required"}]
+    [:input.button.pure-input-1
+     {:type  "submit"
+      :value "Sign Up"}]
     (anti-forgery-field)]])
 
 (defn fast-spring-store [ref]
@@ -30,7 +33,7 @@
 
 (defn payment-page [ref message]
   (html5
-    (html-head "Payment")
+    (html-head "Payment | Movement Session")
     [:body
      (top-menu)
      [:div.l-content
@@ -40,8 +43,7 @@
         [:div.l-box
          [:div.pure-g [:h3.pure-u-1.information-head message]]
          [:div.pure-g
-          [:p.pure-u-1 "To complete the sign up process you will have to register your
-         credit card with FastSpring."]]
+          [:p.pure-u-1 "Register a credit card with payment provider FastSpring to complete the sign up process."]]
          [:div.pure-g (fast-spring-store ref)]]]
        [:div.pure-u-1.pure-u-md-1-5]]
       [:div.information.pure-g
@@ -63,7 +65,7 @@
 
 (defn signup-page [& error-message]
   (html5
-    (html-head "Sign Up")
+    (html-head "Sign Up | Movement Session")
     [:body
      (top-menu)
      [:div.content.is-center
@@ -89,7 +91,7 @@
 
 (defn activation-page [message]
   (html5
-    (html-head "Activation")
+    (html-head "Activation | Movement Session")
     [:body
      (top-menu)
      [:div.l-content

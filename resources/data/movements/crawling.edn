@@ -8,80 +8,99 @@
  ;; crawling
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Inverted Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Inverted Backward Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Inverted Lateral Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Inchworm"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Lizard Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Knee Hand Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Foot Elbow Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Foot Hand Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Foot Hand Backward Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Foot Hand Lateral Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Knee Elbow Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Army Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Shoulder Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Spiderman Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Gallop Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Hover Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Traveling Squat"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Hip Thrust Crawl"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Bridge Crawl"
   :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -7]]}
+                      #db/id[:db.part/user -7]]
+  :movement/measurement :measurement/distance}
 
 
  ]

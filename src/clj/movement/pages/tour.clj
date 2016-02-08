@@ -5,11 +5,10 @@
 
 (defn tour-page []
   (html5
-    (html-head "Tour")
+    (html-head "Tour | Movement Session")
     [:body
      (top-menu)
      [:div.content
-
       [:div.pure-g
        [:h2.content-head.is-center.pure-u-1 "Generate sessions"]]
       [:div.pure-g
@@ -91,8 +90,8 @@
          [:p.pure-u-1 "You can always find content you have created, content movementsession has created and all the content
          that is currently linked to your account."]]]]
       [:div.pure-g
-       [:p.pure-u-1.is-center
-        [:a.pure-button-primary {:title  "See Pricing" :href   "/pricing" :target ""} "See Pricing"]]]]
+       [:p.pure-u-1.center
+        [:a.m-button.orange.x-large.upper {:title  "See Pricing" :href   "/pricing" :target ""} "See Pricing"]]]]
      (footer-after-content)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]

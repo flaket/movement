@@ -1,0 +1,21 @@
+[
+
+ ;; category
+ {:db/id #db/id[:db.part/user -1] :category/name "Endurance"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Running"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Running Technique"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Running Drills"}
+
+ {:db/id             #db/id[:db.part/user -200]
+  :movement/unique-name     "Run"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]]
+  :movement/harder [#db/id[:db.part/user -201]]}
+
+ {:db/id             #db/id[:db.part/user -201]
+  :movement/unique-name     "Sprint"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]]
+  :movement/easier    [#db/id[:db.part/user -200]]}
+
+ ]

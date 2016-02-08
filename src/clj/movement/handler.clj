@@ -221,6 +221,7 @@
     (let [activation-id (generate-activation-id)]
       (db/transact-new-user! email password activation-id)
       (send-activation-email email activation-id)
+      (send-email "admin@movementsession.com" "A new user registered!" "")
       (update-tx-db!)
       (activation-page "To verify your email address we have sent you an activation email."))
     (pricing-page (str email " is already registered as a user."))))

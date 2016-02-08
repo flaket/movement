@@ -46,6 +46,7 @@ appears on the left side of the page.
     bottom: 0;
     z-index: 1000; /* so the menu or its navicon stays above all content */
     background: #2C3546;
+    background: #4a5976;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 
@@ -93,6 +94,7 @@ appears on the left side of the page.
     #menu .pure-menu-selected,
     #menu .pure-menu-heading {
         background: #1f8dd6;
+        background: #2c3546;
     }
         /*
         This styles a link within a selected menu item `<li>`.

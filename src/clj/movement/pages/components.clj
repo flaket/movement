@@ -18,6 +18,8 @@
      "/css/marketing.css"
      "/css/site.css"
      "/css/pricing.css")
+   [:meta {:name "description"
+           :content "Try Movement Session to learn functional and natural movement training through generated workouts."}]
    [:meta {:name "google-site-verification"
            :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]
    [:meta {:name "msvalidate.01"
@@ -27,24 +29,24 @@
   [:div.home-menu.pure-menu-horizontal
    [:a.pure-menu-heading.pure-u {:title  "Home"
                                  :href   "/"
-                                 :target ""} "Movement Session"]
+                                 :target "a"} "Movement Session"]
    [:ul.pure-menu-list
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Home"
                          :href   "/"
-                         :target ""} "Home"]]
+                         :target "a"} "Home"]]
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Tour"
                          :href   "/tour"
-                         :target ""} "Tour"]]
+                         :target "a"} "Tour"]]
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Pricing"
                          :href   "/pricing"
-                         :target ""} "Pricing"]]
+                         :target "a"} "Pricing"]]
     [:li.pure-menu-item
-     [:a.pure-menu-link {:title  "Sign in"
+     [:a.pure-menu-link {:title  "Log in"
                          :href   "/app"
-                         :target ""} "Sign in"]]]])
+                         :target "a"} "Log in"]]]])
 
 (defn footer-after-content []
   [:div.footer.l-box.is-center

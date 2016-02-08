@@ -20,25 +20,25 @@
 #_(def conn (d/connect uri))
 
 #_(let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
-  (d/transact conn schema-tx))
+    (d/transact conn schema-tx))
 
-#_(let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/acrobatics.edn"))))
-      balancing-tx (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
-      climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
-      core-tx (first (Util/readAll (io/reader (io/resource "data/movements/core.edn"))))
-      crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
-      e-tx (first (Util/readAll (io/reader (io/resource "data/movements/e.edn"))))
-      endurance-tx (first (Util/readAll (io/reader (io/resource "data/movements/endurance.edn"))))
-      jumping-tx (first (Util/readAll (io/reader (io/resource "data/movements/jumping.edn"))))
-      lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
-      lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/lowerbody.edn"))))
-      mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility.edn"))))
-      pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
-      pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
-      rolling-tx (first (Util/readAll (io/reader (io/resource "data/movements/rolling.edn"))))
-      sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
-      throwing-catching-tx (first (Util/readAll (io/reader (io/resource "data/movements/throwing-catching.edn"))))
-      walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))]
+#_(let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/acrobatics.edn"))))
+        balancing-tx (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
+        climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
+        core-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/core.edn"))))
+        crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
+        e-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/e.edn"))))
+        endurance-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/endurance.edn"))))
+        jumping-tx (first (Util/readAll (io/reader (io/resource "data/movements/jumping.edn"))))
+        lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
+        lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/lowerbody.edn"))))
+        mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility/mobility.edn"))))
+        pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
+        pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
+        rolling-tx (first (Util/readAll (io/reader (io/resource "data/movements/rolling.edn"))))
+        sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
+        throwing-catching-tx (first (Util/readAll (io/reader (io/resource "data/movements/throwing.edn"))))
+        walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))]
     (d/transact conn acrobatics-tx)
     (d/transact conn balancing-tx)
     (d/transact conn climbing-tx)
@@ -63,15 +63,15 @@
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
                        :user/email               "admin@movementsession.com"
-                       :user/password (hashers/encrypt "movementM9n8b7v6")
-                       :user/name "movementsession"
+                       :user/password            (hashers/encrypt "movementM9n8b7v6")
+                       :user/name                "movementsession"
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                     :user/email               "nils.flakstad@kartverket.no"
-                     :user/valid-subscription? true}]]
-  (d/transact conn tx-user-data))
+                       :user/email               "nils.flakstad@kartverket.no"
+                       :user/valid-subscription? true}]]
+    (d/transact conn tx-user-data))
 
 ;; Get the database value.
 #_(def db (d/db conn))
@@ -83,58 +83,58 @@
               db))
 
 #_(d/q '[:find (pull ?u [*])
-       :where
-       [?u :user/email ?e]]
-     db)
+         :where
+         [?u :user/email ?e]]
+       db)
 
 #_(d/pull db '[*] 17592186045838)
 
 #_(defn image-url [name]
-  (str "public/images/" (str/replace (str/lower-case name) " " "-") ".png"))
+    (str "public/images/" (str/replace (str/lower-case name) " " "-") ".png"))
 
 #_(defn has-no-image? [m]
-  (if-not (io/resource (image-url m)) true false))
+    (if-not (io/resource (image-url m)) true false))
 
 #_(defn url->name [url]
-  (let [name (-> url
-                 (str/split (re-pattern ".png"))
-                 (first)
-                 (str/replace "-" " ")
-                 (str/split (re-pattern " ")))
-        name (map #(str/capitalize %) name)
-        name (-> name
-                 (interleave (cycle " "))
-                 (drop-last)
-                 (str/join))]
-    name))
+    (let [name (-> url
+                   (str/split (re-pattern ".png"))
+                   (first)
+                   (str/replace "-" " ")
+                   (str/split (re-pattern " ")))
+          name (map #(str/capitalize %) name)
+          name (-> name
+                   (interleave (cycle " "))
+                   (drop-last)
+                   (str/join))]
+      name))
 
 #_(defn has-no-data? [url]
-  (let [name (url->name url)
-        x (d/q '[:find ?e
-                 :in $ ?name
-                 :where
-                 [?e :movement/unique-name ?name]]
-               db
-               name)]
-    (empty? x)))
+    (let [name (url->name url)
+          x (d/q '[:find ?e
+                   :in $ ?name
+                   :where
+                   [?e :movement/unique-name ?name]]
+                 db
+                 name)]
+      (empty? x)))
 
 #_(defn find-no-image-movements []
-  (let [movements (flatten (seq (d/q '[:find ?name
-                                       :where
-                                       [_ :movement/unique-name ?name]]
-                                     db)))
-        no-image-movements (filter #(has-no-image? %) movements)]
-    {:#                  (count no-image-movements)
-     :no-image-movements (vec no-image-movements)}))
+    (let [movements (flatten (seq (d/q '[:find ?name
+                                         :where
+                                         [_ :movement/unique-name ?name]]
+                                       db)))
+          no-image-movements (filter #(has-no-image? %) movements)]
+      {:#                  (count no-image-movements)
+       :no-image-movements (vec no-image-movements)}))
 
 #_(defn find-no-data-images []
-  (let [f (io/file "resources/public/images")
-        images (for [file (file-seq f)] (.getName file))
-        images (drop 2 images) ; remove leading junk files
-        no-data-images (filter #(has-no-data? %) images)]
-    {:#images          (count images)
-     :#no-data-images (count no-data-images)
-     :no-data-images  (vec no-data-images)}))
+    (let [f (io/file "resources/public/images")
+          images (for [file (file-seq f)] (.getName file))
+          images (drop 2 images)                            ; remove leading junk files
+          no-data-images (filter #(has-no-data? %) images)]
+      {:#images         (count images)
+       :#no-data-images (count no-data-images)
+       :no-data-images  (vec no-data-images)}))
 
 #_(find-no-image-movements)
 #_(find-no-data-images)
@@ -145,28 +145,28 @@
 Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                     :user/email               "chrhage@gmail.com"
-                     :user/valid-subscription? true}]]
-  (d/transact conn tx-user-data))
+                       :user/email               "chrhage@gmail.com"
+                       :user/valid-subscription? true}]]
+    (d/transact conn tx-user-data))
 
 #_(let [
-      tx-user-data [{:db/id                    #db/id[:db.part/user]
-                     :user/email               "martinarnesen1@gmail.com"
-                     :user/password (hashers/encrypt "Dg86AS721Gas1")}]]
-  (d/transact conn tx-user-data))
+        tx-user-data [{:db/id         #db/id[:db.part/user]
+                       :user/email    "martinarnesen1@gmail.com"
+                       :user/password (hashers/encrypt "Dg86AS721Gas1")}]]
+    (d/transact conn tx-user-data))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
                        :user/email               "chrhage@gmail.com"
                        :user/valid-subscription? true}]]
-  (d/transact conn tx-user-data))
+    (d/transact conn tx-user-data))
 
 #_(let []
-  (empty? (d/q '[:find [?username ...]
-                 :in $ ?username
-                 :where
-                 [?e :user/name ?username]]
-               db
-               "flaket")))
+    (empty? (d/q '[:find [?username ...]
+                   :in $ ?username
+                   :where
+                   [?e :user/name ?username]]
+                 db
+                 "flaket")))
 
 #_(flatten (d/q '[:find (pull ?u [*])
                   :where
@@ -174,77 +174,77 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                 db))
 
 #_(d/q '[:find (pull ?u [*])
-       :where [?u :user/email ?n]]
-     db)
+         :where [?u :user/email ?n]]
+       db)
 
 #_(d/q '[:find (pull ?u [*])
-       :where [?u :category/name ?n]]
-     db)
+         :where [?u :category/name ?n]]
+       db)
 
 #_(d/q '[:find (pull ?u [*])
          :where [?u :movement/unique-name ?n]]
        db)
 
 #_(let [templates ["Natural Movement" "Locomotion" "4x4 Interval Run"]
-        template-ids (map (pull ))])
+        template-ids (map (pull))])
 
 #_(flatten (d/q '[:find (pull ?t [*])
-                :in $ ?name
-                :where
-                [?t :template/created-by ?u]
-                [?u :user/name ?name]]
-              db
+                  :in $ ?name
+                  :where
+                  [?t :template/created-by ?u]
+                  [?u :user/name ?name]]
+                db
                 "andreasflakstad"))
 
 #_(flatten (d/q '[:find (pull ?t [*])
-                :in $ ?email
-                :where
-                [?e :user/email ?email]
-                [?e :user/group ?t]]
-              db
-              "andflak@gmail.com"))
+                  :in $ ?email
+                  :where
+                  [?e :user/email ?email]
+                  [?e :user/group ?t]]
+                db
+                "andflak@gmail.com"))
 
 #_(def db (d/db conn))
 #_(d/pull db '[*] 17592186045815)
 
 ;; begin-plan!
 #_(let [user-id 17592186045808
-      plan-id 17592186046127
-      plan (d/pull db '[*] plan-id)
-      current-day (:db/id (first (:plan/day plan)))
-      tx-data [[:db/add plan-id :plan/started (Date.)]
-               [:db/add plan-id :plan/current-day current-day]
-               [:db/add user-id :user/ongoing-plan plan-id]]]
-  (d/transact conn tx-data))
+        plan-id 17592186046127
+        plan (d/pull db '[*] plan-id)
+        current-day (:db/id (first (:plan/day plan)))
+        tx-data [[:db/add plan-id :plan/started (Date.)]
+                 [:db/add plan-id :plan/current-day current-day]
+                 [:db/add user-id :user/ongoing-plan plan-id]]]
+    (d/transact conn tx-data))
 
 (defn positions [pred coll]
   (keep-indexed (fn [idx x]
                   (when (pred x) idx)) coll))
 ;; progress-plan!
-#_(let [                                                      ;conn (:conn @tx)
-      user-id 17592186045808
-      plan-id 17592186046127
-      plan (d/pull db '[*] plan-id)
-      days (:plan/day plan)
-      current-day (:plan/current-day plan)
-      day-id (:db/id current-day)
-      current-day-pos (first (positions #{current-day} days))
-      new-current-day (:db/id (get days (inc current-day-pos)))
-      tx-data [[:db/add day-id :day/completed? true]
-               [:db/add plan-id :plan/current-day new-current-day]]]
-  tx-data
-  #_(d/transact conn tx-data))
+#_(let [;conn (:conn @tx)
+        user-id 17592186045808
+        plan-id 17592186046127
+        plan (d/pull db '[*] plan-id)
+        days (:plan/day plan)
+        current-day (:plan/current-day plan)
+        day-id (:db/id current-day)
+        current-day-pos (first (positions #{current-day} days))
+        new-current-day (:db/id (get days (inc current-day-pos)))
+        tx-data [[:db/add day-id :day/completed? true]
+                 [:db/add plan-id :plan/current-day new-current-day]]]
+    tx-data
+    #_(d/transact conn tx-data))
 
 ;; end-plan!
 #_(let [user-id 17592186045808
         plan-id 17592186046127
-      plan (d/pull db '[*] plan-id)
-      days (map #(d/pull db '[*] (:db/id %)) (:plan/day plan))
-      all-completed? (every? #(true? (:day/completed? %)) days)
-      tx-data [[:db/add plan-id :plan/ended (Date.)]
-               [:db/add plan-id :plan/completed? all-completed?]
-               [:db/retract user-id :user/ongoing-plan plan-id]]]
-  (d/transact conn tx-data))
+        plan (d/pull db '[*] plan-id)
+        days (map #(d/pull db '[*] (:db/id %)) (:plan/day plan))
+        all-completed? (every? #(true? (:day/completed? %)) days)
+        tx-data [[:db/add plan-id :plan/ended (Date.)]
+                 [:db/add plan-id :plan/completed? all-completed?]
+                 [:db/retract user-id :user/ongoing-plan plan-id]]]
+    (d/transact conn tx-data))
 
 #_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186045973]])
@@ -257,10 +257,10 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                db))
 
 #_(d/q '[:find (pull ?e [*])
-       :in $ ?name
-       :where
-       [?e :template/title ?name]]
-     db "Locomotion")
+         :in $ ?name
+         :where
+         [?e :template/title ?name]]
+       db "Locomotion")
 
 #_(defn all-movements []
     (d/q '[:find [?name ...]
@@ -271,41 +271,41 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 
 #_(defn movements-from-category [category]
     (d/q '[:find [?name ...]
-              :in $ ?cname
-              :where
-              [?e :movement/unique-name ?name]
-              [?e :movement/category ?c]
-              [?c :category/name ?cname]]
-            db category))
+           :in $ ?cname
+           :where
+           [?e :movement/unique-name ?name]
+           [?e :movement/category ?c]
+           [?c :category/name ?cname]]
+         db category))
 
 #_(count (all-movements))
 #_(count (movements-from-category "Pushing"))
 
 #_(let [pushing (set (movements-from-category "Pushing"))
-      pulling (set (movements-from-category "Pulling"))
-      bas (set (movements-from-category "Bent Arm Strength"))]
-  (set/difference bas (set/union pushing pulling)))
+        pulling (set (movements-from-category "Pulling"))
+        bas (set (movements-from-category "Bent Arm Strength"))]
+    (set/difference bas (set/union pushing pulling)))
 
 #_(first (d/q '[:find [?id ...]
-              :in $ ?email ?name
-              :where
-              [?u :user/email ?email]
-              [?u :user/template ?id]
-              [?id :template/title ?name]]
-            db "admin@movementsession.com" "Locomotion"))
-
-#_(defn get-user-template-id [email template-title]
-  (first (d/q '[:find [?id ...]
                 :in $ ?email ?name
                 :where
                 [?u :user/email ?email]
                 [?u :user/template ?id]
                 [?id :template/title ?name]]
-              db email template-title)))
+              db "admin@movementsession.com" "Locomotion"))
+
+#_(defn get-user-template-id [email template-title]
+    (first (d/q '[:find [?id ...]
+                  :in $ ?email ?name
+                  :where
+                  [?u :user/email ?email]
+                  [?u :user/template ?id]
+                  [?id :template/title ?name]]
+                db email template-title)))
 
 #_(defn entity-by-template-title
-  "Returns the whole entity of a named template."
-  [email title]
+    "Returns the whole entity of a named template."
+    [email title]
     (d/q '[:find (pull ?t [*])
            :in $ ?email ?title
            :where
@@ -315,173 +315,173 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
          db email title))
 
 #_(d/q '[:find (pull ?t [*])
-            :in $ ?email ?title
-            :where
-            [?u :user/email ?email]
-            [?u :user/group ?group]
-            [?group :group/title ?title]
-            [?group :group/template ?t]]
-          db
-          "admin@movementsession.com"
-          "Standard Templates 1")
+         :in $ ?email ?title
+         :where
+         [?u :user/email ?email]
+         [?u :user/group ?group]
+         [?group :group/title ?title]
+         [?group :group/template ?t]]
+       db
+       "admin@movementsession.com"
+       "Standard Templates 1")
 
 #_(d/q '[:find (pull ?u [*])
-            :in $
-            :where
+         :in $
+         :where
          [?u :user/name _]]
-          db)
+       db)
 
 #_(d/q '[:find (pull ?t [*])
-       :in $ ?username ?item
-       :where
-       [?e :user/name ?username]
-       [?e ?item ?t]
-       [?t ?created-by ?e]]
-     db "movementsession" :user/plan)
+         :in $ ?username ?item
+         :where
+         [?e :user/name ?username]
+         [?e ?item ?t]
+         [?t ?created-by ?e]]
+       db "movementsession" :user/plan)
 
 #_(vec (map #(d/pull db '[*] (:db/id %)) (:part/specific-movement (d/pull db '[*] 17592186045859))))
 
 #_(d/pull db '[*] 17592186045808)
 
 #_(d/q '[:find ?e
-       :in $ ?id
-       :where
-       [_ :db/id ?id]
-       #_[?m :movement/harder ?e]]
-     db
-     17592186045637)
+         :in $ ?id
+         :where
+         [_ :db/id ?id]
+         #_[?m :movement/harder ?e]]
+       db
+       17592186045637)
 
 ; all exercises not using the input equipment parameter.
 #_(d/q '[:find ?name
-       :in $ ?equipment
-       :where
-       (not-join [?e]
-                 [?e :movement/equipment ?c]
-                 [?c :equipment/name ?equipment])
-       [?e :movement/name ?name]]
-     db
-     "Rings")
+         :in $ ?equipment
+         :where
+         (not-join [?e]
+                   [?e :movement/equipment ?c]
+                   [?c :equipment/name ?equipment])
+         [?e :movement/name ?name]]
+       db
+       "Rings")
 
 #_(d/q '[:find [?e ...]
-       :in $ ?cat
-       :where
-       [?e :template/part ?p]
+         :in $ ?cat
+         :where
+         [?e :template/part ?p]
          [?p :part/category ?c]
          [?c :category/name ?cat]]
-     db
-     "Hip Mobility")
+       db
+       "Hip Mobility")
 
 #_(flatten (d/q '[:find (pull ?t [*])
-                :in $ ?kw ?username
-                :where
-                [?e :user/name ?username]
-                [?e ?kw ?t]
-                [?t :plan/created-by ?e]]
-              db :user/plan "movementsession"))
+                  :in $ ?kw ?username
+                  :where
+                  [?e :user/name ?username]
+                  [?e ?kw ?t]
+                  [?t :plan/created-by ?e]]
+                db :user/plan "movementsession"))
 
 #_(d/q '[:find [?t ...]
-       :in $ ?username
-       :where
-       [(fulltext $ :user/name ?username) [[?e ?n]]]
-       [?e :user/template ?t]
-       [?t :template/created-by ?e]]
-     db "movementsession")
+         :in $ ?username
+         :where
+         [(fulltext $ :user/name ?username) [[?e ?n]]]
+         [?e :user/template ?t]
+         [?t :template/created-by ?e]]
+       db "movementsession")
 
 #_(->> (d/q '[:find (pull ?t [*])
-            :in $ ?username ?item ?created-by
-            :where
-            [?e :user/name ?username]
-            [?e ?item ?t]
-            [?t ?created-by ?e]]
-          db "movementsession" :user/template :template/created-by)
-     flatten)
+              :in $ ?username ?item ?created-by
+              :where
+              [?e :user/name ?username]
+              [?e ?item ?t]
+              [?t ?created-by ?e]]
+            db "movementsession" :user/template :template/created-by)
+       flatten)
 
 #_(->> (map #(flatten
-                (d/q '[:find (pull ?t [*])
-                       :in $ ?category
-                       :where
-                       [?e :user/template ?t]
-                       [?t :template/created-by ?e]
-                       [?t :template/part ?p]
-                       [?p :part/category ?c]
-                       [?c :category/name ?category]]
-                     db %)) ["Crawling" "Rolling"])
-     flatten
-     set
-     seq)
+              (d/q '[:find (pull ?t [*])
+                     :in $ ?category
+                     :where
+                     [?e :user/template ?t]
+                     [?t :template/created-by ?e]
+                     [?t :template/part ?p]
+                     [?p :part/category ?c]
+                     [?c :category/name ?category]]
+                   db %)) ["Crawling" "Rolling"])
+       flatten
+       set
+       seq)
 
 #_(defn items-by-category
-  ""
-  [type category]
-  (flatten
-    (case type
-      :template (d/q '[:find (pull ?t [*])
-                       :in $ ?category
-                       :where
-                       [?e :user/template ?t]
-                       [?t :template/created-by ?e]
-                       [?t :template/part ?p]
-                       [?p :part/category ?c]
-                       [?c :category/name ?category]]
-                     db category)
-      :group (d/q '[:find (pull ?g [*])
-                    :in $ ?category
-                    :where
-                    [?e :user/group ?g]
-                    [?g :group/created-by ?e]
-                    [?g :group/template ?t]
-                    [?t :template/part ?p]
-                    [?p :part/category ?c]
-                    [?c :category/name ?category]]
-                  db category)
-      :plan (d/q '[:find (pull ?plan [*])
-                   :in $ ?category
-                   :where
-                   [?e :user/plan ?plan]
-                   [?plan :plan/created-by ?e]
-                   [?plan :plan/day ?d]
-                   [?d :day/template ?t]
-                   [?t :template/part ?p]
-                   [?p :part/category ?c]
-                   [?c :category/name ?category]]
-                 db category)
-      nil)))
+    ""
+    [type category]
+    (flatten
+      (case type
+        :template (d/q '[:find (pull ?t [*])
+                         :in $ ?category
+                         :where
+                         [?e :user/template ?t]
+                         [?t :template/created-by ?e]
+                         [?t :template/part ?p]
+                         [?p :part/category ?c]
+                         [?c :category/name ?category]]
+                       db category)
+        :group (d/q '[:find (pull ?g [*])
+                      :in $ ?category
+                      :where
+                      [?e :user/group ?g]
+                      [?g :group/created-by ?e]
+                      [?g :group/template ?t]
+                      [?t :template/part ?p]
+                      [?p :part/category ?c]
+                      [?c :category/name ?category]]
+                    db category)
+        :plan (d/q '[:find (pull ?plan [*])
+                     :in $ ?category
+                     :where
+                     [?e :user/plan ?plan]
+                     [?plan :plan/created-by ?e]
+                     [?plan :plan/day ?d]
+                     [?d :day/template ?t]
+                     [?t :template/part ?p]
+                     [?p :part/category ?c]
+                     [?c :category/name ?category]]
+                   db category)
+        nil)))
 
 #_(flatten (d/q '[:find (pull ?t [:db/id :template/title])
-                :in $ ?email
-                :where
-                [?e :user/email ?email]
-                [?e :user/template ?t]]
-              db
-              "admin@movementsession.com"))
+                  :in $ ?email
+                  :where
+                  [?e :user/email ?email]
+                  [?e :user/template ?t]]
+                db
+                "admin@movementsession.com"))
 
 #_(d/pull db '[*] 17592186045838)
 
 #_(flatten
-  (d/q '[:find (pull ?t [*])
-         :in $ ?title
-         :where
-         [(fulltext $ :template/title ?title) [[?t ?n]]]
-         [?e :user/template ?t]
-         [?t :template/created-by ?e]]
-       db "5x5"))
+    (d/q '[:find (pull ?t [*])
+           :in $ ?title
+           :where
+           [(fulltext $ :template/title ?title) [[?t ?n]]]
+           [?e :user/template ?t]
+           [?t :template/created-by ?e]]
+         db "5x5"))
 
 #_(flatten (map #(flatten
-                (d/q '[:find (pull ?t [*])
-                       :in $ ?title
-                       :where
-                       [(fulltext $ :template/title ?title) [[?t ?n]]]
-                       [?e :user/template ?t]
-                       [?t :template/created-by ?e]]
-                     db %)) (str/split "5x5 locomotion" #" ")))
+                  (d/q '[:find (pull ?t [*])
+                         :in $ ?title
+                         :where
+                         [(fulltext $ :template/title ?title) [[?t ?n]]]
+                         [?e :user/template ?t]
+                         [?t :template/created-by ?e]]
+                       db %)) (str/split "5x5 locomotion" #" ")))
 
 #_(flatten (map #(flatten (d/q '[:find (pull ?t [*])
-                               :in $ ?description
-                               :where
-                               [(fulltext $ :template/description ?description) [[?t ?n]]]
-                               [?e :user/template ?t]
-                               [?t :template/created-by ?e]]
-                             db %)) (str/split "practice" #" ")))
+                                 :in $ ?description
+                                 :where
+                                 [(fulltext $ :template/description ?description) [[?t ?n]]]
+                                 [?e :user/template ?t]
+                                 [?t :template/created-by ?e]]
+                               db %)) (str/split "practice" #" ")))
 
 #_(pp/pprint *1)
 
@@ -565,19 +565,19 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 
 ; find all categories a movement belongs to
 #_(d/q '[:find ?category-name
-       :in $ ?movement-name
-       :where
-       [?e :movement/name ?movement-name]
-       [?e :movement/category ?category]
-       [?category :category/name ?category-name]]
-     db
-     "Russian Dip")
+         :in $ ?movement-name
+         :where
+         [?e :movement/name ?movement-name]
+         [?e :movement/category ?category]
+         [?category :category/name ?category-name]]
+       db
+       "Russian Dip")
 
 ; find all movement names
 #_(d/q '[:find ?name
-       :where
-       [_ :movement/name ?name]]
-     db)
+         :where
+         [_ :movement/name ?name]]
+       db)
 
 ; Find binding
 ; [?t ...] says "I want to get back the result ?t unwrapped.
@@ -585,9 +585,9 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 
 ; find all category names, return unwrapped collection.
 #_(d/q '[:find [?name ...]
-       :where
-       [_ :category/name ?name]]
-     db)
+         :where
+         [_ :category/name ?name]]
+       db)
 
 ; pull syntax '[*]: getting everything about an entity
 #_(d/pull db '[*] 17592186045430)
@@ -601,18 +601,51 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 ; peanut butter, and the mixing of the two is the way to go!
 
 #_(d/q '[:find (pull ?p [:part/name])
-       :in $ ?template-name
-       :where
-       [?e :template/title ?template-name]
-       [?e :template/part ?p]]
-     db
-     "Strength")
+         :in $ ?template-name
+         :where
+         [?e :template/title ?template-name]
+         [?e :template/part ?p]]
+       db
+       "Strength")
 
 ; exercises that use "Rings" equipment.
 #_(d/q '[:find (pull ?m [:movement/name])
-       :in $ ?equipment-name
-       :where
-       [?e :equipment/name ?equipment-name]
-       [?m :movement/equipment ?e]]
-     db
-     "Rings")
+         :in $ ?equipment-name
+         :where
+         [?e :equipment/name ?equipment-name]
+         [?m :movement/equipment ?e]]
+       db
+       "Rings")
+
+; using lookup-ref to simplify adding data to an entity
+#_(d/transact conn [[:db/add
+                     [:user/email "jdoe@example.com"]
+                     :db/doc
+                     "doc about John"]])
+
+; most restrictive clauses should come first in a query
+; :where [?e :only/matches ?few]
+;        [?e :will/match ?many]
+
+; Collection Binding
+; pass collections as inputs
+; This behaves as a logical or, that is, it returns a union of the results for each item in the collection. When you want all results that match any of a given collection of entities or values, you should prefer a collection binding in a parameterized query over running multiple queries.
+; The following query uses a collection binding to return all names for artists based in Japan or Canada:
+#_(d/q '[:find (pull ?a [:artist/name])
+         :in $ [?c ...]
+         :where [?a :artist/country ?country]
+         [?country :country/name ?c]]
+       db ["Canada" "Japan"])
+
+; Relation Binding
+; A relation binding is fully general, binding multiple variables positionally to a relation (collection of tuples) passed in. This can be used to ask "or" questions involving multiple variables. For example, what releases are associated with either John Lennon's Mind Games or Paul McCartney's Ram?
+#_[:find ?release
+   :in $ [[?artist-name ?release-name]]
+   :where [?artist :artist/name ?artist-name]
+   [?release :release/artists ?artist]
+   [?release :release/name ?release-name]]
+;; inputs:
+; db, [["John Lennon" "Mind Games"] ["Paul McCartney" "Ram"]]
+
+
+

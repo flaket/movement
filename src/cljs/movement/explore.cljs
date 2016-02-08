@@ -126,7 +126,7 @@
               (for [m movements]
                 ^{:key (rand-int 10000)}
                 (let [name (:movement/unique-name m)]
-                  [:div.pure-u.movement.small.is-center
+                  [:div.pure-u.movement.small.center
                    [:h3.pure-g
                     [:div.pure-u-1-24]
                     [:div.pure-u-11-12.title name]
