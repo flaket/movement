@@ -17,6 +17,20 @@
  {:db/id #db/id[:db.part/user -10] :category/name "Elastic Band"}
  {:db/id #db/id[:db.part/user -11] :category/name "Weights"}
 
+ {:db/id                #db/id[:db.part/user -108]
+  :movement/unique-name "Tripod Transition"
+  :movement/category    [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions
+  :movement/harder      [#db/id[:db.part/user -109]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/unique-name     "Ostrich Walk"
+  :movement/category [#db/id[:db.part/user -1]]}
+
+ {:db/id             #db/id[:db.part/user]
+  :movement/unique-name     "Horse Stance Walk"
+  :movement/category [#db/id[:db.part/user -1]]}
+
  ;; Hip
  {:db/id              #db/id[:db.part/user]
   :movement/unique-name      "Squat Hip Rotation"

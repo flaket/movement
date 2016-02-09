@@ -7,7 +7,7 @@
             [taoensso.timbre :refer [info error]]
             [movement.activation :refer [generate-activation-id send-activation-email]]))
 
-(def uri "datomic:dev://localhost:4334/testing8")
+(def uri "datomic:dev://localhost:4334/testing11")
 #_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
@@ -169,10 +169,10 @@
                                       movements)})))]
     {:title       (:template/title template)
      :description (:template/description template)
-     :background  (:template/background template)
      :parts       parts
      :last-session? (:last-session? template)
-     :plan-id     (:plan-id template)}))
+     :plan-id     (:plan-id template)
+     :template-id (:db/id template)}))
 
 (defn random-template-from-group [email group]
   (let [db (:db @tx)
@@ -237,7 +237,10 @@
      :description (:session/description session)
      :parts       parts
      :comment     (:session/comment session)
-     :time        (:session/time session)}))
+     :time        (:session/time session)
+     :template    (:session/template session)
+     :plan        (:session/plan session)
+     :heart-rate  (:session/heart-rate session)}))
 
 ; refactor following five functions "new-unique-x?", (defn unique-title? [email type title])
 
@@ -624,7 +627,7 @@
 
 (defn transact-session!
   "Adds a completed session to the database."
-  [user {:keys [title description parts comment time plan-id]}]
+  [user {:keys [title description parts comment time plan-id template-id]}]
   (let [conn (:conn @tx)
         parts (map #(assoc % :movements (vals (:movements %))
                              :db/id (d/tempid :db.part/user)) parts)
@@ -643,7 +646,8 @@
                        :session/timestamp   (Date.)
                        :session/part        (vec (map :db/id parts))
                        :session/time        time
-                       :session/plan        plan-id}]
+                       :session/plan        plan-id
+                       :session/template    template-id}]
         part-data (vec (for [p parts]
                          {:db/id                 (:db/id p)
                           :part/title            (:title p)

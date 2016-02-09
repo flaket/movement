@@ -44,7 +44,6 @@
  {:db/id #db/id[:db.part/user -45] :category/name "Pulling"}
  {:db/id #db/id[:db.part/user -46] :category/name "Pull Up"}
 
-
  {:db/id #db/id[:db.part/user -48] :category/name "Push Up"}
  {:db/id #db/id[:db.part/user -49] :category/name "Dip"}
  {:db/id #db/id[:db.part/user -50] :category/name "Back Lever"}
@@ -75,19 +74,19 @@
                   #db/id[:db.part/user -106]
                   #db/id[:db.part/user -109]]}
 
- {:db/id          #db/id[:db.part/user -101]
-  :template/title "Locomotion"
-  :template/public? true
+ {:db/id               #db/id[:db.part/user -101]
+  :template/title      "Locomotion"
+  :template/public?    true
   :template/created-by #db/id[:db.part/user -998]
   :template/description
-                  "Practice different crawls, walks and rolls as ways of moving across the floor. Go through the locomotion movements for between 4 and 6 rounds, keeping a controlled, even tempo and using minimal rest between each movement."
-  :template/part  [#db/id[:db.part/user -1011]
-                   #db/id[:db.part/user -1012]]}
+                       "Practice different crawls, walks and rolls as ways of moving across the floor. Go through the locomotion movements for between 4 and 6 rounds, keeping a controlled, even tempo and using minimal rest between each movement."
+  :template/part       [#db/id[:db.part/user -1011]
+                        #db/id[:db.part/user -1012]]}
  {:db/id                    #db/id[:db.part/user -1011]
   :part/title               "Mobility"
   :part/category            [#db/id[:db.part/user -2]]
-  :part/specific-movement  [#db/id[:db.part/user -5002]
-                            #db/id[:db.part/user -5003]]
+  :part/specific-movement   [#db/id[:db.part/user -5002]
+                             #db/id[:db.part/user -5003]]
   :part/number-of-movements 4
   :part/rep                 10
   :part/set                 1}
@@ -100,24 +99,24 @@
   :part/distance            15
   :part/set                 4}
 
- {:db/id          #db/id[:db.part/user -102]
-  :template/title "Gymnastic Strength"
-  :template/public? true
+ {:db/id               #db/id[:db.part/user -102]
+  :template/title      "Gymnastic Strength"
+  :template/public?    true
   :template/created-by #db/id[:db.part/user -998]
   :template/description
-                  "Dynamic and static bodyweight strength training.
-                  Do each part either in order or interleave them;
-                  it can be effective to do dynamic, bent arm movements shortly after a static, straight arm hold."
-  :template/part  [#db/id[:db.part/user -1021]
-                   #db/id[:db.part/user -1022]
-                   #db/id[:db.part/user -1023]
-                   #db/id[:db.part/user -1024]
-                   #db/id[:db.part/user -1025]]}
- {:db/id                    #db/id[:db.part/user -1021]
-  :part/title               "Warmup"
-  :part/category            [#db/id[:db.part/user -2]
-                             #db/id[:db.part/user -13]
-                             #db/id[:db.part/user -36]]}
+                       "Dynamic and static bodyweight strength training.
+                       Do each part either in order or interleave them;
+                       it can be effective to do dynamic, bent arm movements shortly after a static, straight arm hold."
+  :template/part       [#db/id[:db.part/user -1021]
+                        #db/id[:db.part/user -1022]
+                        #db/id[:db.part/user -1023]
+                        #db/id[:db.part/user -1024]
+                        #db/id[:db.part/user -1025]]}
+ {:db/id         #db/id[:db.part/user -1021]
+  :part/title    "Warmup"
+  :part/category [#db/id[:db.part/user -2]
+                  #db/id[:db.part/user -13]
+                  #db/id[:db.part/user -36]]}
  {:db/id                    #db/id[:db.part/user -1022]
   :part/title               "Straight Arm"
   :part/category            [#db/id[:db.part/user -4]]
@@ -143,78 +142,78 @@
   :part/rep                 10
   :part/set                 2}
 
- {:db/id          #db/id[:db.part/user -103]
-  :template/title "4x4 Interval Run"
-  :template/public? true
+ {:db/id               #db/id[:db.part/user -103]
+  :template/title      "4x4 Interval Run"
+  :template/public?    true
   :template/created-by #db/id[:db.part/user -998]
   :template/description
-                  "Interval work is excellent endurance training and increases aerobic capacity.
-                  Begin with a 10 minute warmup to increase your body temperature and mobilize your legs.
-                  Do four interval runs of four minutes each, with three minutes of active rest between the intervals."
-  :template/part  [#db/id[:db.part/user -1031]
-                   #db/id[:db.part/user -1032]]}
+                       "Interval work is excellent endurance training and increases aerobic capacity.
+                       Begin with a 10 minute warmup to increase your body temperature and mobilize your legs.
+                       Do four interval runs of four minutes each, with three minutes of active rest between the intervals."
+  :template/part       [#db/id[:db.part/user -1031]
+                        #db/id[:db.part/user -1032]]}
  {:db/id                    #db/id[:db.part/user -1031]
   :part/title               "10 min warmup"
   :part/category            [#db/id[:db.part/user -43]
                              #db/id[:db.part/user -44]]
-  :part/specific-movement       [#db/id[:db.part/user -5000]]
+  :part/specific-movement   [#db/id[:db.part/user -5000]]
   :part/number-of-movements 3}
- {:db/id              #db/id[:db.part/user -1032]
-  :part/title         "4x4"
-  :part/category      [#db/id[:db.part/user -36]]
+ {:db/id                  #db/id[:db.part/user -1032]
+  :part/title             "4x4"
+  :part/category          [#db/id[:db.part/user -36]]
   :part/specific-movement [#db/id[:db.part/user -5000]]
-  :part/duration      240
-  :part/set           4}
+  :part/duration          240
+  :part/set               4}
 
 
- {:db/id          #db/id[:db.part/user -104]
-  :template/title "Learning Handstand"
-  :template/public? true
+ {:db/id               #db/id[:db.part/user -104]
+  :template/title      "Learning Handstand"
+  :template/public?    true
   :template/created-by #db/id[:db.part/user -998]
   :template/description
-                  "Warm up the wrists and shoulders, practice perfecting your body line and finish off playing around on your hands."
-  :template/part  [#db/id[:db.part/user -1041]
-                   #db/id[:db.part/user -1042]
-                   #db/id[:db.part/user -1043]
-                   #db/id[:db.part/user -1044]]}
- {:db/id              #db/id[:db.part/user -1041]
-  :part/title         "Wrist and Shoulder Mobility"
-  :part/category      [#db/id[:db.part/user -13]
-                       #db/id[:db.part/user -26]]
-  :part/specific-movement [#db/id[:db.part/user -5002]]
+                       "Warm up the wrists and shoulders, practice perfecting your body line and finish off playing around on your hands."
+  :template/part       [#db/id[:db.part/user -1041]
+                        #db/id[:db.part/user -1042]
+                        #db/id[:db.part/user -1043]
+                        #db/id[:db.part/user -1044]]}
+ {:db/id                    #db/id[:db.part/user -1041]
+  :part/title               "Wrist and Shoulder Mobility"
+  :part/category            [#db/id[:db.part/user -13]
+                             #db/id[:db.part/user -26]]
+  :part/specific-movement   [#db/id[:db.part/user -5002]]
   :part/number-of-movements 3
-  :part/rep      15
-  :part/set      2}
- {:db/id              #db/id[:db.part/user -1042]
-  :part/title         "Wall Walk & Core (5 rounds)"
-  :part/category      [#db/id[:db.part/user -8]]
-  :part/specific-movement [#db/id[:db.part/user -5004]]
+  :part/rep                 15
+  :part/set                 2}
+ {:db/id                    #db/id[:db.part/user -1042]
+  :part/title               "Wall Walk & Core (5 rounds)"
+  :part/category            [#db/id[:db.part/user -8]]
+  :part/specific-movement   [#db/id[:db.part/user -5004]]
   :part/number-of-movements 1
-  :part/set      5}
- {:db/id              #db/id[:db.part/user -1043]
-  :part/title         "Straighten Into Line & Shoulder (5 rounds)"
-  :part/category      [#db/id[:db.part/user -26]]
-  :part/specific-movement [#db/id[:db.part/user -5005]]
+  :part/set                 5}
+ {:db/id                    #db/id[:db.part/user -1043]
+  :part/title               "Straighten Into Line & Shoulder (5 rounds)"
+  :part/category            [#db/id[:db.part/user -26]]
+  :part/specific-movement   [#db/id[:db.part/user -5005]]
   :part/number-of-movements 1
-  :part/set      5}
- {:db/id              #db/id[:db.part/user -1044]
-  :part/title         "Play"
-  :part/category      [#db/id[:db.part/user -30]
-                       #db/id[:db.part/user -17]]
+  :part/set                 5}
+ {:db/id                    #db/id[:db.part/user -1044]
+  :part/title               "Play"
+  :part/category            [#db/id[:db.part/user -30]
+                             #db/id[:db.part/user -17]]
   :part/number-of-movements 2}
 
- {:db/id          #db/id[:db.part/user -106]
-  :template/title "Back Squat 5x5"
-  :template/public? true
+ {:db/id               #db/id[:db.part/user -106]
+  :template/title      "Back Squat 5x5"
+  :template/public?    true
   :template/created-by #db/id[:db.part/user -998]
   :template/description
-                  "The back squat is an excellent exercise to increase overall strength.
-                  Make it a goal to increase the weights of the back squat by 2-3kg/4-5lbs with each new session,
-                  and you will quickly see improvements."
-  :template/part  [#db/id[:db.part/user -1061]
-                   #db/id[:db.part/user -1062]
-                   #db/id[:db.part/user -1063]
-                   #db/id[:db.part/user -1064]]}
+                       "The back squat is an excellent exercise to increase overall strength.
+                       Make it a goal to increase the weights of the back squat by 2-3kg/4-5lbs with each new session,
+                       and you will quickly see improvements."
+  :template/part       [#db/id[:db.part/user -1061]
+                        #db/id[:db.part/user -1062]
+                        #db/id[:db.part/user -1063]
+                        #db/id[:db.part/user -1064]]}
  {:db/id                    #db/id[:db.part/user -1061]
   :part/title               "Hip Mobility Warmup"
   :part/category            [#db/id[:db.part/user -44]]
@@ -227,12 +226,12 @@
   :part/number-of-movements 2
   :part/rep                 10
   :part/set                 3}
- {:db/id                    #db/id[:db.part/user -1063]
-  :part/title               "Back Squat"
-  :part/category            [#db/id[:db.part/user -14]]
-  :part/specific-movement   [#db/id[:db.part/user -5001]]
-  :part/rep                 5
-  :part/set                 5}
+ {:db/id                  #db/id[:db.part/user -1063]
+  :part/title             "Back Squat"
+  :part/category          [#db/id[:db.part/user -14]]
+  :part/specific-movement [#db/id[:db.part/user -5001]]
+  :part/rep               5
+  :part/set               5}
  {:db/id                    #db/id[:db.part/user -1064]
   :part/title               "Practice Other Lifts"
   :part/category            [#db/id[:db.part/user -14]]
@@ -240,17 +239,17 @@
   :part/rep                 5
   :part/set                 3}
 
- {:db/id          #db/id[:db.part/user -109]
-  :template/title "Natural Movement"
-  :template/public? true
+ {:db/id               #db/id[:db.part/user -109]
+  :template/title      "Natural Movement"
+  :template/public?    true
   :template/created-by #db/id[:db.part/user -998]
   :template/description
-                  "Practice movement skills, such as crawling, jumping, climbing and lifting.
-                  Complete all rounds without rest, focusing on quality over speed.
-                  If possible, do lifting, carrying or throwing movements with non-uniform objects like rocks or logs."
-  :template/part  [#db/id[:db.part/user -1091]
-                   #db/id[:db.part/user -1092]
-                   #db/id[:db.part/user -1093]]}
+                       "Practice movement skills, such as crawling, jumping, climbing and lifting.
+                       Complete all rounds without rest, focusing on quality over speed.
+                       If possible, do lifting, carrying or throwing movements with non-uniform objects like rocks or logs."
+  :template/part       [#db/id[:db.part/user -1091]
+                        #db/id[:db.part/user -1092]
+                        #db/id[:db.part/user -1093]]}
  {:db/id                    #db/id[:db.part/user -1091]
   :part/title               "Warmup for 3 rounds"
   :part/category            [#db/id[:db.part/user -43]

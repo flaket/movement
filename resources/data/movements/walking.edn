@@ -1,43 +1,35 @@
 [
 
- ;; LOCOMOTION ON TWO FEET
+ {:db/id #db/id[:db.part/user -1] :category/name "Walk"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Hip Mobility"}
 
- {:db/id #db/id[:db.part/user -2] :category/name "Walking"}
- {:db/id #db/id[:db.part/user -3] :category/name "Lower Body Bodyweight Strength"}
+ {:db/id                #db/id[:db.part/user -100]
+  :movement/unique-name "Split Kneeling Walk"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]]
+  :movement/measurement :measurement/distance
+  :movement/harder      [#db/id[:db.part/user -101]]}
 
- ;; walking
- {:db/id             #db/id[:db.part/user]
-  :movement/unique-name     "Ostrich Walk"
-  :movement/category [#db/id[:db.part/user -2]]}
+ {:db/id                #db/id[:db.part/user -101]
+  :movement/unique-name "Duck Walk"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]]
+  :movement/measurement :measurement/distance
+  :movement/easier      [#db/id[:db.part/user -100]]}
 
- {:db/id             #db/id[:db.part/user]
-  :movement/unique-name     "Horse Stance Walk"
-  :movement/category [#db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]}
+ {:db/id                #db/id[:db.part/user -102]
+  :movement/unique-name "Walking Lunge"
+  :movement/category    [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
- {:db/id              #db/id[:db.part/user]
-  :movement/unique-name      "Split Kneeling Walk"
-  :movement/category  [#db/id[:db.part/user -2]
-                       #db/id[:db.part/user -3]]}
+ {:db/id                #db/id[:db.part/user -103]
+  :movement/unique-name "Hinged Walk"
+  :movement/category    [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
- {:db/id             #db/id[:db.part/user]
-  :movement/unique-name     "Duck Walk"
-  :movement/category [#db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]}
-
- {:db/id             #db/id[:db.part/user]
-  :movement/unique-name     "Walking Lunge"
-  :movement/category [#db/id[:db.part/user -2]
-                      #db/id[:db.part/user -3]]}
-
- {:db/id             #db/id[:db.part/user]
-  :movement/unique-name     "Hinged Walk"
-  :movement/category [#db/id[:db.part/user -2]]}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/unique-name      "Side Shuffle"
-  :movement/category  [#db/id[:db.part/user -2]]}
-
-
+ {:db/id                #db/id[:db.part/user -104]
+  :movement/unique-name "Side Shuffle"
+  :movement/category    [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/distance}
 
  ]

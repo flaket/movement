@@ -1,0 +1,356 @@
+[
+
+ ;; equipment
+ {:db/id #db/id[:db.part/user -5000] :equipment/name "Weights"}
+ {:db/id #db/id[:db.part/user -5001] :equipment/name "Box"}
+
+ ;; category
+ {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Bodyweight"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Lower Body Strength"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Squat"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Weights"}
+ {:db/id #db/id[:db.part/user -6] :category/name "Lunge"}
+ {:db/id #db/id[:db.part/user -7] :category/name "Acrobatics"}
+ {:db/id #db/id[:db.part/user -8] :category/name "Grip Strength"}
+ {:db/id #db/id[:db.part/user -9] :category/name "Balance"}
+ {:db/id #db/id[:db.part/user -10] :category/name "Single Leg Squat"}
+ {:db/id #db/id[:db.part/user -11] :category/name "Lower Body Bodyweight Strength"}
+
+ [
+
+  ;; equipment
+  {:db/id #db/id[:db.part/user -5000] :equipment/name "Weights"}
+
+  ;; category
+  {:db/id #db/id[:db.part/user -1] :category/name "Strength"}
+  {:db/id #db/id[:db.part/user -2] :category/name "Bodyweight"}
+  {:db/id #db/id[:db.part/user -3] :category/name "Lower Body Strength"}
+  {:db/id #db/id[:db.part/user -4] :category/name "Squat"}
+  {:db/id #db/id[:db.part/user -5] :category/name "Weights"}
+  {:db/id #db/id[:db.part/user -6] :category/name "Lunge"}
+  {:db/id #db/id[:db.part/user -7] :category/name "Lifting"}
+  {:db/id #db/id[:db.part/user -8] :category/name "Grip Strength"}
+  {:db/id #db/id[:db.part/user -9] :category/name "Pushing"}
+  {:db/id #db/id[:db.part/user -10] :category/name "Leg Strength"}
+  {:db/id #db/id[:db.part/user -11] :category/name "Carrying"}
+
+  {:db/id              #db/id[:db.part/user -200]
+   :movement/unique-name      "Back Squat"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -3]
+                        #db/id[:db.part/user -4]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]
+   :movement/harder    [#db/id[:db.part/user -201]]}
+
+  {:db/id              #db/id[:db.part/user -201]
+   :movement/unique-name      "Front Squat"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -3]
+                        #db/id[:db.part/user -4]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]
+   :movement/easier    [#db/id[:db.part/user -200]]
+   :movement/harder    [#db/id[:db.part/user -202]]}
+
+  {:db/id              #db/id[:db.part/user -202]
+   :movement/unique-name      "Overhead Squat"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -3]
+                        #db/id[:db.part/user -4]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]
+   :movement/easier    [#db/id[:db.part/user -201]]}
+
+  {:db/id              #db/id[:db.part/user -203]
+   :movement/unique-name      "Back Lunge"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -3]
+                        #db/id[:db.part/user -6]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/harder    [#db/id[:db.part/user -204]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user -204]
+   :movement/unique-name      "Front Lunge"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -3]
+                        #db/id[:db.part/user -6]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/harder    [#db/id[:db.part/user -205]]
+   :movement/easier    [#db/id[:db.part/user -203]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user -205]
+   :movement/unique-name      "Overhead Lunge"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -3]
+                        #db/id[:db.part/user -6]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/easier    [#db/id[:db.part/user -204]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Deadlift"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -3]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -8]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Lapping"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -8]
+                        #db/id[:db.part/user -5]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Waist Carry"
+   :movement/category  [#db/id[:db.part/user -1]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -11]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Chest Carry"
+   :movement/category  [#db/id[:db.part/user -1]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -11]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Hand Carry"
+   :movement/category  [#db/id[:db.part/user -1]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -8]
+                        #db/id[:db.part/user -11]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Shoulder Carry"
+   :movement/category  [#db/id[:db.part/user -1]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -11]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Power Clean"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -8]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Hang Power Clean"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -8]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Hang Clean"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -8]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Clean"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -8]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Jerk"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -5]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Clean & Jerk"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -8]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Snatch"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -8]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Push Press"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -9]
+                        #db/id[:db.part/user -5]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Shoulder Press"
+   :movement/category  [#db/id[:db.part/user -7]
+                        #db/id[:db.part/user -1]
+                        #db/id[:db.part/user -9]
+                        #db/id[:db.part/user -5]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  {:db/id              #db/id[:db.part/user]
+   :movement/unique-name      "Thruster"
+   :movement/category  [#db/id[:db.part/user -1]
+                        #db/id[:db.part/user -3]
+                        #db/id[:db.part/user -4]
+                        #db/id[:db.part/user -5]
+                        #db/id[:db.part/user -7]
+                        #db/id[:db.part/user -9]
+                        #db/id[:db.part/user -10]]
+   :movement/equipment [#db/id[:db.part/user -5000]]}
+
+  ]
+
+
+
+ ;; movements
+
+ {:db/id             #db/id[:db.part/user -100]
+  :movement/unique-name     "Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -4]
+                      #db/id[:db.part/user -11]]
+  :movement/harder   [#db/id[:db.part/user -150]
+                      #db/id[:db.part/user -149]
+                      #db/id[:db.part/user -200]]}
+
+ {:db/id             #db/id[:db.part/user -101]
+  :movement/unique-name     "Lunge"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -6]
+                      #db/id[:db.part/user -11]]
+  :movement/harder   [#db/id[:db.part/user -150]
+                      #db/id[:db.part/user -148]
+                      #db/id[:db.part/user -149]
+                      #db/id[:db.part/user -200]]}
+
+ {:db/id             #db/id[:db.part/user -148]
+  :movement/unique-name     "Chair Pistol Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]
+  :movement/harder   [#db/id[:db.part/user -149]
+                      #db/id[:db.part/user -150]]}
+
+ {:db/id             #db/id[:db.part/user -149]
+  :movement/unique-name     "Elevated Split Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]
+  :movement/harder   [#db/id[:db.part/user -150]
+                      #db/id[:db.part/user -202]
+                      #db/id[:db.part/user -203]]}
+
+ {:db/id             #db/id[:db.part/user -150]
+  :movement/unique-name     "Pistol Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]
+  :movement/harder   [#db/id[:db.part/user -202]
+                      #db/id[:db.part/user -203]]}
+
+ {:db/id             #db/id[:db.part/user -200]
+  :movement/unique-name     "Shin Shrimp Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]
+  :movement/harder   [#db/id[:db.part/user -201]]}
+
+ {:db/id             #db/id[:db.part/user -201]
+  :movement/unique-name     "Knee Shrimp Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]
+  :movement/harder   [#db/id[:db.part/user -202]]
+  :movement/easier   [#db/id[:db.part/user -200]]}
+
+ {:db/id             #db/id[:db.part/user -202]
+  :movement/unique-name     "Shrimp Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]
+  :movement/easier   [#db/id[:db.part/user -201]]}
+
+ {:db/id             #db/id[:db.part/user -203]
+  :movement/unique-name     "Crossing Pistol Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]
+  :movement/easier   [#db/id[:db.part/user -150]
+                      #db/id[:db.part/user -204]]}
+
+ {:db/id             #db/id[:db.part/user -204]
+  :movement/unique-name     "Elevated Crossing Pistol Squat"
+  :movement/category [#db/id[:db.part/user -1]
+                      #db/id[:db.part/user -2]
+                      #db/id[:db.part/user -3]
+                      #db/id[:db.part/user -9]
+                      #db/id[:db.part/user -10]
+                      #db/id[:db.part/user -11]]
+  :movement/harder   [#db/id[:db.part/user -203]]}
+
+ ]

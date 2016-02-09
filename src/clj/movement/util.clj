@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/testing8")
+#_(def uri "datomic:dev://localhost:4334/testing11")
 
 #_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
@@ -22,40 +22,49 @@
 #_(let [schema-tx (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))]
     (d/transact conn schema-tx))
 
-#_(let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/acrobatics.edn"))))
-        balancing-tx (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
+#_(let [balancing-tx (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
         climbing-tx (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
-        core-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/core.edn"))))
         crawling-tx (first (Util/readAll (io/reader (io/resource "data/movements/crawling.edn"))))
-        e-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/e.edn"))))
-        endurance-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/endurance.edn"))))
         jumping-tx (first (Util/readAll (io/reader (io/resource "data/movements/jumping.edn"))))
         lifting-tx (first (Util/readAll (io/reader (io/resource "data/movements/lifting.edn"))))
-        lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/lowerbody.edn"))))
-        mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility/mobility.edn"))))
-        pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/pulling.edn"))))
-        pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/pushing.edn"))))
         rolling-tx (first (Util/readAll (io/reader (io/resource "data/movements/rolling.edn"))))
-        sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/sass.edn"))))
-        throwing-catching-tx (first (Util/readAll (io/reader (io/resource "data/movements/throwing.edn"))))
-        walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))]
-    (d/transact conn acrobatics-tx)
+        hanging-tx (first (Util/readAll (io/reader (io/resource "data/movements/hanging.edn"))))
+        running-tx (first (Util/readAll (io/reader (io/resource "data/movements/running.edn"))))
+        swimming-tx (first (Util/readAll (io/reader (io/resource "data/movements/swimming.edn"))))
+        throwing-tx (first (Util/readAll (io/reader (io/resource "data/movements/throwing-catching.edn"))))
+        walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))
+        ]
+    (d/transact conn throwing-tx)
     (d/transact conn balancing-tx)
     (d/transact conn climbing-tx)
-    (d/transact conn core-tx)
     (d/transact conn crawling-tx)
-    (d/transact conn e-tx)
-    (d/transact conn endurance-tx)
+    (d/transact conn hanging-tx)
     (d/transact conn jumping-tx)
     (d/transact conn lifting-tx)
-    (d/transact conn lowerbody-tx)
-    (d/transact conn mobility-tx)
-    (d/transact conn pulling-tx)
-    (d/transact conn pushing-tx)
     (d/transact conn rolling-tx)
-    (d/transact conn sass-tx)
-    (d/transact conn throwing-catching-tx)
-    (d/transact conn walking-tx))
+    (d/transact conn running-tx)
+    (d/transact conn walking-tx)
+    (d/transact conn swimming-tx))
+
+#_(let [mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility/mobility.edn"))))]
+  (d/transact conn mobility-tx))
+
+#_(let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/acrobatics.edn"))))
+        core-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/core.edn"))))
+        e-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/e.edn"))))
+        endurance-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/endurance.edn"))))
+        lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/lowerbody.edn"))))
+        pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/pulling2.edn"))))
+        pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/pushing2.edn"))))
+        sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/sass.edn"))))]
+  (d/transact conn acrobatics-tx)
+  (d/transact conn core-tx)
+  (d/transact conn e-tx)
+  (d/transact conn endurance-tx)
+  (d/transact conn lowerbody-tx)
+  (d/transact conn pulling-tx)
+  (d/transact conn pushing-tx)
+  (d/transact conn sass-tx))
 
 ;; Update "movementsession" templates
 #_(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
@@ -63,7 +72,7 @@
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
                        :user/email               "admin@movementsession.com"
-                       :user/password            (hashers/encrypt "movementM9n8b7v6")
+                       :user/password            (hashers/encrypt "pw")
                        :user/name                "movementsession"
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
@@ -90,7 +99,7 @@
 #_(d/pull db '[*] 17592186045838)
 
 #_(defn image-url [name]
-    (str "public/images/" (str/replace (str/lower-case name) " " "-") ".png"))
+    (str "public/images/movements/" (str/replace (str/lower-case name) " " "-") ".png"))
 
 #_(defn has-no-image? [m]
     (if-not (io/resource (image-url m)) true false))
@@ -128,7 +137,7 @@
        :no-image-movements (vec no-image-movements)}))
 
 #_(defn find-no-data-images []
-    (let [f (io/file "resources/public/images")
+    (let [f (io/file "resources/public/images/movements")
           images (for [file (file-seq f)] (.getName file))
           images (drop 2 images)                            ; remove leading junk files
           no-data-images (filter #(has-no-data? %) images)]
@@ -646,6 +655,93 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
    [?release :release/name ?release-name]]
 ;; inputs:
 ; db, [["John Lennon" "Mind Games"] ["Paul McCartney" "Ram"]]
+
+#_[[{:user/template [{:db/id 17592186045811}
+                     {:db/id 17592186045814}
+                     {:db/id 17592186045820}
+                     {:db/id 17592186045823}
+                     {:db/id 17592186045828}
+                     {:db/id 17592186045833}],
+     :user/sign-up-timestamp #inst"2016-01-28T21:11:01.782-00:00",
+     :user/setting [{:db/id 17592186045846}],
+     :user/password "bcrypt+sha512$ecf67eb6b9242302cdb7ddbb$12$24326124313224616f6750327765426c50464e4e634244646863714e4f7136752e4d47737832497336514b54774765335a4e573646594a6d4e4a4575",
+     :user/activated? true,
+     :user/valid-subscription? true,
+     :db/id 17592186045844,
+     :user/activation-id "d7c1641e-a0d7-42d5-9285-d6dc66092714",
+     :user/email "chrhage@gmail.com"}]
+   [{:user/template [{:db/id 17592186045811}
+                     {:db/id 17592186045814}
+                     {:db/id 17592186045820}
+                     {:db/id 17592186045823}
+                     {:db/id 17592186045828}
+                     {:db/id 17592186045833}
+                     {:db/id 17592186045879}
+                     {:db/id 17592186045889}
+                     {:db/id 17592186045955}],
+     :user/sign-up-timestamp #inst"2016-02-03T19:31:43.154-00:00",
+     :user/name "Ulf",
+     :user/setting [{:db/id 17592186045949}],
+     :user/password "bcrypt+sha512$7a8ff3ed35b4134b7bf6f67e$12$243261243132245134744c56677355616e6267623676643435303176656857786a2e70335672317848517777304c445150576f4d4e79593779486953",
+     :user/activated? true,
+     :user/session [{:db/id 17592186045962}],
+     :user/valid-subscription? true,
+     :db/id 17592186045947,
+     :user/activation-id "2982e37b-e8e9-4a8b-be9a-aa9c43ee11ed",
+     :user/email "nils.flakstad@kartverket.no"}]
+   [{:user/template [{:db/id 17592186045811}
+                     {:db/id 17592186045814}
+                     {:db/id 17592186045820}
+                     {:db/id 17592186045823}
+                     {:db/id 17592186045828}
+                     {:db/id 17592186045833}
+                     {:db/id 17592186045955}],
+     :user/sign-up-timestamp #inst"2016-01-29T07:00:30.784-00:00",
+     :user/setting [{:db/id 17592186045855}],
+     :user/password "bcrypt+sha512$bd97227205ac27e7c15dfa27$12$24326124313224396c6165725854753657583374726f4d4b636767794f645070754d364c596747356e33416e61566b45535245735935686b50387243",
+     :user/activated? true,
+     :user/session [{:db/id 17592186045982}],
+     :user/valid-subscription? true,
+     :db/id 17592186045853,
+     :user/activation-id "a8abe2d7-7f33-420d-8d94-899bcc5e45df",
+     :user/email "ivar.flakstad@gmail.com"}]
+   [{:user/template [{:db/id 17592186045811}
+                     {:db/id 17592186045814}
+                     {:db/id 17592186045820}
+                     {:db/id 17592186045823}
+                     {:db/id 17592186045828}
+                     {:db/id 17592186045833}
+                     {:db/id 17592186045875}
+                     {:db/id 17592186045879}
+                     {:db/id 17592186045886}
+                     {:db/id 17592186045889}
+                     {:db/id 17592186045955}],
+     :user/sign-up-timestamp #inst"2016-01-28T21:02:00.275-00:00",
+     :user/name "andreasflakstad",
+     :user/setting [{:db/id 17592186045840}],
+     :user/password "bcrypt+sha512$b935b06a3b5c3598b7d82e62$12$24326124313224424869396c715a666777382e534b744256523136654f2e63766e6d2f6435336b70392f4f746b51494245366f587366425a4e414e61",
+     :user/activated? true,
+     :user/session [{:db/id 17592186045859}
+                    {:db/id 17592186045898}
+                    {:db/id 17592186045905}
+                    {:db/id 17592186045916}
+                    {:db/id 17592186045931}
+                    {:db/id 17592186045977}],
+     :user/valid-subscription? true,
+     :db/id 17592186045838,
+     :user/activation-id "b07be03c-a1f4-4bdd-a113-b54969d91bdb",
+     :user/email "andflak@gmail.com"}]
+   [{:db/id 17592186045808,
+     :user/email "admin@movementsession.com",
+     :user/name "movementsession",
+     :user/password "bcrypt+sha512$806f99bbdebc562194a98610$12$243261243132246e4733544e483742596b78304c4d3632622f6757484f523466563957364848744b746b6430354a4c386f415137745961356571642e",
+     :user/valid-subscription? true,
+     :user/template [{:db/id 17592186045811}
+                     {:db/id 17592186045814}
+                     {:db/id 17592186045820}
+                     {:db/id 17592186045823}
+                     {:db/id 17592186045828}
+                     {:db/id 17592186045833}]}]]
 
 
 

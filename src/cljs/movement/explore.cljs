@@ -126,13 +126,13 @@
               (for [m movements]
                 ^{:key (rand-int 10000)}
                 (let [name (:movement/unique-name m)]
-                  [:div.pure-u.movement.small.center
-                   [:h3.pure-g
-                    [:div.pure-u-1-24]
-                    [:div.pure-u-11-12.title name]
-                    [:div.pure-u-1-24]]
-                   [:img.graphic.small-graphic.pure-img-responsive {:src (image-url name) :title name :alt name}]
-                   [:div {:style {:margin-bottom 10}}]])))])]]])))
+                  [:div.pure-u.movement.small
+                   [:h3.pure-g.center
+                    [:div.pure-u-1 name]]
+                   [:div.pure-g
+                    [:div.pure-u-1.center
+                     [:img.graphic.small-graphic.pure-img-responsive {:src (image-url name) :title name :alt name
+                                                                      :style {:margin-bottom 10}}]]]])))])]]])))
 
 (defn template-result [t]
   (let [selected (atom false)

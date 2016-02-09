@@ -1,21 +1,26 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Rolling"}
+ {:db/id #db/id[:db.part/user -1] :category/name "Roll"}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Forward Roll"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions}
+
+ ;; easier forward rolls; ex starting from knees
 
  ;; backward roll
  ;; sideways roll?
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Backward Roll To Lying"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions}
 
  {:db/id             #db/id[:db.part/user]
   :movement/unique-name     "Lying To Forward Roll"
-  :movement/category [#db/id[:db.part/user -1]]}
+  :movement/category [#db/id[:db.part/user -1]]
+  :movement/measurement :measurement/repetitions}
 
 
  ]

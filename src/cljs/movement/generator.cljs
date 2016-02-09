@@ -19,7 +19,7 @@
 
 (defn image-url [name]
   (when-not (nil? name)
-    (str "images/" (str/replace (str/lower-case name) " " "-") ".png")))
+    (str "images/movements/" (str/replace (str/lower-case name) " " "-") ".png")))
 
 (defn add-movement [part-title]
   (let [parts (session/get-in [:movement-session :parts])

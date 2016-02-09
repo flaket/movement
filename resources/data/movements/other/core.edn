@@ -238,4 +238,33 @@
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -7]]}
 
+ ; Lifting legs
+ {:db/id                #db/id[:db.part/user -219]
+  :movement/unique-name "Hanging Side Foot Lift"}
+
+ {:db/id                #db/id[:db.part/user -220]
+  :movement/unique-name "Hanging Knee Tuck"}
+
+ {:db/id                #db/id[:db.part/user -221]
+  :movement/unique-name "Hanging Leg Lift"
+  :movement/category    []
+  :movement/easier      []
+  :movement/harder      []}
+
+ {:db/id                #db/id[:db.part/user -222]
+  :movement/unique-name "Hanging 90 Leg Lift"
+  :movement/category    []
+  :movement/easier      []}
+
+ {:db/id                #db/id[:db.part/user -223]
+  :movement/unique-name "Hanging 90 90 Hold"
+  :movement/category    []
+  :movement/equipment   []}
+
+ {:db/id                #db/id[:db.part/user -224]
+  :movement/unique-name "Hanging One Arm Leg Lift"
+  :movement/category    []
+  :movement/easier      []}
+
+
  ]

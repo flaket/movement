@@ -141,6 +141,17 @@
   :db/doc                "A user may set their maximum heart rate"
   :db.install/_attribute :db.part/db}
 
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/badge
+  :db/valueType          :db.type/ref
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A user can achieve badges"
+  :db.install/_attribute :db.part/db}
+
+ ;; badge
+ {:db/id #db/id[:db.part/user -100] :db/ident :badge/monkey}
+ {:db/id #db/id[:db.part/user -101] :db/ident :badge/bear}
+
  ;; goal
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :goal/name
@@ -582,7 +593,7 @@
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/one
   :db/doc                "A movement has a standard way of logging progress.
-                          :measurement/repetitions :measurement/distance :measurement/time"
+                          :measurement/repetitions :measurement/distance :measurement/duration"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -611,22 +622,14 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/difficulty
-  :db/index              true
-  :db/valueType          :db.type/long
-  :db/cardinality        :db.cardinality/one
-  :db/doc                "The user may set a subjective movement difficulty"
-  :db.install/_attribute :db.part/db}
-
- {:db/id                 #db/id[:db.part/db -1]
   :db/ident              :movement/zone
   :db/valueType          :db.type/ref
   :db/cardinality        :db.cardinality/one
   :db/doc                "A given movement belongs to a mastery zone for the user.
-                          No data (:zone/one) and :zone/one is the learning phase, a new skill.
-                          :zone/two is when the skill is known, but not perfected. The user is effective, but not efficient.
+                          :zone/one (or no data -> implied :zone/one) reflects the learning phase, a completely new skill.
+                          :zone/two is when the skill can be done, but is not perfected. The user is effective, but not efficient.
                           :zone/three is when the skill has been mastered. The user is both effective and efficient.
-                          :zone/none is used if the user never wants to see a movement."
+                          :zone/none is used if the user never wants to see this movement in a session."
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -634,7 +637,7 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A movement used in a session may be stored with rep information"
+  :db/doc                "A movement may have repetitions"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -642,7 +645,7 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A movement used in a session may be stored with set information"
+  :db/doc                "A movement may have sets"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -650,7 +653,7 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A movement used in a session may be stored with duration information"
+  :db/doc                "A movement may have a duration"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -658,7 +661,7 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A movement used in a session may be stored with distance information"
+  :db/doc                "A movement may have a distance"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -666,7 +669,7 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A movement used in a session may be stored with weight information"
+  :db/doc                "A movement may have a weight"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -674,27 +677,26 @@
   :db/index              true
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
-  :db/doc                "A movement used in a session may be stored with list position"
+  :db/doc                "A movement may be stored with a specified position in a list"
   :db.install/_attribute :db.part/db}
 
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/equipment
-  :db/index              true
-  :db/valueType          :db.type/ref
-  :db/cardinality        :db.cardinality/many
-  :db/doc                "A movement may need equipment"
-  :db.install/_attribute :db.part/db}
+ ;; measurement enums
+ {:db/id    #db/id[:db.part/user -1]
+  :db/ident :measurement/distance}
+ {:db/id    #db/id[:db.part/user -2]
+  :db/ident :measurement/duration}
+ {:db/id    #db/id[:db.part/user -3]
+  :db/ident :measurement/repetitions}
 
- ;; equipment
- {:db/id                 #db/id[:db.part/db]
-  :db/ident              :equipment/name
-  :db/index              true
-  :db/fulltext           true
-  :db/valueType          :db.type/string
-  :db/cardinality        :db.cardinality/one
-  :db/unique             :db.unique/identity
-  :db/doc                "Equipment has a unique name"
-  :db.install/_attribute :db.part/db}
+ ;; zone enums
+ {:db/id    #db/id[:db.part/user -4]
+  :db/ident :zone/one}
+ {:db/id    #db/id[:db.part/user -5]
+  :db/ident :zone/two}
+ {:db/id    #db/id[:db.part/user -6]
+  :db/ident :zone/three}
+ {:db/id    #db/id[:db.part/user -7]
+  :db/ident :zone/none}
 
  ;; session
  {:db/id                 #db/id[:db.part/db]
