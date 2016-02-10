@@ -1,35 +1,42 @@
 [
 
+ {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+
  {:db/id #db/id[:db.part/user -1] :category/name "Walk"}
  {:db/id #db/id[:db.part/user -2] :category/name "Hip Mobility"}
 
  {:db/id                #db/id[:db.part/user -100]
   :movement/unique-name "Split Kneeling Walk"
   :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/harder      [#db/id[:db.part/user -101]]}
 
  {:db/id                #db/id[:db.part/user -101]
   :movement/unique-name "Duck Walk"
   :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -100]]}
 
  {:db/id                #db/id[:db.part/user -102]
   :movement/unique-name "Walking Lunge"
-  :movement/category    [#db/id[:db.part/user -1]]
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user -103]
   :movement/unique-name "Hinged Walk"
-  :movement/category    [#db/id[:db.part/user -1]]
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user -104]
   :movement/unique-name "Side Shuffle"
-  :movement/category    [#db/id[:db.part/user -1]]
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance}
 
  ]

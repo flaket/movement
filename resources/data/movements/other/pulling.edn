@@ -1,0 +1,88 @@
+[
+
+ {:db/id #db/id[:db.part/user -1] :category/name "Bent Arm Strength"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Pulling"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Pull Up"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Bar"}
+
+ {:db/id                #db/id[:db.part/user -100]
+  :movement/unique-name "Row"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -4]]
+  :movement/harder      [#db/id[:db.part/user -101]
+                         #db/id[:db.part/user -102]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -101]
+  :movement/unique-name "Chin Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -4]]
+  :movement/easier      [#db/id[:db.part/user -100]]
+  :movement/harder      [#db/id[:db.part/user -103]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -103]
+  :movement/unique-name "Wide Pull Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -4]]
+  :movement/easier      [#db/id[:db.part/user -101]]
+  :movement/harder      [#db/id[:db.part/user -104]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -104]
+  :movement/unique-name "Chest Pull Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -4]]
+  :movement/easier      [#db/id[:db.part/user -101]
+                         #db/id[:db.part/user -104]]
+  :movement/harder      [#db/id[:db.part/user -105]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -105]
+  :movement/unique-name "Archer Pull Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -4]]
+  :movement/easier      [#db/id[:db.part/user -104]]
+  :movement/harder      [#db/id[:db.part/user -106]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -106]
+  :movement/unique-name "Assisted One Arm Pull Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -4]]
+  :movement/easier      [#db/id[:db.part/user -105]]
+  :movement/harder      [#db/id[:db.part/user -107]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -107]
+  :movement/unique-name "Negative One Arm Pull Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -4]]
+  :movement/easier      [#db/id[:db.part/user -106]]
+  :movement/harder      [#db/id[:db.part/user -108]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -108]
+  :movement/unique-name "One Arm Pull Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -4]]
+  :movement/easier      [#db/id[:db.part/user -107]]
+  :movement/measurement :measurement/repetitions}
+
+ ]

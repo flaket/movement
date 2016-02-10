@@ -1,6 +1,8 @@
 [
 
  ;; category
+ {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+
  {:db/id #db/id[:db.part/user -1] :category/name "Lift"}
  {:db/id #db/id[:db.part/user -2] :category/name "Carry"}
  {:db/id #db/id[:db.part/user -3] :category/name "Weight"}
@@ -15,7 +17,8 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
+                         #db/id[:db.part/user -5]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -101]
@@ -23,21 +26,24 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]]
+                         #db/id[:db.part/user -6]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -102]
   :movement/unique-name "Deadlift"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
+                         #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -103]
   :movement/unique-name "Lapping"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
+                         #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -102]]}
 
@@ -45,7 +51,8 @@
   :movement/unique-name "Hang Power Clean"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
+                         #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/harder      [#db/id[:db.part/user -105]]}
 
@@ -53,7 +60,8 @@
   :movement/unique-name "Power Clean"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
+                         #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -102]
                          #db/id[:db.part/user -104]]
@@ -63,7 +71,8 @@
   :movement/unique-name "Hang Clean"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
+                         #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -104]]
   :movement/harder      [#db/id[:db.part/user -107]]}
@@ -72,7 +81,8 @@
   :movement/unique-name "Clean"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
+                         #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -102]
                          #db/id[:db.part/user -106]]}
@@ -81,7 +91,8 @@
   :movement/unique-name "Shoulder Press"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -7]]
+                         #db/id[:db.part/user -7]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/harder      [#db/id[:db.part/user -110]]}
 
@@ -89,7 +100,8 @@
   :movement/unique-name "Push Press"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -7]]
+                         #db/id[:db.part/user -7]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -108]]
   :movement/harder      [#db/id[:db.part/user -110]]}
@@ -98,29 +110,34 @@
   :movement/unique-name "Jerk"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -7]]
+                         #db/id[:db.part/user -7]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -108]]}
 
  ;; Carrying
  {:db/id                #db/id[:db.part/user -111]
   :movement/unique-name "Waist Carry"
-  :movement/category    [#db/id[:db.part/user -2]]
+  :movement/category    [#db/id[:db.part/user -2]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user -112]
   :movement/unique-name "Chest Carry"
-  :movement/category    [#db/id[:db.part/user -2]]
+  :movement/category    [#db/id[:db.part/user -2]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user -113]
   :movement/unique-name "Hand Carry"
-  :movement/category    [#db/id[:db.part/user -2]]
+  :movement/category    [#db/id[:db.part/user -2]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user -114]
   :movement/unique-name "Shoulder Carry"
-  :movement/category    [#db/id[:db.part/user -2]]
+  :movement/category    [#db/id[:db.part/user -2]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance}
 
  ;; Dragging

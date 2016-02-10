@@ -1,0 +1,268 @@
+[
+
+ {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+
+ {:db/id #db/id[:db.part/user -1] :category/name "Bent Arm Strength"}
+ {:db/id #db/id[:db.part/user -2] :category/name "Push"}
+ {:db/id #db/id[:db.part/user -3] :category/name "Push Up"}
+ {:db/id #db/id[:db.part/user -4] :category/name "Dip"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Headstand"}
+ {:db/id #db/id[:db.part/user -6] :category/name "Bar"}
+ {:db/id #db/id[:db.part/user -7] :category/name "Bridge"}
+ {:db/id #db/id[:db.part/user -8] :category/name "Wrist Mobility"}
+
+ ; push up
+ {:db/id                #db/id[:db.part/user -100]
+  :movement/unique-name "Knee Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/measurement :measurement/repetitions
+  :movement/harder      [#db/id[:db.part/user -101]]}
+
+ {:db/id                #db/id[:db.part/user -101]
+  :movement/unique-name "Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/measurement :measurement/repetitions
+  :movement/easier      [#db/id[:db.part/user -100]]
+  :movement/harder      [#db/id[:db.part/user -104]
+                         #db/id[:db.part/user -105]
+                         #db/id[:db.part/user -106]
+                         #db/id[:db.part/user -108]
+                         #db/id[:db.part/user -111]
+                         #db/id[:db.part/user -112]
+                         #db/id[:db.part/user -113]
+                         #db/id[:db.part/user -114]]}
+
+ {:db/id                #db/id[:db.part/user -102]
+  :movement/unique-name "Burpee"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -101]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -103]
+  :movement/unique-name "Forward Sprawl To Push Up"
+  :movement/category    [#db/id[:db.part/user -33]
+                         #db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -101]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -104]
+  :movement/unique-name "Wide Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/measurement :measurement/repetitions
+  :movement/easier      [#db/id[:db.part/user -101]]}
+
+ {:db/id                #db/id[:db.part/user -105]
+  :movement/unique-name "Diamond Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/measurement :measurement/repetitions
+  :movement/easier      [#db/id[:db.part/user -101]]}
+
+ {:db/id                #db/id[:db.part/user -106]
+  :movement/unique-name "Pseudo Planche Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -101]]}
+
+ {:db/id                #db/id[:db.part/user -107]
+  :movement/unique-name "Headstand Push Out"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -101]]}
+
+ {:db/id                #db/id[:db.part/user -108]
+  :movement/unique-name "Hindu Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/measurement :measurement/repetitions
+  :movement/easier      [#db/id[:db.part/user -101]]}
+
+ {:db/id                #db/id[:db.part/user -109]
+  :movement/unique-name "Pike Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -108]]
+  :movement/harder      [#db/id[:db.part/user -110]]}
+
+ {:db/id                #db/id[:db.part/user -110]
+  :movement/unique-name "Elevated Pike Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -109]]
+  :movement/harder      [#db/id[:db.part/user -121]]}
+
+ {:db/id                #db/id[:db.part/user -111]
+  :movement/unique-name "Russian Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/measurement :measurement/repetitions
+  :movement/easier      [#db/id[:db.part/user -101]]}
+
+ {:db/id                #db/id[:db.part/user -112]
+  :movement/unique-name "Fingertip Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -8]]
+  :movement/easier      [#db/id[:db.part/user -101]]}
+
+ {:db/id                #db/id[:db.part/user -113]
+  :movement/unique-name "Lateral Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -101]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -114]
+  :movement/unique-name "Ring Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -101]]
+  :movement/measurement :measurement/repetitions}
+
+ ; ring wide push up
+ ; ring archer push up
+ ; ring pseudo planche push up
+
+ ; bridge push up
+ {:db/id                #db/id[:db.part/user -115]
+  :movement/unique-name "Bridge Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -7]]
+  :movement/measurement :measurement/repetitions
+  :movement/easier      [#db/id[:db.part/user -101]]
+  :movement/harder      [#db/id[:db.part/user -116]]}
+
+ {:db/id                #db/id[:db.part/user -116]
+  :movement/unique-name "One Leg Bridge Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -7]]
+  :movement/easier      [#db/id[:db.part/user -115]]
+  :movement/harder      [#db/id[:db.part/user -117]]}
+
+ {:db/id                #db/id[:db.part/user -117]
+  :movement/unique-name "One Arm Bridge Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -7]]
+  :movement/easier      [#db/id[:db.part/user -116]]}
+
+ ; one arm push up
+ {:db/id                #db/id[:db.part/user -118]
+  :movement/unique-name "Archer Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -104]
+                         #db/id[:db.part/user -105]]
+  :movement/harder      [#db/id[:db.part/user -119]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -119]
+  :movement/unique-name "One Arm Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -118]]
+  :movement/harder      [#db/id[:db.part/user -120]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -120]
+  :movement/unique-name "One Leg One Arm Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -119]]
+  :movement/measurement :measurement/repetitions}
+
+ ; handstand push up
+ {:db/id                #db/id[:db.part/user -121]
+  :movement/unique-name "Wall Kip Handstand Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -107]
+                         #db/id[:db.part/user -110]]
+  :movement/harder      [#db/id[:db.part/user -122]]}
+
+ {:db/id                #db/id[:db.part/user -122]
+  :movement/unique-name "Wall Handstand Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -121]]
+  :movement/harder      [#db/id[:db.part/user -123]]}
+
+ {:db/id                #db/id[:db.part/user -123]
+  :movement/unique-name "Ring Handstand Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -122]]
+  :movement/harder      [#db/id[:db.part/user -125]]}
+
+ {:db/id                #db/id[:db.part/user -124]
+  :movement/unique-name "Handstand Push Up Kip"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -122]]
+  :movement/harder      [#db/id[:db.part/user -125]]
+  :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -125]
+  :movement/unique-name "Handstand Push Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]
+  :movement/easier      [#db/id[:db.part/user -124]]
+  :movement/measurement :measurement/repetitions}
+
+ ; Dip
+ ; most dips in climbing.edn
+
+ {:db/id                #db/id[:db.part/user -126]
+  :movement/unique-name "Single Bar Dip"
+  :movement/harder      [#db/id[:db.part/user -127]]}
+
+ {:db/id                #db/id[:db.part/user -127]
+  :movement/unique-name "Korean Dip"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -6]]
+  :movement/measurement :measurement/repetitions
+  :movement/easier      [#db/id[:db.part/user -126]]}
+
+ {:db/id                #db/id[:db.part/user -128]
+  :movement/unique-name "Tricep Dip"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -4]]
+  :movement/measurement :measurement/repetitions}
+
+ ]

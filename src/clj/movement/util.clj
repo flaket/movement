@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/testing11")
+#_(def uri "datomic:dev://localhost:4334/testing13")
 
 #_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
@@ -33,7 +33,16 @@
         swimming-tx (first (Util/readAll (io/reader (io/resource "data/movements/swimming.edn"))))
         throwing-tx (first (Util/readAll (io/reader (io/resource "data/movements/throwing-catching.edn"))))
         walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))
-        ]
+        mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility/mobility.edn"))))
+
+        hand-balance-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/hand-balance.edn"))))
+        ring-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/ring.edn"))))
+        pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/pushing.edn"))))
+        pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/pulling.edn"))))
+        planche-lever-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/planche-lever.edn"))))
+        leg-strength-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/leg-strength.edn"))))
+        core-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/core.edn"))))
+        footwork-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/footwork.edn"))))]
     (d/transact conn throwing-tx)
     (d/transact conn balancing-tx)
     (d/transact conn climbing-tx)
@@ -44,34 +53,25 @@
     (d/transact conn rolling-tx)
     (d/transact conn running-tx)
     (d/transact conn walking-tx)
-    (d/transact conn swimming-tx))
+    (d/transact conn swimming-tx)
+    (d/transact conn mobility-tx)
 
-#_(let [mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility/mobility.edn"))))]
-  (d/transact conn mobility-tx))
-
-#_(let [acrobatics-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/acrobatics.edn"))))
-        core-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/core.edn"))))
-        e-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/e.edn"))))
-        endurance-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/endurance.edn"))))
-        lowerbody-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/lowerbody.edn"))))
-        pulling-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/pulling2.edn"))))
-        pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/pushing2.edn"))))
-        sass-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/sass.edn"))))]
-  (d/transact conn acrobatics-tx)
-  (d/transact conn core-tx)
-  (d/transact conn e-tx)
-  (d/transact conn endurance-tx)
-  (d/transact conn lowerbody-tx)
-  (d/transact conn pulling-tx)
-  (d/transact conn pushing-tx)
-  (d/transact conn sass-tx))
+    (d/transact conn hand-balance-tx)
+    (d/transact conn ring-tx)
+    (d/transact conn pushing-tx)
+    (d/transact conn pulling-tx)
+    (d/transact conn planche-lever-tx)
+    (d/transact conn leg-strength-tx)
+    (d/transact conn core-tx)
+    (d/transact conn footwork-tx)
+    )
 
 ;; Update "movementsession" templates
 #_(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
     (d/transact conn templates-tx))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "admin@movementsession.com"
+                       :user/email               "a"
                        :user/password            (hashers/encrypt "pw")
                        :user/name                "movementsession"
                        :user/valid-subscription? true}]]

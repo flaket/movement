@@ -82,20 +82,25 @@
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5
          [:div.pure-g
-          [:h3.pure-u "Categories"]]
-         (doall (for [c (sort (session/get :all-categories))]
-                  ^{:key c}
-                  [:div.pure-g {:style {:cursor           'pointer
-                                        :color            (when (= c (:selected-category @explore-state)) "#fffff8")
-                                        :background-color (when (= c (:selected-category @explore-state)) "gray")}}
-                   [:span.pure-u-1
-                    {:on-click #(GET "movements-by-category"
-                                     {:params        {:n        (:number-of-results @explore-state)
-                                                      :category c}
-                                      :handler       (fn [r] (do
-                                                               (swap! explore-state assoc :selected-category c)
-                                                               (swap! explore-state assoc :movements r)))
-                                      :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})} c]]))]
+          [:span.pure-u {:style {:margin-bottom 10}} "See movements by category"]]
+         (let [categories (sort (session/get :all-categories))]
+           (doall
+             (for [c categories]
+               ^{:key c}
+               [:div.pure-g {:style {:cursor           'pointer
+                                     :color            (when (= c (:selected-category @explore-state)) "#fffff8")
+                                     :background-color (when (= c (:selected-category @explore-state)) "gray")}}
+                [:span.pure-u-1
+                 {:style    {:color (when (and (= "Practical Movements" c)
+                                               (not (= c (:selected-category @explore-state))))
+                                      "red")}
+                  :on-click #(GET "movements-by-category"
+                                  {:params        {:n        (:number-of-results @explore-state)
+                                                   :category c}
+                                   :handler       (fn [r] (do
+                                                            (swap! explore-state assoc :selected-category c)
+                                                            (swap! explore-state assoc :movements r)))
+                                   :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})} c]])))]
         [:div.pure-u.pure-u-md-4-5
          [:div.pure-g
           [:div.pure-u.pure-u-md-1-2
@@ -131,7 +136,7 @@
                     [:div.pure-u-1 name]]
                    [:div.pure-g
                     [:div.pure-u-1.center
-                     [:img.graphic.small-graphic.pure-img-responsive {:src (image-url name) :title name :alt name
+                     [:img.graphic.small-graphic.pure-img-responsive {:src   (image-url name) :title name :alt name
                                                                       :style {:margin-bottom 10}}]]]])))])]]])))
 
 (defn template-result [t]
@@ -405,7 +410,7 @@
         [:div.pure-g
          [:div.pure-u {:style {:margin-right 5}}
           (if-not (nil? my-plan-id)
-            [:div {:style    {:color 'green}} [:i.fa.fa-check.fa-2x]]
+            [:div {:style {:color 'green}} [:i.fa.fa-check.fa-2x]]
             [:button.button.button-secondary
              {:on-click #(POST "assoc/plan"
                                {:params        {:email (session/get :email) :id (:db/id p)}
