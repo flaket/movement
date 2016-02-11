@@ -145,37 +145,6 @@
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 
-(def part {:rep 10, :duration nil, :categories ["Run" "Mobility" "Sit/Stand Transition"], :weight nil, :distance nil, :set 3, :rest nil})
-(defn get-n-movements-from-categories
-  "Get n random movement entities drawn from param list of categories."
-  [n categories]
-  (let [db db
-        movement-ids (d/q '[:find [?m ...]
-                            :in $ [?cname ...]
-                            :where
-                            [?c :category/name ?cname]
-                            [?m :movement/category ?c]
-                            [?m :movement/unique-name _]]
-                          db categories)
-        movements (->> movement-ids
-                       shuffle
-                       (take n)
-                       (map #(d/pull db '[*] %)))]
-    movements))
-(defn single-movement [part]
-  (let [movement (first (get-n-movements-from-categories 1 (:categories part)))
-        movement (merge movement (dissoc part :categories))
-        movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
-        movement (rename-keys movement {:movement/measurement :measurement
-                                        :movement/category :category
-                                        :movement/unique-name :unique
-                                        :movement/easier :easier
-                                        :movement/harder :harder
-                                        :movement/description :description
-                                        :movement/zone :zone
-                                        :movement/practical :practical
-                                        :movement/name :name})]
-    movement))
 
 #_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
 Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",

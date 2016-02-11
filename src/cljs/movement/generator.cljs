@@ -188,7 +188,7 @@
          [:span (str "zone: " zone)]]]
        [:div.pure-g
         [:div.pure-u-1.center
-         [:span (str "is practical: " practical)]]]
+         [:span (str "measurement: " measurement)]]]
        [:div {:style {:cursor 'pointer}}
         [:div.pure-g
          [:div.pure-u-1-12]

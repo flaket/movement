@@ -154,6 +154,14 @@
   :db/doc                "A user can achieve badges"
   :db.install/_attribute :db.part/db}
 
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :user/movements
+  :db/valueType          :db.type/ref
+  :db/isComponent        true
+  :db/cardinality        :db.cardinality/many
+  :db/doc                "A list of all movements the user has done"
+  :db.install/_attribute :db.part/db}
+
  ;; badge
  {:db/id #db/id[:db.part/user -100] :db/ident :badge/monkey}
  {:db/id #db/id[:db.part/user -101] :db/ident :badge/bear}

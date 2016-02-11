@@ -79,13 +79,13 @@
         movement (merge movement (dissoc part :categories))
         movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
         movement (rename-keys movement {:movement/measurement :measurement
-                                        :movement/category :category
+                                        :movement/category    :category
                                         :movement/unique-name :unique
-                                        :movement/easier :easier
-                                        :movement/harder :harder
+                                        :movement/easier      :easier
+                                        :movement/harder      :harder
                                         :movement/description :description
-                                        :movement/zone :zone
-                                        :movement/practical :practical})]
+                                        :movement/zone        :zone
+                                        :movement/practical   :practical})]
     (.println System/out (str "New movement: " movement))
     movement))
 
@@ -96,13 +96,13 @@
         movement (merge movement (dissoc part :categories))
         movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
         movement (rename-keys movement {:movement/measurement :measurement
-                                        :movement/category :category
+                                        :movement/category    :category
                                         :movement/unique-name :unique
-                                        :movement/easier :easier
-                                        :movement/harder :harder
+                                        :movement/easier      :easier
+                                        :movement/harder      :harder
                                         :movement/description :description
-                                        :movement/zone :zone
-                                        :movement/practical :practical})]
+                                        :movement/zone        :zone
+                                        :movement/practical   :practical})]
     (.println System/out (str "New movement: " movement))
     movement))
 
@@ -683,22 +683,16 @@
                                      :part/session-movement (vec (map :db/id (:movements part)))})
         ; extract movements from parts
         movement-data (flatten (for [part parts] (for [m (:movements part)] m)))
-        ; mark new movements with :zone/one
-        movement-data (for [movement movement-data] (if (nil? (:movement/zone movement))
-                                                      (assoc movement :movement/zone {:db/id (d/tempid :db.part/user)
-                                                                                      :db/ident :zone/one})
-                                                      movement))
         ; remove unnecessary data
-        movement-data (map #(dissoc % :category :practical :measurement :harder :easier :id) movement-data)
+        movement-data (map #(dissoc % :zone :category :practical :measurement :harder :easier :id) movement-data)
         ; rename data to match schema
-        movement-data (map #(rename-keys % {:unique :movement/name
-                                            :zone :movement/zone
-                                            :rep :movement/rep
-                                            :set :movement/set
+        movement-data (map #(rename-keys % {:unique   :movement/name
+                                            :rep      :movement/rep
+                                            :set      :movement/set
                                             :distance :movement/distance
                                             :duration :movement/duration
-                                            :weight :movement/weight
-                                            :rest :movement/rest}) movement-data)]
+                                            :weight   :movement/weight
+                                            :rest     :movement/rest}) movement-data)]
     ; transact all datoms
     (d/transact (:conn @tx) (concat user-session-data part-data movement-data))))
 
