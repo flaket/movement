@@ -10,7 +10,7 @@
     [goog.events :as events]
     [clojure.string :as str]
     [movement.util :refer [handler-fn positions GET POST get-plans get-ongoing-plan
-                           get-stored-sessions get-equipment get-groups]]
+                           get-stored-sessions get-groups]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]
     [movement.components.login :refer [footer]]))
@@ -24,49 +24,33 @@
 (defn add-movement [part-title]
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))
-        categories (:categories (first (filter #(= part-title (:title %)) parts)))
-        movements (session/get-in [:movement-session :parts position-in-parts :movements])]
-    (if-let [equipment (session/get-in [:movement-session :parts position-in-parts :equipment])]
-      (GET "movement-from-equipment"
-           {:params        {:equipment equipment}
-            :handler       #(let [id (swap! m-counter inc)
-                                  new-movement (first %)
-                                  new-movement (assoc new-movement :id id)
-                                  new-movements (assoc movements id new-movement)]
-                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-            :error-handler #(pr "error getting movement from equipment through add.")})
-      (GET "singlemovement"
-           {:params        {:categories categories}
-            :handler       #(let [id (swap! m-counter inc)
-                                  new-movement (first %)
-                                  new-movement (assoc new-movement :id id)
-                                  new-movements (assoc movements id new-movement)]
-                             (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-            :error-handler #(pr "error getting single movement through add.")}))))
+        part (session/get-in [:movement-session :parts position-in-parts])
+        movements (:movements part)
+        part (apply dissoc part (for [[k v] part :when (nil? v)] k))
+        part (dissoc part :title :movements)]
+    (GET "singlemovement"
+         {:params        part
+          :handler       #(let [id (swap! m-counter inc)
+                                new-movement (assoc % :id id)
+                                new-movements (assoc movements id new-movement)]
+                           (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+          :error-handler #(pr "error getting single movement through add.")})))
 
 (defn refresh-movement
   ([m part-title]
    (let [parts (session/get-in [:movement-session :parts])
          position-in-parts (first (positions #{part-title} (map :title parts)))
-         categories (:categories (first (filter #(= part-title (:title %)) parts)))
-         movements (session/get-in [:movement-session :parts position-in-parts :movements])]
-     (if-let [equipment (session/get-in [:movement-session :parts position-in-parts :equipment])]
-       (GET "movement-from-equipment"
-            {:params        {:equipment equipment}
-             :handler       #(let [id (:id m)
-                                   new-movement (first %)
-                                   new-movement (assoc new-movement :id id)
-                                   new-movements (assoc movements id new-movement)]
-                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-             :error-handler #(pr "error getting movement from equipment through refresh.")})
-       (GET "singlemovement"
-            {:params        {:categories categories}
-             :handler       #(let [id (:id m)
-                                   new-movement (first %)
-                                   new-movement (assoc new-movement :id id)
-                                   new-movements (assoc movements id new-movement)]
-                              (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
-             :error-handler #(pr "error getting single movement through refresh.")}))))
+         part (session/get-in [:movement-session :parts position-in-parts])
+         movements (:movements part)
+         part (apply dissoc part (for [[k v] part :when (nil? v)] k))
+         part (dissoc part :title :movements)]
+     (GET "singlemovement"
+          {:params        part
+           :handler       #(let [id (:id m)
+                                 new-movement (assoc % :id id)
+                                 new-movements (assoc movements id new-movement)]
+                            (session/assoc-in! [:movement-session :parts position-in-parts :movements] new-movements))
+           :error-handler #(pr "error getting single movement through refresh.")})))
   ([m part-title new-difficulty]
    (let [parts (session/get-in [:movement-session :parts])
          position-in-parts (first (positions #{part-title} (map :title parts)))
@@ -112,9 +96,7 @@
 (defn add-session-handler [session]
   (let [new-parts (mapv #(assoc % :movements (list-to-sorted-map (:movements %)))
                         (:parts session))]
-    (do
-      (pr session)
-      (session/put! :movement-session (assoc session :parts new-parts :comment "")))))
+    (session/put! :movement-session (assoc session :parts new-parts))))
 
 (defn create-session-from-template [id]
   (GET "template"
@@ -199,7 +181,10 @@
         [:div.pure-u-1-12]]
        [:div.pure-g
         [:div.pure-u-1.center
-         [:span (str zone)]]]
+         [:span (str "zone: " zone)]]]
+       [:div.pure-g
+        [:div.pure-u-1.center
+         [:span (str "is practical: " practical)]]]
        [:div {:style {:cursor 'pointer}}
         [:div.pure-g
          [:div.pure-u-1-12]
@@ -354,8 +339,8 @@
             [:div.pure-u-1.button
              {:style    {:margin-bottom 5}
               :on-click #(GET "next-session-from-plan"
-                              {:params  {:email (session/get :email)}
-                               :handler add-session-handler
+                              {:params        {:email (session/get :email)}
+                               :handler       add-session-handler
                                :error-handler (fn [r] (pr "error getting session data from server."))})}
              (str "Continue " (:plan/title plan))]])
          [:div.pure-g
@@ -414,31 +399,27 @@
     (fn []
       [:div
        [:div.pure-g
-        [:a.pure-u.pure-u-md-1-5 {:style {:text-decoration 'underline
-                                          :text-align 'right
-                                          :margin-right 5}
+        [:a.pure-u.pure-u-md-1-5 {:style    {:text-decoration 'underline
+                                             :text-align      'right
+                                             :margin-right    5}
                                   :on-click #(session/remove! :movement-session)}
          "Clear session"]
         [:div.pure-u.pure-u-md-1-5.button.button-primary {:style    {:margin-right 5}
-                                                              :on-click pick-random-template}
+                                                          :on-click pick-random-template}
          "Random"]
         [:div.pure-u.pure-u-md-1-5.button {:style    {:margin-right 5}
-                                               :on-click #(handler-fn
-                                                           (do
-                                                             (when (nil? (session/get :equipment))
-                                                               (get-equipment))
-                                                             (when groups-showing?
-                                                               (reset! groups-showing? false))
-                                                             (reset! templates-showing? (not @templates-showing?))))}
+                                           :on-click #(handler-fn
+                                                       (do
+                                                         (when groups-showing?
+                                                           (reset! groups-showing? false))
+                                                         (reset! templates-showing? (not @templates-showing?))))}
          "Select"]
-        [:div.pure-u.pure-u-md-1-5.button {:style {:margin-right 5}
-                                                   :on-click #(handler-fn
-                                                               (do
-                                                                 (when (nil? (session/get :equipment))
-                                                                   (get-equipment))
-                                                                 (when templates-showing?
-                                                                   (reset! templates-showing? false))
-                                                                 (reset! groups-showing? (not @groups-showing?))))}
+        [:div.pure-u.pure-u-md-1-5.button {:style    {:margin-right 5}
+                                           :on-click #(handler-fn
+                                                       (do
+                                                         (when templates-showing?
+                                                           (reset! templates-showing? false))
+                                                         (reset! groups-showing? (not @groups-showing?))))}
          "Group"]
         ]
        (when @templates-showing?
@@ -540,12 +521,12 @@
                          (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
                          (session/get :movement-session)
                          (POST "store-session"
-                                 {:params        {:session (session/get :movement-session)
-                                                  :user    (session/get :user)}
-                                  :handler       (fn [response] (do
-                                                                  (reset! session-stored-successfully? true)
-                                                                  (get-stored-sessions)))
-                                  :error-handler (fn [response] (pr response))}))}
+                               {:params        {:session (session/get :movement-session)
+                                                :user    (session/get :user)}
+                                :handler       (fn [response] (do
+                                                                (reset! session-stored-successfully? true)
+                                                                (get-stored-sessions)))
+                                :error-handler (fn [response] (pr response))}))}
             "Confirm Finish Session"]
            [:div.pure-u.pure-u-md-1-5]]
           [:div.pure-g

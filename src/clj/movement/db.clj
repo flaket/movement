@@ -55,6 +55,8 @@
          [?u :user/email ?email]]
        (:db @tx) email template-title))
 
+
+
 (defn get-n-movements-from-categories
   "Get n random movement entities drawn from param list of categories."
   [n categories]
@@ -71,6 +73,21 @@
                        (take n)
                        (map #(d/pull db '[*] %)))]
     movements))
+
+(defn single-movement [part]
+  (let [movement (first (get-n-movements-from-categories 1 (vals (:categories part))))
+        movement (merge movement (dissoc part :categories))
+        movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
+        movement (rename-keys movement {:movement/measurement :measurement
+                                        :movement/category :category
+                                        :movement/unique-name :unique
+                                        :movement/easier :easier
+                                        :movement/harder :harder
+                                        :movement/description :description
+                                        :movement/zone :zone
+                                        :movement/practical :practical})]
+    (.println System/out (str "New movement: " movement))
+    movement))
 
 (defn get-movements-from-category
   "Get n movement entities of the category."
@@ -132,6 +149,23 @@
                 (:db @tx)
                 email)))
 
+(defn prep-new-movement [movement part]
+  {:unique      (:movement/unique-name movement)
+   :name        (:movement/name movement)
+   :category    (:movement/category movement)
+   :measurement (:movement/measurement movement)
+   :easier      (:movement/easier movement)
+   :harder      (:movement/harder movement)
+   :description (:movement/description movement)
+   :zone        (:movement/zone movement)
+   :rep         (:part/rep part)
+   :set         (:part/set part)
+   :distance    (:part/distance part)
+   :duration    (:part/duration part)
+   :weight      (:part/weight part)
+   :rest        (:part/rest part)
+   :practical   (:part/practical part)})
+
 (defn create-session [template]
   (let [parts (vec
                 (for [part (:template/part template)]
@@ -143,24 +177,7 @@
                                            []
                                            (get-n-movements-from-categories n category-names))
                      movements (concat specific-movements generated-movements)
-                     movements (vec
-                                 (for [m movements]
-                                   {:unique      (:movement/unique-name m)
-                                    :name        (:movement/name m)
-                                    :category    (:movement/category m)
-                                    :measurement (:movement/measurement m)
-                                    :easier      (:movement/easier m)
-                                    :harder      (:movement/harder m)
-                                    :description (:movement/description m)
-                                    :zone        (:movement/zone m)
-
-                                    :rep         (:part/rep part)
-                                    :set         (:part/set part)
-                                    :distance    (:part/distance part)
-                                    :duration    (:part/duration part)
-                                    :weight      (:part/weight part)
-                                    :rest        (:part/rest part)
-                                    :practical   (:part/practical part)}))]
+                     movements (vec (for [m movements] (prep-new-movement m part)))]
                     {:title      (:part/title part)
                      :categories category-names
                      :movements  movements

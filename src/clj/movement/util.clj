@@ -145,104 +145,37 @@
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 
-(def session {:description "asd", :last-session? nil, :plan-id nil, :time nil,
-              :title       "Practical Movement", :comment "", :template-id 17592186045793
-              :parts       [{:rep        10, :duration nil, :title "Warming up",
-                             :categories ["Run" "Mobility" "Sit/Stand Transition"],
-                             :weight     nil, :distance nil, :set 3,
-                             :movements  {1 {:description nil,
-                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
-                                                           {:category/name "Hip Mobility", :db/id 17592186045573}
-                                                           {:category/name "Mobility", :db/id 17592186045581}
-                                                           {:category/name "Sit/Stand Transition", :db/id 17592186045584}],
-                                             :unique      "Kneeling To Tall Half Kneeling",
-                                             :harder      nil, :zone nil, :easier nil, :name nil,
-                                             :rep         10, :duration 100,
-                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
-                                             :weight      nil, :id 1, :distance nil, :set 3, :practical true, :rest nil},
-                                          2 {:description nil,
-                                             :category    [{:category/name "Hip Mobility", :db/id 17592186045573}
-                                                           {:category/name "Mobility", :db/id 17592186045581}],
-                                             :unique      "Dynamic Soleus Stretch", :harder nil, :zone nil, :easier nil,
-                                             :name        nil, :rep 10, :duration nil,
-                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
-                                             :weight      nil, :id 2, :distance nil, :set 3, :practical true, :rest nil},
-                                          3 {:description nil,
-                                             :category    [{:category/name "Hip Mobility", :db/id 17592186045573}
-                                                           {:category/name "Mobility", :db/id 17592186045581}],
-                                             :unique      "Horse Stance Walk", :harder nil, :zone nil, :easier nil, :name nil,
-                                             :rep         10, :duration nil,
-                                             :measurement {:db/id 17592186045419, :db/ident :measurement/distance},
-                                             :weight      nil, :id 3, :distance nil, :set 3, :practical true, :rest nil},
-                                          4 {:description nil,
-                                             :category    [{:category/name "Hip Mobility", :db/id 17592186045573}
-                                                           {:category/name "Mobility", :db/id 17592186045581}],
-                                             :unique      "Prayer Squat", :harder nil, :zone nil, :easier nil, :name nil,
-                                             :rep         10, :duration nil,
-                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
-                                             :weight      nil, :id 4, :distance nil, :set 3, :practical true, :rest nil}},
-                             :rest       nil}
-                            {:rep       30, :duration nil, :title "Practice a skill", :categories ["Practical Movements"],
-                             :weight    nil, :distance nil, :set 1, :rest nil
-                             :movements {5 {:description nil,
-                                            :category    [{:category/name "Practical Movements", :db/id 17592186045427}
-                                                          {:category/name "Bar", :db/id 17592186045456}
-
-                                                          {:category/name "Bent Arm Strength", :db/id 17592186045462}
-                                                          {:category/name "Brachiate", :db/id 17592186045514}],
-                                            :unique      "Bent Arm Linear Traverse", :harder nil, :zone nil,
-                                            :easier      [{:db/id 17592186045470} {:db/id 17592186045517} {:db/id 17592186045525}],
-                                            :name        nil, :rep 30, :duration nil,
-                                            :measurement {:db/id 17592186045419, :db/ident :measurement/distance},
-                                            :weight      nil, :id 5, :distance nil, :set 1, :practical true, :rest nil}}}
-                            {:rep       nil, :duration nil, :title "Circuit for 4+ rounds", :categories ["Practical Movements"],
-                             :weight    nil, :distance nil, :set 4,
-                             :rest      nil
-                             :movements {6  {:description nil,
-                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
-                                                           {:category/name "Bar", :db/id 17592186045456}
-                                                           {:category/name "Hang", :db/id 17592186045513}
-                                                           {:category/name "Straight Arm Strength", :db/id 17592186045515}],
-                                             :unique      "Arching Hang", :harder nil, :zone nil,
-                                             :easier      [{:db/id 17592186045518}], :name nil, :rep nil, :duration nil,
-                                             :measurement {:db/id 17592186045420, :db/ident :measurement/duration},
-                                             :weight      nil, :id 6, :distance nil, :set 4, :practical true, :rest nil},
-                                         7  {:description nil,
-                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
-                                                           {:category/name "Bar", :db/id 17592186045456}
-                                                           {:category/name "Wrist Mobility", :db/id 17592186045491}
-                                                           {:category/name "Hang", :db/id 17592186045513}],
-                                             :unique      "False Grip Hang", :harder nil, :zone nil,
-                                             :easier      [{:db/id 17592186045516}], :name nil, :rep nil, :duration nil,
-                                             :measurement {:db/id 17592186045420, :db/ident :measurement/duration},
-                                             :weight      nil, :id 7, :distance nil, :set 4, :practical true, :rest nil},
-                                         8  {:description nil,
-                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
-                                                           {:category/name "Climb", :db/id 17592186045455}
-                                                           {:category/name "Bar", :db/id 17592186045456}],
-                                             :unique      "Hand Swing Up", :harder [{:db/id 17592186045480}], :zone nil,
-                                             :easier      [{:db/id 17592186045478}], :name nil, :rep nil, :duration nil,
-                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
-                                             :weight      nil, :id 8, :distance nil, :set 4, :practical true, :rest nil},
-                                         9  {:description nil,
-                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
-                                                           {:category/name "Climb", :db/id 17592186045455}
-                                                           {:category/name "Bar", :db/id 17592186045456}
-                                                           {:category/name "Pull Up", :db/id 17592186045460}
-                                                           {:category/name "Pull", :db/id 17592186045461}
-                                                           {:category/name "Bent Arm Strength", :db/id 17592186045462}],
-                                             :unique      "Pull Up Reach", :harder [{:db/id 17592186045472}], :zone nil,
-                                             :easier      [{:db/id 17592186045470}], :name nil, :rep nil, :duration nil,
-                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
-                                             :weight      nil, :id 9, :distance nil, :set 4, :practical true, :rest nil},
-                                         10 {:description nil,
-                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
-                                                           {:category/name "Balance", :db/id 17592186045434}
-                                                           {:category/name "Beam", :db/id 17592186045437}],
-                                             :unique      "Balancing Tripod Transition", :harder nil, :zone nil,
-                                             :easier      [{:db/id 17592186045438}], :name nil, :rep nil, :duration nil,
-                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
-                                             :weight      nil, :id 10, :distance nil, :set 4, :practical true, :rest nil}}}]})
+(def part {:rep 10, :duration nil, :categories ["Run" "Mobility" "Sit/Stand Transition"], :weight nil, :distance nil, :set 3, :rest nil})
+(defn get-n-movements-from-categories
+  "Get n random movement entities drawn from param list of categories."
+  [n categories]
+  (let [db db
+        movement-ids (d/q '[:find [?m ...]
+                            :in $ [?cname ...]
+                            :where
+                            [?c :category/name ?cname]
+                            [?m :movement/category ?c]
+                            [?m :movement/unique-name _]]
+                          db categories)
+        movements (->> movement-ids
+                       shuffle
+                       (take n)
+                       (map #(d/pull db '[*] %)))]
+    movements))
+(defn single-movement [part]
+  (let [movement (first (get-n-movements-from-categories 1 (:categories part)))
+        movement (merge movement (dissoc part :categories))
+        movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
+        movement (rename-keys movement {:movement/measurement :measurement
+                                        :movement/category :category
+                                        :movement/unique-name :unique
+                                        :movement/easier :easier
+                                        :movement/harder :harder
+                                        :movement/description :description
+                                        :movement/zone :zone
+                                        :movement/practical :practical
+                                        :movement/name :name})]
+    movement))
 
 #_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
 Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",

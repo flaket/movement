@@ -497,11 +497,9 @@
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (response (db/all-movement-names))))
-           (GET "/singlemovement" req
-             (let [categories (vec (vals (:categories (:params req))))]
-               (if-not (authenticated? req)
-                 (throw-unauthorized)
-                 (response (db/get-n-movements-from-categories 1 categories)))))
+           (GET "/singlemovement" req (if-not (authenticated? req)
+                                        (throw-unauthorized)
+                                        (response (db/single-movement (:params req)))))
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
                                     (response (db/all-category-names))))

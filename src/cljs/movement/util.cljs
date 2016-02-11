@@ -66,15 +66,10 @@
                        :handler       #(session/put! :ongoing-plan %)
                        :error-handler #(pr (str "error retrieving ongoing-plan: " %))}))
 
-(defn get-routines []
+#_(defn get-routines []
   (GET "routines" {:params        {:email (session/get :email)}
                    :handler       #(session/put! :routines %)
                    :error-handler #(pr (str "error retrieving routines: " %))}))
-
-(defn get-equipment []
-  (GET "equipment" {:params        {:user (session/get :user)}
-                    :handler       #(session/put! :equipment %)
-                    :error-handler #(pr (str "error retrieving equipment: " %))}))
 
 (defn get-all-categories []
   (GET "categories" {:handler       #(session/put! :all-categories %)
