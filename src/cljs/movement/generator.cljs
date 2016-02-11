@@ -57,9 +57,8 @@
          movements (session/get-in [:movement-session :parts position-in-parts :movements])
          part (session/get-in [:movement-session :parts position-in-parts])
          part (apply dissoc part (for [[k v] part :when (nil? v)] k))
-         part (dissoc part :title :movements)
-         difficulty (case new-difficulty "easier" :movement/easier "harder" :movement/harder nil)]
-     (when-let [id (:db/id (first (shuffle (difficulty m))))]
+         part (dissoc part :title :movements)]
+     (when-let [id (:db/id (first (shuffle (new-difficulty m))))]
        (GET "movement-by-id"
             {:params        {:id id
                              :part part}
@@ -130,25 +129,6 @@
   (create-session-from-template (:db/id (first (shuffle (session/get :templates))))))
 
 ;;;;;; Components ;;;;;;
-(defn buttons-component [m title]
-  [:div.pure-g
-   [:div.pure-u-1-12]
-   [:div.pure-u-1-6.refresh
-    [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
-   [:div.pure-u-1-12]
-   (if (:movement/easier m)
-     [:div.pure-u-1-6.refresh
-      [:i.fa.fa-minus {:on-click #(refresh-movement m title "easier") :title "Swap with easier movement"}]]
-     [:div.pure-u-1-6])
-   [:div.pure-u-1-12]
-   (if (:movement/harder m)
-     [:div.pure-u-1-6.refresh
-      [:i.fa.fa-plus {:on-click #(refresh-movement m title "harder") :title "Swap with harder movement"}]]
-     [:div.pure-u-1-6])
-   [:div.pure-u-1-12]
-   [:div.pure-u-1-6.destroy
-    [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]])
-
 (defn slider-component []
   (let [data (atom 0)]
     (fn [position-in-parts id r min max step]
@@ -178,7 +158,23 @@
         rest-clicked? (atom false)]
     (fn []
       [:div.pure-u.movement.center {:id (str "m-" id)}
-       (buttons-component m title)
+       [:div.pure-g
+        [:div.pure-u-1-12]
+        [:div.pure-u-1-6.refresh
+         [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
+        [:div.pure-u-1-12]
+        (if easier
+          [:div.pure-u-1-6.refresh
+           [:i.fa.fa-minus {:on-click #(refresh-movement m title :easier) :title "Swap with easier movement"}]]
+          [:div.pure-u-1-6])
+        [:div.pure-u-1-12]
+        (if harder
+          [:div.pure-u-1-6.refresh
+           [:i.fa.fa-plus {:on-click #(refresh-movement m title :harder) :title "Swap with harder movement"}]]
+          [:div.pure-u-1-6])
+        [:div.pure-u-1-12]
+        [:div.pure-u-1-6.destroy
+         [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]]
        [:div.pure-g
         [:div.pure-u-1-12]
         [:h3.pure-u.title name]
