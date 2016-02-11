@@ -485,10 +485,14 @@
                                   (response (db/all-routines (str (:email (:params req)))))))
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (response (db/entity-by-movement-name (:name (:params req))))))
+                                  (response (db/movement :name
+                                                         (:name (:params req))
+                                                         (:part (:params req))))))
            (GET "/movement-by-id" req (if-not (authenticated? req)
                                         (throw-unauthorized)
-                                        (response (db/entity-by-id (read-string (:entity (:params req)))))))
+                                        (response (db/movement :id
+                                                               (read-string (:id (:params req)))
+                                                               (:part (:params req))))))
            (GET "/movements-by-category" req (if-not (authenticated? req)
                                                (throw-unauthorized)
                                                (response

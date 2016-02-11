@@ -89,6 +89,23 @@
     (.println System/out (str "New movement: " movement))
     movement))
 
+(defn movement [type id part]
+  (let [movement (cond (= type :name) (entity-by-movement-name id)
+                       (= type :id) (entity-by-id id)
+                       (= type :category) (first (get-n-movements-from-categories 1 (vals (:categories part)))))
+        movement (merge movement (dissoc part :categories))
+        movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
+        movement (rename-keys movement {:movement/measurement :measurement
+                                        :movement/category :category
+                                        :movement/unique-name :unique
+                                        :movement/easier :easier
+                                        :movement/harder :harder
+                                        :movement/description :description
+                                        :movement/zone :zone
+                                        :movement/practical :practical})]
+    (.println System/out (str "New movement: " movement))
+    movement))
+
 (defn get-movements-from-category
   "Get n movement entities of the category."
   [n category]

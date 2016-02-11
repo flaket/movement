@@ -55,10 +55,14 @@
    (let [parts (session/get-in [:movement-session :parts])
          position-in-parts (first (positions #{part-title} (map :title parts)))
          movements (session/get-in [:movement-session :parts position-in-parts :movements])
+         part (session/get-in [:movement-session :parts position-in-parts])
+         part (apply dissoc part (for [[k v] part :when (nil? v)] k))
+         part (dissoc part :title :movements)
          difficulty (case new-difficulty "easier" :movement/easier "harder" :movement/harder nil)]
-     (when-let [entity (:db/id (first (shuffle (difficulty m))))]
+     (when-let [id (:db/id (first (shuffle (difficulty m))))]
        (GET "movement-by-id"
-            {:params        {:entity entity}
+            {:params        {:id id
+                             :part part}
              :handler       #(let [id (:id m)
                                    new-movement %
                                    new-movement (assoc new-movement :id id)
@@ -69,10 +73,14 @@
 (defn add-movement-from-search [part-title movement-name]
   (let [parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{part-title} (map :title parts)))
-        movements (session/get-in [:movement-session :parts position-in-parts :movements])]
+        movements (session/get-in [:movement-session :parts position-in-parts :movements])
+        part (session/get-in [:movement-session :parts position-in-parts])
+        part (apply dissoc part (for [[k v] part :when (nil? v)] k))
+        part (dissoc part :title :movements)]
     (GET "movement"
-         {:params        {:name (str movement-name)}
-          :handler       #(let [id (swap! m-counter inc)
+         {:params        {:name (str movement-name)
+                          :part part}
+          :handler        #(let [id (swap! m-counter inc)
                                 new-movement %
                                 new-movement (assoc new-movement :id id)
                                 new-movements (assoc movements id new-movement)]
