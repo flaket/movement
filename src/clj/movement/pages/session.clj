@@ -6,7 +6,7 @@
             [movement.pages.signup :refer [signup-form]]))
 
 (defn image-url [name]
-  (str "../images/" (str/replace (str/lower-case name) " " "-") ".png"))
+  (str "../images/movements/" (str/replace (str/lower-case name) " " "-") ".png"))
 
 (defn time-component [time]
   (let [minutes (int (/ time 60))
@@ -31,7 +31,9 @@
         rep (:movement/rep m)
         set (:movement/set m)
         distance (:movement/distance m)
-        duration (:movement/duration m)]
+        duration (:movement/duration m)
+        weight (:movement/weight m)
+        rest (:movement/rest m)]
     [:div.pure-u.movement.is-center {:id (str "m-" id)}
      [:h3.pure-g
       [:div.pure-u-1-12]
@@ -97,20 +99,17 @@
     [:div.pure-u.pure-u-md-1-9]]])
 
 (defn epilog []
-  [:div#epilog.content
-   [:h2.content-head.is-center "Create and discover more sessions like this"]
+  [:div#epilog
+   [:h2.content-head.center "Create and discover more sessions like this"]
    [:div.pure-g
-    [:div.pure-u.pure-u-md-1-5]
-    [:a.pure-u-1.pure-u-md-3-5.pure-button.pure-button-primary
-     {:title  "Movement Session Learn More"
-      :href   "/"
-      :target ""} "Learn more"]
-    [:div.pure-u.pure-u-md-1-5]]])
+    [:div.pure-u-1.center
+     [:a.m-button.orange.x-large.upper
+      {:title "Try Movement Session" :href "/" :target "_self"} "Try Movement Session"]]]])
 
 (defn view-session-page [session]
   (html5
     [:head
-     [:link {:rel "shortcut icon" :href "images/static-air-baby.png"}]
+     [:link {:rel "shortcut icon" :href "images/movements/static-air-baby.png"}]
      [:title "View your session | Movement Session"]
      [:script {:src "analytics.js" :type "text/javascript"}]
      (include-css
@@ -120,18 +119,17 @@
        "/css/pure-min.css"
        "/css/grids-responsive-min.css"
        "/css/normalize.css"
-       #_"/css/marketing.css"
+       "/css/marketing.css"
        "/css/site.css")]
     [:body
      [:div
-      #_(top-menu)
       [:div.content
        (header-component session)
        (doall
          (for [p (:parts session)]
            ^{:key p} (part-component p)))
        (when-let [time (:time session)]
-         (when (not= 0 time) (time-component time)))
+         (time-component time))
        (comment-component (:comment session))
        (epilog)]
       #_(footer-always-bottom)]

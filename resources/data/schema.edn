@@ -105,6 +105,7 @@
   :db/ident              :user/session
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A user has logged sessions"
   :db.install/_attribute :db.part/db}
@@ -113,6 +114,7 @@
   :db/ident              :user/setting
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A user has settings"
   :db.install/_attribute :db.part/db}
@@ -121,6 +123,7 @@
   :db/ident              :user/interest
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A user can set interests"
   :db.install/_attribute :db.part/db}
@@ -129,6 +132,7 @@
   :db/ident              :user/goal
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A user can set goals"
   :db.install/_attribute :db.part/db}
@@ -137,6 +141,7 @@
   :db/ident              :user/max-heart-rate
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/one
   :db/doc                "A user may set their maximum heart rate"
   :db.install/_attribute :db.part/db}
@@ -144,6 +149,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :user/badge
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A user can achieve badges"
   :db.install/_attribute :db.part/db}
@@ -259,6 +265,7 @@
   :db/ident              :template/part
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A template consists of parts"
   :db.install/_attribute :db.part/db}
@@ -302,6 +309,7 @@
   :db/ident              :routine/movement
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A routine consists of movements"
   :db.install/_attribute :db.part/db}
@@ -345,6 +353,7 @@
   :db/ident              :group/template
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A group consists of templates"
   :db.install/_attribute :db.part/db}
@@ -412,6 +421,7 @@
   :db/ident              :plan/current-day
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/one
   :db/doc                "An ongoing plan is at a current day"
   :db.install/_attribute :db.part/db}
@@ -420,6 +430,7 @@
   :db/ident              :plan/day
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A plan consists of many days"
   :db.install/_attribute :db.part/db}
@@ -429,6 +440,7 @@
   :db/ident              :day/template
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "Each day consists of zero or more templates"
   :db.install/_attribute :db.part/db}
@@ -437,6 +449,7 @@
   :db/ident              :day/group
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "Each session of the day may draw the template from a group"
   :db.install/_attribute :db.part/db}
@@ -472,8 +485,17 @@
   :db/ident              :part/category
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A part can have several categories"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/practical
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Should only movements with category Practical Movements be used?"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -496,6 +518,7 @@
   :db/ident              :part/specific-movement
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "Optionally a specific movement can be added to a part"
   :db.install/_attribute :db.part/db}
@@ -541,9 +564,18 @@
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
+  :db/ident              :part/rest
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Optionally the rest time between sets can be given"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
   :db/ident              :part/session-movement
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A stored session has parts with movements"
   :db.install/_attribute :db.part/db}
@@ -583,14 +615,24 @@
   :db/ident              :movement/category
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A movement has one or more categories"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/practical
+  :db/index              true
+  :db/valueType          :db.type/boolean
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "Should only movements with category Practical Movements be used when refreshing?"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :movement/measurement
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/one
   :db/doc                "A movement has a standard way of logging progress.
                           :measurement/repetitions :measurement/distance :measurement/duration"
@@ -624,6 +666,7 @@
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :movement/zone
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/one
   :db/doc                "A given movement belongs to a mastery zone for the user.
                           :zone/one (or no data -> implied :zone/one) reflects the learning phase, a completely new skill.
@@ -670,6 +713,14 @@
   :db/valueType          :db.type/long
   :db/cardinality        :db.cardinality/one
   :db/doc                "A movement may have a weight"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id                 #db/id[:db.part/db]
+  :db/ident              :movement/rest
+  :db/index              true
+  :db/valueType          :db.type/long
+  :db/cardinality        :db.cardinality/one
+  :db/doc                "A movement may have rest time"
   :db.install/_attribute :db.part/db}
 
  {:db/id                 #db/id[:db.part/db]
@@ -754,6 +805,7 @@
   :db/ident              :session/part
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/many
   :db/doc                "A session consists of parts"
   :db.install/_attribute :db.part/db}
@@ -779,6 +831,7 @@
   :db/ident              :session/heart-rate
   :db/index              true
   :db/valueType          :db.type/ref
+  :db/isComponent        true
   :db/cardinality        :db.cardinality/one
   :db/doc                "A session may be stored with heart rate data"
   :db.install/_attribute :db.part/db}

@@ -112,13 +112,15 @@
 (defn add-session-handler [session]
   (let [new-parts (mapv #(assoc % :movements (list-to-sorted-map (:movements %)))
                         (:parts session))]
-    (session/put! :movement-session (assoc session :parts new-parts :comment ""))))
+    (do
+      (pr session)
+      (session/put! :movement-session (assoc session :parts new-parts :comment "")))))
 
 (defn create-session-from-template [id]
   (GET "template"
        {:params        {:template-id id}
         :handler       add-session-handler
-        :error-handler (fn [] (pr "error getting session data from server."))}))
+        :error-handler (fn [r] (pr r))}))
 
 (defn create-session-from-group [group]
   (GET "group"
@@ -170,17 +172,20 @@
                         (int @data))
          :on-change   #(reset! data (-> % .-target .-value))}]])))
 
-(defn movement-component [{:keys [id category distance rep set duration] :as m}
-                          title categories]
-  (let [unique-name (:movement/unique-name m)
-        name (if (nil? unique-name) (:movement/name m) unique-name)
+(defn movement-component
+  [{:keys [id unique name category measurement easier harder description zone
+           rep set distance duration weight rest practical] :as m}
+   title categories]
+  (let [name (if (nil? unique) name unique)
         graphic (image-url name)
         parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{title} (map :title parts)))
         rep-clicked? (atom false)
         set-clicked? (atom false)
         distance-clicked? (atom false)
-        duration-clicked? (atom false)]
+        duration-clicked? (atom false)
+        weight-clicked? (atom false)
+        rest-clicked? (atom false)]
     (fn []
       [:div.pure-u.movement.center {:id (str "m-" id)}
        (buttons-component m title)
@@ -192,6 +197,9 @@
         [:div.pure-u-1-12]
         [:img.pure-u.graphic.pure-img-responsive {:src graphic :title name :alt name}]
         [:div.pure-u-1-12]]
+       [:div.pure-g
+        [:div.pure-u-1.center
+         [:span (str zone)]]]
        [:div {:style {:cursor 'pointer}}
         [:div.pure-g
          [:div.pure-u-1-12]
@@ -526,19 +534,18 @@
            [:div.pure-u.pure-u-md-1-5]
            [:div.pure-u-1-1.pure-u-md-3-5.button.button-secondary
             {:on-click #(let [min (session/get-in [:movement-session :time :minutes])
-                              min (if (nil? min) 0 (int (reader/read-string min)))
+                              min (when-not (nil? min) (int (reader/read-string min)))
                               sec (session/get-in [:movement-session :time :seconds])
-                              sec (if (nil? sec) 0 (int (reader/read-string sec)))]
+                              sec (when-not (nil? sec) (int (reader/read-string sec)))]
                          (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
-                         #_(pr (str "last-session? " (:last-session? (session/get :movement-session))
-                                  " plan-id: " (:plan-id (session/get :movement-session))))
+                         (session/get :movement-session)
                          (POST "store-session"
-                               {:params        {:session (session/get :movement-session)
-                                                :user    (session/get :user)}
-                                :handler       (fn [response] (do
-                                                                (reset! session-stored-successfully? true)
-                                                                (get-stored-sessions)))
-                                :error-handler (fn [response] (pr response))}))}
+                                 {:params        {:session (session/get :movement-session)
+                                                  :user    (session/get :user)}
+                                  :handler       (fn [response] (do
+                                                                  (reset! session-stored-successfully? true)
+                                                                  (get-stored-sessions)))
+                                  :error-handler (fn [response] (pr response))}))}
             "Confirm Finish Session"]
            [:div.pure-u.pure-u-md-1-5]]
           [:div.pure-g

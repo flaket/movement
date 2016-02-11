@@ -5,11 +5,11 @@
             [clojure.pprint :as pp]
             [buddy.hashers :as hashers]
             [clojure.string :as str]
-            [clojure.set :as set])
+            [clojure.set :as set :refer [rename-keys]])
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/testing13")
+#_(def uri "datomic:dev://localhost:4334/testing16")
 
 #_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
@@ -77,11 +77,6 @@
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
 
-#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "nils.flakstad@kartverket.no"
-                       :user/valid-subscription? true}]]
-    (d/transact conn tx-user-data))
-
 ;; Get the database value.
 #_(def db (d/db conn))
 
@@ -96,7 +91,7 @@
          [?u :user/email ?e]]
        db)
 
-#_(d/pull db '[*] 17592186045838)
+#_(d/pull db '[*] 17592186045793)
 
 #_(defn image-url [name]
     (str "public/images/movements/" (str/replace (str/lower-case name) " " "-") ".png"))
@@ -149,6 +144,105 @@
 #_(find-no-data-images)
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
+
+(def session {:description "asd", :last-session? nil, :plan-id nil, :time nil,
+              :title       "Practical Movement", :comment "", :template-id 17592186045793
+              :parts       [{:rep        10, :duration nil, :title "Warming up",
+                             :categories ["Run" "Mobility" "Sit/Stand Transition"],
+                             :weight     nil, :distance nil, :set 3,
+                             :movements  {1 {:description nil,
+                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
+                                                           {:category/name "Hip Mobility", :db/id 17592186045573}
+                                                           {:category/name "Mobility", :db/id 17592186045581}
+                                                           {:category/name "Sit/Stand Transition", :db/id 17592186045584}],
+                                             :unique      "Kneeling To Tall Half Kneeling",
+                                             :harder      nil, :zone nil, :easier nil, :name nil,
+                                             :rep         10, :duration 100,
+                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
+                                             :weight      nil, :id 1, :distance nil, :set 3, :practical true, :rest nil},
+                                          2 {:description nil,
+                                             :category    [{:category/name "Hip Mobility", :db/id 17592186045573}
+                                                           {:category/name "Mobility", :db/id 17592186045581}],
+                                             :unique      "Dynamic Soleus Stretch", :harder nil, :zone nil, :easier nil,
+                                             :name        nil, :rep 10, :duration nil,
+                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
+                                             :weight      nil, :id 2, :distance nil, :set 3, :practical true, :rest nil},
+                                          3 {:description nil,
+                                             :category    [{:category/name "Hip Mobility", :db/id 17592186045573}
+                                                           {:category/name "Mobility", :db/id 17592186045581}],
+                                             :unique      "Horse Stance Walk", :harder nil, :zone nil, :easier nil, :name nil,
+                                             :rep         10, :duration nil,
+                                             :measurement {:db/id 17592186045419, :db/ident :measurement/distance},
+                                             :weight      nil, :id 3, :distance nil, :set 3, :practical true, :rest nil},
+                                          4 {:description nil,
+                                             :category    [{:category/name "Hip Mobility", :db/id 17592186045573}
+                                                           {:category/name "Mobility", :db/id 17592186045581}],
+                                             :unique      "Prayer Squat", :harder nil, :zone nil, :easier nil, :name nil,
+                                             :rep         10, :duration nil,
+                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
+                                             :weight      nil, :id 4, :distance nil, :set 3, :practical true, :rest nil}},
+                             :rest       nil}
+                            {:rep       30, :duration nil, :title "Practice a skill", :categories ["Practical Movements"],
+                             :weight    nil, :distance nil, :set 1, :rest nil
+                             :movements {5 {:description nil,
+                                            :category    [{:category/name "Practical Movements", :db/id 17592186045427}
+                                                          {:category/name "Bar", :db/id 17592186045456}
+
+                                                          {:category/name "Bent Arm Strength", :db/id 17592186045462}
+                                                          {:category/name "Brachiate", :db/id 17592186045514}],
+                                            :unique      "Bent Arm Linear Traverse", :harder nil, :zone nil,
+                                            :easier      [{:db/id 17592186045470} {:db/id 17592186045517} {:db/id 17592186045525}],
+                                            :name        nil, :rep 30, :duration nil,
+                                            :measurement {:db/id 17592186045419, :db/ident :measurement/distance},
+                                            :weight      nil, :id 5, :distance nil, :set 1, :practical true, :rest nil}}}
+                            {:rep       nil, :duration nil, :title "Circuit for 4+ rounds", :categories ["Practical Movements"],
+                             :weight    nil, :distance nil, :set 4,
+                             :rest      nil
+                             :movements {6  {:description nil,
+                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
+                                                           {:category/name "Bar", :db/id 17592186045456}
+                                                           {:category/name "Hang", :db/id 17592186045513}
+                                                           {:category/name "Straight Arm Strength", :db/id 17592186045515}],
+                                             :unique      "Arching Hang", :harder nil, :zone nil,
+                                             :easier      [{:db/id 17592186045518}], :name nil, :rep nil, :duration nil,
+                                             :measurement {:db/id 17592186045420, :db/ident :measurement/duration},
+                                             :weight      nil, :id 6, :distance nil, :set 4, :practical true, :rest nil},
+                                         7  {:description nil,
+                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
+                                                           {:category/name "Bar", :db/id 17592186045456}
+                                                           {:category/name "Wrist Mobility", :db/id 17592186045491}
+                                                           {:category/name "Hang", :db/id 17592186045513}],
+                                             :unique      "False Grip Hang", :harder nil, :zone nil,
+                                             :easier      [{:db/id 17592186045516}], :name nil, :rep nil, :duration nil,
+                                             :measurement {:db/id 17592186045420, :db/ident :measurement/duration},
+                                             :weight      nil, :id 7, :distance nil, :set 4, :practical true, :rest nil},
+                                         8  {:description nil,
+                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
+                                                           {:category/name "Climb", :db/id 17592186045455}
+                                                           {:category/name "Bar", :db/id 17592186045456}],
+                                             :unique      "Hand Swing Up", :harder [{:db/id 17592186045480}], :zone nil,
+                                             :easier      [{:db/id 17592186045478}], :name nil, :rep nil, :duration nil,
+                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
+                                             :weight      nil, :id 8, :distance nil, :set 4, :practical true, :rest nil},
+                                         9  {:description nil,
+                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
+                                                           {:category/name "Climb", :db/id 17592186045455}
+                                                           {:category/name "Bar", :db/id 17592186045456}
+                                                           {:category/name "Pull Up", :db/id 17592186045460}
+                                                           {:category/name "Pull", :db/id 17592186045461}
+                                                           {:category/name "Bent Arm Strength", :db/id 17592186045462}],
+                                             :unique      "Pull Up Reach", :harder [{:db/id 17592186045472}], :zone nil,
+                                             :easier      [{:db/id 17592186045470}], :name nil, :rep nil, :duration nil,
+                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
+                                             :weight      nil, :id 9, :distance nil, :set 4, :practical true, :rest nil},
+                                         10 {:description nil,
+                                             :category    [{:category/name "Practical Movements", :db/id 17592186045427}
+                                                           {:category/name "Balance", :db/id 17592186045434}
+                                                           {:category/name "Beam", :db/id 17592186045437}],
+                                             :unique      "Balancing Tripod Transition", :harder nil, :zone nil,
+                                             :easier      [{:db/id 17592186045438}], :name nil, :rep nil, :duration nil,
+                                             :measurement {:db/id 17592186045421, :db/ident :measurement/repetitions},
+                                             :weight      nil, :id 10, :distance nil, :set 4, :practical true, :rest nil}}}]})
 
 #_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
 Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",
@@ -656,92 +750,92 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
 ;; inputs:
 ; db, [["John Lennon" "Mind Games"] ["Paul McCartney" "Ram"]]
 
-#_[[{:user/template [{:db/id 17592186045811}
-                     {:db/id 17592186045814}
-                     {:db/id 17592186045820}
-                     {:db/id 17592186045823}
-                     {:db/id 17592186045828}
-                     {:db/id 17592186045833}],
-     :user/sign-up-timestamp #inst"2016-01-28T21:11:01.782-00:00",
-     :user/setting [{:db/id 17592186045846}],
-     :user/password "bcrypt+sha512$ecf67eb6b9242302cdb7ddbb$12$24326124313224616f6750327765426c50464e4e634244646863714e4f7136752e4d47737832497336514b54774765335a4e573646594a6d4e4a4575",
-     :user/activated? true,
+#_[[{:user/template            [{:db/id 17592186045811}
+                                {:db/id 17592186045814}
+                                {:db/id 17592186045820}
+                                {:db/id 17592186045823}
+                                {:db/id 17592186045828}
+                                {:db/id 17592186045833}],
+     :user/sign-up-timestamp   #inst"2016-01-28T21:11:01.782-00:00",
+     :user/setting             [{:db/id 17592186045846}],
+     :user/password            "bcrypt+sha512$ecf67eb6b9242302cdb7ddbb$12$24326124313224616f6750327765426c50464e4e634244646863714e4f7136752e4d47737832497336514b54774765335a4e573646594a6d4e4a4575",
+     :user/activated?          true,
      :user/valid-subscription? true,
-     :db/id 17592186045844,
-     :user/activation-id "d7c1641e-a0d7-42d5-9285-d6dc66092714",
-     :user/email "chrhage@gmail.com"}]
-   [{:user/template [{:db/id 17592186045811}
-                     {:db/id 17592186045814}
-                     {:db/id 17592186045820}
-                     {:db/id 17592186045823}
-                     {:db/id 17592186045828}
-                     {:db/id 17592186045833}
-                     {:db/id 17592186045879}
-                     {:db/id 17592186045889}
-                     {:db/id 17592186045955}],
-     :user/sign-up-timestamp #inst"2016-02-03T19:31:43.154-00:00",
-     :user/name "Ulf",
-     :user/setting [{:db/id 17592186045949}],
-     :user/password "bcrypt+sha512$7a8ff3ed35b4134b7bf6f67e$12$243261243132245134744c56677355616e6267623676643435303176656857786a2e70335672317848517777304c445150576f4d4e79593779486953",
-     :user/activated? true,
-     :user/session [{:db/id 17592186045962}],
+     :db/id                    17592186045844,
+     :user/activation-id       "d7c1641e-a0d7-42d5-9285-d6dc66092714",
+     :user/email               "chrhage@gmail.com"}]
+   [{:user/template            [{:db/id 17592186045811}
+                                {:db/id 17592186045814}
+                                {:db/id 17592186045820}
+                                {:db/id 17592186045823}
+                                {:db/id 17592186045828}
+                                {:db/id 17592186045833}
+                                {:db/id 17592186045879}
+                                {:db/id 17592186045889}
+                                {:db/id 17592186045955}],
+     :user/sign-up-timestamp   #inst"2016-02-03T19:31:43.154-00:00",
+     :user/name                "Ulf",
+     :user/setting             [{:db/id 17592186045949}],
+     :user/password            "bcrypt+sha512$7a8ff3ed35b4134b7bf6f67e$12$243261243132245134744c56677355616e6267623676643435303176656857786a2e70335672317848517777304c445150576f4d4e79593779486953",
+     :user/activated?          true,
+     :user/session             [{:db/id 17592186045962}],
      :user/valid-subscription? true,
-     :db/id 17592186045947,
-     :user/activation-id "2982e37b-e8e9-4a8b-be9a-aa9c43ee11ed",
-     :user/email "nils.flakstad@kartverket.no"}]
-   [{:user/template [{:db/id 17592186045811}
-                     {:db/id 17592186045814}
-                     {:db/id 17592186045820}
-                     {:db/id 17592186045823}
-                     {:db/id 17592186045828}
-                     {:db/id 17592186045833}
-                     {:db/id 17592186045955}],
-     :user/sign-up-timestamp #inst"2016-01-29T07:00:30.784-00:00",
-     :user/setting [{:db/id 17592186045855}],
-     :user/password "bcrypt+sha512$bd97227205ac27e7c15dfa27$12$24326124313224396c6165725854753657583374726f4d4b636767794f645070754d364c596747356e33416e61566b45535245735935686b50387243",
-     :user/activated? true,
-     :user/session [{:db/id 17592186045982}],
+     :db/id                    17592186045947,
+     :user/activation-id       "2982e37b-e8e9-4a8b-be9a-aa9c43ee11ed",
+     :user/email               "nils.flakstad@kartverket.no"}]
+   [{:user/template            [{:db/id 17592186045811}
+                                {:db/id 17592186045814}
+                                {:db/id 17592186045820}
+                                {:db/id 17592186045823}
+                                {:db/id 17592186045828}
+                                {:db/id 17592186045833}
+                                {:db/id 17592186045955}],
+     :user/sign-up-timestamp   #inst"2016-01-29T07:00:30.784-00:00",
+     :user/setting             [{:db/id 17592186045855}],
+     :user/password            "bcrypt+sha512$bd97227205ac27e7c15dfa27$12$24326124313224396c6165725854753657583374726f4d4b636767794f645070754d364c596747356e33416e61566b45535245735935686b50387243",
+     :user/activated?          true,
+     :user/session             [{:db/id 17592186045982}],
      :user/valid-subscription? true,
-     :db/id 17592186045853,
-     :user/activation-id "a8abe2d7-7f33-420d-8d94-899bcc5e45df",
-     :user/email "ivar.flakstad@gmail.com"}]
-   [{:user/template [{:db/id 17592186045811}
-                     {:db/id 17592186045814}
-                     {:db/id 17592186045820}
-                     {:db/id 17592186045823}
-                     {:db/id 17592186045828}
-                     {:db/id 17592186045833}
-                     {:db/id 17592186045875}
-                     {:db/id 17592186045879}
-                     {:db/id 17592186045886}
-                     {:db/id 17592186045889}
-                     {:db/id 17592186045955}],
-     :user/sign-up-timestamp #inst"2016-01-28T21:02:00.275-00:00",
-     :user/name "andreasflakstad",
-     :user/setting [{:db/id 17592186045840}],
-     :user/password "bcrypt+sha512$b935b06a3b5c3598b7d82e62$12$24326124313224424869396c715a666777382e534b744256523136654f2e63766e6d2f6435336b70392f4f746b51494245366f587366425a4e414e61",
-     :user/activated? true,
-     :user/session [{:db/id 17592186045859}
-                    {:db/id 17592186045898}
-                    {:db/id 17592186045905}
-                    {:db/id 17592186045916}
-                    {:db/id 17592186045931}
-                    {:db/id 17592186045977}],
+     :db/id                    17592186045853,
+     :user/activation-id       "a8abe2d7-7f33-420d-8d94-899bcc5e45df",
+     :user/email               "ivar.flakstad@gmail.com"}]
+   [{:user/template            [{:db/id 17592186045811}
+                                {:db/id 17592186045814}
+                                {:db/id 17592186045820}
+                                {:db/id 17592186045823}
+                                {:db/id 17592186045828}
+                                {:db/id 17592186045833}
+                                {:db/id 17592186045875}
+                                {:db/id 17592186045879}
+                                {:db/id 17592186045886}
+                                {:db/id 17592186045889}
+                                {:db/id 17592186045955}],
+     :user/sign-up-timestamp   #inst"2016-01-28T21:02:00.275-00:00",
+     :user/name                "andreasflakstad",
+     :user/setting             [{:db/id 17592186045840}],
+     :user/password            "bcrypt+sha512$b935b06a3b5c3598b7d82e62$12$24326124313224424869396c715a666777382e534b744256523136654f2e63766e6d2f6435336b70392f4f746b51494245366f587366425a4e414e61",
+     :user/activated?          true,
+     :user/session             [{:db/id 17592186045859}
+                                {:db/id 17592186045898}
+                                {:db/id 17592186045905}
+                                {:db/id 17592186045916}
+                                {:db/id 17592186045931}
+                                {:db/id 17592186045977}],
      :user/valid-subscription? true,
-     :db/id 17592186045838,
-     :user/activation-id "b07be03c-a1f4-4bdd-a113-b54969d91bdb",
-     :user/email "andflak@gmail.com"}]
-   [{:db/id 17592186045808,
-     :user/email "admin@movementsession.com",
-     :user/name "movementsession",
-     :user/password "bcrypt+sha512$806f99bbdebc562194a98610$12$243261243132246e4733544e483742596b78304c4d3632622f6757484f523466563957364848744b746b6430354a4c386f415137745961356571642e",
+     :db/id                    17592186045838,
+     :user/activation-id       "b07be03c-a1f4-4bdd-a113-b54969d91bdb",
+     :user/email               "andflak@gmail.com"}]
+   [{:db/id                    17592186045808,
+     :user/email               "admin@movementsession.com",
+     :user/name                "movementsession",
+     :user/password            "bcrypt+sha512$806f99bbdebc562194a98610$12$243261243132246e4733544e483742596b78304c4d3632622f6757484f523466563957364848744b746b6430354a4c386f415137745961356571642e",
      :user/valid-subscription? true,
-     :user/template [{:db/id 17592186045811}
-                     {:db/id 17592186045814}
-                     {:db/id 17592186045820}
-                     {:db/id 17592186045823}
-                     {:db/id 17592186045828}
-                     {:db/id 17592186045833}]}]]
+     :user/template            [{:db/id 17592186045811}
+                                {:db/id 17592186045814}
+                                {:db/id 17592186045820}
+                                {:db/id 17592186045823}
+                                {:db/id 17592186045828}
+                                {:db/id 17592186045833}]}]]
 
 
 

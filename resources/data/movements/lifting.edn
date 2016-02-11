@@ -74,7 +74,8 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -104]]
+  :movement/easier      [#db/id[:db.part/user -100]
+                         #db/id[:db.part/user -104]]
   :movement/harder      [#db/id[:db.part/user -107]]}
 
  {:db/id                #db/id[:db.part/user -107]

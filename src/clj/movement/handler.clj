@@ -497,22 +497,11 @@
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (response (db/all-movement-names))))
-           (GET "/equipment" req (if-not (authenticated? req)
-                                   (throw-unauthorized)
-                                   (response (db/all-equipment-names))))
-           (GET "/equipment-session" req (if-not (authenticated? req)
-                                           (throw-unauthorized)
-                                           (let [equipment (:equipment (:params req))]
-                                             (response (db/create-equipment-session equipment 5)))))
-           (GET "/movement-from-equipment" req (let [e (:equipment (:params req))]
-                                                 (if-not (authenticated? req)
-                                                   (throw-unauthorized)
-                                                   (response (db/get-movement-from-equipment e)))))
            (GET "/singlemovement" req
              (let [categories (vec (vals (:categories (:params req))))]
                (if-not (authenticated? req)
                  (throw-unauthorized)
-                 (response (db/get-n-movements-from-categories 1 categories {})))))
+                 (response (db/get-n-movements-from-categories 1 categories)))))
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
                                     (response (db/all-category-names))))
