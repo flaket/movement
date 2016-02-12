@@ -447,7 +447,8 @@
            (GET "/session/:url" [url] (view-session-page (db/get-session url)))
            (GET "/template" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (let [template (db/entity-by-id (read-string (:template-id (:params req))))
+                                  (let [id (:template-id (:params req))
+                                        template (db/entity-by-id (if (string? id) (read-string id) id))
                                         email (:email (:params req))]
                                     (response (db/create-session email template)))))
            (GET "/next-session-from-plan" req (if-not (authenticated? req)

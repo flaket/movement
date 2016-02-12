@@ -86,10 +86,12 @@
                 [?u :user/email ?e]]
               db))
 
-#_(d/q '[:find (pull ?u [*])
-         :where
-         [?u :user/email ?e]]
-       db)
+#_(-> (d/q '[:find [(pull ?u [:user/movements]) ...]
+             :where
+             [?u :user/email ?e]]
+           db)
+      first
+      :user/movements)
 
 #_(d/pull db '[*] 17592186045521)
 
@@ -144,50 +146,6 @@
 #_(find-no-data-images)
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
-
-(defn get-n-movements-from-categories
-  "Get n random movement entities drawn from param list of categories."
-  [n categories]
-  (let [db db
-        movement-ids (d/q '[:find [?m ...]
-                            :in $ [?cname ...]
-                            :where
-                            [?c :category/name ?cname]
-                            [?m :movement/category ?c]
-                            [?m :movement/unique-name _]]
-                          db categories)
-        movements (->> movement-ids
-                       shuffle
-                       (take n)
-                       (map #(d/pull db '[*] %)))]
-    movements))
-
-(let [generated-movements (get-n-movements-from-categories 1 ["Practical Movements"])
-      user-movements (d/q '[:find [(pull ?m [*]) ...]
-                            :in $ ?email
-                            :where
-                            [?u :user/email ?email]
-                            [?u :user/movements ?m]]
-                          db
-                          "a")
-      new-generated-movements (for [movement generated-movements]
-                                (if-let [user-movement (some #(when
-                                                               (= (:movement/unique-name movement) (:movement/name %))
-                                                               %)
-                                                             user-movements)]
-                                  (merge movement (dissoc user-movement :db/id))
-                                  (loop [m movement]
-                                    (let [easier (:movement/easier m)]
-                                      (if (nil? easier)
-                                        m
-                                        (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))
-                                              new-has-been-done? (some #(= (:movement/unique-name new) (:movement/name %)) user-movements)]
-                                          (if new-has-been-done?
-                                            new
-                                            (recur new))))))))]
-  new-generated-movements)
-
-
 
 #_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
 Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",

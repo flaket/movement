@@ -151,6 +151,7 @@
    title categories]
   (let [name (if (nil? unique) name unique)
         graphic (image-url name)
+        measurement (:db/ident measurement)
         parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{title} (map :title parts)))
         rep-clicked? (atom false)
@@ -187,11 +188,15 @@
         [:img.pure-u.graphic.pure-img-responsive {:src graphic :title name :alt name}]
         [:div.pure-u-1-12]]
        [:div.pure-g
-        [:div.pure-u-1.center
-         [:span (str "zone: " zone)]]]
-       [:div.pure-g
-        [:div.pure-u-1.center
-         [:span (str "measurement: " measurement)]]]
+        [:div.pure-u-1.center {:style {:color 'gold}}
+         (let [zone (:db/ident zone)]
+           (cond
+             (= :zone/one zone) [:div {:title "You're still in the learning phase with this movement"}
+                                 [:i.fa.fa-star][:i.fa.fa-star-o][:i.fa.fa-star-o]]
+             (= :zone/two zone) [:div {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}
+                                 [:i.fa.fa-star][:i.fa.fa-star][:i.fa.fa-star-o]]
+             (= :zone/three zone) [:div {:title "You have mastered this movement. You are both effective and efficient."}
+                                   [:i.fa.fa-star][:i.fa.fa-star][:i.fa.fa-star]]))]]
        [:div {:style {:cursor 'pointer}}
         [:div.pure-g
          [:div.pure-u-1-12]

@@ -78,8 +78,6 @@
 (defn single-movement [email part]
   (let [db (:db @tx)
         ; convert string values to ints. Why is this needed? A mistake in the client?
-        temp (.println System/out (str "Email: " email))
-        temp (.println System/out (str "Categories: " (:categories part)))
         part (into {} (for [[k v] part]
                         (if (and (string? v)
                                  (or (= k :rep) (= k :set) (= k :distance)
@@ -87,7 +85,6 @@
                           [k (read-string v)]
                           [k v])))
         movement (first (get-n-movements-from-categories 1 (vals (:categories part))))
-        temp (.println System/out (str "Random movement: " movement))
         user-movements (d/q '[:find [(pull ?m [*]) ...]
                               :in $ ?email
                               :where
@@ -119,7 +116,6 @@
                                         :movement/description :description
                                         :movement/zone        :zone
                                         :movement/practical   :practical})]
-    (.println System/out (str "New movement: " movement))
     movement))
 
 (defn movement [type id part]
