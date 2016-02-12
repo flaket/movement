@@ -75,7 +75,14 @@
     movements))
 
 (defn single-movement [part]
-  (let [movement (first (get-n-movements-from-categories 1 (vals (:categories part))))
+  (let [; convert string values to ints. Why is this needed? A mistake in the client?
+        part (into {} (for [[k v] part]
+                        (if (and (string? v)
+                                 (or (= k :rep) (= k :set) (= k :distance)
+                                     (= k :duration) (= k :weight) (= k :rest)))
+                          [k (read-string v)]
+                          [k v])))
+        movement (first (get-n-movements-from-categories 1 (vals (:categories part))))
         movement (merge movement (dissoc part :categories))
         movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
         movement (rename-keys movement {:movement/measurement :measurement
@@ -90,7 +97,14 @@
     movement))
 
 (defn movement [type id part]
-  (let [movement (cond (= type :name) (entity-by-movement-name id)
+  (let [; convert string values to ints. Why is this needed? A mistake in the client?
+        part (into {} (for [[k v] part]
+                        (if (and (string? v)
+                                 (or (= k :rep) (= k :set) (= k :distance)
+                                     (= k :duration) (= k :weight) (= k :rest)))
+                          [k (read-string v)]
+                          [k v])))
+        movement (cond (= type :name) (entity-by-movement-name id)
                        (= type :id) (entity-by-id id)
                        (= type :category) (first (get-n-movements-from-categories 1 (vals (:categories part)))))
         movement (merge movement (dissoc part :categories))

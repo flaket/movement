@@ -5,7 +5,7 @@
             [reagent.session :as session]
             [cljs.core.async :as async :refer [timeout <!]]
             [movement.menu :refer [menu-component]]
-            [movement.util :refer [handler-fn text-input POST get-routines]]
+            [movement.util :refer [handler-fn text-input POST]]
             [movement.text :refer [text-input-component auto-complete-did-mount]]
             [movement.template :refer [movement-component]]
             [movement.user :refer [set-username-component]]

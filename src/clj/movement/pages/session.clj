@@ -129,7 +129,8 @@
          (for [p (:parts session)]
            ^{:key p} (part-component p)))
        (when-let [time (:time session)]
-         (time-component time))
+         (when-not (= 0 time)
+           (time-component time)))
        (comment-component (:comment session))
        (epilog)]
       #_(footer-always-bottom)]
