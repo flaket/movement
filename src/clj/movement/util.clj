@@ -91,7 +91,7 @@
          [?u :user/email ?e]]
        db)
 
-#_(d/pull db '[*] 17592186045793)
+#_(d/pull db '[*] 17592186045521)
 
 #_(defn image-url [name]
     (str "public/images/movements/" (str/replace (str/lower-case name) " " "-") ".png"))
@@ -162,7 +162,7 @@
                        (map #(d/pull db '[*] %)))]
     movements))
 
-(let [generated-movements (get-n-movements-from-categories 5 ["Practical Movements"])
+(let [generated-movements (get-n-movements-from-categories 1 ["Practical Movements"])
       user-movements (d/q '[:find [(pull ?m [*]) ...]
                             :in $ ?email
                             :where
@@ -170,14 +170,21 @@
                             [?u :user/movements ?m]]
                           db
                           "a")
-      new-generated-movements (for [m generated-movements]
+      new-generated-movements (for [movement generated-movements]
                                 (if-let [user-movement (some #(when
-                                                               (= (:movement/unique-name m) (:movement/name %))
+                                                               (= (:movement/unique-name movement) (:movement/name %))
                                                                %)
                                                              user-movements)]
-                                  (merge m (dissoc user-movement :db/id))
-                                  ; else: TODO loop: when generated has easier: swap
-                                  m))]
+                                  (merge movement (dissoc user-movement :db/id))
+                                  (loop [m movement]
+                                    (let [easier (:movement/easier m)]
+                                      (if (nil? easier)
+                                        m
+                                        (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))
+                                              new-has-been-done? (some #(= (:movement/unique-name new) (:movement/name %)) user-movements)]
+                                          (if new-has-been-done?
+                                            new
+                                            (recur new))))))))]
   new-generated-movements)
 
 

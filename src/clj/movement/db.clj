@@ -216,16 +216,24 @@
                                            [?u :user/movements ?m]]
                                          db
                                          email)
-                     generated-movements (for [m generated-movements]
+                     generated-movements (for [movement generated-movements]
                                            ; if the user has done the movement before
                                            (if-let [user-movement (some #(when
-                                                                          (= (:movement/unique-name m) (:movement/name %))
+                                                                          (= (:movement/unique-name movement) (:movement/name %))
                                                                           %)
                                                                         user-movements)]
                                              ; assoc :zone data
-                                             (merge m (dissoc user-movement :db/id))
-                                             ; else: TODO loop: when generated has easier: swap
-                                             m))
+                                             (merge movement (dissoc user-movement :db/id))
+                                             ; else: movement has not been performed, swap recursively to the easiest variationwhen generated has easier: swap
+                                             (loop [m movement]
+                                               (let [easier (:movement/easier m)]
+                                                 (if (nil? easier)
+                                                   m
+                                                   (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))
+                                                         new-has-been-done? (some #(= (:movement/unique-name new) (:movement/name %)) user-movements)]
+                                                     (if new-has-been-done?
+                                                       new
+                                                       (recur new))))))))
                      movements (concat specific-movements generated-movements)
                      movements (vec (for [m movements] (prep-new-movement m part)))]
                     {:title      (:part/title part)
