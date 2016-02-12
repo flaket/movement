@@ -107,7 +107,8 @@
 
 (defn create-session-from-template [id]
   (GET "template"
-       {:params        {:template-id id}
+       {:params        {:template-id id
+                        :email (session/get :email)}
         :handler       add-session-handler
         :error-handler (fn [r] (pr r))}))
 
@@ -523,7 +524,6 @@
                               sec (session/get-in [:movement-session :time :seconds])
                               sec (when-not (nil? sec) (int (reader/read-string sec)))]
                          (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
-                         (session/get :movement-session)
                          (POST "store-session"
                                {:params        {:session (session/get :movement-session)
                                                 :user    (session/get :user)}

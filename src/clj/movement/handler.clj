@@ -84,19 +84,19 @@
 
 (defn add-session! [req]
   (let [session (:session (:params req))
-        user (:user (:params req))
-        last-session-of-the-day? (:last-session? session)]
+        user (:user (:params req))]
     (if (nil? user)
       (response {:message "User email lacking from client data" :session session} 400)
       (try
         (do
-          (when last-session-of-the-day?
+          (when (:last-session? session)
             (db/progress-plan! (:plan-id session)))
-          (db/transact-session! user session))
+          (db/transact-session! user session)
+          (db/transact-new-movements! user (:parts session)))
         (catch Exception e
           (error e (str "error transacting session: user: " user " session: " session)))
         (finally (do (update-tx-db!)
-                     (response {:session session :message "Session stored successfully"})))))))
+                     (response {:message "Session stored successfully"})))))))
 
 (defn try-assoc-template! [email template]
   (try
@@ -277,7 +277,7 @@
         ; if one template; return session with last-session? flag true
         (= 1 (count templates)) (let [template (db/entity-by-id (:db/id (first templates)))
                                       template (assoc template :plan-id (:db/id plan) :last-session? true)]
-                                  (db/create-session template))
+                                  (db/create-session (:user/email user-entity) template))
         ; else; it gets tricky..
         :else (let [last-session (atom false)
               last-planned-session (last (filter #(= (:db/id plan)
@@ -296,7 +296,7 @@
               template (db/entity-by-id (:db/id template-id))
               template (assoc template :plan-id (:db/id plan)
                                        :last-session? @last-session)]
-          (db/create-session template))))))
+          (db/create-session (:user/email user-entity) template))))))
 
 (defn activate-user! [id]
   (let [user (db/entity-by-lookup-ref :user/activation-id id)]
@@ -447,8 +447,9 @@
            (GET "/session/:url" [url] (view-session-page (db/get-session url)))
            (GET "/template" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (let [template (db/entity-by-id (read-string (:template-id (:params req))))]
-                                    (response (db/create-session template)))))
+                                  (let [template (db/entity-by-id (read-string (:template-id (:params req))))
+                                        email (:email (:params req))]
+                                    (response (db/create-session email template)))))
            (GET "/next-session-from-plan" req (if-not (authenticated? req)
                                                 (throw-unauthorized)
                                                 (response (next-session-from-plan req))))
@@ -459,7 +460,7 @@
                                (throw-unauthorized)
                                (let [group (:group (:params req))
                                      email (:email (:params req))]
-                                 (response (db/create-session
+                                 (response (db/create-session email
                                              (db/random-template-from-group email group))))))
            (GET "/groups" req (if-not (authenticated? req)
                                 (throw-unauthorized)

@@ -5,7 +5,8 @@
             [clojure.string :as str]
             [clojure.set :refer [rename-keys]]
             [taoensso.timbre :refer [info error]]
-            [movement.activation :refer [generate-activation-id send-activation-email]]))
+            [movement.activation :refer [generate-activation-id send-activation-email]]
+            [clojure.set :as set]))
 
 (def uri "datomic:dev://localhost:4334/testing16")
 #_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
@@ -197,8 +198,9 @@
    :rest        (:part/rest part)
    :practical   (:part/practical part)})
 
-(defn create-session [template]
-  (let [parts (vec
+(defn create-session [email template]
+  (let [db (:db @tx)
+        parts (vec
                 (for [part (:template/part template)]
                   (let
                     [n (:part/number-of-movements part)
@@ -207,6 +209,23 @@
                      generated-movements (if (nil? n)
                                            []
                                            (get-n-movements-from-categories n category-names))
+                     user-movements (d/q '[:find [(pull ?m [*]) ...]
+                                           :in $ ?email
+                                           :where
+                                           [?u :user/email ?email]
+                                           [?u :user/movements ?m]]
+                                         db
+                                         email)
+                     generated-movements (for [m generated-movements]
+                                           ; if the user has done the movement before
+                                           (if-let [user-movement (some #(when
+                                                                          (= (:movement/unique-name m) (:movement/name %))
+                                                                          %)
+                                                                        user-movements)]
+                                             ; assoc :zone data
+                                             (merge m (dissoc user-movement :db/id))
+                                             ; else: TODO loop: when generated has easier: swap
+                                             m))
                      movements (concat specific-movements generated-movements)
                      movements (vec (for [m movements] (prep-new-movement m part)))]
                     {:title      (:part/title part)
@@ -663,6 +682,27 @@
                  {:db/id     #db/id[:db.part/user -101]
                   :user/name created-by}]]
     (d/transact (:conn @tx) tx-data)))
+
+(defn transact-new-movements!
+  "All movements from a session that the user has never done before are linked to the user."
+  [user parts]
+  (let [session-movements (into #{} (flatten (for [part parts] (for [m (vals (:movements part))] (:unique m)))))
+        user-movements (into #{} (map :movement/name (d/q '[:find [(pull ?m [:movement/name]) ...]
+                                                            :in $ ?email
+                                                            :where
+                                                            [?u :user/email ?email]
+                                                            [?u :user/movements ?m]]
+                                                          (:db @tx)
+                                                          user)))
+        new-movements (set/difference session-movements user-movements)
+        new-movements (for [m new-movements] {:db/id         (d/tempid :db.part/user)
+                                              :movement/name m
+                                              :movement/zone {:db/id    (d/tempid :db.part/user)
+                                                              :db/ident :zone/one}})
+        user-movement-data [{:db/id          #db/id[:db.part/user -100]
+                             :user/email     user
+                             :user/movements (map :db/id new-movements)}]]
+    (d/transact (:conn @tx) (concat user-movement-data new-movements))))
 
 (defn transact-session!
   "Adds a completed session to the database."

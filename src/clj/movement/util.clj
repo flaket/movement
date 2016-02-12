@@ -145,8 +145,6 @@
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 
-(def part {:rep "30" :set "1" :distance 100 :duration "30" :categories {"0" "Climb" "1" "Mobility"}})
-
 (defn get-n-movements-from-categories
   "Get n random movement entities drawn from param list of categories."
   [n categories]
@@ -164,27 +162,25 @@
                        (map #(d/pull db '[*] %)))]
     movements))
 
-(defn single-movement [part]
-  (let [part (into {}
-                   (for [[k v] part]
-                     (if (and (string? v)
-                              (or (= k :rep) (= k :set) (= k :distance)
-                                  (= k :duration) (= k :weight) (= k :rest)))
-                       [k (read-string v)]
-                       [k v])))
-        movement (first (get-n-movements-from-categories 1 (vals (:categories part))))
-        movement (merge movement (dissoc part :categories))
-        movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
-        movement (rename-keys movement {:movement/measurement :measurement
-                                        :movement/category    :category
-                                        :movement/unique-name :unique
-                                        :movement/easier      :easier
-                                        :movement/harder      :harder
-                                        :movement/description :description
-                                        :movement/zone        :zone
-                                        :movement/practical   :practical})]
-    (.println System/out (str "New movement: " movement))
-    movement))
+(let [generated-movements (get-n-movements-from-categories 5 ["Practical Movements"])
+      user-movements (d/q '[:find [(pull ?m [*]) ...]
+                            :in $ ?email
+                            :where
+                            [?u :user/email ?email]
+                            [?u :user/movements ?m]]
+                          db
+                          "a")
+      new-generated-movements (for [m generated-movements]
+                                (if-let [user-movement (some #(when
+                                                               (= (:movement/unique-name m) (:movement/name %))
+                                                               %)
+                                                             user-movements)]
+                                  (merge m (dissoc user-movement :db/id))
+                                  ; else: TODO loop: when generated has easier: swap
+                                  m))]
+  new-generated-movements)
+
+
 
 #_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
 Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",
