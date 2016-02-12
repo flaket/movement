@@ -75,8 +75,11 @@
                        (map #(d/pull db '[*] %)))]
     movements))
 
-(defn single-movement [part]
-  (let [; convert string values to ints. Why is this needed? A mistake in the client?
+(defn single-movement [email part]
+  (let [db (:db @tx)
+        ; convert string values to ints. Why is this needed? A mistake in the client?
+        temp (.println System/out (str "Email: " email))
+        temp (.println System/out (str "Categories: " (:categories part)))
         part (into {} (for [[k v] part]
                         (if (and (string? v)
                                  (or (= k :rep) (= k :set) (= k :distance)
@@ -84,6 +87,28 @@
                           [k (read-string v)]
                           [k v])))
         movement (first (get-n-movements-from-categories 1 (vals (:categories part))))
+        temp (.println System/out (str "Random movement: " movement))
+        user-movements (d/q '[:find [(pull ?m [*]) ...]
+                              :in $ ?email
+                              :where
+                              [?u :user/email ?email]
+                              [?u :user/movements ?m]]
+                            db
+                            email)
+        movement (if-let [user-movement (some #(when
+                                                (= (:movement/unique-name movement) (:movement/name %))
+                                                %)
+                                              user-movements)]
+                   (merge movement (dissoc user-movement :db/id))
+                   (loop [m movement]
+                     (let [easier (:movement/easier m)]
+                       (if (nil? easier)
+                         m
+                         (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))
+                               new-has-been-done? (some #(= (:movement/unique-name new) (:movement/name %)) user-movements)]
+                           (if new-has-been-done?
+                             new
+                             (recur new)))))))
         movement (merge movement (dissoc part :categories))
         movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
         movement (rename-keys movement {:movement/measurement :measurement

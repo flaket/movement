@@ -29,7 +29,8 @@
         part (apply dissoc part (for [[k v] part :when (nil? v)] k))
         part (dissoc part :title :movements)]
     (GET "singlemovement"
-         {:params        part
+         {:params        {:part part
+                          :email (session/get :email)}
           :handler       #(let [id (swap! m-counter inc)
                                 new-movement (assoc % :id id)
                                 new-movements (assoc movements id new-movement)]
@@ -45,7 +46,8 @@
          part (apply dissoc part (for [[k v] part :when (nil? v)] k))
          part (dissoc part :title :movements)]
      (GET "singlemovement"
-          {:params        part
+          {:params        {:part part
+                           :email (session/get :email)}
            :handler       #(let [id (:id m)
                                  new-movement (assoc % :id id)
                                  new-movements (assoc movements id new-movement)]

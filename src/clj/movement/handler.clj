@@ -504,7 +504,9 @@
                                    (response (db/all-movement-names))))
            (GET "/singlemovement" req (if-not (authenticated? req)
                                         (throw-unauthorized)
-                                        (response (db/single-movement (:params req)))))
+                                        (let [email (:email (:params req))
+                                              part (:part (:params req))]
+                                          (response (db/single-movement email part)))))
            (GET "/categories" req (if-not (authenticated? req)
                                     (throw-unauthorized)
                                     (response (db/all-category-names))))
