@@ -170,12 +170,12 @@
         [:div.pure-u-1-12]
         (if easier
           [:div.pure-u-1-6.refresh
-           [:i.fa.fa-minus {:on-click #(refresh-movement m title :easier) :title "Swap with easier movement"}]]
+           [:i.fa.fa-arrow-down {:on-click #(refresh-movement m title :easier) :title "Swap with easier progression"}]]
           [:div.pure-u-1-6])
         [:div.pure-u-1-12]
         (if harder
           [:div.pure-u-1-6.refresh
-           [:i.fa.fa-plus {:on-click #(refresh-movement m title :harder) :title "Swap with harder movement"}]]
+           [:i.fa.fa-arrow-up {:on-click #(refresh-movement m title :harder) :title "Swap with harder progression"}]]
           [:div.pure-u-1-6])
         [:div.pure-u-1-12]
         [:div.pure-u-1-6.destroy

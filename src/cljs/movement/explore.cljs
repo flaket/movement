@@ -75,6 +75,49 @@
         #_[:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :routines (:menu-selection @explore-state)) "button-primary")
                                                  :on-click  #(swap! explore-state assoc :menu-selection :routines)} "Routines"]]])))
 
+(defn movement-component [m selected?]
+  (let [name (:movement/unique-name m)
+        name (if (nil? name) (:movement/name m))
+        zone (:db/ident (:movement/zone m))]
+    [:div.pure-u.movement {:className (if selected? "explore-selected" "small")
+                           :style     {:cursor 'pointer}
+                           :on-click  #(GET "explore-movement"
+                                            {:params  {:unique-name (:movement/unique-name m)
+                                                       :email (session/get :email)}
+                                             :handler (fn [r] (do
+                                                                (pr r)
+                                                                (swap! explore-state dissoc :movements)
+                                                                (swap! explore-state assoc :selected-movement r)))
+                                             :error-handler (fn [r] (pr "error exploring-movement: " r))})}
+     [:h3.pure-g.center
+      [:div.pure-u-1 name]]
+     [:div.pure-g
+      [:div.pure-u-1.center {:style {:color 'gray :opacity 0.8}}
+       (cond
+         (= :zone/one zone) [:div {:title "You're still in the learning phase with this movement"}
+                             [:i.fa.fa-star] [:i.fa.fa-star-o] [:i.fa.fa-star-o]]
+         (= :zone/two zone) [:div {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}
+                             [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star-o]]
+         (= :zone/three zone) [:div {:title "You have mastered this movement. You are both effective and efficient."}
+                               [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star]])]]
+     [:div.pure-g
+      [:div.pure-u-1.center
+       [:img.graphic.pure-img-responsive {:className (if selected? "" "small-graphic")
+                                                        :src   (image-url name) :title name :alt name
+                                                        :style {:margin-bottom 10}}]]]
+     (when selected?
+       (for [c (:movement/category m)]
+         [:div.pure-g
+          [:div.pure-u-1.center.explore-link {:on-click #(GET "movements-by-category"
+                                                              {:params        {:n        (:number-of-results @explore-state)
+                                                                               :category (:category/name c)}
+                                                               :handler       (fn [r] (do
+                                                                                        (swap! explore-state assoc :selected-category c)
+                                                                                        (swap! explore-state dissoc :selected-movement)
+                                                                                        (swap! explore-state assoc :movements r)))
+                                                               :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})}
+           (:category/name c)]]))]))
+
 (defn movements-component []
   (let []
     (fn []
@@ -90,7 +133,7 @@
                [:div.pure-g {:style {:cursor           'pointer
                                      :color            (when (= c (:selected-category @explore-state)) "#fffff8")
                                      :background-color (when (= c (:selected-category @explore-state)) "gray")}}
-                [:span.pure-u-1
+                [:span.pure-u-1.explore-link
                  {:style    {:color (when (and (= "Practical Movements" c)
                                                (not (= c (:selected-category @explore-state))))
                                       "red")}
@@ -99,13 +142,14 @@
                                                    :category c}
                                    :handler       (fn [r] (do
                                                             (swap! explore-state assoc :selected-category c)
+                                                            (swap! explore-state dissoc :selected-movement)
                                                             (swap! explore-state assoc :movements r)))
                                    :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})} c]])))]
         [:div.pure-u.pure-u-md-4-5
          [:div.pure-g
-          [:div.pure-u.pure-u-md-1-2
+          [:div.pure-u.pure-u-md-1-3
            [results-slider 1 30 1]]
-          [:div.pure-u.pure-u-md-1-2
+          [:div.pure-u.pure-u-md-1-3
            (let [id (str "explore-mtags")
                  movements-ac-comp (with-meta text-input-component
                                               {:component-did-mount #(auto-complete-did-mount
@@ -118,26 +162,51 @@
                                  :on-save     #(when (some #{%} (session/get :all-movements))
                                                 (GET "movement"
                                                      {:params        {:name (str %)}
-                                                      :handler       (fn [r] (swap! explore-state assoc
-                                                                                    :movements [r]
-                                                                                    :selected-category nil))
-                                                      :error-handler (pr "error getting single movement through add.")}))}])]]
+                                                      :handler       (fn [r] (do
+                                                                               (swap! explore-state dissoc :movements)
+                                                                               (swap! explore-state assoc :selected-movement r)))
+                                                      :error-handler (pr "error getting single movement through add.")}))}])]
+          [:div.pure-u.pure-u-md-1-3
+           [:button.button.button-primary {:on-click #(GET "user-movements"
+                                                           {:params {:email (session/get :email)}
+                                                            :handler (fn [r] (do
+                                                                               (swap! explore-state dissoc :selected-movement)
+                                                                               (swap! explore-state assoc :movements r)))
+                                                            :error-handler (fn [r] (pr (str "error getting user movements: " r)))})}
+            "Movements I have done"]]]
          (when-not (nil? (:movements @explore-state))
            [:div.pure-g
             [:div.pure-u-1 (str "Showing " (count (:movements @explore-state)) " results")]])
          (let [movements (:movements @explore-state)]
-           [:div.pure-g.movements
-            (doall
-              (for [m movements]
-                ^{:key (rand-int 10000)}
-                (let [name (:movement/unique-name m)]
-                  [:div.pure-u.movement.small
-                   [:h3.pure-g.center
-                    [:div.pure-u-1 name]]
-                   [:div.pure-g
-                    [:div.pure-u-1.center
-                     [:img.graphic.small-graphic.pure-img-responsive {:src   (image-url name) :title name :alt name
-                                                                      :style {:margin-bottom 10}}]]]])))])]]])))
+           (if movements
+             [:div.pure-g.movements
+              (doall
+                (for [m movements]
+                  ^{:key (:db/id m)}
+                  (movement-component m false)))]
+             (when-let [movement (:selected-movement @explore-state)]
+               (let [easier (:movement/easier movement)
+                     harder (:movement/harder movement)]
+                 [:div.movements
+                  [:div.pure-g
+                   [:div.pure-u-1-4
+                    (for [e easier]
+                      [:div.pure-g.center
+                       (movement-component e false)])]
+                   (if-not (empty? easier)
+                     [:div.pure-u-1-12.explore-green [:i.fa.fa-arrow-right]]
+                     [:div.pure-u-1-12.explore-green])
+                   [:div.pure-u-1-4
+                    [:div.pure-g
+                     (movement-component movement true)]]
+                   (if-not (empty? harder)
+                     [:div.pure-u-1-12.explore-green [:i.fa.fa-arrow-right]]
+                     [:div.pure-u-1-12.explore-green])
+                   [:div.pure-u-1-4
+                    (for [h harder]
+                      [:div.pure-g
+                       [:div.pure-u-1-5]
+                       (movement-component h false)])]]]))))]]])))
 
 (defn template-result [t]
   (let [selected (atom false)

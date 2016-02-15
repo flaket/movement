@@ -492,6 +492,15 @@
                                               :name
                                               (:name (:params req))
                                               (:part (:params req))))))
+           (GET "/explore-movement" req (if-not (authenticated? req)
+                                          (throw-unauthorized)
+                                          (let [unique-name (:unique-name (:params req))
+                                                email (:email (:params req))]
+                                            (response (db/explore-movement email unique-name)))))
+           (GET "/user-movements" req (if-not (authenticated? req)
+                                          (throw-unauthorized)
+                                          (let [email (:email (:params req))]
+                                            (response (db/user-movements email)))))
            (GET "/movement-by-id" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (response (db/movement
@@ -502,8 +511,9 @@
            (GET "/movements-by-category" req (if-not (authenticated? req)
                                                (throw-unauthorized)
                                                (response
-                                                 (db/get-movements-from-category (read-string (:n (:params req)))
-                                                                                 (:category (:params req))))))
+                                                 (db/get-movements-from-category
+                                                   (read-string (:n (:params req)))
+                                                   (:category (:params req))))))
            (GET "/movements" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (response (db/all-movement-names))))

@@ -86,11 +86,11 @@
         rep (:rep movement)
         distance (:distance movement)
         duration (:duration movement)
-        rep-dist-dur (case measurement :measurement/repetitions {:rep rep :distance nil :duration nil
+        rep-dist-dur (case measurement :measurement/repetitions {:rep  rep :distance nil :duration nil
                                                                  :zone zone :measurement measurement}
-                                       :measurement/distance {:rep nil :distance distance :duration nil
+                                       :measurement/distance {:rep  nil :distance distance :duration nil
                                                               :zone zone :measurement measurement}
-                                       :measurement/duration {:rep nil :distance nil :duration duration
+                                       :measurement/duration {:rep  nil :distance nil :duration duration
                                                               :zone zone :measurement measurement}
                                        nil)
         movement (merge movement rep-dist-dur)
@@ -102,6 +102,36 @@
                                         :movement/practical   :practical})
         movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))]
     movement))
+
+(defn get-movements-from-category
+  "Get n movement entities of the category."
+  [n category]
+  (let [db (:db @tx)
+        movements (d/q '[:find (pull ?m [*])
+                         :in $ ?cat
+                         :where
+                         [?c :category/name ?cat]
+                         [?m :movement/category ?c]
+                         [?m :movement/unique-name _]]
+                       (:db @tx) category)
+        movements (->> movements flatten (sort-by :movement/unique-name) (take n))
+        ;user-movements
+        #_(d/q '[:find [(pull ?m [*]) ...]
+                 :in $ ?email
+                 :where
+                 [?u :user/email ?email]
+                 [?u :user/movements ?m]]
+               db
+               email)
+        ;movements
+        #_(for [movement movements]
+          (if-let [user-movement (some #(when
+                                         (= (:movement/unique-name movement) (:movement/name %))
+                                         %)
+                                       user-movements)]
+            (merge movement (dissoc user-movement :db/id))
+            movement))]
+    movements))
 
 (defn get-n-movements-from-categories
   "Get n random movement entities drawn from param list of categories."
@@ -165,6 +195,27 @@
                              (recur new)))))))
         movement (merge movement (dissoc part :categories))
         movement (prep-new-movement-2 movement)]
+    movement))
+
+(defn user-movements [email]
+  (let [db (:db @tx)
+        user-movements (d/q '[:find [(pull ?m [*]) ...]
+                              :in $ ?email
+                              :where
+                              [?u :user/email ?email]
+                              [?u :user/movements ?m]]
+                            db email)]
+    user-movements))
+
+(defn explore-movement [email unique-name]
+  (let [db (:db @tx)
+        movement (entity-by-movement-name unique-name)
+        user-movements (d/q '[:find [(pull ?m [*]) ...] :in $ ?email :where [?u :user/email ?email] [?u :user/movements ?m]] db email)
+        movement (if-let [user-movement (some #(when (= (:movement/unique-name movement) (:movement/name %)) %) user-movements)]
+                   (merge movement (dissoc user-movement :db/id))
+                   movement)
+        movement (assoc movement :movement/easier (map #(entity-by-id (:db/id %)) (:movement/easier movement)))
+        movement (assoc movement :movement/harder (map #(entity-by-id (:db/id %)) (:movement/harder movement)))]
     movement))
 
 (defn movement [email type id part]
@@ -254,18 +305,7 @@
      :last-session? (:last-session? session)
      :parts         (:parts session)}))
 
-(defn get-movements-from-category
-  "Get n movement entities of the category."
-  [n category]
-  (let [movements (d/q '[:find (pull ?m [*])
-                         :in $ ?cat
-                         :where
-                         [?c :category/name ?cat]
-                         [?m :movement/category ?c]
-                         [?m :movement/unique-name _]]
-                       (:db @tx) category)
-        m (->> movements flatten (sort-by :movement/unique-name) (take n))]
-    m))
+
 
 ;; refactor the following four functions "all-x"
 
