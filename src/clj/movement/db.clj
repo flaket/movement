@@ -56,8 +56,6 @@
          [?u :user/email ?email]]
        (:db @tx) email template-title))
 
-
-
 (defn get-n-movements-from-categories
   "Get n random movement entities drawn from param list of categories."
   [n categories]
@@ -241,19 +239,21 @@
                                            ; if the user has done the movement before
                                            (if-let [user-movement (some #(when
                                                                           (= (:movement/unique-name movement) (:movement/name %))
-                                                                          %)
+                                                                          (dissoc % :db/id))
                                                                         user-movements)]
                                              ; assoc :zone data
-                                             (merge movement (dissoc user-movement :db/id))
+                                             (merge movement user-movement)
                                              ; else: movement has not been performed, swap recursively to the easiest variationwhen generated has easier: swap
                                              (loop [m movement]
                                                (let [easier (:movement/easier m)]
                                                  (if (nil? easier)
                                                    m
-                                                   (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))
-                                                         new-has-been-done? (some #(= (:movement/unique-name new) (:movement/name %)) user-movements)]
-                                                     (if new-has-been-done?
-                                                       new
+                                                   (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))]
+                                                     (if-let [user-movement (some #(when
+                                                                                    (= (:movement/unique-name new) (:movement/name %))
+                                                                                    (dissoc % :db/id))
+                                                                                  user-movements)]
+                                                       (merge new user-movement)
                                                        (recur new))))))))
                      movements (concat specific-movements generated-movements)
                      movements (vec (for [m movements] (prep-new-movement m part)))]
