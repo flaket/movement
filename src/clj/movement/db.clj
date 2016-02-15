@@ -58,15 +58,25 @@
 
 (defn get-n-movements-from-categories
   "Get n random movement entities drawn from param list of categories."
-  [n categories]
+  [n categories practical?]
   (let [db (:db @tx)
-        movement-ids (d/q '[:find [?m ...]
-                            :in $ [?cname ...]
-                            :where
-                            [?c :category/name ?cname]
-                            [?m :movement/category ?c]
-                            [?m :movement/unique-name _]]
-                          db categories)
+        movement-ids (if practical?
+                       (d/q '[:find [?m ...]
+                              :in $ [?cname ...]
+                              :where
+                              [?c :category/name "Practical Movements"]
+                              [?m :movement/category ?c]
+                              [?d :category/name ?cname]
+                              [?m :movement/category ?d]
+                              [?m :movement/unique-name _]]
+                            db categories)
+                       (d/q '[:find [?m ...]
+                              :in $ [?cname ...]
+                              :where
+                              [?c :category/name ?cname]
+                              [?m :movement/category ?c]
+                              [?m :movement/unique-name _]]
+                            db categories))
         movements (->> movement-ids
                        shuffle
                        (take n)
@@ -82,7 +92,7 @@
                                      (= k :duration) (= k :weight) (= k :rest)))
                           [k (read-string v)]
                           [k v])))
-        movement (first (get-n-movements-from-categories 1 (vals (:categories part))))
+        movement (first (get-n-movements-from-categories 1 (vals (:categories part)) (:practical part)))
         user-movements (d/q '[:find [(pull ?m [*]) ...]
                               :in $ ?email
                               :where
@@ -99,10 +109,12 @@
                      (let [easier (:movement/easier m)]
                        (if (nil? easier)
                          m
-                         (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))
-                               new-has-been-done? (some #(= (:movement/unique-name new) (:movement/name %)) user-movements)]
-                           (if new-has-been-done?
-                             new
+                         (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))]
+                           (if-let [user-movement (some #(when
+                                                          (= (:movement/unique-name new) (:movement/name %))
+                                                          (dissoc % :db/id))
+                                                        user-movements)]
+                             (merge new user-movement)
                              (recur new)))))))
         movement (merge movement (dissoc part :categories))
         movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
@@ -126,7 +138,7 @@
                           [k v])))
         movement (cond (= type :name) (entity-by-movement-name id)
                        (= type :id) (entity-by-id id)
-                       (= type :category) (first (get-n-movements-from-categories 1 (vals (:categories part)))))
+                       (= type :category) (first (get-n-movements-from-categories 1 (vals (:categories part)) (:part/practical part))))
         movement (merge movement (dissoc part :categories))
         movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
         movement (rename-keys movement {:movement/measurement :measurement
@@ -227,7 +239,7 @@
                      category-names (vec (map :category/name (:part/category part)))
                      generated-movements (if (nil? n)
                                            []
-                                           (get-n-movements-from-categories n category-names))
+                                           (get-n-movements-from-categories n category-names (:part/practical part)))
                      user-movements (d/q '[:find [(pull ?m [*]) ...]
                                            :in $ ?email
                                            :where
@@ -260,6 +272,7 @@
                     {:title      (:part/title part)
                      :categories category-names
                      :movements  movements
+                     :practical  (:part/practical part)
                      :rep        (:part/rep part)
                      :set        (:part/set part)
                      :distance   (:part/distance part)

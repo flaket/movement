@@ -154,24 +154,45 @@
    :measurement (:movement/measurement movement)
    :easier      (:movement/easier movement)
    :harder      (:movement/harder movement)
-   :zone        (:movement/zone movement)})
+   :description (:movement/description movement)
+   :zone        (:movement/zone movement)
+   :rep         (:part/rep part)
+   :set         (:part/set part)
+   :distance    (:part/distance part)
+   :duration    (:part/duration part)
+   :weight      (:part/weight part)
+   :rest        (:part/rest part)
+   :practical   (:part/practical part)})
 
 (defn get-n-movements-from-categories
   "Get n random movement entities drawn from param list of categories."
-  [n categories]
+  [n categories practical?]
   (let [db db
-        movement-ids (d/q '[:find [?m ...]
-                            :in $ [?cname ...]
-                            :where
-                            [?c :category/name ?cname]
-                            [?m :movement/category ?c]
-                            [?m :movement/unique-name _]]
-                          db categories)
+        movement-ids (if practical?
+                       (d/q '[:find [?m ...]
+                              :in $ [?cname ...]
+                              :where
+                              [?c :category/name "Practical Movements"]
+                              [?m :movement/category ?c]
+                              [?d :category/name ?cname]
+                              [?m :movement/category ?d]
+                              [?m :movement/unique-name _]]
+                            db categories)
+                       (d/q '[:find [?m ...]
+                              :in $ [?cname ...]
+                              :where
+                              [?c :category/name ?cname]
+                              [?m :movement/category ?c]
+                              [?m :movement/unique-name _]]
+                            db categories))
         movements (->> movement-ids
                        shuffle
                        (take n)
                        (map #(d/pull db '[*] %)))]
     movements))
+
+(let [a (get-n-movements-from-categories 5 ["Jump"] true)]
+  a)
 
 (let [user-movements (d/q '[:find [(pull ?m [*]) ...]
                             :in $ ?email
@@ -180,7 +201,7 @@
                             [?u :user/movements ?m]]
                           db
                           "a")
-      generated-movements (get-n-movements-from-categories 5 ["Practical Movements"])
+      generated-movements (get-n-movements-from-categories 5 ["Mobility"] ["Practical Movements"])
       movements (for [movement generated-movements]
                             ; if the user has done the movement before
                             (if-let [user-movement (some #(when
