@@ -19,23 +19,7 @@
 
  {:db/id         #db/id[:db.part/user -999]
   :user/email    "a"
-  :user/template [#db/id[:db.part/user -100]
-                  #db/id[:db.part/user -101]]}
-
- ;; ----------------------------------------------------------------
-
- {:db/id               #db/id[:db.part/user -100]
-  :template/title      "Test-template"
-  :template/public?    true
-  :template/created-by #db/id[:db.part/user -998]
-  :template/description "Description-text"
-  :template/part       [#db/id[:db.part/user -500]]}
-
- {:db/id                    #db/id[:db.part/user -500]
-  :part/title               "Part title"
-  :part/category            [#db/id[:db.part/user -13]]
-  :part/practical           true}
-
+  :user/template [#db/id[:db.part/user -101]]}
 
  ;; ----------------------------------------------------------------
 
@@ -59,6 +43,8 @@
   :part/practical           true
   :part/number-of-movements 4
   :part/rep                 10
+  :part/distance            15
+  :part/duration            30
   :part/set                 3}
  {:db/id                    #db/id[:db.part/user -1001]
   :part/title               "Practice a skill"
@@ -66,12 +52,17 @@
   :part/practical           true
   :part/number-of-movements 1
   :part/rep                 30
+  :part/distance            50
+  :part/duration             240
   :part/set                 1}
  {:db/id                    #db/id[:db.part/user -1002]
   :part/title               "Circuit for 4+ rounds"
   :part/category            [#db/id[:db.part/user -13]]
   :part/practical           true
   :part/number-of-movements 5
-  :part/set                 4}
+  :part/set                 4
+  :part/rep                 10
+  :part/distance            15
+  :part/duration             30}
 
  ]

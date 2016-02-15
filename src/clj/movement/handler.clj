@@ -487,14 +487,18 @@
                                   (response (db/all-routines (str (:email (:params req)))))))
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
-                                  (response (db/movement :name
-                                                         (:name (:params req))
-                                                         (:part (:params req))))))
+                                  (response (db/movement
+                                              (:email (:params req))
+                                              :name
+                                              (:name (:params req))
+                                              (:part (:params req))))))
            (GET "/movement-by-id" req (if-not (authenticated? req)
                                         (throw-unauthorized)
-                                        (response (db/movement :id
-                                                               (read-string (:id (:params req)))
-                                                               (:part (:params req))))))
+                                        (response (db/movement
+                                                    (:email (:params req))
+                                                    :id
+                                                    (read-string (:id (:params req)))
+                                                    (:part (:params req))))))
            (GET "/movements-by-category" req (if-not (authenticated? req)
                                                (throw-unauthorized)
                                                (response

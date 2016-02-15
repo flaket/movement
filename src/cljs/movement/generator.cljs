@@ -62,7 +62,8 @@
          part (dissoc part :title :movements)]
      (when-let [id (:db/id (first (shuffle (new-difficulty m))))]
        (GET "movement-by-id"
-            {:params        {:id id
+            {:params        {:email (session/get :email)
+                             :id id
                              :part part}
              :handler       #(let [id (:id m)
                                    new-movement %
@@ -79,7 +80,8 @@
         part (apply dissoc part (for [[k v] part :when (nil? v)] k))
         part (dissoc part :title :movements)]
     (GET "movement"
-         {:params        {:name (str movement-name)
+         {:params        {:email (session/get :email)
+                          :name (str movement-name)
                           :part part}
           :handler        #(let [id (swap! m-counter inc)
                                 new-movement %
@@ -151,7 +153,6 @@
    title categories]
   (let [name (if (nil? unique) name unique)
         graphic (image-url name)
-        measurement (:db/ident measurement)
         parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{title} (map :title parts)))
         rep-clicked? (atom false)
@@ -178,25 +179,28 @@
           [:div.pure-u-1-6])
         [:div.pure-u-1-12]
         [:div.pure-u-1-6.destroy
-         [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]]
-       [:div.pure-g
-        [:div.pure-u-1-12]
-        [:h3.pure-u.title name]
+         [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
         [:div.pure-u-1-12]]
+
+       [:div.pure-g.center {:style {:margin-top -12}}
+        [:div.pure-u-1-12]
+        [:h3.pure-u-5-6 name]
+        [:div.pure-u-1-12]]
+
+       [:div.pure-g
+        [:div.pure-u-1.center {:style {:margin-top -10 :color 'gray :opacity 0.8}}
+         (cond
+           (= :zone/one zone) [:div {:title "You're still in the learning phase with this movement"}
+                               [:i.fa.fa-star] [:i.fa.fa-star-o] [:i.fa.fa-star-o]]
+           (= :zone/two zone) [:div {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}
+                               [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star-o]]
+           (= :zone/three zone) [:div {:title "You have mastered this movement. You are both effective and efficient."}
+                                 [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star]])]]
        [:div.pure-g
         [:div.pure-u-1-12]
         [:img.pure-u.graphic.pure-img-responsive {:src graphic :title name :alt name}]
         [:div.pure-u-1-12]]
-       [:div.pure-g
-        [:div.pure-u-1.center {:style {:color 'gold}}
-         (let [zone (:db/ident zone)]
-           (cond
-             (= :zone/one zone) [:div {:title "You're still in the learning phase with this movement"}
-                                 [:i.fa.fa-star][:i.fa.fa-star-o][:i.fa.fa-star-o]]
-             (= :zone/two zone) [:div {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}
-                                 [:i.fa.fa-star][:i.fa.fa-star][:i.fa.fa-star-o]]
-             (= :zone/three zone) [:div {:title "You have mastered this movement. You are both effective and efficient."}
-                                   [:i.fa.fa-star][:i.fa.fa-star][:i.fa.fa-star]]))]]
+
        [:div {:style {:cursor 'pointer}}
         [:div.pure-g
          [:div.pure-u-1-12]

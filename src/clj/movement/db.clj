@@ -8,7 +8,7 @@
             [movement.activation :refer [generate-activation-id send-activation-email]]
             [clojure.set :as set]))
 
-(def uri "datomic:dev://localhost:4334/testing16")
+(def uri "datomic:dev://localhost:4334/testing17")
 #_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
@@ -55,6 +55,53 @@
          [?u :user/template ?t]
          [?u :user/email ?email]]
        (:db @tx) email template-title))
+
+(defn prep-new-movement [movement part]
+  (let [measurement (:db/ident (:movement/measurement movement))
+        zone (:db/ident (:movement/zone movement))
+        rep (:part/rep part)
+        distance (:part/distance part)
+        duration (:part/duration part)
+        rep-dist-dur (case measurement :measurement/repetitions {:rep rep :distance nil :duration nil}
+                                       :measurement/distance {:rep nil :distance distance :duration nil}
+                                       :measurement/duration {:rep nil :distance nil :duration duration}
+                                       nil)]
+    (merge rep-dist-dur
+           {:unique      (:movement/unique-name movement)
+            :name        (:movement/name movement)
+            :category    (:movement/category movement)
+            :easier      (:movement/easier movement)
+            :harder      (:movement/harder movement)
+            :description (:movement/description movement)
+            :zone        zone
+            :measurement measurement
+            :set         (:part/set part)
+            :weight      (:part/weight part)
+            :rest        (:part/rest part)
+            :practical   (:part/practical part)})))
+
+(defn prep-new-movement-2 [movement]
+  (let [measurement (:db/ident (:movement/measurement movement))
+        zone (:db/ident (:movement/zone movement))
+        rep (:rep movement)
+        distance (:distance movement)
+        duration (:duration movement)
+        rep-dist-dur (case measurement :measurement/repetitions {:rep rep :distance nil :duration nil
+                                                                 :zone zone :measurement measurement}
+                                       :measurement/distance {:rep nil :distance distance :duration nil
+                                                              :zone zone :measurement measurement}
+                                       :measurement/duration {:rep nil :distance nil :duration duration
+                                                              :zone zone :measurement measurement}
+                                       nil)
+        movement (merge movement rep-dist-dur)
+        movement (rename-keys movement {:movement/category    :category
+                                        :movement/unique-name :unique
+                                        :movement/easier      :easier
+                                        :movement/harder      :harder
+                                        :movement/description :description
+                                        :movement/practical   :practical})
+        movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))]
+    movement))
 
 (defn get-n-movements-from-categories
   "Get n random movement entities drawn from param list of categories."
@@ -117,19 +164,12 @@
                              (merge new user-movement)
                              (recur new)))))))
         movement (merge movement (dissoc part :categories))
-        movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
-        movement (rename-keys movement {:movement/measurement :measurement
-                                        :movement/category    :category
-                                        :movement/unique-name :unique
-                                        :movement/easier      :easier
-                                        :movement/harder      :harder
-                                        :movement/description :description
-                                        :movement/zone        :zone
-                                        :movement/practical   :practical})]
+        movement (prep-new-movement-2 movement)]
     movement))
 
-(defn movement [type id part]
+(defn movement [email type id part]
   (let [; convert string values to ints. Why is this needed? A mistake in the client?
+        db (:db @tx)
         part (into {} (for [[k v] part]
                         (if (and (string? v)
                                  (or (= k :rep) (= k :set) (= k :distance)
@@ -139,18 +179,80 @@
         movement (cond (= type :name) (entity-by-movement-name id)
                        (= type :id) (entity-by-id id)
                        (= type :category) (first (get-n-movements-from-categories 1 (vals (:categories part)) (:part/practical part))))
+        user-movements (d/q '[:find [(pull ?m [*]) ...]
+                              :in $ ?email
+                              :where
+                              [?u :user/email ?email]
+                              [?u :user/movements ?m]]
+                            db
+                            email)
+        movement (if-let [user-movement (some #(when
+                                                (= (:movement/unique-name movement) (:movement/name %))
+                                                %)
+                                              user-movements)]
+                   (merge movement (dissoc user-movement :db/id))
+                   movement)
         movement (merge movement (dissoc part :categories))
-        movement (apply dissoc movement (for [[k v] movement :when (nil? v)] k))
-        movement (rename-keys movement {:movement/measurement :measurement
-                                        :movement/category    :category
-                                        :movement/unique-name :unique
-                                        :movement/easier      :easier
-                                        :movement/harder      :harder
-                                        :movement/description :description
-                                        :movement/zone        :zone
-                                        :movement/practical   :practical})]
-    (.println System/out (str "New movement: " movement))
+        movement (prep-new-movement-2 movement)]
     movement))
+
+(defn create-session [email template]
+  (let [db (:db @tx)
+        parts (vec
+                (for [part (:template/part template)]
+                  (let
+                    [n (:part/number-of-movements part)
+                     specific-movements (:part/specific-movement part)
+                     category-names (vec (map :category/name (:part/category part)))
+                     generated-movements (if (nil? n)
+                                           []
+                                           (get-n-movements-from-categories n category-names (:part/practical part)))
+                     user-movements (d/q '[:find [(pull ?m [*]) ...]
+                                           :in $ ?email
+                                           :where
+                                           [?u :user/email ?email]
+                                           [?u :user/movements ?m]]
+                                         db
+                                         email)
+                     generated-movements (for [movement generated-movements]
+                                           ; if the user has done the movement before
+                                           (if-let [user-movement (some #(when
+                                                                          (= (:movement/unique-name movement) (:movement/name %))
+                                                                          (dissoc % :db/id))
+                                                                        user-movements)]
+                                             ; assoc :zone data
+                                             (merge movement user-movement)
+                                             ; else: movement has not been performed, swap recursively to the easiest variationwhen generated has easier: swap
+                                             (loop [m movement]
+                                               (let [easier (:movement/easier m)]
+                                                 (if (nil? easier)
+                                                   m
+                                                   (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))]
+                                                     (if-let [user-movement (some #(when
+                                                                                    (= (:movement/unique-name new) (:movement/name %))
+                                                                                    (dissoc % :db/id))
+                                                                                  user-movements)]
+                                                       (merge new user-movement)
+                                                       (recur new))))))))
+                     movements (concat specific-movements generated-movements)
+                     movements (vec (for [m movements] (prep-new-movement m part)))]
+                    {:title      (:part/title part)
+                     :categories category-names
+                     :movements  movements
+                     :practical  (:part/practical part)
+                     :rep        (:part/rep part)
+                     :set        (:part/set part)
+                     :distance   (:part/distance part)
+                     :duration   (:part/duration part)
+                     :weight     (:part/weight part)
+                     :rest       (:part/rest part)})))
+        session (assoc template :parts parts)]
+    {:title         (:template/title session)
+     :description   (:template/description session)
+     :template-id   (:db/id session)
+     :plan-id       (:plan-id session)
+     :last-session? (:last-session? session)
+     :parts         (:parts session)}))
 
 (defn get-movements-from-category
   "Get n movement entities of the category."
@@ -211,81 +313,6 @@
                   [?e :user/routine ?r]]
                 (:db @tx)
                 email)))
-
-(defn prep-new-movement [movement part]
-  {:unique      (:movement/unique-name movement)
-   :name        (:movement/name movement)
-   :category    (:movement/category movement)
-   :measurement (:movement/measurement movement)
-   :easier      (:movement/easier movement)
-   :harder      (:movement/harder movement)
-   :description (:movement/description movement)
-   :zone        (:movement/zone movement)
-   :rep         (:part/rep part)
-   :set         (:part/set part)
-   :distance    (:part/distance part)
-   :duration    (:part/duration part)
-   :weight      (:part/weight part)
-   :rest        (:part/rest part)
-   :practical   (:part/practical part)})
-
-(defn create-session [email template]
-  (let [db (:db @tx)
-        parts (vec
-                (for [part (:template/part template)]
-                  (let
-                    [n (:part/number-of-movements part)
-                     specific-movements (:part/specific-movement part)
-                     category-names (vec (map :category/name (:part/category part)))
-                     generated-movements (if (nil? n)
-                                           []
-                                           (get-n-movements-from-categories n category-names (:part/practical part)))
-                     user-movements (d/q '[:find [(pull ?m [*]) ...]
-                                           :in $ ?email
-                                           :where
-                                           [?u :user/email ?email]
-                                           [?u :user/movements ?m]]
-                                         db
-                                         email)
-                     generated-movements (for [movement generated-movements]
-                                           ; if the user has done the movement before
-                                           (if-let [user-movement (some #(when
-                                                                          (= (:movement/unique-name movement) (:movement/name %))
-                                                                          (dissoc % :db/id))
-                                                                        user-movements)]
-                                             ; assoc :zone data
-                                             (merge movement user-movement)
-                                             ; else: movement has not been performed, swap recursively to the easiest variationwhen generated has easier: swap
-                                             (loop [m movement]
-                                               (let [easier (:movement/easier m)]
-                                                 (if (nil? easier)
-                                                   m
-                                                   (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))]
-                                                     (if-let [user-movement (some #(when
-                                                                                    (= (:movement/unique-name new) (:movement/name %))
-                                                                                    (dissoc % :db/id))
-                                                                                  user-movements)]
-                                                       (merge new user-movement)
-                                                       (recur new))))))))
-                     movements (concat specific-movements generated-movements)
-                     movements (vec (for [m movements] (prep-new-movement m part)))]
-                    {:title      (:part/title part)
-                     :categories category-names
-                     :movements  movements
-                     :practical  (:part/practical part)
-                     :rep        (:part/rep part)
-                     :set        (:part/set part)
-                     :distance   (:part/distance part)
-                     :duration   (:part/duration part)
-                     :weight     (:part/weight part)
-                     :rest       (:part/rest part)})))
-        session (assoc template :parts parts)]
-    {:title         (:template/title session)
-     :description   (:template/description session)
-     :template-id   (:db/id session)
-     :plan-id       (:plan-id session)
-     :last-session? (:last-session? session)
-     :parts         (:parts session)}))
 
 (defn random-template-from-group [email group]
   (let [db (:db @tx)
