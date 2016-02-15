@@ -176,6 +176,17 @@ a:hover {
 
 .explore-link:hover { color: #999; }
 
+.dim { opacity: 0.8; }
+
+.gold { color: gold; }
+
+.star { margin: 0 0 0 10px;
+        transition: all 0.2s; }
+
+.star:hover { -webkit-transform: scale(1.2);
+              -ms-transform: scale(1.2);
+              transform: scale(1.2); }
+
 .refresh {
   padding: 15px 5px 0 0;
   position: relative;

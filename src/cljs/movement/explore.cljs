@@ -92,14 +92,19 @@
      [:h3.pure-g.center
       [:div.pure-u-1 name]]
      [:div.pure-g
-      [:div.pure-u-1.center {:style {:color 'gray :opacity 0.8}}
-       (cond
-         (= :zone/one zone) [:div {:title "You're still in the learning phase with this movement"}
-                             [:i.fa.fa-star] [:i.fa.fa-star-o] [:i.fa.fa-star-o]]
-         (= :zone/two zone) [:div {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}
-                             [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star-o]]
-         (= :zone/three zone) [:div {:title "You have mastered this movement. You are both effective and efficient."}
-                               [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star]])]]
+      (cond
+        (= :zone/one zone) [:div.pure-u-1.center.dim
+                            [:i.fa.fa-star.gold {:title "You're still in the learning phase with this movement"}]
+                            [:i.fa.fa-star-o.star {:title "Give two stars to indicate that you now know this movement well."}]
+                            [:i.fa.fa-star-o.star {:title "Give three stars to indicate that you have mastered this movement."}]]
+        (= :zone/two zone) [:div.pure-u-1.center.dim
+                            [:i.fa.fa-star.gold.star {:title "Go back to one star if you no longer can do this movement well."}]
+                            [:i.fa.fa-star.gold {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}]
+                            [:i.fa.fa-star-o.star {:title "Give three stars to indicate that you have mastered this movement."}]]
+        (= :zone/three zone) [:div.pure-u-1.center.dim
+                              [:i.fa.fa-star.gold.star {:title "Go back to one star if you no longer can do this movement well."}]
+                              [:i.fa.fa-star.gold.star {:title "Go back to two stars if you no longer master this movement."}]
+                              [:i.fa.fa-star.gold {:title "You have mastered this movement. You are both effective and efficient."}]])]
      [:div.pure-g
       [:div.pure-u-1.center
        [:img.graphic.pure-img-responsive {:className (if selected? "" "small-graphic")
