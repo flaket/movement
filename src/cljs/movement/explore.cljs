@@ -75,53 +75,107 @@
         #_[:div.pure-u-1-2.pure-u-md-1-5.button {:className (when (= :routines (:menu-selection @explore-state)) "button-primary")
                                                  :on-click  #(swap! explore-state assoc :menu-selection :routines)} "Routines"]]])))
 
-(defn movement-component [m selected?]
-  (let [name (:movement/unique-name m)
-        name (if (nil? name) (:movement/name m))
-        zone (:db/ident (:movement/zone m))]
-    [:div.pure-u.movement {:className (if selected? "explore-selected" "small")
-                           :style     {:cursor 'pointer}
-                           :on-click  #(GET "explore-movement"
-                                            {:params  {:unique-name (:movement/unique-name m)
-                                                       :email (session/get :email)}
-                                             :handler (fn [r] (do
-                                                                (pr r)
-                                                                (swap! explore-state dissoc :movements)
-                                                                (swap! explore-state assoc :selected-movement r)))
-                                             :error-handler (fn [r] (pr "error exploring-movement: " r))})}
-     [:h3.pure-g.center
-      [:div.pure-u-1 name]]
-     [:div.pure-g
-      (cond
-        (= :zone/one zone) [:div.pure-u-1.center.dim
-                            [:i.fa.fa-star.gold {:title "You're still in the learning phase with this movement"}]
-                            [:i.fa.fa-star-o.star {:title "Give two stars to indicate that you now know this movement well."}]
-                            [:i.fa.fa-star-o.star {:title "Give three stars to indicate that you have mastered this movement."}]]
-        (= :zone/two zone) [:div.pure-u-1.center.dim
-                            [:i.fa.fa-star.gold.star {:title "Go back to one star if you no longer can do this movement well."}]
-                            [:i.fa.fa-star.gold {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}]
-                            [:i.fa.fa-star-o.star {:title "Give three stars to indicate that you have mastered this movement."}]]
-        (= :zone/three zone) [:div.pure-u-1.center.dim
-                              [:i.fa.fa-star.gold.star {:title "Go back to one star if you no longer can do this movement well."}]
-                              [:i.fa.fa-star.gold.star {:title "Go back to two stars if you no longer master this movement."}]
-                              [:i.fa.fa-star.gold {:title "You have mastered this movement. You are both effective and efficient."}]])]
-     [:div.pure-g
-      [:div.pure-u-1.center
-       [:img.graphic.pure-img-responsive {:className (if selected? "" "small-graphic")
-                                                        :src   (image-url name) :title name :alt name
-                                                        :style {:margin-bottom 10}}]]]
-     (when selected?
-       (for [c (:movement/category m)]
-         [:div.pure-g
-          [:div.pure-u-1.center.explore-link {:on-click #(GET "movements-by-category"
-                                                              {:params        {:n        (:number-of-results @explore-state)
-                                                                               :category (:category/name c)}
-                                                               :handler       (fn [r] (do
-                                                                                        (swap! explore-state assoc :selected-category c)
-                                                                                        (swap! explore-state dissoc :selected-movement)
-                                                                                        (swap! explore-state assoc :movements r)))
-                                                               :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})}
-           (:category/name c)]]))]))
+(defn zone-data [val local-zone name]
+  (cond
+    (= :zone/one val) [:div.pure-u-1.center.dim
+                       [:i.fa.fa-star.gold {:title "You're still in the learning phase with this movement"}]
+                       [:i.fa.fa-star-o.star {:on-click #(POST "set-zone" {:params        {:email (session/get :email)
+                                                                                           :name  name
+                                                                                           :zone  :zone/two}
+                                                                           :handler       (fn [r] (reset! local-zone :zone/two))
+                                                                           :error-handler (fn [r] (pr "error setting zone data: " r))})
+                                              :style    {:cursor 'pointer}
+                                              :title    "Give two stars to indicate that you now know this movement well."}]
+                       [:i.fa.fa-star-o.star {:on-click #(POST "set-zone" {:params        {:email (session/get :email)
+                                                                                           :name  name
+                                                                                           :zone  :zone/three}
+                                                                           :handler       (fn [r] (reset! local-zone :zone/three))
+                                                                           :error-handler (fn [r] (pr "error setting zone data: " r))})
+                                              :style    {:cursor 'pointer}
+                                              :title    "Give three stars to indicate that you have mastered this movement."}]]
+    (= :zone/two val) [:div.pure-u-1.center.dim
+                       [:i.fa.fa-star.gold.star {:on-click #(POST "set-zone" {:params        {:email (session/get :email)
+                                                                                              :name  name
+                                                                                              :zone  :zone/one}
+                                                                              :handler       (fn [r] (reset! local-zone :zone/one))
+                                                                              :error-handler (fn [r] (pr "error setting zone data: " r))})
+                                                 :style    {:cursor 'pointer}
+                                                 :title    "Go back to one star if you no longer can do this movement well."}]
+                       [:i.fa.fa-star.gold {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}]
+                       [:i.fa.fa-star-o.star {:on-click #(POST "set-zone" {:params        {:email (session/get :email)
+                                                                                           :name  name
+                                                                                           :zone  :zone/three}
+                                                                           :handler       (fn [r] (reset! local-zone :zone/three))
+                                                                           :error-handler (fn [r] (pr "error setting zone data: " r))})
+                                              :style    {:cursor 'pointer}
+                                              :title    "Give three stars to indicate that you have mastered this movement."}]]
+    (= :zone/three val) [:div.pure-u-1.center.dim
+                         [:i.fa.fa-star.gold.star {:on-click #(POST "set-zone" {:params        {:email (session/get :email)
+                                                                                                :name  name
+                                                                                                :zone  :zone/one}
+                                                                                :handler       (fn [r] (reset! local-zone :zone/one))
+                                                                                :error-handler (fn [r] (pr "error setting zone data: " r))})
+                                                   :style    {:cursor 'pointer}
+                                                   :title    "Go back to one star if you no longer can do this movement well."}]
+                         [:i.fa.fa-star.gold.star {:on-click #(POST "set-zone" {:params        {:email (session/get :email)
+                                                                                                :name  name
+                                                                                                :zone  :zone/two}
+                                                                                :handler       (fn [r] (reset! local-zone :zone/two))
+                                                                                :error-handler (fn [r] (pr "error setting zone data: " r))})
+                                                   :style    {:cursor 'pointer}
+                                                   :title    "Go back to two stars if you no longer master this movement."}]
+                         [:i.fa.fa-star.gold {:title "You have mastered this movement. You are both effective and efficient."}]]))
+
+(defn movement-component [name zone selected? category]
+  (let []
+    (fn [name zone selected?]
+      [:div.pure-u.movement {:className (if selected? "explore-selected" "small")}
+       [:h3.pure-g.center
+        (if selected?
+          [:div.pure-u-1 {:style {:cursor 'default}} name]
+          [:div.pure-u-1 {:style    {:cursor 'pointer}
+                          :on-click #(GET "explore-movement"
+                                          {:params        {:unique-name name
+                                                           :email       (session/get :email)}
+                                           :handler       (fn [r] (do
+                                                                    (pr r)
+                                                                    (swap! explore-state dissoc :movements)
+                                                                    (swap! explore-state assoc :selected-movement r)))
+                                           :error-handler (fn [r] (pr "error exploring-movement: " r))})}
+           name])]
+       [:div.pure-g
+        (let [val @zone]
+          (zone-data val zone name))]
+       [:div.pure-g
+        [:div.pure-u-1.center
+         (if selected?
+           [:img.graphic.pure-img-responsive {:src   (image-url name) :title name :alt name
+                                              :style {:margin-bottom 10}}]
+           [:img.graphic.pure-img-responsive {:className (if selected? "" "small-graphic")
+                                              :src       (image-url name) :title name :alt name
+                                              :style     {:margin-bottom 10
+                                                          :cursor        'pointer}
+                                              :on-click  #(GET "explore-movement"
+                                                               {:params        {:unique-name name
+                                                                                :email       (session/get :email)}
+                                                                :handler       (fn [r] (do
+                                                                                         (pr r)
+                                                                                         (swap! explore-state dissoc :movements)
+                                                                                         (swap! explore-state assoc :selected-movement r)))
+                                                                :error-handler (fn [r] (pr "error exploring-movement: " r))})}])]]
+       (when selected?
+         (for [c category]
+           [:div.pure-g
+            [:div.pure-u-1.center.explore-link {:style    {:cursor 'pointer}
+                                                :on-click #(GET "movements-by-category"
+                                                                {:params        {:n        (:number-of-results @explore-state)
+                                                                                 :category (:category/name c)}
+                                                                 :handler       (fn [r] (do
+                                                                                          (swap! explore-state assoc :selected-category (:category/name c))
+                                                                                          (swap! explore-state dissoc :selected-movement)
+                                                                                          (swap! explore-state assoc :movements r)))
+                                                                 :error-handler (fn [r] (pr (str "error getting movements by category: " r)))})}
+             (:category/name c)]]))])))
 
 (defn movements-component []
   (let []
@@ -173,10 +227,10 @@
                                                       :error-handler (pr "error getting single movement through add.")}))}])]
           [:div.pure-u.pure-u-md-1-3
            [:button.button.button-primary {:on-click #(GET "user-movements"
-                                                           {:params {:email (session/get :email)}
-                                                            :handler (fn [r] (do
-                                                                               (swap! explore-state dissoc :selected-movement)
-                                                                               (swap! explore-state assoc :movements r)))
+                                                           {:params        {:email (session/get :email)}
+                                                            :handler       (fn [r] (do
+                                                                                     (swap! explore-state dissoc :selected-movement)
+                                                                                     (swap! explore-state assoc :movements r)))
                                                             :error-handler (fn [r] (pr (str "error getting user movements: " r)))})}
             "Movements I have done"]]]
          (when-not (nil? (:movements @explore-state))
@@ -188,30 +242,36 @@
               (doall
                 (for [m movements]
                   ^{:key (:db/id m)}
-                  (movement-component m false)))]
+                  [movement-component (if (nil? (:movement/unique-name m)) (:movement/name m) (:movement/unique-name m)) (atom (:db/ident (:movement/zone m))) false (:movement/category m)]))]
              (when-let [movement (:selected-movement @explore-state)]
                (let [easier (:movement/easier movement)
                      harder (:movement/harder movement)]
                  [:div.movements
                   [:div.pure-g
-                   [:div.pure-u-1-4
-                    (for [e easier]
-                      [:div.pure-g.center
-                       (movement-component e false)])]
-                   (if-not (empty? easier)
-                     [:div.pure-u-1-12.explore-green [:i.fa.fa-arrow-right]]
-                     [:div.pure-u-1-12.explore-green])
-                   [:div.pure-u-1-4
+                   [:div.pure-u-1-3
                     [:div.pure-g
-                     (movement-component movement true)]]
-                   (if-not (empty? harder)
-                     [:div.pure-u-1-12.explore-green [:i.fa.fa-arrow-right]]
-                     [:div.pure-u-1-12.explore-green])
-                   [:div.pure-u-1-4
-                    (for [h harder]
-                      [:div.pure-g
-                       [:div.pure-u-1-5]
-                       (movement-component h false)])]]]))))]]])))
+                     [:div.pure-u-3-4
+                      (for [m easier]
+                        [:div.pure-g.center
+                         [movement-component (if (nil? (:movement/unique-name m)) (:movement/name m) (:movement/unique-name m)) (atom (:db/ident (:movement/zone m))) false (:movement/category m)]])]
+                     [:div.pure-u-1-4
+                      (when-not (empty? easier)
+                        [:div.explore-green [:i.fa.fa-arrow-right]])]]]
+
+                   [:div.pure-u-1-3
+                    [:div.pure-g
+                     [movement-component (if (nil? (:movement/unique-name movement)) (:movement/name movement) (:movement/unique-name movement)) (atom (:db/ident (:movement/zone movement))) true (:movement/category movement)]]]
+
+                   [:div.pure-u-1-3
+                    [:div.pure-g
+                     [:div.pure-u-1-4
+                      (when-not (empty? harder)
+                        [:div.explore-green [:i.fa.fa-arrow-right]])]
+                     [:div.pure-u-3-4
+                      (for [m harder]
+                        [:div.pure-g
+                         [:div.pure-u-1-5]
+                         [movement-component (if (nil? (:movement/unique-name m)) (:movement/name m) (:movement/unique-name m)) (atom (:db/ident (:movement/zone m))) false (:movement/category m)]])]]]]]))))]]])))
 
 (defn template-result [t]
   (let [selected (atom false)

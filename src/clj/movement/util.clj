@@ -93,6 +93,14 @@
       first
       :user/movements)
 
+(d/q '[:find ?m .
+       :in $ ?email ?name
+       :where
+       [?e :user/email ?email]
+       [?e :user/movements ?m]
+       [?m :movement/name ?name]]
+     db "a" "Squat")
+
 #_(d/pull db '[*] 17592186045521)
 
 #_(defn image-url [name]

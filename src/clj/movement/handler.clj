@@ -226,6 +226,14 @@
       (activation-page "To verify your email address we have sent you an activation email."))
     (pricing-page (str email " is already registered as a user."))))
 
+(defn set-zone! [email name zone]
+  (try
+    (db/transact-zone-data! email name zone)
+    (catch Exception e
+      (response (str "Exception: " e)))
+    (finally (do (update-tx-db!)
+                 (response "Zone set successfully!")))))
+
 (defn begin-plan! [user-id plan-id]
   (try
     (db/begin-plan! user-id plan-id)
@@ -433,6 +441,12 @@
                                      (let [user-id (:db/id (db/find-user (:email (:params req))))
                                            plan-id (:id (:params req))]
                                        (end-plan! user-id plan-id))))
+           (POST "/set-zone" req (if-not (authenticated? req)
+                                   (throw-unauthorized)
+                                   (let [email (:email (:params req))
+                                         name (:name (:params req))
+                                         zone (:zone (:params req))]
+                                     (set-zone! email name zone))))
            (GET "/user" req (if-not (authenticated? req)
                               (throw-unauthorized)
                               (let [email (:email (:params req))]

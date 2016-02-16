@@ -859,6 +859,24 @@
     ; transact all datoms
     (d/transact (:conn @tx) (concat user-session-data part-data movement-data))))
 
+(defn transact-zone-data!
+  ""
+  [email name zone]
+  (let [db (:db @tx)
+        conn (:conn @tx)
+        m-id (d/q '[:find ?m .
+                    :in $ ?email ?name
+                    :where
+                    [?e :user/email ?email]
+                    [?e :user/movements ?m]
+                    [?m :movement/name ?name]]
+                  db email name)
+        tx-data [{:db/id m-id
+                  :movement/zone #db/id[:db.part/user -100]}
+                 {:db/id #db/id[:db.part/user -100]
+                  :db/ident zone}]]
+    (d/transact conn tx-data)))
+
 (defn transact-new-user!
   "Adds a new user to the database."
   [email password activation-id]
