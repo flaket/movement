@@ -16,7 +16,10 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
-  :movement/harder      [#db/id[:db.part/user -101]]}
+  :movement/harder      [#db/id[:db.part/user -101]
+                         #db/id[:db.part/user -103]
+                         #db/id[:db.part/user -110]
+                         #db/id[:db.part/user -111]]}
 
  {:db/id                #db/id[:db.part/user -101]
   :movement/unique-name "Balancing Lateral Walk"
@@ -35,7 +38,7 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -100]]}
+  :movement/easier      [#db/id[:db.part/user -101]]}
 
  {:db/id                #db/id[:db.part/user -103]
   :movement/unique-name "Balancing Low Walk"

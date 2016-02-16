@@ -14,15 +14,17 @@
  {:db/id                #db/id[:db.part/user -300]
   :movement/unique-name "False Grip Hang"
   :movement/category    [#db/id[:db.part/user -7]]}
+
  {:db/id                #db/id[:db.part/user -301]
   :movement/unique-name "Dip"}
 
- {:db/id                #db/id[:db.part/user -99]
+ {:db/id                #db/id[:db.part/user -302]
   :movement/unique-name "Ring Support Hold"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -10]]
   :movement/measurement :measurement/duration}
 
+ ; row
  {:db/id                #db/id[:db.part/user -100]
   :movement/unique-name "Ring Row"
   :movement/category    [#db/id[:db.part/user -1]
@@ -38,6 +40,7 @@
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -100]]}
 
+ ; dip
  {:db/id                #db/id[:db.part/user -102]
   :movement/unique-name "Ring Dip"
   :movement/category    [#db/id[:db.part/user -1]
@@ -45,8 +48,9 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -99]
-                         #db/id[:db.part/user -301]]}
+  :movement/easier      [#db/id[:db.part/user -301]
+                         #db/id[:db.part/user -302]]
+  :movement/harder      [#db/id[:db.part/user -103]]}
 
  {:db/id                #db/id[:db.part/user -103]
   :movement/unique-name "Wide Ring Dip"
@@ -55,7 +59,8 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]]}
+  :movement/easier      [#db/id[:db.part/user -102]]
+  :movement/harder      [#db/id[:db.part/user -104]]}
 
  {:db/id                #db/id[:db.part/user -104]
   :movement/unique-name "Archer Ring Dip"
@@ -66,13 +71,17 @@
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -103]]}
 
+ ; chin
  {:db/id                #db/id[:db.part/user -105]
   :movement/unique-name "Ring Chin Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+  :movement/measurement :measurement/repetitions
+  :movement/harder      [#db/id[:db.part/user -106]
+                         #db/id[:db.part/user -107]
+                         #db/id[:db.part/user -108]]}
 
  {:db/id                #db/id[:db.part/user -106]
   :movement/unique-name "Wide Ring Chin Up"
@@ -122,6 +131,7 @@
   :movement/easier      [#db/id[:db.part/user -109]]
   :movement/measurement :measurement/repetitions}
 
+ ; muscle up
  {:db/id                #db/id[:db.part/user -200]
   :movement/unique-name "Ring Muscle Up Transition"
   :movement/category    [#db/id[:db.part/user -1]
@@ -136,8 +146,8 @@
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -5]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -300]
-                         #db/id[:db.part/user -101]]
+  :movement/easier      [#db/id[:db.part/user -102]
+                         #db/id[:db.part/user -107]]
   :movement/harder      [#db/id[:db.part/user -202]]}
 
  {:db/id                #db/id[:db.part/user -202]
@@ -146,22 +156,9 @@
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -5]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -106]
+  :movement/easier      [#db/id[:db.part/user -102]
+                         #db/id[:db.part/user -107]
                          #db/id[:db.part/user -200]
                          #db/id[:db.part/user -201]]}
-
- {:db/id                #db/id[:db.part/user -400]
-  :movement/unique-name "Ring Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user -401]
-  :movement/unique-name "Ring Handstand Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions}
 
  ]

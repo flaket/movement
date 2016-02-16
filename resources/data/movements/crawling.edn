@@ -14,7 +14,8 @@
   :movement/unique-name "Baby Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
+  :movement/measurement :measurement/distance
+  :movement/harder      [#db/id[:db.part/user -106]]}
 
  {:db/id                #db/id[:db.part/user -101]
   :movement/unique-name "Elbow Knee Crawl"
@@ -35,8 +36,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -102]]
-  :movement/harder      [#db/id[:db.part/user -110]]}
+  :movement/harder      [#db/id[:db.part/user -109]]}
 
  {:db/id                #db/id[:db.part/user -104]
   :movement/unique-name "Shoulder Crawl"
@@ -59,6 +59,7 @@
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
+  :movement/harder      [#db/id[:db.part/user -100]]
   :movement/harder      [#db/id[:db.part/user -107]]}
 
  {:db/id                #db/id[:db.part/user -107]
@@ -84,7 +85,8 @@
   :movement/unique-name "Spiderman Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]]
+                         #db/id[:db.part/user -6]
+                         #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -106]]
   :movement/harder      [#db/id[:db.part/user -110]]}
@@ -141,7 +143,7 @@
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -106]]
+  :movement/easier      [#db/id[:db.part/user -108]]
   :movement/harder      [#db/id[:db.part/user -116]]}
 
  {:db/id                #db/id[:db.part/user -116]
@@ -150,7 +152,8 @@
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -115]]}
+  :movement/easier      [#db/id[:db.part/user -115]]
+  :movement/harder      [#db/id[:db.part/user -301]]}
 
  {:db/id                #db/id[:db.part/user -117]
   :movement/unique-name "Traveling Squat"
@@ -174,5 +177,6 @@
                          #db/id[:db.part/user -300]]}
 
  {:db/id #db/id[:db.part/user -300] :movement/unique-name "High Bridge"}
+ {:db/id #db/id[:db.part/user -301] :movement/unique-name "Handstand Walk"}
 
  ]

@@ -8,7 +8,7 @@
             [movement.activation :refer [generate-activation-id send-activation-email]]
             [clojure.set :as set]))
 
-(def uri "datomic:dev://localhost:4334/testing17")
+(def uri "datomic:dev://localhost:4334/testing18")
 #_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
@@ -283,7 +283,11 @@
                                                                                     (= (:movement/unique-name new) (:movement/name %))
                                                                                     (dissoc % :db/id))
                                                                                   user-movements)]
-                                                       (merge new user-movement)
+                                                       (let [zone (:db/ident (:movement/zone user-movement))]
+                                                         ; if user is effective or have mastered the easier movement, return the original, else return the easier
+                                                         (if (or (= :zone/two zone) (= :zone/three zone))
+                                                           m
+                                                           (merge new user-movement)))
                                                        (recur new))))))))
                      movements (concat specific-movements generated-movements)
                      movements (vec (for [m movements] (prep-new-movement m part)))]

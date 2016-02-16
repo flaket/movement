@@ -12,10 +12,24 @@
  {:db/id #db/id[:db.part/user -8] :category/name "Bent Arm Strength"}
  {:db/id #db/id[:db.part/user -9] :category/name "Muscle Up"}
 
+ {:db/id                #db/id[:db.part/user -400]
+  :movement/unique-name "Hanging Pull"}
+
  ; negative dip
 
- {:db/id                #db/id[:db.part/user -100]
+ {:db/id                #db/id[:db.part/user -99]
   :movement/unique-name "Jumping Dip"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
+                         #db/id[:db.part/user -8]
+                         #db/id[:db.part/user -33]]
+  :movement/measurement :measurement/repetitions
+  :movement/harder      [#db/id[:db.part/user -101]]}
+
+ {:db/id                #db/id[:db.part/user -100]
+  :movement/unique-name "Negative Dip"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
@@ -34,7 +48,8 @@
                          #db/id[:db.part/user -8]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -100]]
+  :movement/easier      [#db/id[:db.part/user -99]
+                         #db/id[:db.part/user -100]]
   :movement/harder      [#db/id[:db.part/user -102]]}
 
  {:db/id                #db/id[:db.part/user -102]
@@ -61,16 +76,6 @@
   :movement/easier      [#db/id[:db.part/user -102]]}
 
  ;; Pull up
- ; {:db/id                #db/id[:db.part/user -200]
- ; :movement/unique-name "Negative Pull Up"
- ; :movement/category    [#db/id[:db.part/user -1]
- ;                        #db/id[:db.part/user -2]
- ;                        #db/id[:db.part/user -6]
- ;                        #db/id[:db.part/user -7]
- ;                        #db/id[:db.part/user -8]]
- ; :movement/measurement :measurement/repetitions
- ; :movement/easier      []
- ; :movement/harder      [#db/id[:db.part/user -104]]}
 
  {:db/id                #db/id[:db.part/user -104]
   :movement/unique-name "Jumping Pull Up"
@@ -81,9 +86,20 @@
                          #db/id[:db.part/user -8]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -105]]}
+  :movement/harder      [#db/id[:db.part/user -106]]}
 
  {:db/id                #db/id[:db.part/user -105]
+  :movement/unique-name "Negative Pull Up"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -6]
+                         #db/id[:db.part/user -7]
+                         #db/id[:db.part/user -8]
+                         #db/id[:db.part/user -33]]
+  :movement/measurement :measurement/duration
+  :movement/harder      [#db/id[:db.part/user -106]]}
+
+ {:db/id                #db/id[:db.part/user -106]
   :movement/unique-name "Pull Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
@@ -92,19 +108,8 @@
                          #db/id[:db.part/user -8]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -104]]
-  :movement/harder      [#db/id[:db.part/user -106]]}
-
- {:db/id                #db/id[:db.part/user -106]
-  :movement/unique-name "Pull Up Hold"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -105]]
+  :movement/easier      [#db/id[:db.part/user -104]
+                         #db/id[:db.part/user -105]]
   :movement/harder      [#db/id[:db.part/user -107]]}
 
  {:db/id                #db/id[:db.part/user -107]
@@ -198,6 +203,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -33]]
+  :movement/easier      [#db/id[:db.part/user -400]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -117]

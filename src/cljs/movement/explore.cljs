@@ -146,23 +146,22 @@
        [:div.pure-g
         (let [val @zone]
           (zone-data val zone name))]
-       [:div.pure-g
-        [:div.pure-u-1.center
-         (if selected?
-           [:img.graphic.pure-img-responsive {:src   (image-url name) :title name :alt name
-                                              :style {:margin-bottom 10}}]
-           [:img.graphic.pure-img-responsive {:className (if selected? "" "small-graphic")
-                                              :src       (image-url name) :title name :alt name
-                                              :style     {:margin-bottom 10
-                                                          :cursor        'pointer}
-                                              :on-click  #(GET "explore-movement"
-                                                               {:params        {:unique-name name
-                                                                                :email       (session/get :email)}
-                                                                :handler       (fn [r] (do
-                                                                                         (pr r)
-                                                                                         (swap! explore-state dissoc :movements)
-                                                                                         (swap! explore-state assoc :selected-movement r)))
-                                                                :error-handler (fn [r] (pr "error exploring-movement: " r))})}])]]
+       [:div.center
+        (if selected?
+          [:img.graphic.pure-img-responsive {:src   (image-url name) :title name :alt name
+                                             :style {:margin-bottom 10}}]
+          [:img.graphic.pure-img-responsive {:className (if selected? "" "small-graphic")
+                                             :src       (image-url name) :title name :alt name
+                                             :style     {:margin-bottom 10
+                                                         :cursor        'pointer}
+                                             :on-click  #(GET "explore-movement"
+                                                              {:params        {:unique-name name
+                                                                               :email       (session/get :email)}
+                                                               :handler       (fn [r] (do
+                                                                                        (pr r)
+                                                                                        (swap! explore-state dissoc :movements)
+                                                                                        (swap! explore-state assoc :selected-movement r)))
+                                                               :error-handler (fn [r] (pr "error exploring-movement: " r))})}])]
        (when selected?
          (for [c category]
            [:div.pure-g

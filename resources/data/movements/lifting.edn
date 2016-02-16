@@ -54,6 +54,7 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
+  :movement/easier      [#db/id[:db.part/user -102]]
   :movement/harder      [#db/id[:db.part/user -105]]}
 
  {:db/id                #db/id[:db.part/user -105]
@@ -63,8 +64,7 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]
-                         #db/id[:db.part/user -104]]
+  :movement/easier      [#db/id[:db.part/user -104]]
   :movement/harder      [#db/id[:db.part/user -107]]}
 
  {:db/id                #db/id[:db.part/user -106]
@@ -85,8 +85,7 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]
-                         #db/id[:db.part/user -106]]}
+  :movement/easier      [#db/id[:db.part/user -106]]}
 
  {:db/id                #db/id[:db.part/user -108]
   :movement/unique-name "Shoulder Press"
@@ -95,7 +94,7 @@
                          #db/id[:db.part/user -7]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -110]]}
+  :movement/harder      [#db/id[:db.part/user -109]]}
 
  {:db/id                #db/id[:db.part/user -109]
   :movement/unique-name "Push Press"
@@ -114,8 +113,7 @@
                          #db/id[:db.part/user -7]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -108]
-                         #db/id[:db.part/user -109]]}
+  :movement/easier      [#db/id[:db.part/user -109]]}
 
  ;; Carrying
  {:db/id                #db/id[:db.part/user -111]

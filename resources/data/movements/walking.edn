@@ -10,16 +10,14 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/harder      [#db/id[:db.part/user -101]]}
+  :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user -101]
   :movement/unique-name "Duck Walk"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -100]]}
+  :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user -102]
   :movement/unique-name "Walking Lunge"

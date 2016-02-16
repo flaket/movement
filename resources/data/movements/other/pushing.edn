@@ -10,6 +10,7 @@
  {:db/id #db/id[:db.part/user -6] :category/name "Bar"}
  {:db/id #db/id[:db.part/user -7] :category/name "Bridge"}
  {:db/id #db/id[:db.part/user -8] :category/name "Wrist Mobility"}
+ {:db/id #db/id[:db.part/user -9] :category/name "Ring"}
 
  ; push up
  {:db/id                #db/id[:db.part/user -100]
@@ -50,7 +51,6 @@
                          #db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -101]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -104]
@@ -135,9 +135,16 @@
   :movement/unique-name "Ring Push Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -9]]
   :movement/easier      [#db/id[:db.part/user -101]]
   :movement/measurement :measurement/repetitions}
+
+ {:db/id                #db/id[:db.part/user -500]
+  :movement/unique-name "Spiderman Crawl"
+  :movement/category    [#db/id[:db.part/user -1]
+                         #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -3]]}
 
  ; ring wide push up
  ; ring archer push up
@@ -221,7 +228,8 @@
   :movement/unique-name "Ring Handstand Push Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
+                         #db/id[:db.part/user -3]
+                         #db/id[:db.part/user -9]]
   :movement/easier      [#db/id[:db.part/user -122]]
   :movement/harder      [#db/id[:db.part/user -125]]}
 
