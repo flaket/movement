@@ -22,7 +22,7 @@
         (doall
           (for [m (reverse (:movements @routine-state))]
             ^{:key (rand-int 1000)}
-            (movement-component {} (str m) (str "images/" (str/replace (str/lower-case m) " " "-") ".png"))))]
+            (movement-component {} {} (str m) (str "images/" (str/replace (str/lower-case m) " " "-") ".png"))))]
        [:div.pure-u-1-2
         [:div.pure-g
          [:h3.pure-u-1 "All Movements"]]

@@ -39,7 +39,7 @@
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
   (when (session/get :user)
-    (set-page! #'explore-component))
+    (set-page! #'create-component))
 
   (.initializeTouchEvents js/React true)
   (mount-root))

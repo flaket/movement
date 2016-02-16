@@ -11,27 +11,25 @@
 
 (defn title [state text]
   [:div.pure-g
-   [:h1.pure-u-1
+   [:h1.pure-u-1.center
     [:input {:type        "text"
-             :size        50
+             :size        24
              :placeholder text
              :on-change   #(swap! state assoc :title (-> % .-target .-value))
-             :value       (:title @state)}]]
-   [:div.pure-g
-    [:div.pure-u (str "by " (session/get :username))]]])
+             :value       (:title @state)}]]])
 
 (defn description [state]
   [:div.pure-g
-   [:div.pure-u
+   [:p.pure-u-1.subtitle
     [:textarea {:rows        3
-                :cols        58
+                :cols        72
                 :placeholder "Optional description"
                 :on-change   #(swap! state assoc :description (-> % .-target .-value))
                 :value       (:description @state)}]]])
 
 (defn error [message]
   [:div.pure-g
-   [:h3.pure-u {:style {:color "red"}} message]])
+   [:h3.pure-u-1.center {:style {:color "red"}} message]])
 
 (defn username [t]
   [:div
