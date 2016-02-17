@@ -37,18 +37,18 @@
    [:div.pure-u.movement
     (when-not (nil? m)
       [:div.pure-g
-       [:div.pure-u.destroy
-        [:i.fa.fa-remove {:on-click #(let [specific-movements (vec (remove #{m} (get-in @template-state [:parts i :specific-movements])))]
+       [:div.pure-u-1
+        [:i.fa.fa-remove {:style {:margin "10px 0 0 15px" :cursor 'pointer :color "#CC9999" :opacity 0.8 :font-size "2.0em"}
+                          :on-click #(let [specific-movements (vec (remove #{m} (get-in @template-state [:parts i :specific-movements])))]
                                       (swap! template-state assoc-in [:parts i :specific-movements] specific-movements))
                           :title    "Remove movement"}]]])
     [:h3.pure-g
-     [:div.pure-u-1-12]
-     [:div.pure-u.title title]]
+     [:div.pure-u-1.center title]]
     (if-not (nil? m)
       [:img.graphic.pure-img-responsive {:src image}]
-      [:div
+      [:div.pure-g
        (for [c categories]
-         [:div {:style {:margin-right 5}} c])
+         [:div.pure-u-1.center {:style {:margin-right 5}} c])
        [:img.graphic.pure-img-responsive {:src image}]])
     [:div
      [:div.pure-g
@@ -170,6 +170,22 @@
 
 (defn category-input [categories i showing-categories-list]
   [:div
+   [:div.pure-g {:style {:margin-top 10 :margin-bottom 10}}
+    [:a.pure-u {:style {:text-decoration 'underline}
+                :on-click #(handler-fn (reset! showing-categories-list (not @showing-categories-list)))}
+     (if @showing-categories-list "Hide categories list" "Show categories list")]]
+   (when @showing-categories-list
+     [:div.pure-g
+      (for [c (sort (session/get :all-categories))]
+        ^{:key c}
+        [:div.pure-u
+         {:style    {:cursor     'pointer :margin-right 10 :margin-bottom 5
+                     :color      (when (some #{c} (get-in @template-state [:parts i :categories])) "#fffff8")
+                     :background (when (some #{c} (get-in @template-state [:parts i :categories])) "gray")}
+          :on-click #(if (some #{c} (get-in @template-state [:parts i :categories]))
+                      (let [new-categories (remove #{c} (get-in @template-state [:parts i :categories]))]
+                        (swap! template-state assoc-in [:parts i :categories] new-categories))
+                      (swap! template-state update-in [:parts i :categories] conj c))} c])])
    [:div.pure-g
     (let [id (str "ctags" i)
           categories-ac-comp (with-meta text-input-component
@@ -190,24 +206,7 @@
        [:span c]
        [:i.fa.fa-times {:style    {:color 'red :cursor 'pointer}
               :on-click #(let [categories (vec (remove #{c} (get-in @template-state [:parts i :categories])))]
-                          (swap! template-state assoc-in [:parts i :categories] categories))}]])]
-
-   [:div.pure-g {:style {:margin-top 10}}
-    [:a.pure-u {:style {:text-decoration 'underline}
-                :on-click #(handler-fn (reset! showing-categories-list (not @showing-categories-list)))}
-     (if @showing-categories-list "Hide categories list" "Show categories list")]]
-   (when @showing-categories-list
-     [:div.pure-g
-      (for [c (sort (session/get :all-categories))]
-        ^{:key c}
-        [:div.pure-u
-         {:style    {:cursor     'pointer :margin-right 8 :margin-bottom 5
-                     :color      (when (some #{c} (get-in @template-state [:parts i :categories])) "#fffff8")
-                     :background (when (some #{c} (get-in @template-state [:parts i :categories])) "gray")}
-          :on-click #(if (some #{c} (get-in @template-state [:parts i :categories]))
-                      (let [new-categories (remove #{c} (get-in @template-state [:parts i :categories]))]
-                        (swap! template-state assoc-in [:parts i :categories] new-categories))
-                      (swap! template-state update-in [:parts i :categories] conj c))} c])])])
+                          (swap! template-state assoc-in [:parts i :categories] categories))}]])]])
 
 (defn part-creator-component []
   (let [showing-categories-list (atom false)]
