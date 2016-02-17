@@ -143,8 +143,7 @@
         {:type        "range" :value @data :min min :max max :step step
          :style       {:width "100%"}
          :on-mouse-up #(session/assoc-in!
-                        [:movement-session :parts position-in-parts :movements id r]
-                        (int @data))
+                        [:movement-session :parts position-in-parts :movements id r] @data)
          :on-change   #(reset! data (-> % .-target .-value))}]])))
 
 (defn movement-component
@@ -203,52 +202,50 @@
 
        [:div {:style {:cursor 'pointer}}
         [:div.pure-g
-         [:div.pure-u-1-12]
-         [:div.pure-u-5-12
-          [:div.pure-u {:on-click  #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))
-                        :className (str (when-not (and rep (< 0 rep)) " no-data")
-                                        (when @rep-clicked? " selected"))} "Reps"]]
-         [:div.pure-u-5-12
-          [:div.pure-u {:on-click  #(handler-fn (reset! set-clicked? (not @set-clicked?)))
-                        :className (str (when-not (and set (< 0 set)) " no-data")
-                                        (when @set-clicked? " selected"))} "Set"]]
-         [:div.pure-u-1-12]]
+         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))
+                                  :className (str (when-not (and rep (< 0 rep)) " no-data")
+                                                  (when @rep-clicked? " selected"))} "Reps"]
+         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! set-clicked? (not @set-clicked?)))
+                           :className (str (when-not (and set (< 0 set)) " no-data")
+                                           (when @set-clicked? " selected"))} "Set"]
+         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))
+                                  :className (str (when-not (and rest (< 0 rest)) " no-data")
+                                                  (when @rest-clicked? " selected"))} "Rest"]]
         [:div.pure-g
-         [:div.pure-u-1-12]
-         [:div.pure-u-5-12
-          (if (and rep (< 0 rep))
-            [:div.rep-set {:on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} rep])]
-         [:div.pure-u-5-12
-          (if (and set (< 0 set))
-            [:div.rep-set {:on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))} set])]
-         [:div.pure-u-1-12]]]
+         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))}
+          (when (and rep (< 0 rep)) rep)]
+         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))}
+          (when (and set (< 0 set)) set)]
+         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))}
+          (when (and rest (< 0 rest)) rest)]]]
        [:div {:style {:cursor 'pointer :margin-bottom 10}}
         [:div.pure-g
-         [:div.pure-u-1-12]
-         [:div.pure-u-5-12
-          [:div.pure-u {:on-click  #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))
-                        :className (str (when-not (and distance (< 0 distance)) " no-data"))} "Meters"]]
-         [:div.pure-u-5-12
-          [:div.pure-u {:on-click  #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))
-                        :className (str (when-not (and duration (< 0 duration)) " no-data"))} "Seconds"]]
-         [:div.pure-u-1-12]]
+         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))
+                                  :className (str (when-not (and distance (< 0 distance)) " no-data"))} "Meters"]
+         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))
+                                  :className (str (when-not (and duration (< 0 duration)) " no-data"))} "Seconds"]
+         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))
+                                  :className (str (when-not (and weight (< 0 weight)) " no-data"))} "Weight"]]
         [:div.pure-g
-         [:div.pure-u-1-12]
-         [:div.pure-u-5-12
-          (if (and distance (< 0 distance))
-            [:div.rep-set {:on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} distance])]
-         [:div.pure-u-5-12
-          (if (and duration (< 0 duration))
-            [:div.rep-set {:on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))} duration])]
-         [:div.pure-u-1-12]]]
+
+         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))}
+          (when (and distance (< 0 distance)) distance)]
+         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))}
+          (when (and duration (< 0 duration)) duration)]
+         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))}
+          (when (and weight (< 0 weight)) weight)]]]
        (when @rep-clicked?
          [slider-component position-in-parts id :rep 0 50 1])
        (when @set-clicked?
          [slider-component position-in-parts id :set 0 20 1])
+       (when @rest-clicked?
+         [slider-component position-in-parts id :rest 0 240 10])
        (when @distance-clicked?
          [slider-component position-in-parts id :distance 0 400 5])
        (when @duration-clicked?
-         [slider-component position-in-parts id :duration 0 1800 10])])))
+         [slider-component position-in-parts id :duration 0 1800 10])
+       (when @weight-clicked?
+         [slider-component position-in-parts id :weight 0 200 2.5])])))
 
 (defn add-movement-component []
   (let [show-search-input? (atom false)]

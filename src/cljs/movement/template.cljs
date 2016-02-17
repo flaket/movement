@@ -33,7 +33,7 @@
 
 (defn movement-component
   ([categories data title image] (movement-component categories data title image nil))
-  ([categories {:keys [rep set distance duration i]} title image m]
+  ([categories {:keys [rep set distance duration weight rest i]} title image m]
    [:div.pure-u.movement
     (when-not (nil? m)
       [:div.pure-g
@@ -52,38 +52,22 @@
        [:img.graphic.pure-img-responsive {:src image}]])
     [:div
      [:div.pure-g
-      [:div.pure-u-1-12]
-      [:div.pure-u-5-12 {:className (str (when-not (and rep (< 0 rep)) " no-data"))}
-       [:div.pure-u "Reps"]]
-      [:div.pure-u-5-12 {:className (str (when-not (and set (< 0 set)) " no-data"))}
-       [:div.pure-u "Set"]]
-      [:div.pure-u-1-12]]
+      [:div.pure-u-1-3.center {:className (str (when-not (and rep (< 0 rep)) " no-data"))} "Reps"]
+      [:div.pure-u-1-3.center {:className (str (when-not (and set (< 0 set)) " no-data"))} "Set"]
+      [:div.pure-u-1-3.center {:className (str (when-not (and rest (< 0 rest)) " no-data"))} "Rest"]]
      [:div.pure-g
-      [:div.pure-u-1-12]
-      [:div.pure-u-5-12
-       (when (and rep (< 0 rep))
-         [:div.rep-set rep])]
-      [:div.pure-u-5-12
-       (when (and set (< 0 set))
-         [:div.rep-set set])]
-      [:div.pure-u-1-12]]]
+      [:div.pure-u-1-3.rep-set.center (when (and rep (< 0 rep)) rep)]
+      [:div.pure-u-1-3.rep-set.center (when (and set (< 0 set)) set)]
+      [:div.pure-u-1-3.rep-set.center (when (and rest (< 0 rest)) rest)]]]
     [:div
      [:div.pure-g
-      [:div.pure-u-1-12]
-      [:div.pure-u-5-12 {:className (str (when-not (and distance (< 0 distance)) " no-data"))}
-       [:div "Meters"]]
-      [:div.pure-u-5-12 {:className (str (when-not (and duration (< 0 duration)) " no-data"))}
-       [:div "Seconds"]]
-      [:div.pure-u-1-12]]
+      [:div.pure-u-1-3.center {:className (str (when-not (and distance (< 0 distance)) " no-data"))} "Meters"]
+      [:div.pure-u-1-3.center {:className (str (when-not (and duration (< 0 duration)) " no-data"))} "Seconds"]
+      [:div.pure-u-1-3.center {:className (str (when-not (and weight (< 0 weight)) " no-data"))} "Weight"]]
      [:div.pure-g
-      [:div.pure-u-1-12]
-      [:div.pure-u-5-12
-       (when (and distance (< 0 distance))
-         [:div.rep-set distance])]
-      [:div.pure-u-5-12
-       (when (and duration (< 0 duration))
-         [:div.rep-set duration])]
-      [:div.pure-u-1-12]]]]))
+      [:div.pure-u-1-3.rep-set.center (when (and distance (< 0 distance)) distance)]
+      [:div.pure-u-1-3.rep-set.center (when (and duration (< 0 duration)) duration)]
+      [:div.pure-u-1-3.rep-set.center (when (and set (< 0 weight)) weight)]]]]))
 
 (defn rep-set-distance-duration-component [i]
   [:div.pure-g
@@ -113,6 +97,17 @@
                                (swap! template-state assoc-in [:parts i :set] value)))
                            (catch js/Error e
                              (pr (str "Caught exception: " e))))}]
+     [:input.pure-u {:style {:margin-right 5 :margin-top 5}
+                     :type        "number"
+                     :size        6
+                     :placeholder "rest"
+                     :value       (get-in @template-state [:parts i :rest])
+                     :on-change   #(try
+                                    (let [value (-> % .-target .-value read-string)]
+                                      (if (or (nil? value) (and (integer? value) (< 0 value)))
+                                        (swap! template-state assoc-in [:parts i :rest] value)))
+                                    (catch js/Error e
+                                      (pr (str "Caught exception: " e))))}]
      [:input.pure-u {:style {:margin-right 5 :margin-top 5}
               :type      "number"
               :value     (get-in @template-state [:parts i :distance])
@@ -146,17 +141,7 @@
                                         (swap! template-state assoc-in [:parts i :weight] value)))
                                     (catch js/Error e
                                       (pr (str "Caught exception: " e))))}]
-     [:input.pure-u {:style {:margin-right 5 :margin-top 5}
-                     :type        "number"
-                     :size        6
-                     :placeholder "rest"
-                     :value       (get-in @template-state [:parts i :rest])
-                     :on-change   #(try
-                                    (let [value (-> % .-target .-value read-string)]
-                                      (if (or (nil? value) (and (integer? value) (< 0 value)))
-                                        (swap! template-state assoc-in [:parts i :rest] value)))
-                                    (catch js/Error e
-                                      (pr (str "Caught exception: " e))))}]]]])
+     ]]])
 
 (defn movement-input [i n]
   [:div.pure-g {:style {:margin-top 10}}
@@ -316,7 +301,9 @@
                  s (get-in @template-state [:parts i :set])
                  di (get-in @template-state [:parts i :distance])
                  du (get-in @template-state [:parts i :duration])
-                 data {:rep r :set s :distance di :duration du :i i}
+                 we (get-in @template-state [:parts i :weight])
+                 re (get-in @template-state [:parts i :rest])
+                 data {:rep r :set s :distance di :duration du :weight we :rest re :i i}
                  specific-movements (get-in @template-state [:parts i :specific-movements])
                  n (get-in @template-state [:parts i :n])]
              [part-creator-component (get parts i) i data specific-movements n])))
