@@ -6,7 +6,7 @@
 
 body {
     background-color: #fffff8;
-    color: #111111;
+    color: #111;
 }
 
 
@@ -52,36 +52,35 @@ body {
     text-align: center;
     box-shadow: 0 1px 1px rgba(0,0,0, 0.2);
     background: #4a5976;
+    background: #6b7da2;
+    background: #2C3546;
 }
 
-.home-menu .pure-menu-heading {
-    color: #111;
+.pure-menu-heading {
     color: #fffff8;
     font-weight: 400;
     font-size: 140%;
 }
 
-.home-menu .pure-menu-selected a {
-    color: #111;
+.pure-menu-item a {
     color: #fffff8;
 }
 
-.home-menu a {
-    color: #111;
-    color: #fffff8;
+.pure-menu-item a:hover {
+    background: #2C3546;
+
 }
 
-.home-menu li a:hover,
-.home-menu li a:focus {
-    background: #4a5976;
-    border: none;
-    color: #555;
-}
 
 .splash-container {
     background: #4a5976;
+    background: #f2d79a;
+    background: #6b7da2;
+    background: #2C3546;
+    /*
     border-top: 1px solid #3D4657;
-    height:400px;
+    */
+    height:600px;
 }
 
 .splash {

@@ -14,6 +14,10 @@
 
  {:db/id                #db/id[:db.part/user -400]
   :movement/unique-name "Hanging Pull"}
+ {:db/id                #db/id[:db.part/user -401]
+  :movement/unique-name "Ring Dip"}
+ {:db/id                #db/id[:db.part/user -402]
+  :movement/unique-name "Hanging Pull"}
 
  ; negative dip
 
@@ -50,7 +54,8 @@
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -99]
                          #db/id[:db.part/user -100]]
-  :movement/harder      [#db/id[:db.part/user -102]]}
+  :movement/harder      [#db/id[:db.part/user -102]
+                         #db/id[:db.part/user -401]]}
 
  {:db/id                #db/id[:db.part/user -102]
   :movement/unique-name "Russian Dip"
@@ -96,7 +101,7 @@
                          #db/id[:db.part/user -7]
                          #db/id[:db.part/user -8]
                          #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
+  :movement/measurement :measurement/repetitions
   :movement/harder      [#db/id[:db.part/user -106]]}
 
  {:db/id                #db/id[:db.part/user -106]
@@ -203,7 +208,8 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -33]]
-  :movement/easier      [#db/id[:db.part/user -400]]
+  :movement/easier      [#db/id[:db.part/user -400]
+                         #db/id[:db.part/user -402]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -117]

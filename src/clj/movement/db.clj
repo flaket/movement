@@ -8,7 +8,7 @@
             [movement.activation :refer [generate-activation-id send-activation-email]]
             [clojure.set :as set]))
 
-(def uri "datomic:dev://localhost:4334/testing18")
+(def uri "datomic:dev://localhost:4334/test-db")
 #_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
@@ -718,6 +718,7 @@
                                     :categories         :part/category
                                     :specific-movements :part/specific-movement
                                     :title              :part/title
+                                    :practical          :part/practical
                                     :rep                :part/rep
                                     :set                :part/set
                                     :distance           :part/distance
@@ -860,6 +861,7 @@
                                             :duration :movement/duration
                                             :weight   :movement/weight
                                             :rest     :movement/rest}) movement-data)]
+    (.println System/out (vec (concat user-session-data part-data movement-data)))
     ; transact all datoms
     (d/transact (:conn @tx) (concat user-session-data part-data movement-data))))
 

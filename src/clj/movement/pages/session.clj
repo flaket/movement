@@ -36,47 +36,24 @@
         rest (:movement/rest m)]
     [:div.pure-u.movement.is-center {:id (str "m-" id)}
      [:h3.pure-g
-      [:div.pure-u-1-12]
-      [:div.pure-u.title name]]
+      [:div.pure-u-1.center name]]
      [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]
-     [:div
-      [:div.pure-g
-       [:div.pure-u-1-12]
-       (if (and rep (< 0 rep))
-         [:div.pure-u-5-12 "Reps"]
-         [:div.pure-u-5-12.no-data "Reps"])
-       (if (and set (< 0 set))
-         [:div.pure-u-5-12 "Set"]
-         [:div.pure-u-5-12.no-data "Set"])
-       [:div.pure-u-1-12]]
-      [:div.pure-g
-       [:div.pure-u-1-12]
-       [:div.pure-u-5-12
-        (when (and rep (< 0 rep))
-          [:div.rep-set rep])]
-       [:div.pure-u-5-12
-        (when (and set (< 0 set))
-          [:div.rep-set set])]
-       [:div.pure-u-1-12]]]
-     [:div
-      [:div.pure-g
-       [:div.pure-u-1-12]
-       (if (and distance (< 0 distance))
-         [:div.pure-u-5-12 "Meters"]
-         [:div.pure-u-5-12.no-data "Meters"])
-       (if (and duration (< 0 duration))
-         [:div.pure-u-5-12 "Seconds"]
-         [:div.pure-u-5-12.no-data "Seconds"])
-       [:div.pure-u-1-12]]
-      [:div.pure-g
-       [:div.pure-u-1-12]
-       [:div.pure-u-5-12
-        (when (and distance (< 0 distance))
-          [:div.rep-set distance])]
-       [:div.pure-u-5-12
-        (when (and duration (< 0 duration))
-          [:div.rep-set duration])]
-       [:div.pure-u-1-12]]]]))
+     [:div.pure-g
+      (if (and rep (< 0 rep)) [:div.pure-u-1-3.center "Reps"] [:div.pure-u-1-3.no-data.center "Reps"])
+      (if (and set (< 0 set)) [:div.pure-u-1-3.center "Set"] [:div.pure-u-1-3.no-data.center "Set"])
+      (if (and rest (< 0 rest)) [:div.pure-u-1-3.center "Rest"] [:div.pure-u-1-3.no-data.center "Rest"])]
+     [:div.pure-g
+      [:div.pure-u-1-3.rep-set.center (when (and rep (< 0 rep)) rep)]
+      [:div.pure-u-1-3.rep-set.center (when (and set (< 0 set)) set)]
+      [:div.pure-u-1-3.rep-set.center (when (and rest (< 0 rest)) rest)]]
+     [:div.pure-g
+      (if (and distance (< 0 distance)) [:div.pure-u-1-3.center "Meters"] [:div.pure-u-1-3.no-data.center "Meters"])
+      (if (and duration (< 0 duration)) [:div.pure-u-1-3.center "Seconds"] [:div.pure-u-1-3.no-data.center "Seconds"])
+      (if (and weight (< 0 weight)) [:div.pure-u-1-3.center "Weight"] [:div.pure-u-1-3.no-data.center "Weight"])]
+     [:div.pure-g
+      [:div.pure-u-1-3.rep-set.center (when (and distance (< 0 distance)) distance)]
+      [:div.pure-u-1-3.rep-set.center (when (and duration (< 0 duration)) duration)]
+      [:div.pure-u-1-3.rep-set.center (when (and weight (< 0 weight)) weight)]]]))
 
 (defn part-component [{:keys [title movements]}]
   [:div

@@ -45,6 +45,7 @@
   :movement/unique-name "Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -11]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
@@ -53,6 +54,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -5]
+                         #db/id[:db.part/user -11]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/duration}
 
@@ -60,6 +62,7 @@
   :movement/unique-name "Split Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -11]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
@@ -108,6 +111,7 @@
   :movement/unique-name "Deep Knee Bend"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
+                         #db/id[:db.part/user -11]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/duration}
 
@@ -223,27 +227,6 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Stepping Over"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Stepping Under"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Extended Stepping Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 

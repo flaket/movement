@@ -143,7 +143,7 @@
         {:type        "range" :value @data :min min :max max :step step
          :style       {:width "100%"}
          :on-mouse-up #(session/assoc-in!
-                        [:movement-session :parts position-in-parts :movements id r] @data)
+                        [:movement-session :parts position-in-parts :movements id r] (int @data))
          :on-change   #(reset! data (-> % .-target .-value))}]])))
 
 (defn movement-component
@@ -250,7 +250,7 @@
 (defn add-movement-component []
   (let [show-search-input? (atom false)]
     (fn [title i]
-      [:div.pure-u.movement
+      [:div.pure-u.movement.search
        [:div.pure-g.add-movement
         [:div.pure-u-2-5]
         [:div.pure-u-1-5
@@ -268,7 +268,7 @@
              [movements-ac-comp {:id          id
                                  :class       "edit"
                                  :placeholder "type to find and add movement.."
-                                 :size        32
+                                 :size        28
                                  :auto-focus  true
                                  :on-save     #(when (some #{%} (session/get :all-movements))
                                                 (do
@@ -308,10 +308,11 @@
         [:div.pure-u.pure-u-md-1-5]
         [:h1.pure-u-1.pure-u-md-3-5 title]
         [:p.pure-u.pure-u-md-1-5]]
-       [:div.pure-g
-        [:div.pure-u.pure-u-md-1-9]
-        [:p.pure-u-1.pure-u-md-7-9.subtitle description]
-        [:div.pure-u.pure-u-md-1-9]]])))
+       (when-not (nil? description)
+         [:div.pure-g
+          [:div.pure-u.pure-u-md-1-9]
+          [:p.pure-u-1.pure-u-md-7-9.subtitle description]
+          [:div.pure-u.pure-u-md-1-9]])])))
 
 (defn template-component [t]
   [:div.pure-u.button.button-primary {:on-click #(create-session-from-template (:db/id t))
@@ -341,12 +342,11 @@
         plans-showing? (atom false)]
     (fn []
       [:div.blank-state
-       [:div.pure-g {:style {:margin-bottom 50}}
-        [:div.pure-u.pure-u-md-1-8]
-        [:h1.pure-u.pure-u-md-3-4 "Create your next Movement Session"]]
+       [:div.pure-g.center {:style {:margin-bottom 50}}
+        [:h1.pure-u-1 "Create your next Movement Session"]]
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-8]
-        [:div.pure-u.pure-u-md-3-4
+        [:div.pure-u-1.pure-u-md-3-4
          (when-let [plan (session/get :ongoing-plan)]
            [:div.pure-g
             [:div.pure-u-1.button

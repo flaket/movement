@@ -22,7 +22,8 @@
   :movement/unique-name "Ring Support Hold"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -10]]
-  :movement/measurement :measurement/duration}
+  :movement/measurement :measurement/duration
+  :movement/harder      [#db/id[:db.part/user -102]]}
 
  ; row
  {:db/id                #db/id[:db.part/user -100]

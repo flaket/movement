@@ -9,9 +9,12 @@
  {:db/id #db/id[:db.part/user -4] :category/name "Straight Arm Strength"}
  {:db/id #db/id[:db.part/user -5] :category/name "Bent Arm Strength"}
 
- ;; hanging
  {:db/id                #db/id[:db.part/user -100]
-  :movement/unique-name "Pull Up Hold"}
+  :movement/unique-name "Pull Up"}
+ {:db/id                #db/id[:db.part/user -101]
+  :movement/unique-name "Elbow Pull Up"}
+
+ ;; hanging
 
  {:db/id                #db/id[:db.part/user -200]
   :movement/unique-name "Passive Hang"
@@ -39,7 +42,8 @@
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -201]]
-  :movement/harder      [#db/id[:db.part/user -203]]}
+  :movement/harder      [#db/id[:db.part/user -203]
+                         #db/id[:db.part/user -101]]}
 
  {:db/id                #db/id[:db.part/user -203]
   :movement/unique-name "Arching Hang"
@@ -95,7 +99,6 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -200]]
   :movement/harder      [#db/id[:db.part/user -209]]}
 
  {:db/id                #db/id[:db.part/user -209]
@@ -125,8 +128,7 @@
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -200]]}
+  :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -300]
   :movement/unique-name "Figure 8 Swing"
@@ -147,7 +149,6 @@
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -100]
-                         #db/id[:db.part/user -201]
                          #db/id[:db.part/user -209]]}
 
  {:db/id                #db/id[:db.part/user -213]
@@ -158,8 +159,7 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -201]
-                         #db/id[:db.part/user -209]]}
+  :movement/easier      [#db/id[:db.part/user -209]]}
 
  {:db/id                #db/id[:db.part/user -214]
   :movement/unique-name "Bent Arm Linear Traverse"
@@ -169,7 +169,6 @@
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -100]
-                         #db/id[:db.part/user -201]
                          #db/id[:db.part/user -209]]}
 
  {:db/id                #db/id[:db.part/user -215]
@@ -180,8 +179,7 @@
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -201]
-                         #db/id[:db.part/user -209]
+  :movement/easier      [#db/id[:db.part/user -209]
                          #db/id[:db.part/user -211]]}
 
  ;; suspension traverse - swinging: rings far apart

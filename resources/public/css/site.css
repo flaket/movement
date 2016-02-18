@@ -141,7 +141,16 @@ a:hover {
   background-color: rgba(220,220,220,0.4);
   background-color: #f6f5ee;
   border-radius: 15px;
+
+  box-shadow: 0px 0px 10px rgba(150,150,150,0.6);
 }
+
+.search { box-shadow: 0px 0px 3px rgba(150,150,150,0.4);
+          opacity: 0.4;
+          border-style: dashed;
+          border-color: #aaa;
+          border-width: 3px;
+          }
 
 .small {
   width: 200px;
@@ -161,7 +170,7 @@ a:hover {
 }
 
 .add-movement {
-    opacity: 0.2;
+    opacity: 0.6;
     margin: 30px 0 30px 5px;
 }
 
@@ -208,6 +217,16 @@ a:hover {
 	-webkit-transition: all 0.2s;
 	transition: all 0.2s;
 }
+
+.practical {  }
+
+.practical:hover { text-decoration: line-through;
+                   opacity: 0.35; }
+
+.not-practical { text-decoration: line-through;
+             opacity: 0.35; }
+
+.not-practical:hover { opacity: 0.75; }
 
 .description {
   position: relative;

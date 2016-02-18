@@ -9,7 +9,7 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/testing18")
+#_(def uri "datomic:dev://localhost:4334/test-db")
 
 #_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
@@ -93,15 +93,7 @@
       first
       :user/movements)
 
-(d/q '[:find ?m .
-       :in $ ?email ?name
-       :where
-       [?e :user/email ?email]
-       [?e :user/movements ?m]
-       [?m :movement/name ?name]]
-     db "a" "Squat")
-
-#_(d/pull db '[*] 17592186045521)
+#_(d/pull db '[*] 17592186045793)
 
 #_(defn image-url [name]
     (str "public/images/movements/" (str/replace (str/lower-case name) " " "-") ".png"))

@@ -1,30 +1,5 @@
 [
 
- {:db/id               #db/id[:db.part/user -101]
-  :template/title      "Locomotion"
-  :template/public?    true
-  :template/created-by #db/id[:db.part/user -998]
-  :template/description
-                       "Practice different crawls, walks and rolls as ways of moving across the floor. Go through the locomotion movements for between 4 and 6 rounds, keeping a controlled, even tempo and using minimal rest between each movement."
-  :template/part       [#db/id[:db.part/user -1011]
-                        #db/id[:db.part/user -1012]]}
- {:db/id                    #db/id[:db.part/user -1011]
-  :part/title               "Mobility"
-  :part/category            [#db/id[:db.part/user -2]]
-  :part/specific-movement   [#db/id[:db.part/user -5002]
-                             #db/id[:db.part/user -5003]]
-  :part/number-of-movements 4
-  :part/rep                 10
-  :part/set                 1}
- {:db/id                    #db/id[:db.part/user -1012]
-  :part/title               "Locomotion"
-  :part/category            [#db/id[:db.part/user -13]
-                             #db/id[:db.part/user -15]
-                             #db/id[:db.part/user -16]]
-  :part/number-of-movements 6
-  :part/distance            15
-  :part/set                 4}
-
  #_{:db/id               #db/id[:db.part/user -102]
     :template/title      "Gymnastic Strength"
     :template/public?    true

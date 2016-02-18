@@ -29,24 +29,24 @@
   [:div.home-menu.pure-menu-horizontal
    [:a.pure-menu-heading.pure-u {:title  "Home"
                                  :href   "/"
-                                 :target "_top"} "Movement Session"]
+                                 :target "_self"} "Movement Session"]
    [:ul.pure-menu-list
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Home"
                          :href   "/"
-                         :target "_top"} "Home"]]
+                         :target "_self"} "Home"]]
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Tour"
                          :href   "/tour"
-                         :target "_top"} "Tour"]]
+                         :target "_self"} "Tour"]]
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Pricing"
                          :href   "/pricing"
-                         :target "_top"} "Pricing"]]
+                         :target "_self"} "Pricing"]]
     [:li.pure-menu-item
-     [:a.pure-menu-link {:title  "Log in"
+     [:a.pure-menu-link {:title  "Sign in"
                          :href   "/app"
-                         :target "_blank"} "Log in"]]]])
+                         :target "_blank"} "Sign In"]]]])
 
 (defn footer-after-content []
   [:div.footer.l-box.center

@@ -6,6 +6,7 @@
  {:db/id #db/id[:db.part/user -2] :category/name "Walk"}
  {:db/id #db/id[:db.part/user -3] :category/name "Crawl"}
  {:db/id #db/id[:db.part/user -4] :category/name "Beam"}
+ {:db/id #db/id[:db.part/user -5] :category/name "Balancing Locomotion"}
 
  {:db/id #db/id[:db.part/user -108] :movement/unique-name "Tripod Transition"}
 
@@ -14,6 +15,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/harder      [#db/id[:db.part/user -101]
@@ -26,6 +28,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -100]]
@@ -36,6 +39,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -101]]}
@@ -45,6 +49,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -100]]
@@ -55,6 +60,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -101]
@@ -66,6 +72,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -102]
@@ -76,6 +83,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -103]]
@@ -86,6 +94,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -104]
@@ -104,6 +113,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -100]]}
@@ -113,6 +123,7 @@
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
+                         #db/id[:db.part/user -5]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -100]]}

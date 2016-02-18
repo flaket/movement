@@ -50,24 +50,22 @@
        (for [c categories]
          [:div.pure-u-1.center {:style {:margin-right 5}} c])
        [:img.graphic.pure-img-responsive {:src image}]])
-    [:div
-     [:div.pure-g
-      [:div.pure-u-1-3.center {:className (str (when-not (and rep (< 0 rep)) " no-data"))} "Reps"]
-      [:div.pure-u-1-3.center {:className (str (when-not (and set (< 0 set)) " no-data"))} "Set"]
-      [:div.pure-u-1-3.center {:className (str (when-not (and rest (< 0 rest)) " no-data"))} "Rest"]]
-     [:div.pure-g
-      [:div.pure-u-1-3.rep-set.center (when (and rep (< 0 rep)) rep)]
-      [:div.pure-u-1-3.rep-set.center (when (and set (< 0 set)) set)]
-      [:div.pure-u-1-3.rep-set.center (when (and rest (< 0 rest)) rest)]]]
-    [:div
-     [:div.pure-g
-      [:div.pure-u-1-3.center {:className (str (when-not (and distance (< 0 distance)) " no-data"))} "Meters"]
-      [:div.pure-u-1-3.center {:className (str (when-not (and duration (< 0 duration)) " no-data"))} "Seconds"]
-      [:div.pure-u-1-3.center {:className (str (when-not (and weight (< 0 weight)) " no-data"))} "Weight"]]
-     [:div.pure-g
-      [:div.pure-u-1-3.rep-set.center (when (and distance (< 0 distance)) distance)]
-      [:div.pure-u-1-3.rep-set.center (when (and duration (< 0 duration)) duration)]
-      [:div.pure-u-1-3.rep-set.center (when (and set (< 0 weight)) weight)]]]]))
+    [:div.pure-g
+     [:div.pure-u-1-3.center {:className (str (when-not (and rep (< 0 rep)) " no-data"))} "Reps"]
+     [:div.pure-u-1-3.center {:className (str (when-not (and set (< 0 set)) " no-data"))} "Set"]
+     [:div.pure-u-1-3.center {:className (str (when-not (and rest (< 0 rest)) " no-data"))} "Rest"]]
+    [:div.pure-g
+     [:div.pure-u-1-3.rep-set.center (when (and rep (< 0 rep)) rep)]
+     [:div.pure-u-1-3.rep-set.center (when (and set (< 0 set)) set)]
+     [:div.pure-u-1-3.rep-set.center (when (and rest (< 0 rest)) rest)]]
+    [:div.pure-g
+     [:div.pure-u-1-3.center {:className (str (when-not (and distance (< 0 distance)) " no-data"))} "Meters"]
+     [:div.pure-u-1-3.center {:className (str (when-not (and duration (< 0 duration)) " no-data"))} "Seconds"]
+     [:div.pure-u-1-3.center {:className (str (when-not (and weight (< 0 weight)) " no-data"))} "Weight"]]
+    [:div.pure-g
+     [:div.pure-u-1-3.rep-set.center (when (and distance (< 0 distance)) distance)]
+     [:div.pure-u-1-3.rep-set.center (when (and duration (< 0 duration)) duration)]
+     [:div.pure-u-1-3.rep-set.center (when (and weight (< 0 weight)) weight)]]]))
 
 (defn rep-set-distance-duration-component [i]
   [:div.pure-g
@@ -210,7 +208,7 @@
 
 (defn part-creator-component []
   (let [showing-categories-list (atom false)]
-    (fn [{:keys [title n categories]} i data specific-movements n]
+    (fn [{:keys [title n categories practical]} i data specific-movements n]
       [:div {:style {:margin-top "40px"
                      :border-top "dotted 1px"}}
        [:h2 [:input {:type        "text"
@@ -219,6 +217,10 @@
                      :value       (get-in @template-state [:parts i :title])}]]
        (category-input categories i showing-categories-list)
        (movement-input i n)
+       [:div.pure-g {:style {:margin-top 10 :cursor 'pointer}}
+        [:div.pure-u-1 {:on-click #(swap! template-state assoc-in [:parts i :practical]
+                                          (not practical))}
+         [:span {:className (if practical "practical" "not-practical")} "Only generate movements that also have the category Practical Movements"]]]
        [:div.pure-g.movements
         (for [m specific-movements]
           ^{:key (rand-int 10000)} (movement-component categories data (str m) (str "images/movements/" (str/replace (str/lower-case m) " " "-") ".png") m))
@@ -240,6 +242,7 @@
       :on-click #(swap! template-state update-in [:parts]
                         conj {:title              ""
                               :categories         []
+                              :practical          false
                               :n                  0
                               :specific-movements []})} [:i.fa.fa-plus]]]])
 
