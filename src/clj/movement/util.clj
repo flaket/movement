@@ -11,7 +11,7 @@
 
 #_(def uri "datomic:dev://localhost:4334/test-db")
 
-#_(def uri "datomic:ddb://us-east-1/movementsession/real-production?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+#_(def uri "datomic:ddb://us-east-1/movementsession/db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 #_(d/delete-database uri)
 
@@ -66,16 +66,23 @@
     (d/transact conn footwork-tx)
     )
 
-;; Update "movementsession" templates
+;; Update "movementsession" templates. CAREFUL! adds more templates, does not overwrite.
 #_(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
     (d/transact conn templates-tx))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "a"
-                       :user/password            (hashers/encrypt "pw")
+                       :user/email               "admin@movementsession.com"
+                       :user/password            (hashers/encrypt "movementM9n8b7v6")
                        :user/name                "movementsession"
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
+
+#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
+                     :user/email               "andflak@gmail.com"
+                     :user/password            (hashers/encrypt "movementM9n8b7v6")
+                     :user/name                "flakstad"
+                     :user/valid-subscription? true}]]
+  (d/transact conn tx-user-data))
 
 ;; Get the database value.
 #_(def db (d/db conn))

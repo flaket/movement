@@ -118,6 +118,23 @@
       {:title "Sign Up" :href "/pricing" :target ""} "Try Movement Session"]
      [:a.l-m {:title "Learn more" :href "/tour" :target ""} "Or learn more"]]]])
 
+(defn email-list []
+  [:div.pure-g
+   [:div.pure-u.pure-u-lg-1-5]
+   [:div.pure-u-1.pure-u-lg-4-5
+    [:link {:href "//cdn-images.mailchimp.com/embedcode/slim-10_7.css" :rel "stylesheet" :type "text/css"}]
+    [:style {:type "text/css"} "#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }"]
+    [:div#mc_embed_signup
+     [:form {:action "//movementsession.us12.list-manage.com/subscribe/post?u=82d2cd810b5590723731dc9a0&amp;id=e4ecd35054"
+             :method "post" :id "mc-embedded-subscribe-form" :name "mc-embedded-subscribe-form" :class "validate"
+             :target "_blank" :novalidate true}
+      [:div#mc_embed_signup_scroll
+       [:p {:for "mce-EMAIL"} "Subscribe to our mailing list to learn more, receive updates and future discounts"]
+       [:input {:type "email" :value "" :name "EMAIL" :class "email" :id "mce-EMAIL" :placeholder "email address" :required true}]
+       [:div {:style "position: absolute; left: -5000px;" :aria-hidden true}
+        [:input {:type "text" :name "b_82d2cd810b5590723731dc9a0_e4ecd35054" :tab-index "-1" :value ""}]]
+       [:div.clear [:input {:type "submit" :value "Subscribe" :name "subscribe" :id "mc-embedded-subscribe" :class "button"}]]]]]]])
+
 (defn landing-page []
   (html5
     (html-head "Movement Session :: Log and generate workouts for your functional, natural and practical movement training")
@@ -126,7 +143,8 @@
      (splash)
      [:div.content
       (sell)
-      (epilog)]
+      (epilog)
+      (email-list)]
      (footer-after-content)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
