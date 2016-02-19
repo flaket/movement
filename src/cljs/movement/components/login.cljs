@@ -13,7 +13,7 @@
    [:a.pure-menu-heading {:title  "Home"
                           :href   "/"
                           :target ""} "Movement Session"]
-   [:ul.pure-menu-list
+   #_[:ul.pure-menu-list
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Home"
                          :href   "/"

@@ -22,7 +22,7 @@
       :required    "required"}]
     [:input.button.pure-input-1
      {:type  "submit"
-      :value "Sign Up"}]
+      :value "Try 30 days for free"}]
     (anti-forgery-field)]])
 
 (defn fast-spring-store [ref]

@@ -23,7 +23,7 @@
        [:div.pure-u.pure-u-md-1-3
         [:div.l-box
          [:h3.information-head "Customer support"]
-         [:p "We will always get back to you within 24 hours."]]]]
+         [:p "I will always get back to you within 24 hours."]]]]
       [:div.pure-g
        [:div.pure-u-1
         [:div.pure-g

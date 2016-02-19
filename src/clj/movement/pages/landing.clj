@@ -35,76 +35,77 @@
    [:div.pure-u-1
     [:div.pure-g.splash-head
      [:h1.pure-u-1.center
-      "Workouts for functional and practical movement training"
-      #_"Plan less, move more"]]
+      "Workouts for functional and practical movement training"]]
     [:div.pure-g.splash
      [:p.pure-u-1.splash-subhead
-      "Movement Session was created so that you can spend less time searching for training programs and more time creating a strong and healthy body that is capable of performing practical movements when you need it to."]]]])
+      "Spend less time searching for training programs and more time creating a strong and healthy body that is capable of performing when you need it to."]]]])
 
 (defn sell []
   [:div#sell
+   [:h2.content-head.center "Interactive workouts"]
    [:div.pure-g
     [:div.pure-u-1.pure-u-lg-1-2
      [:img {:src "images/marketing/session-circuit.png" :height "475" :width "500"}]]
     [:div.pure-u-1.pure-u-md-1-2
      [:div.pure-g
       [:p.pure-u-1 "
-   Movement Session is a tool for creating workouts and for logging them. You can use it to create your workouts be inspired to move your body in new ways
-   and to log your efforts and review your progress towards your goals.
+   Movement Session is a movement training app for creating interactive workouts and for logging them.
+   It is a tool in your movement practice to create your workouts, be inspired by discovering new movement patterns
+   and to log your efforts and track your progress towards your goals.
    "]]
      [:div.pure-g
       [:p.pure-u-1 "
-   Every workout is interactive. That means that you can easily add and remove exercises. Exercises that are part of progressions can also be replaced by easier or harder variations.
+   Every workout that you create is interactive. This means that you can easily add and remove exercises, even to workouts that others have designed. Exercises that are part of progressions can be replaced by easier or harder variations.
    "]]]]
+   [:h2.content-head.center "A new way to create workouts"]
    [:div.pure-g [:p.pure-u-1 "
    A problem I have had with training is ending up doing the same things over and over.
    I want variation in my training. Moving should be a playful and fun experience. Searching for training programs is not fun.
-   Going to the gym and doing fitness is not fun. Playing and learning new skills is fun!
+   Going to the gym and doing fitness is not fun. Playing around and learning new skills is fun!
    So after spending some time researching I know a lot of movements, but when it comes time to move I have trouble recalling them all and often end up doing the same things as yesterday.
    "]]
    [:div.pure-g [:p.pure-u-1 "
-   So I created a different way to write down workouts. With Movement Session you can create fully planned workout sessions and specify every exercise, every rep and every set.
-   Or you can say what kind of exercise should appear and let the tool create the workout for you.
+   If you have had similar concerns you're going to love Movement Session.
    "]]
+   [:div.pure-g [:p.pure-u-1 "
+   Movement Session offers a different way to write down workouts. You may still write down fully planned workout sessions and specify every exercise, every rep and every set.
+   Or you can simply say what " [:b "kind"] " of exercise should appear and let the tool create the workout for you.
+   This powerful feature allows you to stop roaming the internet, searching for workout plans, and instead generate thousands of unique, interactive and beautifully presented workouts."]]
    [:div.pure-g
     [:div.pure-u-1.center
      [:img {:src "images/marketing/create-template.png" :height "700" :width "700"}]]]
+   [:div.pure-g [:p.pure-u-1 "
+   In the above example I create a workout template. This template will define what a workout will look like. It starts off with some handstand training. I specify that it will always start with wrist stretches.
+   Then Movement Session should pick three movements for me from the category \"handstand\". This technique allows me to either fully or partially have the tool create the variation that I seek in my training.
+   "]]
+   [:div.pure-g [:p.pure-u-1 "
+   Practical, natural or primal movement patterns such as crawling, lifting, running, climbing and so on, have a higher priority within Movement Session.
+   You can specify that select workouts will only use these patterns. Besides the practical movement patterns we also value functional movement and mobility training.
+   Finally, you can of course create workouts such as Crossfit AMRAP's or calisthenic push up challenges if you so please.
+   The database is filled with movement patterns from several disciplines, but has a focus on movements that doesn't utilize equipment.
+   "]]
+   [:div.pure-g
+    [:div.pure-u-1.pure-u-lg-1-2
+     [:img {:src "images/marketing/stars.png" :height "500" :width "500"}]]
+    [:div.pure-u-1.pure-u-md-1-2
+     [:div.pure-g
+      [:p.pure-u-1 "
+   To adapt to your skill level and to help you progress Movement Session uses self reporting to fine-tune how workouts are created.
+   After you have completed a workout and saved it, all the movements you did will be marked with one star, indicating that you are learning this movement pattern.
+   "]]
+     [:div.pure-g
+      [:p.pure-u-1 "
+   When you have learned a movement and can do it effectively you should mark it with two stars. Movement Session will now create workouts
+   with more advanced movement patterns. When you have mastered a movement and can do it both effectively and efficiently you should mark it with three stars.
+   "]]]]
 
-   [:div.pure-g [:p.pure-u-1 "
-    movement training\nfunctional movement\nnatural movement\nprimal movement\nprimal training\nmovement practice\nmovement training app\ntraining plan\nworkout plan\ngenerate\nlog\ninteractive workouts\n
-   "]]
-   [:div.pure-g [:p.pure-u-1 "
-   Have you ever spent
-   "]]
-
-   [:div.pure-g [:p.pure-u-1 [:b "
-   And even if you find something that looks good, you want a way to easily scale the workout.
-   There should be a way to find a replacement movement that is either easier or harder, without having a personal trainer to guide you.
-   "]]]
-   [:div.pure-g [:p.pure-u-1 "
-   Moving your body should be a playful and fun experience. Searching for training programs is not fun. Going to the gym and doing fitness is not fun.
-   Playing and learning new skills is fun!"]]
-   [:div.pure-g [:p.pure-u-1 "
-   If this sounds like a good idea, you're going to love Movement Session.
-   "]]
-   [:div.pure-g [:p.pure-u-1 "
-   With Movement Session you will create unique workouts, either fully planned or generated.
-   You can stop roaming the internet, searching for workout plans, and instead generate thousands of unique, interactive and beautifully presented sessions.
-   "]]
-   [:div.pure-g [:p.pure-u-1 "
-   Movement Session is about learning new skills and training hard and training with great variety. Why? Because it's more fun
-   and because we want to build strong, healthy bodies that can play hard, will not let us down if we need to perform
-    and that will last us a good, long life."]]
-
+   [:h2.content-head.center "Summary"]
    [:div.pure-g
     [:div.pure-u.pure-u-md-1-3
-     [:div.pure-g [:p.pure-u-1 [:b "Create workouts"]]]
      [:div.pure-g [:p.pure-u-1 "Reach your movement goals by creating unique sessions and workout plans or explore what others create."]]]
     [:div.pure-u.pure-u-md-1-3
-     [:div.pure-g.l-m [:p.pure-u-1 [:b "Log your progress"]]]
      [:div.pure-g.l-m [:p.pure-u-1 "Log your workouts with rich data, view past sessions and share sessions with your friends."]]]
     [:div.pure-u.pure-u-md-1-3
-     [:div.pure-g.l-m [:p.pure-u-1 [:b "Set your skill level"]]]
      [:div.pure-g.l-m [:p.pure-u-1 "Set your skill level for each movement. Movement Session will create workouts with more advanced
        movements as you log your progress. You can also adjust the difficulty of a workout by swapping movements with easier or harder variations."]]]]])
 

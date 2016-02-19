@@ -10,38 +10,45 @@
      (top-menu)
      [:div.content
       [:div.pure-g
-       [:h2.content-head.is-center.pure-u-1 "Generate sessions"]]
+       [:h2.content-head.center.pure-u-1 "Create workout sessions"]]
       [:div.pure-g
        [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
-         [:p.pure-u-1 "The next workout is a click of a button away. Continue a plan you're enrolled in or create a new inspiring session."]
-         [:p.pure-u-1 "You can get a session picked randomly, or you can select something you or others have created."]
-         [:p.pure-u-1 "If a generated session is not to your liking you can quickly replace it with another."]]]
+         [:p.pure-u-1 "
+         The next workout is a click of a button away. Continue a plan you're enrolled in or create a new inspiring session.
+         You can get a session picked randomly, or you can select something you or others have created.
+         If a generated session is not to your liking you can quickly replace it with another."]]]
        [:div.pure-u.pure-u-lg-1-2
-        [:p [:img {:src "tour-session.png" :height "806" :width "699"}]]]]
+        [:div.pure-g
+         [:p.pure-u-1.center [:img {:src "images/marketing/tour-session.png" :height "806" :width "699"}]]]]]
+
+      [:div.pure-g
+       [:div.pure-u-1
+        [:div.pure-g
+         [:h2.content-head.is-center.pure-u-1 "Go from static to dynamic workouts"]]
+        [:div.pure-g
+         [:p.pure-u-1 "Stop searching for static and fully planned workouts.
+         Use Movement Session to create beautifully presented, dynamic workouts and embrace variation, learning and new movement challenges."]]
+        [:div.pure-g
+         [:p.pure-u-1.center [:img {:src "images/marketing/old-style-to-new.png" :height "850" :width "575"}]]]]]
 
       [:div.pure-g
        [:h2.content-head.is-center.pure-u-1 "Interactivity"]]
       [:div.pure-g
        [:div.pure-u.pure-u-lg-1-2
-        [:p [:img {:src "add.png" :height "267" :width "535"}]]]
-       [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
-         [:p.pure-u-1 "You can always expand any part of a session by adding more movements of the same kind."]]
-        [:div.pure-g
-         [:p.pure-u-1 "You can also add any specific movement by searching for it."]]]]
-      [:div.pure-g
-       [:div.pure-u.pure-u-lg-1-2
+         [:p.pure-u-1 "You can always expand any part of a session by adding more movements of the same kind.
+         You can also add any specific movement by searching for it."]]
         [:div.pure-g
          [:p.pure-u-1 "Maybe you don't have access to some equipment a movement needs, like a bar or some weights.
          The green crossing arrows allows you to swap any movement with another one."]]
         [:div.pure-g
-         [:p.pure-u-1 "If a movement shows the + and - icons, it means that they have links to easier and/or harder movement variations.
-         Swapping the movement with a variation is a great way to adjust the difficulty of the session."]]
+         [:p.pure-u-1 "If a movement shows the arrow icons they can be replaced by easier and/or harder variations.
+         Swapping the movement with a variation is a great way to adjust the difficulty of the session or to learn a new movement."]]
         [:div.pure-g
-         [:p.pure-u-1 "Repetitions, sets, distance and duration can be set. This way you can log your efforts in detail."]]]
+         [:p.pure-u-1 "Repetitions, sets, rest period, distance, duration and weights can all be set. This way you can log your efforts in detail."]]]
        [:div.pure-u.pure-u-lg-1-2
-        [:p [:img {:src "movement.png" :height "385" :width "242"}]]]]
+        [:p.pure-u-1.center [:img {:src "images/marketing/session-circuit.png" :height "500" :width "560"}]]]]
 
       [:div.pure-g
        [:h2.content-head.is-center.pure-u-1 "Log & Share"]]
@@ -51,13 +58,13 @@
         Add how long your session lasted and write a comment. Your session will be stored with all the data you provide and
         the session can be reviewed at a later time. Each session gets a unique url address so you can share your workout with your friends.
         "]]
-       [:div.pure-u.pure-u-lg-1-2 [:img {:src "time-comment.png" :height "220" :width "544"}]]]
+       [:div.pure-u.pure-u-lg-1-2.center [:img {:src "images/marketing/time-comment.png" :height "220" :width "544"}]]]
 
       [:div.pure-g
        [:h2.content-head.is-center.pure-u-1 "Create your own workouts and plans"]]
       [:div.pure-g
        [:div.pure-u.pure-u-lg-1-2
-        [:p [:img {:src "create-plan.png" :height "436" :width "511"}]]]
+        [:p.center [:img {:src "images/marketing/create-plan.png" :height "436" :width "511"}]]]
        [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
          [:p.pure-u-1 "
@@ -79,15 +86,15 @@
          You can also search for and view a specific movement.
          "]]]
        [:div.pure-u.pure-u-lg-1-2
-        [:p [:img {:src "explore-movements.png" :height "522" :width "556"}]]]]
+        [:p.center [:img {:src "images/marketing/explore-movements-2.png" :height "522" :width "556"}]]]]
       [:div.pure-g
        [:div.pure-u.pure-u-lg-1-2
-        [:p [:img {:src "explore-templates.png" :height "462" :width "595"}]]]
+        [:p.center [:img {:src "images/marketing/explore-templates.png" :height "462" :width "595"}]]]
        [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
-         [:p.pure-u-1 "Templates, groups and plans can be found by searching for words or by categories used."]]
+         [:p.pure-u-1.l-m "Templates, groups and plans can be found by searching for words or by categories used."]]
         [:div.pure-g
-         [:p.pure-u-1 "You can always find content you have created, content movementsession has created and all the content
+         [:p.pure-u-1.l-m "You can always find content you have created, content movementsession has created and all the content
          that is currently linked to your account."]]]]
       [:div.pure-g
        [:p.pure-u-1.center
