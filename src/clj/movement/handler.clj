@@ -70,7 +70,7 @@
     (cond
       (nil? (:db/id user)) (response {:message "Unknown user"} 400)
       (false? (:user/activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
-      ;(false? (:user/valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
+      (false? (:user/valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
       (valid-user? user password) (let [claims {:user (keyword email)
                                                 :exp  (-> 3 hours from-now)}
                                         token (jws/sign claims secret {:alg :hs512})]

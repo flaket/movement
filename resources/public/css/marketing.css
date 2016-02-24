@@ -15,9 +15,9 @@ body {
     height: auto;
 }
 
-.beta { color: blue;
--webkit-transform: rotate(45deg);
- transform: rotate(45deg);}
+.beta { color: lightyellow;
+-webkit-transform: rotate(25deg);
+ transform: rotate(25deg);}
 
 .center { text-align: center; }
 

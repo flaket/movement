@@ -11,7 +11,7 @@
 
 #_(def uri "datomic:dev://localhost:4334/test-db")
 
-#_(def uri "datomic:ddb://eu-west-1/movementsession/db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+#_(def uri "datomic:ddb://eu-west-1/movementsession/prod-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 #_(d/delete-database uri)
 
@@ -66,13 +66,8 @@
     (d/transact conn footwork-tx)
     )
 
-;; Update "movementsession" templates. CAREFUL! adds more templates, does not overwrite.
-#_(let [templates-tx (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))]
-    (d/transact conn templates-tx))
-
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "admin@movementsession.com"
-                       :user/password            (hashers/encrypt "movementM9n8b7v6")
+                       :user/email               "andflak@gmail.com"
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
 
@@ -97,10 +92,15 @@
       first
       :user/movements)
 
-#_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045793]])
+#_(d/q '[:find [?u ...]
+       :where
+       [?u :session/url _]]
+     db)
 
-#_(d/pull db '[*] 17592186045793)
+#_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045892]])
+
+#_(d/pull db '[*] 17592186045892)
 
 #_(defn image-url [name]
     (str "public/images/movements/" (str/replace (str/lower-case name) " " "-") ".png"))

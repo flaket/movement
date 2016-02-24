@@ -29,7 +29,7 @@
   [:div.home-menu.pure-menu-horizontal
    [:a.pure-menu-heading.pure-u {:title  "Home"
                                  :href   "/"
-                                 :target "_self"} "Movement Session " [:span "BETA"] ""]
+                                 :target "_self"} "Movement Session " [:div.beta "BETA"] ""]
    [:ul.pure-menu-list
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Home"

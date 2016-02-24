@@ -12,7 +12,7 @@
   [:div.home-menu.pure-menu-horizontal
    [:a.pure-menu-heading {:title  "Home"
                           :href   "/"
-                          :target ""} "Movement Session" [:div.beta "BETA"]]
+                          :target ""} "Movement Session " [:div.beta "BETA"]]
    #_[:ul.pure-menu-list
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Home"
@@ -91,7 +91,8 @@
           :placeholder "password"}]
         [:div.pure-u.pure-u-md-1-5]]
        (when-let [e @error]
-         [:div.notice e])
+         [:div.pure-g
+          [:div.pure-u-1.notice.center e]])
        [:div.pure-g
         [:div.pure-u.pure-u-md-1-5]
         [:button.pure-u.pure-u-md-3-5.button.button-primary

@@ -9,7 +9,7 @@
             [clojure.set :as set]))
 
 #_(def uri "datomic:dev://localhost:4334/test-db")
-(def uri "datomic:ddb://eu-west-1/movementsession/db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+(def uri "datomic:ddb://eu-west-1/movementsession/prod-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
 
@@ -861,7 +861,6 @@
                                             :duration :movement/duration
                                             :weight   :movement/weight
                                             :rest     :movement/rest}) movement-data)]
-    (.println System/out (vec (concat user-session-data part-data movement-data)))
     ; transact all datoms
     (d/transact (:conn @tx) (concat user-session-data part-data movement-data))))
 
@@ -903,7 +902,7 @@
                        :user/activated?          true
                        :user/activation-id       (generate-activation-id)
                        :user/sign-up-timestamp   (Date.)
-                       :user/valid-subscription? false
+                       :user/valid-subscription? true
                        :user/setting             [#db/id[:db.part/user -100]]}
                       {:db/id                  #db/id[:db.part/user -100]
                        :setting/view           "Standard"
