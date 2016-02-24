@@ -12,7 +12,7 @@
   [:div.home-menu.pure-menu-horizontal
    [:a.pure-menu-heading {:title  "Home"
                           :href   "/"
-                          :target ""} "Movement Session"]
+                          :target ""} "Movement Session" [:div.beta "BETA"]]
    #_[:ul.pure-menu-list
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Home"

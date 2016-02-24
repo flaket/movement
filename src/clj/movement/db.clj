@@ -8,8 +8,8 @@
             [movement.activation :refer [generate-activation-id send-activation-email]]
             [clojure.set :as set]))
 
-#_(def uri "datomic:dev://localhost:4334/test-db")
-(def uri "datomic:ddb://eu-west-1/movementsession/db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+(def uri "datomic:dev://localhost:4334/test-db")
+#_(def uri "datomic:ddb://eu-west-1/movementsession/db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
 

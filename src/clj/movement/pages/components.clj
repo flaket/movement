@@ -29,7 +29,7 @@
   [:div.home-menu.pure-menu-horizontal
    [:a.pure-menu-heading.pure-u {:title  "Home"
                                  :href   "/"
-                                 :target "_self"} "Movement Session"]
+                                 :target "_self"} "Movement Session " [:span "BETA"] ""]
    [:ul.pure-menu-list
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Home"
@@ -40,13 +40,13 @@
                          :href   "/tour"
                          :target "_self"} "Tour"]]
     [:li.pure-menu-item
-     [:a.pure-menu-link {:title  "Pricing"
-                         :href   "/pricing"
-                         :target "_self"} "Pricing"]]
+     [:a.pure-menu-link {:title  "Sign up"
+                         :href   "/signup"
+                         :target "_self"} "Sign up"]]
     [:li.pure-menu-item
-     [:a.pure-menu-link {:title  "Sign in"
+     [:a.pure-menu-link {:title  "Log in"
                          :href   "/app"
-                         :target "_blank"} "Sign In"]]]])
+                         :target "_blank"} "Log In"]]]])
 
 (defn footer-after-content []
   [:div.footer.l-box.center

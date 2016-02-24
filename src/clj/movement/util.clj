@@ -71,9 +71,8 @@
     (d/transact conn templates-tx))
 
 #_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "andflak@gmail.com"
-                       :user/password            (hashers/encrypt pw"")
-                       :user/name                "flakstad"
+                       :user/email               "admin@movementsession.com"
+                       :user/password            (hashers/encrypt "movementM9n8b7v6")
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
 
@@ -86,12 +85,20 @@
                 [?u :user/email ?e]]
               db))
 
+#_(d/q '[:find [(pull ?u [*]) ...]
+       :where
+       [?u :user/email ?e]]
+     db)
+
 #_(-> (d/q '[:find [(pull ?u [:user/movements]) ...]
              :where
              [?u :user/email ?e]]
            db)
       first
       :user/movements)
+
+#_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
+#_(d/transact conn [[:db.fn/retractEntity 17592186045793]])
 
 #_(d/pull db '[*] 17592186045793)
 
@@ -252,8 +259,7 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                  [:db/retract user-id :user/ongoing-plan plan-id]]]
     (d/transact conn tx-data))
 
-#_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
-#_(d/transact conn [[:db.fn/retractEntity 17592186045973]])
+
 
 #_(empty? (d/q '[:find [?u ...]
                  :in $

@@ -98,7 +98,7 @@
          that is currently linked to your account."]]]]
       [:div.pure-g
        [:p.pure-u-1.center
-        [:a.m-button.orange.x-large.upper {:title  "See Pricing" :href   "/pricing" :target ""} "See Pricing"]]]]
+        [:a.m-button.orange.x-large.upper {:title  "Sign Up" :href   "/signup" :target ""} "Sign Up"]]]]
      (footer-after-content)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]

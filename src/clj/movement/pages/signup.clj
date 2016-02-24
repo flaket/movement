@@ -22,7 +22,7 @@
       :required    "required"}]
     [:input.button.pure-input-1
      {:type  "submit"
-      :value "Try 30 days for free"}]
+      :value "Sign up"}]
     (anti-forgery-field)]])
 
 (defn fast-spring-store [ref]
@@ -43,8 +43,17 @@
         [:div.l-box
          [:div.pure-g [:h3.pure-u-1.information-head message]]
          [:div.pure-g
+          [:p.pure-u-1 "Congratulations! You can now log in to the app and start creating workouts."]]
+         [:div.pure-g
+          [:div.pure-u.pure-u-md-2-5]
+          [:a.pure-u.pure-u-md-1-5.button.button-primary
+           {:title  "Launch app"
+            :href   "/app"
+            :target ""} "Launch app"]
+          [:div.pure-u.pure-u-md-2-5]]
+         #_[:div.pure-g
           [:p.pure-u-1 "Register a credit card with payment provider FastSpring to complete the sign up process."]]
-         [:div.pure-g (fast-spring-store ref)]]]
+         #_[:div.pure-g (fast-spring-store ref)]]]
        [:div.pure-u-1.pure-u-md-1-5]]
       [:div.information.pure-g
        [:div.pure-u-1.pure-u-md-1-3]
