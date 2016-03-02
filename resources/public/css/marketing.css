@@ -9,15 +9,10 @@ body {
     color: #111;
 }
 
-
 .pure-img-responsive {
     max-width: 100%;
     height: auto;
 }
-
-.beta { color: lightyellow;
--webkit-transform: rotate(25deg);
- transform: rotate(25deg);}
 
 .center { text-align: center; }
 
@@ -45,6 +40,17 @@ body {
           border: 1px solid #b56d02;
           color: #fffff2;}
 
+
+.orange:hover { background: yellow; }
+
+
+.gray { background: gray;
+        border: 1px solid #b56d02;
+        color: #111; }
+
+.gray:hover { background: lightgray; }
+
+
 .x-large {     padding: 20px 35px;
                font-size: 20px;
                font-weight: 700;}
@@ -54,60 +60,32 @@ body {
 .home-menu {
     padding: 1.4em;
     text-align: center;
+    /*
     box-shadow: 0 1px 1px rgba(0,0,0, 0.2);
-    background: #4a5976;
-    background: #6b7da2;
-    background: #2C3546;
+    */
+    background: #ffffff;
 }
 
 .pure-menu-heading {
-    color: #fffff8;
+    color: #111;
     font-weight: 400;
-    font-size: 140%;
+    font-size: 120%;
 }
 
 .pure-menu-item a {
-    color: #fffff8;
+    color: #111;
 }
 
 .pure-menu-item a:hover {
-    background: #2C3546;
+    background: #fffff8;
+    color: lightgray;
 
-}
-
-
-.splash-container {
-    background: #4a5976;
-    background: #f2d79a;
-    background: #6b7da2;
-    background: #2C3546;
-    /*
-    border-top: 1px solid #3D4657;
-    */
-    height:600px;
 }
 
 .splash {
-    width: 80%;
-    height: 50%;
-    margin: auto;
-    top: 0; left: 0; bottom: 0; right: 0;
-    text-align: center;
+    background: #fffff8;
 }
 
-.splash-head { font-size: 20px;
-               font-weight: bold;
-               color: #fffff8;
-               padding: 1em 1.6em;
-               font-weight: 100;
-               border-radius: 5px;
-               line-height: 1em; }
-
-.splash-subhead {
-    color: #fffff8;
-    letter-spacing: 0.06em;
-    opacity: 0.9;
-}
 
 .content-head {
     font-weight: 400;
@@ -166,7 +144,7 @@ body {
 
     /* We increase the body font size */
     body {
-        font-size: 16px;
+        font-size: 20px;
     }
     /* We want to give the content area some more padding */
     .content {

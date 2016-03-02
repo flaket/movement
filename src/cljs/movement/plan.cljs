@@ -52,9 +52,9 @@
       [:div.pure-u.movement.day {:on-click  #(swap! plan-state assoc :selected i)
                                  :style {:cursor 'pointer}
                                  :className (str "" (when (= i selected) " day-selected"))}
-       [:h3.pure-g
+       [:div.pure-g
         [:div.pure-u-1-12]
-        [:div.pure-u.title (str "Day " (inc i))]]
+        [:h3.pure-u.title (str "Day " (inc i))]]
        (for [t (range (count day))]
          ^{:key (rand-int 1000)}
          [:h4.pure-g [:span.pure-u-1

@@ -20,7 +20,8 @@
          If a generated session is not to your liking you can quickly replace it with another."]]]
        [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
-         [:p.pure-u-1.center [:img {:src "images/marketing/tour-session.png" :height "806" :width "699"}]]]]]
+         [:p.pure-u-1.center
+          [:img.pure-img-responsive {:src "images/marketing/tour-session.png"}]]]]]
 
       [:div.pure-g
        [:div.pure-u-1
@@ -30,7 +31,8 @@
          [:p.pure-u-1 "Stop searching for static and fully planned workouts.
          Use Movement Session to create beautifully presented, dynamic workouts and embrace variation, learning and new movement challenges."]]
         [:div.pure-g
-         [:p.pure-u-1.center [:img {:src "images/marketing/old-style-to-new.png" :height "850" :width "575"}]]]]]
+         [:p.pure-u-1.center
+          [:img.pure-img-responsive {:src "images/marketing/old-style-to-new.png"}]]]]]
 
       [:div.pure-g
        [:h2.content-head.is-center.pure-u-1 "Interactivity"]]
@@ -48,7 +50,8 @@
         [:div.pure-g
          [:p.pure-u-1 "Repetitions, sets, rest period, distance, duration and weights can all be set. This way you can log your efforts in detail."]]]
        [:div.pure-u.pure-u-lg-1-2
-        [:p.pure-u-1.center [:img {:src "images/marketing/session-circuit.png" :height "500" :width "560"}]]]]
+        [:p.pure-u-1.center
+         [:img.pure-img-responsive {:src "images/marketing/session-circuit.png"}]]]]
 
       [:div.pure-g
        [:h2.content-head.is-center.pure-u-1 "Log & Share"]]
@@ -58,13 +61,15 @@
         Add how long your session lasted and write a comment. Your session will be stored with all the data you provide and
         the session can be reviewed at a later time. Each session gets a unique url address so you can share your workout with your friends.
         "]]
-       [:div.pure-u.pure-u-lg-1-2.center [:img {:src "images/marketing/time-comment.png" :height "220" :width "544"}]]]
+       [:div.pure-u.pure-u-lg-1-2.center
+        [:img.pure-img-responsive {:src "images/marketing/time-comment.png"}]]]
 
       [:div.pure-g
        [:h2.content-head.is-center.pure-u-1 "Create your own workouts and plans"]]
       [:div.pure-g
        [:div.pure-u.pure-u-lg-1-2
-        [:p.center [:img {:src "images/marketing/create-plan.png" :height "436" :width "511"}]]]
+        [:p.center
+         [:img.pure-img-responsive {:src "images/marketing/create-plan.png"}]]]
        [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
          [:p.pure-u-1 "
@@ -86,10 +91,12 @@
          You can also search for and view a specific movement.
          "]]]
        [:div.pure-u.pure-u-lg-1-2
-        [:p.center [:img {:src "images/marketing/explore-movements-2.png" :height "522" :width "556"}]]]]
+        [:p.center
+         [:img.pure-img-responsive {:src "images/marketing/explore-movements-2.png"}]]]]
       [:div.pure-g
        [:div.pure-u.pure-u-lg-1-2
-        [:p.center [:img {:src "images/marketing/explore-templates.png" :height "462" :width "595"}]]]
+        [:p.center
+         [:img.pure-img-responsive {:src "images/marketing/explore-templates.png"}]]]
        [:div.pure-u.pure-u-lg-1-2
         [:div.pure-g
          [:p.pure-u-1.l-m "Templates, groups and plans can be found by searching for words or by categories used."]]
@@ -98,7 +105,7 @@
          that is currently linked to your account."]]]]
       [:div.pure-g
        [:p.pure-u-1.center
-        [:a.m-button.orange.x-large.upper {:title  "Sign Up" :href   "/signup" :target ""} "Sign Up"]]]]
+        [:a.m-button.orange.x-large.upper {:title  "Sign Up" :href   "/signup" :target ""} "Try Movement Session"]]]]
      (footer-after-content)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]

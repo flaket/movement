@@ -131,10 +131,10 @@
  ;; ---------------------------------------------------------------------------
 
  {:db/id               #db/id[:db.part/user -104]
-  :template/title      "Practical Movements 4"
+  :template/title      "Practical Movements 3"
   :template/public?    true
   :template/created-by #db/id[:db.part/user -998]
-  :template/description "Complete 3-5 rounds of the whole circuit without resting"
+  :template/description "Complete 4-5 rounds of the whole circuit without resting"
   :template/part       [#db/id[:db.part/user -1040]
                         #db/id[:db.part/user -1041]
                         #db/id[:db.part/user -1042]
@@ -172,10 +172,10 @@
  ;; ----------------------------------------------------------------------
 
  {:db/id               #db/id[:db.part/user -105]
-  :template/title      "Practical Movements 5"
+  :template/title      "Practical Movements 4"
   :template/public?    true
   :template/created-by #db/id[:db.part/user -998]
-  :template/description "Complete 3-5 rounds of the whole circuit without resting"
+  :template/description "Complete 4-5 rounds of the whole circuit without resting"
   :template/part       [#db/id[:db.part/user -1050]
                         #db/id[:db.part/user -1051]
                         #db/id[:db.part/user -1052]
@@ -216,15 +216,6 @@
   :part/number-of-movements 1
   :part/distance            20
   :part/set                 5}
-
- ;; --------------------------------------------------------------------------
- ; -106
- ;; todo: advanced (include lifting, throwing, running, rolling, more climbing)
-
- ;; --------------------------------------------------------------------------
- ; -107
- ;; todo: advanced (include lifting, throwing, running, rolling, more climbing)
-
 
  ;; --------------------------------------------------------------------------
  {:db/id               #db/id[:db.part/user -108]
@@ -286,9 +277,15 @@
 
  ;; --------------------------------------------------------------------------
  ; hip mobility fully spec (squat routine 1 & 2)
-
+ ;DONE
  ;; --------------------------------------------------------------------------
  ; shoulder/scap- & spine-mobility (ido shoulder/scap + (jefferson curl + bridge rotation))
+ ;DONE
+ ;; --------------------------------------------------------------------------
+ ; Handstand
+ ; DONE
+
+
 
  ;; --------------------------------------------------------------------------
  ; locomotion fully spec (ido)
@@ -298,9 +295,6 @@
 
  ;; --------------------------------------------------------------------------
  ; Lift heavy things (PB)
-
- ;; --------------------------------------------------------------------------
- ; Handstand
 
  ;; --------------------------------------------------------------------------
  ; Handstand 2
@@ -331,5 +325,12 @@
 
  ;; --------------------------------------------------------------------------
  ; Ring play
+
+ ;; --------------------------------------------------------------------------
+ ; advanced (include lifting, throwing, running, rolling, more climbing)
+
+ ;; --------------------------------------------------------------------------
+ ; advanced (include lifting, throwing, running, rolling, more climbing)
+
 
  ]

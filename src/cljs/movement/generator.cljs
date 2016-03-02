@@ -163,29 +163,20 @@
     (fn []
       [:div.pure-u.movement.center {:id (str "m-" id)}
        [:div.pure-g
-        [:div.pure-u-1-12]
-        [:div.pure-u-1-6.refresh
+        [:div.pure-u-1-5.refresh
          [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
-        [:div.pure-u-1-12]
-        (if easier
-          [:div.pure-u-1-6.refresh
-           [:i.fa.fa-arrow-down {:on-click #(refresh-movement m title :easier) :title "Swap with easier progression"}]]
-          [:div.pure-u-1-6])
-        [:div.pure-u-1-12]
-        (if harder
-          [:div.pure-u-1-6.refresh
-           [:i.fa.fa-arrow-up {:on-click #(refresh-movement m title :harder) :title "Swap with harder progression"}]]
-          [:div.pure-u-1-6])
-        [:div.pure-u-1-12]
-        [:div.pure-u-1-6.destroy
-         [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]
-        [:div.pure-u-1-12]]
-
-       [:div.pure-g.center {:style {:margin-top -12}}
-        [:div.pure-u-1-12]
-        [:h3.pure-u-5-6 name]
-        [:div.pure-u-1-12]]
-
+        [:div.pure-u-1-5.refresh
+         (when easier
+           [:i.fa.fa-arrow-down {:on-click #(refresh-movement m title :easier) :title "Swap with easier progression"}])]
+        [:div.pure-u-1-5.refresh
+         (when harder
+           [:i.fa.fa-arrow-up {:on-click #(refresh-movement m title :harder) :title "Swap with harder progression"}])]
+        [:div.pure-u-1-5]
+        [:div.pure-u-1-5.destroy
+         [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]]
+       [:div.pure-g
+        [:div.pure-u-1-5]
+        [:h3.pure-u-3-5 name]]
        [:div.pure-g
         [:div.pure-u-1.center {:style {:margin-top -10 :color 'gray :opacity 0.8}}
          (cond
@@ -196,9 +187,9 @@
            (= :zone/three zone) [:div {:title "You have mastered this movement. You are both effective and efficient."}
                                  [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star]])]]
        [:div.pure-g
-        [:div.pure-u-1-12]
-        [:img.pure-u.graphic.pure-img-responsive {:src graphic :title name :alt name}]
-        [:div.pure-u-1-12]]
+        [:div.pure-u-1
+         [:div.center
+          [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]]]]
 
        [:div {:style {:cursor 'pointer}}
         [:div.pure-g
@@ -576,13 +567,14 @@
               (plan-completed))
             [:div
              [top-menu-component]
-             [header-component session]
-             (let [parts (:parts session)]
-               (doall
-                 (for [i (range (count parts))]
-                   ^{:key i} [part-component (get parts i) i])))
-             (when-not (= "A Rest Day" (:title session))
-               [:div
-                [time-comment-component]
-                [finish-session-component]])])
-          [blank-state-component])]])))
+             [:div.session
+              [header-component session]
+              (let [parts (:parts session)]
+                (doall
+                  (for [i (range (count parts))]
+                    ^{:key i} [part-component (get parts i) i])))
+              (when-not (= "A Rest Day" (:title session))
+                [:div
+                 [time-comment-component]
+                 [finish-session-component]])]]
+            [blank-state-component]))]])))

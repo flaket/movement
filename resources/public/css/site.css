@@ -25,6 +25,8 @@ html {
 
 body {
   background-color: #fffff8;
+  background-color: #eee;
+  background: #f6f5ee;
   color: #111;
 }
 
@@ -43,15 +45,15 @@ input, textarea {
 h1 {
   font-weight: 400;
   margin-top: 2rem;
-  margin-bottom: 1.5rem;
-  font-size: 3.2rem;
+  margin-bottom: 1.0rem;
+  font-size: 2.2rem;
   line-height: 1;
 }
 
 p.subtitle {
   margin-top: 1rem;
-  margin-bottom: 2.5rem;
-  font-size: 1.6rem;
+  margin-bottom: 1.0rem;
+  font-size: 1.4rem;
   display: block;
   line-height: 1;
 }
@@ -59,18 +61,19 @@ p.subtitle {
 h2 {
   font-weight: 400;
   margin-top: 2rem;
-  margin-bottom: 0;
-  font-size: 2.0rem;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
   line-height: 1;
 }
 
 h3 {
-  font-weight: 400;
-  font-size: 1.5rem;
+  font-weight: 1400;
+  font-size: 1.8rem;
   margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
   margin-left: 0.0rem;
   line-height: 1;
+  opacity: 0.8;
 }
 
 h1, h2, p.subtitle {
@@ -128,20 +131,20 @@ a:hover {
   text-align: center;
 }
 
+.session {
+    background: #f6f5ee; }
+
 .movement {
-  width: 265px;
+  width: 373px;
   border-width: 1px;
   border-color: #fffff8;
-  margin-right: 15px;
-  padding: 5px;
+  margin: 0 15px 15px 0;
+  padding: 0;
   border-style: solid;
   position: relative;
-  margin-bottom: 15px;
-  box-shadow: 0px 0px 3px rgba(150,150,150,0.4);
   background-color: rgba(220,220,220,0.4);
   background-color: #f6f5ee;
-  border-radius: 15px;
-
+  border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(150,150,150,0.6);
 }
 
@@ -154,12 +157,23 @@ a:hover {
 
 .small {
   width: 200px;
-  font-size: 15px;
+}
+
+.small h3 {
+    font-size: 110%;
+}
+
+.big {
+  width: 420px;
+  font-size: 150%;
+}
+
+.big h3 {
+    font-size: 150%;
 }
 
 .day {
-  width: 200px;
-  margin-top: 15px;
+  margin: 15px 15px 0 0;
   background-color: inherit;
   color: inherit;
 }
@@ -198,19 +212,20 @@ a:hover {
               transform: scale(1.2); }
 
 .refresh {
-  padding: 15px 5px 0 0;
-  position: relative;
+  margin: 0;
+  padding: 5px 0 0 0px;
   -webkit-transition: all 0.2s;
   cursor: pointer;
-  font-size: 2.0em;
+  font-size: 2.5em;
   transition: all 0.2s;
   color: #99cc99;
   opacity: 0.8;
 }
 
 .destroy {
-    padding: 15px 15px 0 0;
-	font-size: 2.0em;
+    margin: 0;
+    padding: 0px 0px 0 20px;
+	font-size: 2.5em;
 	color: #CC9999;
 	opacity: 0.8;
 	cursor: pointer;
@@ -239,15 +254,6 @@ a:hover {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 200px;
-  height: 200px;
-  padding: 0px;
-  margin: 15px 0px 0px 15px;
-}
-
-.small-graphic {
-    width: 150px;
-    height: 150px;
 }
 
 .refresh:hover {

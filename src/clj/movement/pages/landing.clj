@@ -11,7 +11,7 @@
    [:div.home-menu.pure-menu.pure-menu-horizontal
     [:a.pure-menu-heading {:title  "Home"
                            :href   "/"
-                           :target "_self"} "Movement Session " [:div.beta "BETA"]]
+                           :target "_self"} "Movement Session"]
     [:ul.pure-menu-list
      [:li.pure-menu-item
       [:a.pure-menu-link {:title  "Home"
@@ -31,32 +31,24 @@
                           :target "_blank"} "Log In"]]]]])
 
 (defn splash []
-  [:div.pure-g.splash-container
-   [:div.pure-u-1
-    [:div.pure-g.splash-head
-     [:h1.pure-u-1.center
-      "Workouts for functional and practical movement training"]]
-    [:div.pure-g.splash
-     [:p.pure-u-1.splash-subhead
-      "Spend less time searching for training programs and more time creating a strong and healthy body that is capable of performing when you need it to."]]]])
+  [:div#splash
+   [:div.pure-g
+    [:div.pure-u-1.pure-u-lg-1-2
+     [:div.pure-g
+      [:h1.pure-u-1
+       "Interactive workouts for your movement practice"]]
+     [:div.pure-g
+      [:p.pure-u-1
+       "Create and log individually adapted workouts without the help of a personal trainer."]]
+     [:div.pure-g
+      [:div.pure-u-1.center
+       [:a.m-button.orange.x-large.upper
+        {:title "Sign Up" :href "/pricing" :target ""} "Create a workout now"]]]]
+    [:div.pure-u-1.pure-u-md-1-2
+     [:img.pure-img-responsive {:src "images/marketing/session-circuit.png"}]]]])
 
 (defn sell []
   [:div#sell
-   [:h2.content-head.center "Interactive workouts"]
-   [:div.pure-g
-    [:div.pure-u-1.pure-u-lg-1-2
-     [:img {:src "images/marketing/session-circuit.png" :height "475" :width "500"}]]
-    [:div.pure-u-1.pure-u-md-1-2
-     [:div.pure-g
-      [:p.pure-u-1 "
-   Movement Session is a movement training app for creating interactive workouts and for logging them.
-   It is a tool in your movement practice to create your workouts, be inspired by discovering new movement patterns
-   and to log your efforts and track your progress towards your goals.
-   "]]
-     [:div.pure-g
-      [:p.pure-u-1 "
-   Every workout that you create is interactive. This means that you can easily add and remove exercises, even to workouts that others have designed. Exercises that are part of progressions can be replaced by easier or harder variations.
-   "]]]]
    [:h2.content-head.center "A new way to create workouts"]
    [:div.pure-g [:p.pure-u-1 "
    A problem I have had with training is ending up doing the same things over and over.
@@ -73,7 +65,7 @@
    This powerful feature allows you to stop roaming the internet, searching for workout plans, and instead generate thousands of unique, interactive and beautifully presented workouts."]]
    [:div.pure-g
     [:div.pure-u-1.center
-     [:img {:src "images/marketing/create-template.png" :height "700" :width "700"}]]]
+     [:img.pure-img-responsive {:src "images/marketing/create-template.png"}]]]
    [:div.pure-g [:p.pure-u-1 "
    In the above example I create a workout template. This template will define what a workout will look like. It starts off with some handstand training. I specify that it will always start with wrist stretches.
    Then Movement Session should pick three movements for me from the category \"handstand\". This technique allows me to either fully or partially have the tool create the variation that I seek in my training.
@@ -86,7 +78,7 @@
    "]]
    [:div.pure-g
     [:div.pure-u-1.pure-u-lg-1-2
-     [:img {:src "images/marketing/stars.png" :height "500" :width "500"}]]
+     [:img.pure-img-responsive {:src "images/marketing/stars.png"}]]
     [:div.pure-u-1.pure-u-md-1-2
      [:div.pure-g
       [:p.pure-u-1 "
@@ -98,6 +90,18 @@
    When you have learned a movement and can do it effectively you should mark it with two stars. Movement Session will now create workouts
    with more advanced movement patterns. When you have mastered a movement and can do it both effectively and efficiently you should mark it with three stars.
    "]]]]
+
+   [:h2.content-head.center "Interactive workouts"]
+   [:div.pure-g
+    [:p.pure-u-1 "
+   Movement Session is a movement training app for creating interactive workouts and for logging them.
+   It is a tool in your movement practice to create your workouts, be inspired by discovering new movement patterns
+   and to log your efforts and track your progress towards your goals. Spend less time searching for training programs and more time creating a strong and healthy body that is capable of performing when you need it to.
+   "]]
+   [:div.pure-g
+    [:p.pure-u-1 "
+   Every workout that you create is interactive. This means that you can easily add and remove exercises, even to workouts that others have designed. Exercises that are part of progressions can be replaced by easier or harder variations.
+   "]]
 
    [:h2.content-head.center "Summary"]
    [:div.pure-g
@@ -140,8 +144,9 @@
     (html-head "Movement Session :: Log and generate workouts for your functional, natural and practical movement training")
     [:body
      (landing-header)
-     (splash)
      [:div.content
+      (splash)
+      #_(carousel)
       (sell)
       (epilog)
       (email-list)]

@@ -34,7 +34,6 @@
         throwing-tx (first (Util/readAll (io/reader (io/resource "data/movements/throwing-catching.edn"))))
         walking-tx (first (Util/readAll (io/reader (io/resource "data/movements/walking.edn"))))
         mobility-tx (first (Util/readAll (io/reader (io/resource "data/movements/mobility/mobility.edn"))))
-
         hand-balance-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/hand-balance.edn"))))
         ring-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/ring.edn"))))
         pushing-tx (first (Util/readAll (io/reader (io/resource "data/movements/other/pushing.edn"))))
@@ -55,7 +54,6 @@
     (d/transact conn walking-tx)
     (d/transact conn swimming-tx)
     (d/transact conn mobility-tx)
-
     (d/transact conn hand-balance-tx)
     (d/transact conn ring-tx)
     (d/transact conn pushing-tx)
@@ -66,10 +64,23 @@
     (d/transact conn footwork-tx)
     )
 
-#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
+#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user -1]
                        :user/email               "andflak@gmail.com"
+                       :user/password            (hashers/encrypt "pw")
+                       :user/activated?          true
                        :user/valid-subscription? true}]]
     (d/transact conn tx-user-data))
+
+#_(let [d [[:db.fn/cas 17592186045926 :part/title "Shoulder routine" "Elastic shoulders"]]]
+  (d/transact conn d))
+
+#_(let [d [{:db/id 17592186045926
+            :part/category [#db/id[:db.part/user -2]]}
+           {:db/id #db/id[:db.part/user -2]
+            :category/name "Elastic Band"}]]
+  (d/transact conn d))
+
+#_(d/transact conn [[:db/retract 17592186045926 :part/category 17592186045493]])
 
 ;; Get the database value.
 #_(def db (d/db conn))
@@ -80,9 +91,16 @@
                 [?u :user/email ?e]]
               db))
 
-#_(d/q '[:find [(pull ?u [*]) ...]
+(d/q '[:find [(pull ?u [:user/email]) ...]
        :where
        [?u :user/email ?e]]
+     db)
+
+#_(d/q '[:find [(pull ?t [*]) ...]
+       :where
+         [?u :user/template ?t]
+         [?t :template/created-by ?x]
+         [?x :user/name "movementsession"]]
      db)
 
 #_(-> (d/q '[:find [(pull ?u [:user/movements]) ...]
@@ -97,7 +115,6 @@
        [?u :session/url _]]
      db)
 
-#_(d/transact conn [[:db/retract 17592186045808 :user/ongoing-plan 17592186046194]])
 #_(d/transact conn [[:db.fn/retractEntity 17592186045892]])
 
 #_(d/pull db '[*] 17592186045892)

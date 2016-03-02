@@ -45,22 +45,21 @@
          [:div.pure-g
           [:p.pure-u-1 "Congratulations! You can now log in to the app and start creating workouts."]]
          [:div.pure-g
-          [:div.pure-u.pure-u-md-2-5]
-          [:a.pure-u.pure-u-md-1-5.button.button-primary
-           {:title  "Launch app"
-            :href   "/app"
-            :target ""} "Launch app"]
-          [:div.pure-u.pure-u-md-2-5]]
+          [:div.pure-u-1.center
+           [:a.button.button-primary
+            {:title  "Launch app"
+             :href   "/app"
+             :target ""} "Launch app"]]]
          #_[:div.pure-g
           [:p.pure-u-1 "Register a credit card with payment provider FastSpring to complete the sign up process."]]
          #_[:div.pure-g (fast-spring-store ref)]]]
        [:div.pure-u-1.pure-u-md-1-5]]
       [:div.information.pure-g
-       [:div.pure-u-1.pure-u-md-1-3]
-       [:div.pure-u-1.pure-u-md-1-3
+       [:div.pure-u-1.pure-u-md-1-5]
+       [:div.pure-u-1.pure-u-md-3-5
         [:div.l-box
          ]]
-       [:div.pure-u-1.pure-u-md-1-3]]]
+       [:div.pure-u-1.pure-u-md-1-5]]]
      (footer-always-bottom)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
@@ -68,9 +67,7 @@
      [:noscript
       [:p
        [:img {:alt "Clicky" :width 1 :height 1
-              :src "//in.getclicky.com/100920866ns.gif"}]]]
-
-     ]))
+              :src "//in.getclicky.com/100920866ns.gif"}]]]]))
 
 (defn signup-page [& error-message]
   (html5
@@ -81,21 +78,21 @@
       (when error-message
         [:div
          [:div.pure-g
-          [:div.pure-u.pure-u-md-2-5]
-          [:div.pure-u.pure-u-md-1-5 error-message]
-          [:div.pure-u.pure-u-md-2-5]]
+          [:div.pure-u.pure-u-md-1-3]
+          [:div.pure-u-1.pure-u-md-1-3 error-message]
+          [:div.pure-u.pure-u-md-1-3]]
          [:div.pure-g
-          [:div.pure-u.pure-u-md-2-5]
-          [:a.pure-u.pure-u-md-1-5.button.button-primary
+          [:div.pure-u.pure-u-md-1-3]
+          [:a.pure-u-1.pure-u-md-1-3.button.button-primary
            {:title  "Log in"
             :href   "/app"
             :target ""} "Log in"]
-          [:div.pure-u.pure-u-md-2-5]]])
+          [:div.pure-u.pure-u-md-1-3]]])
       [:div.pure-g
-       [:div.pure-u.pure-u-md-2-5]
-       [:div.pure-u.pure-u-md-1-5
+       [:div.pure-u.pure-u-md-1-5]
+       [:div.pure-u-1.pure-u-md-3-5
         (signup-form)]
-       [:div.pure-u.pure-u-md-2-5]]]
+       [:div.pure-u.pure-u-md-1-5]]]
      (footer-always-bottom)]))
 
 (defn activation-page [message]

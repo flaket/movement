@@ -12,17 +12,27 @@
  {:db/id #db/id[:db.part/user -10] :category/name "Jump"}
  {:db/id #db/id[:db.part/user -11] :category/name "Acrobatic"}
 
+ {:db/id             #db/id[:db.part/user -300]
+  :movement/unique-name     "Running Lateral Jump"}
+ {:db/id             #db/id[:db.part/user -301]
+  :movement/unique-name     "Box Jump"}
+
  ;; more leg strength in lifting.edn
 
  {:db/id                #db/id[:db.part/user -100]
   :movement/unique-name "Front Flip"
   :movement/category    [#db/id[:db.part/user -10]
-                         #db/id[:db.part/user -11]]}
+                         #db/id[:db.part/user -11]]
+  :movement/easier      [#db/id[:db.part/user -300]
+                         #db/id[:db.part/user -301]]
+  :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -101]
   :movement/unique-name "Back Flip"
   :movement/category    [#db/id[:db.part/user -10]
-                         #db/id[:db.part/user -11]]}
+                         #db/id[:db.part/user -300]
+                         #db/id[:db.part/user -301]]
+  :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -102]
   :movement/unique-name "Back Squat"
