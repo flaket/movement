@@ -113,6 +113,20 @@
           new-parts (vec (concat before [part] after))]
       (session/assoc-in! [:movement-session :parts] new-parts))))
 
+(defn move-movement [i id direction]
+  (let [movements (session/get-in [:movement-session :parts i :movements])
+        m (get movements id)
+        new-id (cond
+                 (= direction :up) (dec id)
+                 (= direction :down) (inc id))
+        m1 (get movements new-id)
+        new-movements (assoc movements id m1 new-id m)]
+    (session/assoc-in! [:movement-session :parts i :movements] new-movements)
+    #_(cond
+      (and (= m (second (last movements))) (= direction :down)) nil
+      (and (= m (second (first movements))) (= direction :up)) nil
+      :else (session/assoc-in! [:movement-session :parts i :movements] new-movements))))
+
 (defn list-to-sorted-map [list-of-movements]
   (let [movements (atom (sorted-map))]
     (doseq [m list-of-movements
@@ -165,7 +179,7 @@
 (defn movement-component
   [{:keys [id unique name category measurement easier harder description zone
            rep set distance duration weight rest practical] :as m}
-   title categories]
+   title categories i]
   (let [name (if (nil? unique) name unique)
         graphic (image-url name)
         parts (session/get-in [:movement-session :parts])
@@ -175,13 +189,19 @@
         distance-clicked? (atom false)
         duration-clicked? (atom false)
         weight-clicked? (atom false)
-        rest-clicked? (atom false)]
+        rest-clicked? (atom false)
+        movement-selected? (atom false)]
     (fn []
       [:div.pure-u.movement {:id (str "m-" id)}
        [:div.pure-g
         [:div.pure-u-2-3
-         [:div.pure-g
-          [:h3.pure-u-1.title name]]
+         (when @movement-selected?
+           [:div.pure-g {:style {:cursor 'pointer}}
+            [:div.pure-u-1-12]
+            [:h3.pure-u-1-5.no-data [:i.fa.fa-arrow-down {:on-click #(move-movement i id :down) :title "Move movement down"}]]
+            [:h3.pure-u-1-5.no-data [:i.fa.fa-arrow-up {:on-click #(move-movement i id :up) :title "Move movement up"}]]])
+         [:div.pure-g {:style {:cursor 'pointer}}
+          [:h3.pure-u-1.title {:on-click #(reset! movement-selected? (not @movement-selected?))} name]]
          [:div.pure-g
           [:div.pure-u-1 {:style {:margin-left 15 :margin-top 20 :color 'gray :opacity 0.8}}
            (cond
@@ -290,17 +310,20 @@
              :style    {:cursor 'pointer}}]]])])))
 
 (defn part-component []
-  (let []
+  (let [part-selected? (atom false)]
     (fn [{:keys [title movements categories] :as part} i]
       [:div
-       [:div.pure-g
-        [:h2.pure-u-21-24 title]
-        [:h2.pure-u-1-24.no-data [:i.fa.fa-arrow-up {:on-click #(move-part i :up) :title "Move part up"}]]
-        [:h2.pure-u-1-24.no-data [:i.fa.fa-arrow-down {:on-click #(move-part i :down) :title "Move part down"}]]
-        [:h2.pure-u-1-24.no-data [:i.fa.fa-times {:on-click #(remove-part i) :title "Remove part"}]]]
+       [:div.pure-g {:style {:cursor 'pointer}}
+        [:h2.pure-u-21-24 {:on-click #(reset! part-selected? (not @part-selected?))} title]
+        (when @part-selected?
+          [:h2.pure-u-1-24.no-data [:i.fa.fa-arrow-down {:on-click #(move-part i :down) :title "Move part down"}]])
+        (when @part-selected?
+          [:h2.pure-u-1-24.no-data [:i.fa.fa-arrow-up {:on-click #(move-part i :up) :title "Move part up"}]])
+        (when @part-selected?
+          [:h2.pure-u-1-24.no-data [:i.fa.fa-times {:on-click #(remove-part i) :title "Remove part"}]])]
        [:div.pure-g.movements
         (for [m (vals movements)]
-          ^{:key (str m (rand-int 100000))} [movement-component m title categories])
+          ^{:key (str m (rand-int 100000))} [movement-component m title categories i])
         (when-not (empty? categories)
           [add-movement-component title i])]])))
 
@@ -319,21 +342,7 @@
         [:div.pure-g
          [:div.pure-u-1 (str month " " day)]]
         [:div.pure-g
-         [:div.pure-u-1 [:p.subtitle description]]]]]
-      #_[:div {:style {:margin-top 50}}
-       [:div.pure-g
-        [:div.pure-u.pure-u-md-2-5]
-        [:div.pure-u-1.pure-u-md-1-5.center (str month " " day)]
-        [:div.pure-u.pure-u-md-2-5]]
-       [:div.pure-g
-        [:div.pure-u.pure-u-md-1-5]
-        [:h1.pure-u-1.pure-u-md-3-5 title]
-        [:p.pure-u.pure-u-md-1-5]]
-       (when-not (nil? description)
-         [:div.pure-g
-          [:div.pure-u.pure-u-md-1-9]
-          [:p.pure-u-1.pure-u-md-7-9.subtitle description]
-          [:div.pure-u.pure-u-md-1-9]])])))
+         [:div.pure-u-1 [:p.subtitle description]]]]])))
 
 (defn template-component [t]
   [:div.pure-u.button.button-primary {:on-click #(create-session-from-template (:db/id t))
