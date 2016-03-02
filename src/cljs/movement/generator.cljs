@@ -97,6 +97,22 @@
         movements (dissoc movements (:id m))]
     (session/assoc-in! [:movement-session :parts position-in-parts :movements] movements)))
 
+(defn remove-part [i]
+  (let [parts (session/get-in [:movement-session :parts])
+        part (get parts i)
+        new-parts (vec (remove #{part} parts))]
+    (session/assoc-in! [:movement-session :parts] new-parts)))
+
+(defn move-part [i direction]
+  (when-not (and (= i 0) (= direction :up))
+    (let [parts (session/get-in [:movement-session :parts])
+          part (get parts i)
+          new-parts (vec (remove #{part} parts))
+          [before after] (split-at (cond (= direction :up) (dec i)
+                                         (= direction :down) (inc i)) new-parts)
+          new-parts (vec (concat before [part] after))]
+      (session/assoc-in! [:movement-session :parts] new-parts))))
+
 (defn list-to-sorted-map [list-of-movements]
   (let [movements (atom (sorted-map))]
     (doseq [m list-of-movements
@@ -161,70 +177,71 @@
         weight-clicked? (atom false)
         rest-clicked? (atom false)]
     (fn []
-      [:div.pure-u.movement.center {:id (str "m-" id)}
+      [:div.pure-u.movement {:id (str "m-" id)}
        [:div.pure-g
-        [:div.pure-u-1-5.refresh
-         [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
-        [:div.pure-u-1-5.refresh
-         (when easier
-           [:i.fa.fa-arrow-down {:on-click #(refresh-movement m title :easier) :title "Swap with easier progression"}])]
-        [:div.pure-u-1-5.refresh
-         (when harder
-           [:i.fa.fa-arrow-up {:on-click #(refresh-movement m title :harder) :title "Swap with harder progression"}])]
-        [:div.pure-u-1-5]
-        [:div.pure-u-1-5.destroy
-         [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]]
-       [:div.pure-g
-        [:div.pure-u-1-5]
-        [:h3.pure-u-3-5 name]]
-       [:div.pure-g
-        [:div.pure-u-1.center {:style {:margin-top -10 :color 'gray :opacity 0.8}}
-         (cond
-           (= :zone/one zone) [:div {:title "You're still in the learning phase with this movement"}
-                               [:i.fa.fa-star] [:i.fa.fa-star-o] [:i.fa.fa-star-o]]
-           (= :zone/two zone) [:div {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}
-                               [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star-o]]
-           (= :zone/three zone) [:div {:title "You have mastered this movement. You are both effective and efficient."}
-                                 [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star]])]]
-       [:div.pure-g
-        [:div.pure-u-1
-         [:div.center
-          [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]]]]
+        [:div.pure-u-2-3
+         [:div.pure-g
+          [:h3.pure-u-1.title name]]
+         [:div.pure-g
+          [:div.pure-u-1 {:style {:margin-left 15 :margin-top 20 :color 'gray :opacity 0.8}}
+           (cond
+             (= :zone/one zone) [:div {:title "You're still in the learning phase with this movement"}
+                                 [:i.fa.fa-star] [:i.fa.fa-star-o] [:i.fa.fa-star-o]]
+             (= :zone/two zone) [:div {:title "You know this movement well, but it is not perfected. You're effective, but not efficient."}
+                                 [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star-o]]
+             (= :zone/three zone) [:div {:title "You have mastered this movement. You are both effective and efficient."}
+                                   [:i.fa.fa-star] [:i.fa.fa-star] [:i.fa.fa-star]])]]
+         [:img.graphic.pure-img-responsive {:src graphic :title name :alt name}]]
 
-       [:div {:style {:cursor 'pointer}}
-        [:div.pure-g
-         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))
-                                  :className (str (when-not (and rep (< 0 rep)) " no-data")
-                                                  (when @rep-clicked? " selected"))} "Reps"]
-         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! set-clicked? (not @set-clicked?)))
-                           :className (str (when-not (and set (< 0 set)) " no-data")
-                                           (when @set-clicked? " selected"))} "Set"]
-         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))
-                                  :className (str (when-not (and rest (< 0 rest)) " no-data")
-                                                  (when @rest-clicked? " selected"))} "Rest"]]
-        [:div.pure-g
-         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))}
-          (when (and rep (< 0 rep)) rep)]
-         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))}
-          (when (and set (< 0 set)) set)]
-         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))}
-          (when (and rest (< 0 rest)) rest)]]]
-       [:div {:style {:cursor 'pointer :margin-bottom 10}}
-        [:div.pure-g
-         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))
-                                  :className (str (when-not (and distance (< 0 distance)) " no-data"))} "Meters"]
-         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))
-                                  :className (str (when-not (and duration (< 0 duration)) " no-data"))} "Seconds"]
-         [:div.pure-u-1-3.center {:on-click  #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))
-                                  :className (str (when-not (and weight (< 0 weight)) " no-data"))} "Weight"]]
-        [:div.pure-g
+        [:div.pure-u-1-3 {:style {:cursor 'pointer}}
+         [:div.pure-g
+          [:div.pure-u-1-2.refresh [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
+          [:div.pure-u-1-2.destroy [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]]
+         [:div.pure-g
+          (if easier
+            [:div.pure-u-1-2.refresh [:i.fa.fa-arrow-down {:on-click #(refresh-movement m title :easier) :title "Swap with easier progression"}]]
+            [:div.pure-u-1-2.refresh])
+          (if harder
+            [:div.pure-u-1-2.refresh [:i.fa.fa-arrow-up {:on-click #(refresh-movement m title :harder) :title "Swap with harder progression"}]]
+            [:div.pure-u-1-2.refresh])]
+         [:div.pure-g
+          (when (and rep (< 0 rep))
+            [:div.pure-u.rep-set {:on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} rep])
+          [:div.pure-u {:on-click  #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))
+                        :className (str (if-not (and rep (< 0 rep)) " no-data" " data")
+                                        (when @rep-clicked? " selected"))} "reps"]]
+         [:div.pure-g
+          (when (and set (< 0 set))
+            [:div.pure-u.rep-set {:on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))} set])
+          [:div.pure-u {:on-click  #(handler-fn (reset! set-clicked? (not @set-clicked?)))
+                        :className (str (if-not (and set (< 0 set)) " no-data" " data")
+                                        (when @set-clicked? " selected"))} "set"]]
+         [:div.pure-g
+          (when (and distance (< 0 distance))
+            [:div.pure-u.rep-set {:on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} distance])
+          [:div.pure-u {:on-click  #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))
+                        :className (str (if-not (and distance (< 0 distance)) " no-data" " data"))}
+           (if (and distance (< 0 distance)) "m" "distance")]]
+         [:div.pure-g
+          (when (and duration (< 0 duration))
+            [:div.pure-u.rep-set {:on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))} duration])
+          [:div.pure-u {:on-click  #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))
+                        :className (str (if-not (and duration (< 0 duration)) " no-data" " data"))}
+           (if (and duration (< 0 duration)) "s" "time")]]
+         [:div.pure-g
+          (when (and weight (< 0 weight))
+            [:div.pure-u.rep-set {:on-click #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))} weight])
+          [:div.pure-u {:on-click  #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))
+                        :className (str (if-not (and weight (< 0 weight)) " no-data" " data"))}
+           (if (and weight (< 0 weight)) "kg" "weight")]]
+         [:div.pure-g
+          (when (and rest (< 0 rest))
+            [:div.pure-u.rep-set {:on-click #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))} rest])
+          [:div.pure-u {:on-click  #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))
+                        :className (str (if-not (and rest (< 0 rest)) " no-data" " data")
+                                        (when @rest-clicked? " selected"))}
+           (if (and rest (< 0 rest)) "s" "rest time")]]]]
 
-         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))}
-          (when (and distance (< 0 distance)) distance)]
-         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))}
-          (when (and duration (< 0 duration)) duration)]
-         [:div.pure-u-1-3.rep-set.center {:on-click #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))}
-          (when (and weight (< 0 weight)) weight)]]]
        (when @rep-clicked?
          [slider-component position-in-parts id :rep 0 50 1])
        (when @set-clicked?
@@ -274,9 +291,13 @@
 
 (defn part-component []
   (let []
-    (fn [{:keys [title movements categories]} i]
+    (fn [{:keys [title movements categories] :as part} i]
       [:div
-       [:h2 title]
+       [:div.pure-g
+        [:h2.pure-u-21-24 title]
+        [:h2.pure-u-1-24.no-data [:i.fa.fa-arrow-up {:on-click #(move-part i :up) :title "Move part up"}]]
+        [:h2.pure-u-1-24.no-data [:i.fa.fa-arrow-down {:on-click #(move-part i :down) :title "Move part down"}]]
+        [:h2.pure-u-1-24.no-data [:i.fa.fa-times {:on-click #(remove-part i) :title "Remove part"}]]]
        [:div.pure-g.movements
         (for [m (vals movements)]
           ^{:key (str m (rand-int 100000))} [movement-component m title categories])
@@ -290,7 +311,16 @@
         day (.getDate date)
         month (get months (.getMonth date))]
     (fn [{:keys [title description]}]
-      [:div {:style {:margin-top 50}}
+      [:div.pure-g
+       [:div.pure-u-1-2
+        [:div.pure-g
+         [:div.pure-u-1 [:h1 title]]]]
+       [:div.pure-u-1-2
+        [:div.pure-g
+         [:div.pure-u-1 (str month " " day)]]
+        [:div.pure-g
+         [:div.pure-u-1 [:p.subtitle description]]]]]
+      #_[:div {:style {:margin-top 50}}
        [:div.pure-g
         [:div.pure-u.pure-u-md-2-5]
         [:div.pure-u-1.pure-u-md-1-5.center (str month " " day)]
@@ -576,5 +606,5 @@
               (when-not (= "A Rest Day" (:title session))
                 [:div
                  [time-comment-component]
-                 [finish-session-component]])]]
-            [blank-state-component]))]])))
+                 [finish-session-component]])]])
+          [blank-state-component])]])))

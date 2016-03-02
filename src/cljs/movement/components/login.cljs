@@ -12,7 +12,7 @@
   [:div.home-menu.pure-menu-horizontal
    [:a.pure-menu-heading {:title  "Home"
                           :href   "/"
-                          :target ""} "Movement Session " [:div.beta "BETA"]]
+                          :target ""} "Movement Session"]
    #_[:ul.pure-menu-list
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Home"
@@ -76,26 +76,21 @@
                        "?referrer="
                        @user)} "Purchase subscription"]])
        [:div.pure-g {:style {:padding 5}}
-        [:div.pure-u.pure-u-md-1-5]
         [text-input user
-         {:class       (str "pure-u pure-u-md-3-5" (when @loading? " disabled"))
+         {:class       (str "pure-u-1" (when @loading? " disabled"))
           :name        "email"
-          :placeholder "email"}]
-        [:div.pure-u.pure-u-md-1-5]]
+          :placeholder "email"}]]
        [:div.pure-g {:style {:padding 5}}
-        [:div.pure-u.pure-u-md-1-5]
         [text-input password
-         {:class       (str "pure-u pure-u-md-3-5" (when @loading? " disabled"))
+         {:class       (str "pure-u-1" (when @loading? " disabled"))
           :type        "password"
           :name        "password"
-          :placeholder "password"}]
-        [:div.pure-u.pure-u-md-1-5]]
+          :placeholder "password"}]]
        (when-let [e @error]
          [:div.pure-g
           [:div.pure-u-1.notice.center e]])
        [:div.pure-g
-        [:div.pure-u.pure-u-md-1-5]
-        [:button.pure-u.pure-u-md-3-5.button.button-primary
+        [:button.pure-u-1.button.button-primary
          {:class    (when @loading? " disabled")
           :on-click #(if-not (and (seq @user) (seq @password))
                       (reset! error "Both fields are required.")
@@ -123,16 +118,15 @@
                                                                        (reset! error (:message (:response response)))
                                                                        (when update-payment?
                                                                          (reset! show-payment? true))))})))}
-         (if @loading? "Logging in..." "Log In")]
-        [:div.pure-u.pure-u-md-1-5]]])))
+         (if @loading? "Logging in..." "Log In")]]])))
 
 (defn login-page []
   [:div
-   (header)
+   #_(header)
    [:div.content.is-center {:style {:margin-top 200}}
     [:div.pure-g
-     [:div.pure-u-1-12.pure-u-md-1-5]
-     [:div.pure-u-5-12.pure-u-md-3-5
+     [:div.pure-u.pure-u-md-1-5]
+     [:div.pure-u-1.pure-u-md-3-5
       [login]]
-     [:div.pure-u-1-12.pure-u-md-1-5]]
+     [:div.pure-u.pure-u-md-1-5]]
     #_(footer)]])
