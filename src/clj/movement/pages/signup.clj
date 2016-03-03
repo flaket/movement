@@ -74,25 +74,26 @@
     (html-head "Sign Up | Movement Session")
     [:body
      (top-menu)
-     [:div.content.is-center
-      (when error-message
-        [:div
-         [:div.pure-g
-          [:div.pure-u.pure-u-md-1-3]
-          [:div.pure-u-1.pure-u-md-1-3 error-message]
-          [:div.pure-u.pure-u-md-1-3]]
-         [:div.pure-g
-          [:div.pure-u.pure-u-md-1-3]
-          [:a.pure-u-1.pure-u-md-1-3.button.button-primary
-           {:title  "Log in"
-            :href   "/app"
-            :target ""} "Log in"]
-          [:div.pure-u.pure-u-md-1-3]]])
-      [:div.pure-g
-       [:div.pure-u.pure-u-md-1-5]
-       [:div.pure-u-1.pure-u-md-3-5
-        (signup-form)]
-       [:div.pure-u.pure-u-md-1-5]]]
+     [:div.content
+      [:div.signup
+       [:div.pure-g
+        [:div.pure-u.pure-u-md-1-5]
+        [:div.pure-u-1.pure-u-md-3-5
+         (signup-form)]
+        [:div.pure-u.pure-u-md-1-5]]
+       (when error-message
+         [:div
+          [:div.pure-g
+           [:div.pure-u.pure-u-md-1-3]
+           [:div.pure-u-1.pure-u-md-1-3 error-message]
+           [:div.pure-u.pure-u-md-1-3]]
+          [:div.pure-g
+           [:div.pure-u.pure-u-md-1-3]
+           [:a.pure-u-1.pure-u-md-1-3.button.button-primary
+            {:title  "Log in"
+             :href   "/app"
+             :target ""} "Log in"]
+           [:div.pure-u.pure-u-md-1-3]]])]]
      (footer-always-bottom)]))
 
 (defn activation-page [message]

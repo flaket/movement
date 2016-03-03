@@ -7,12 +7,9 @@
 (defn contact-content []
   [:div
    (top-menu)
-   [:div.l-content
-    [:div.information.pure-g
-     [:div.pure-u-1.is-center
-      [:div.pure-g
-       [:p.pure-u-1 "For support questions or feature suggestions, send an email to"]
-       [:p.pure-u-1 "support (at) movementsession.com"]]]]]
+   [:div.pure-g.information
+    [:p.pure-u-1.center "For support questions or feature suggestions, send an email to"]
+    [:p.pure-u-1.center "support (at) movementsession.com"]]
    (footer-always-bottom)])
 
 (defn contact-page []

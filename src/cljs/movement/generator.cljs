@@ -490,122 +490,104 @@
   (let [adding-time (atom false)
         adding-comment (atom false)]
     (fn []
-      [:div
-       [:div.pure-g
-        [:div.pure-u.pure-u-md-1-5]
-        [:div.pure-u.pure-u-md-3-5.center
-         [:i.fa.fa-clock-o.fa-4x {:style    {:cursor 'pointer :opacity 0.5 :margin-right 10}
-                                  :on-click #(handler-fn (reset! adding-time (not @adding-time)))}]
-         [:i.fa.fa-comment-o.fa-4x {:style    {:cursor 'pointer :opacity 0.5}
-                                    :on-click #(handler-fn (reset! adding-comment (not @adding-comment)))}]
-         (when @adding-time
-           [:div
-            [:div.pure-g
-             [:div.pure-u.pure-u-md-1-3]
-             [:label.pure-u-1-2.pure-u-md-1-6 "minutes"]
-             [:label.pure-u-1-2.pure-u-md-1-6 "seconds"]
-             [:div.pure-u.pure-u-md-1-3]]
-            [:div.pure-g
-             [:div.pure-u.pure-u-md-1-3]
-             [:input.pure-u-1-2.pure-u-md-1-6 {:type      "number"
-                                               :value     (session/get-in [:movement-session :time :minutes])
-                                               :min       0
-                                               :on-change #(try
-                                                            (let [value (-> % .-target .-value)]
-                                                              (session/assoc-in! [:movement-session :time :minutes] value))
-                                                            (catch js/Error e
-                                                              (pr (str "Caught exception: " e))))}]
-             [:input.pure-u-1-2.pure-u-md-1-6 {:type      "number"
-                                               :value     (session/get-in [:movement-session :time :seconds])
-                                               :min       0
-                                               :on-change #(try
-                                                            (let [value (-> % .-target .-value)]
-                                                              (session/assoc-in! [:movement-session :time :seconds] value))
-                                                            (catch js/Error e
-                                                              (pr (str "Caught exception: " e))))}]
-             [:div.pure-u.pure-u-md-1-3]]])]
-        [:div.pure-u.pure-u-md-1-5]]
-       [:div.pure-g {:style {:margin-bottom 20}}
-        [:div.pure-u.pure-u-md-1-5]
-        [:div.pure-u.pure-u-md-3-5.center
-         (when @adding-comment
-           [:div.pure-g {:style {:margin-top 5}}
-            [:div.pure-u.pure-u-md-1-5]
-            [:div.pure-u.pure-u-md-3-5
-             [:textarea {:rows      4
-                         :cols      80
-                         :on-change #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
-                         :value     (session/get-in [:movement-session :comment])}]]
-            [:div.pure-u.pure-u-md-1-5]])]
-        [:div.pure-u.pure-u-md-1-5]]
-
-       ])))
+      [:div {:style {:margin-top '50}}
+             [:div.pure-g
+              [:div.pure-u [:i.fa.fa-clock-o.fa-4x {:style    {:cursor 'pointer :opacity 0.5 :margin-right 10}
+                                                    :on-click #(handler-fn (reset! adding-time (not @adding-time)))}]]
+              (when @adding-time
+                [:div.pure-u {:style {:margin-left 10}}
+                 [:div.pure-g
+                  [:label.pure-u-1-2 "minutes"]
+                  [:label.pure-u-1-2 "seconds"]]
+                 [:div.pure-g
+                  [:input.pure-u-1-2 {:type      "number"
+                                      :value     (session/get-in [:movement-session :time :minutes])
+                                      :min       0
+                                      :on-change #(try
+                                                   (let [value (-> % .-target .-value)]
+                                                     (session/assoc-in! [:movement-session :time :minutes] value))
+                                                   (catch js/Error e
+                                                     (pr (str "Caught exception: " e))))}]
+                  [:input.pure-u-1-2 {:type      "number"
+                                      :value     (session/get-in [:movement-session :time :seconds])
+                                      :min       0
+                                      :on-change #(try
+                                                   (let [value (-> % .-target .-value)]
+                                                     (session/assoc-in! [:movement-session :time :seconds] value))
+                                                   (catch js/Error e
+                                                     (pr (str "Caught exception: " e))))}]]])]
+                    [:div.pure-g {:style {:margin-top 5 :margin-bottom 10}}
+                     [:div.pure-u [:i.fa.fa-comment-o.fa-4x {:style    {:cursor 'pointer :opacity 0.5}
+                                                             :on-click #(handler-fn (reset! adding-comment (not @adding-comment)))}]]
+                     (when @adding-comment
+                       [:div.pure-u {:style {:margin-left 10}}
+                        [:div.pure-g
+                         [:div.pure-u
+                          [:textarea {:rows      4
+                                      :cols      80
+                                      :on-change #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
+                                      :value     (session/get-in [:movement-session :comment])}]]]])]])))
 
 (defn finish-session-component []
   (let [finish-button-clicked? (atom false)
         session-stored-successfully? (atom false)]
     (fn []
-      (if @session-stored-successfully?
-        (let []
-          (go (<! (timeout 3000))
-              (session/remove! :movement-session)
-              (reset! finish-button-clicked? false)
-              (reset! session-stored-successfully? false))
-          [:div.pure-g
-           [:div.pure-u-1.center {:style {:color "green" :font-size 24}} "Session stored successfully!"]])
-        (if @finish-button-clicked?
-          [:div.pure-g
-           [:div.pure-u.pure-u-md-1-5]
-           [:div.pure-u-1-1.pure-u-md-3-5.button.button-secondary
-            {:on-click #(let [min (session/get-in [:movement-session :time :minutes])
-                              min (when-not (nil? min) (int (reader/read-string min)))
-                              sec (session/get-in [:movement-session :time :seconds])
-                              sec (when-not (nil? sec) (int (reader/read-string sec)))]
-                         (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
-                         (POST "store-session"
-                               {:params        {:session (session/get :movement-session)
-                                                :user    (session/get :user)}
-                                :handler       (fn [response] (do
-                                                                (reset! session-stored-successfully? true)
-                                                                (get-stored-sessions)))
-                                :error-handler (fn [response] (pr response))}))}
-            "Confirm Finish Session"]
-           [:div.pure-u.pure-u-md-1-5]]
-          [:div.pure-g
-           [:div.pure-u.pure-u-md-1-5]
-           [:div.pure-u-1-1.pure-u-md-3-5.button.button-primary
-            {:on-click #(handler-fn (reset! finish-button-clicked? true))}
-            "Finish Movement Session"]
-           [:div.pure-u.pure-u-md-1-5]])))))
+      [:div {:style {:margin-top '50}}
+       (if @session-stored-successfully?
+         (let []
+           (go (<! (timeout 3000))
+               (session/remove! :movement-session)
+               (reset! finish-button-clicked? false)
+               (reset! session-stored-successfully? false))
+           [:div.pure-g
+            [:div.pure-u-1 {:style {:color "green" :font-size 24}} "Session stored successfully!"]])
+         (if @finish-button-clicked?
+           [:div.pure-g
+            [:div.pure-u-1.pure-u-md-1-2.button.button-secondary
+             {:on-click #(let [min (session/get-in [:movement-session :time :minutes])
+                               min (when-not (nil? min) (int (reader/read-string min)))
+                               sec (session/get-in [:movement-session :time :seconds])
+                               sec (when-not (nil? sec) (int (reader/read-string sec)))]
+                          (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
+                          (POST "store-session"
+                                {:params        {:session (session/get :movement-session)
+                                                 :user    (session/get :user)}
+                                 :handler       (fn [response] (do
+                                                                 (reset! session-stored-successfully? true)
+                                                                 (get-stored-sessions)))
+                                 :error-handler (fn [response] (pr response))}))}
+             "Confirm Finish Session"]
+            [:div.pure-u.pure-u-md-1-5]]
+           [:div.pure-g
+            [:div.pure-u-1.pure-u-md-1-2.button.button-primary
+             {:on-click #(handler-fn (reset! finish-button-clicked? true))}
+             "Finish Movement Session"]]))])))
 
 (defn plan-completed []
-  [:div
-   [top-menu-component]
-   [:div {:style {:margin-top 50}}
-    [:div.pure-g
-     [:div.pure-u.pure-u-md-1-5]
-     [:h1.pure-u-1.pure-u-md-3-5 "Plan completed!"]
-     [:p.pure-u.pure-u-md-1-5]]
-    [:div.pure-g
-     [:div.pure-u.pure-u-md-1-9]
-     [:p.pure-u-1.pure-u-md-7-9.subtitle "Congratulations on completing your plan!
+  [:div {:style {:margin-top 50}}
+   [:div.pure-g
+    [:h1.pure-u-1 "Plan completed!"]]
+   [:div.pure-g
+    [:p.pure-u-1.subtitle "Congratulations on completing your plan!
               All the data from your training is stored in the database.
-              We're hard at work to create a statistics page where you soon can explore the details of your training."]
-     [:div.pure-u.pure-u-md-1-9]]]])
+              We're hard at work to create a statistics page where you soon can explore the details of your training."]]])
 
 (defn generator-component []
   (let []
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}
        [menu-component]
-       [:div.content {:style {:margin-top "20px"}}
-        (if-let [session (session/get :movement-session)]
-          (if (:plan-completed? session)
-            (do
-              (get-ongoing-plan)
-              (plan-completed))
-            [:div
-             [top-menu-component]
+       (if-let [session (session/get :movement-session)]
+         [:div
+          [:div.pure-g
+           [:a.pure-u-1 {:style    {:text-decoration 'underline :text-align      'right
+                                    :margin-right    5 :margin-top 20}
+                         :on-click #(session/remove! :movement-session)} "clear session"]]
+          [:div.content {:style {:margin-top "20px"}}
+           (if (:plan-completed? session)
+             (do
+               (get-ongoing-plan)
+               (plan-completed))
              [:div.session
               [header-component session]
               (let [parts (:parts session)]
@@ -615,5 +597,6 @@
               (when-not (= "A Rest Day" (:title session))
                 [:div
                  [time-comment-component]
-                 [finish-session-component]])]])
-          [blank-state-component])]])))
+                 [finish-session-component]])])]]
+         [:div.content
+          [blank-state-component]])])))

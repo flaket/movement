@@ -149,7 +149,7 @@
       #_(carousel)
       (sell)
       (epilog)
-      (email-list)]
+      #_(email-list)]
      (footer-after-content)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]

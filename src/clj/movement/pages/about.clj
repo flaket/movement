@@ -11,10 +11,10 @@
      [:div.l-content
       [:div.information.pure-g
        [:div.pure-u.pure-u-md-1-5
-        [:img {:width 150 :height 150 :src "images/static-air-baby.png"}]]
+        [:img {:width 150 :height 150 :src "images/movements/static-air-baby.png"}]]
        [:div.pure-u.pure-u-md-4-5
         [:div.pure-g
-         [:p.pure-u-1 "Movement Session was created by me, Andreas Flakstad. I'm a software engineer and small business owner from Trondheim, Norway."]]
+         [:p.pure-u-1 "Movement Session is the product of Andreas Flakstad. I'm a software engineer and small business owner from Trondheim, Norway."]]
         [:div.pure-g
          [:p.pure-u-1 "You can contact me at admin (at) movementsession.com, or reach me through Twitter @AndreasFlakstad."]]]]]
      (footer-always-bottom)
