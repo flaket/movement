@@ -91,7 +91,7 @@
                 [?u :user/email ?e]]
               db))
 
-(d/q '[:find [(pull ?u [:user/email]) ...]
+#_(d/q '[:find [(pull ?u [:user/email]) ...]
        :where
        [?u :user/email ?e]]
      db)
