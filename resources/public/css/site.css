@@ -5,6 +5,16 @@
              src: url("../fonts/ETBembo-DisplayItalic.ttf");
              font-weight: normal;
              font-style: italic; }
+@font-face { font-family: CabinSketch;
+             src: url("../fonts/cabin-sketch.regular.ttf"); }
+@font-face { font-family: CabinSketchBold;
+             src: url("../fonts/cabin-sketch.bold.ttf"); }
+@font-face { font-family: AmaticSC;
+             src: url("../fonts/amatic-sc.regular.ttf"); }
+@font-face { font-family: AmaticSCBold;
+             src: url("../fonts/amatic-sc.bold.ttf"); }
+@font-face { font-family: CaveatBrush;
+             src: url("../fonts/caveat-brush.regular.ttf"); }
 
 html, button, input, select, textarea,
 .pure-g [class *= "pure-u"] {
@@ -27,6 +37,7 @@ body {
   background-color: #fffff8;
   background-color: #eee;
   background: #f6f5ee;
+  background-color: #fffff8;
   color: #111;
 }
 
@@ -93,12 +104,6 @@ h1, h2, p.subtitle {
     padding-right: 10px;
 }
 
-.no-data {
-    opacity: 0.2;
-}
-
-.data { padding-top: 15px; }
-
 .selected {
     background-color: #5555aa;
 }
@@ -137,8 +142,28 @@ a:hover {
   text-align: center;
 }
 
+
+article .pure-g [class *= "pure-u"] {
+font-family:
+CabinSketch,
+CabinSketchBold,
+AmaticSCBold,
+AmaticSC,
+     'Handlee',
+         'Raleway',
+         'Roboto',
+         ETBembo,
+         Palatino,
+         "Palatino Linotype",
+         "Palatino LT STD",
+         "Book Antiqua",
+         Georgia,
+         sans-serif;}
+
 .session {
-    background: #f6f5ee; }
+    background: #f6f5ee;
+    background-color: #fffff8;
+     }
 
 .movement {
   width: 373px;
@@ -152,6 +177,7 @@ a:hover {
   background-color: rgba(220,220,220,0.4);
   background-color: #f6f5ee;
   background-color: #fffff8;
+  background-color: #f6f5ee;
   border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(150,150,150,0.6);
 }
@@ -290,12 +316,15 @@ input[type="reset"],
 input[type="button"] {
   display: inline-block;
   height: 38px;
+  height: 100px;
   padding: 0 30px;
   color: #555;
   text-align: center;
   font-size: 11px;
+  font-size: 18px;
   font-weight: 600;
   line-height: 38px;
+  line-height: 100px;
   letter-spacing: .1rem;
   text-transform: uppercase;
   text-decoration: none;
@@ -368,3 +397,18 @@ input[type="button"].button-secondary {
    color: #fffff8;
    background-color: #b56d02;
    border-color: #b56d02; }
+
+.button-success,
+.button-error,
+.button-warning,
+.button-secondary { color: white;
+                    border-radius: 4px;
+                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2); }
+.button-success { background: rgb(28, 184, 65); /* this is a green */ }
+.button-error { background: rgb(202, 60, 60); /* this is a maroon */ }
+.button-warning { background: rgb(223, 117, 20); /* this is an orange */ }
+.button-secondary { background: rgb(66, 184, 221); /* this is a light blue */ }
+.button-xsmall { font-size: 70%; }
+.button-small { font-size: 85%; }
+.button-large { font-size: 110%; }
+.button-xlarge { font-size: 125%; }

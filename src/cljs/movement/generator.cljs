@@ -121,11 +121,7 @@
                  (= direction :down) (inc id))
         m1 (get movements new-id)
         new-movements (assoc movements id m1 new-id m)]
-    (session/assoc-in! [:movement-session :parts i :movements] new-movements)
-    #_(cond
-        (and (= m (second (last movements))) (= direction :down)) nil
-        (and (= m (second (first movements))) (= direction :up)) nil
-        :else (session/assoc-in! [:movement-session :parts i :movements] new-movements))))
+    (session/assoc-in! [:movement-session :parts i :movements] new-movements)))
 
 (defn list-to-sorted-map [list-of-movements]
   (let [movements (atom (sorted-map))]
@@ -176,6 +172,22 @@
                         [:movement-session :parts position-in-parts :movements id r] (int @data))
          :on-change   #(reset! data (-> % .-target .-value))}]])))
 
+(defn rep-component [rep id position-in-parts]
+  (let [rep-clicked? (atom false)]
+    (fn [rep]
+      [:div
+       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
+                               :className (str (if-not (and rep (< 0 rep)) " no-data" " data") (when @rep-clicked? " selected"))
+                               :on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} "reps"]
+       (when @rep-clicked?
+         [slider-component position-in-parts id :rep 0 50 1])])))
+
+;(defn distance [])
+;(defn duration [])
+;(defn rest [])
+;(defn weight [])
+;(defn set [])
+
 (defn movement-component
   [{:keys [id unique name category measurement easier harder description zone
            rep set distance duration weight rest practical] :as m}
@@ -184,85 +196,80 @@
         graphic (image-url name)
         parts (session/get-in [:movement-session :parts])
         position-in-parts (first (positions #{title} (map :title parts)))
-        rep-clicked? (atom false)
-        set-clicked? (atom false)
-        distance-clicked? (atom false)
-        duration-clicked? (atom false)
-        weight-clicked? (atom false)
-        rest-clicked? (atom false)
         expand (atom false)]
     (fn []
       [:div.pure-g.movement {:id (str "m-" id)}
+       [:div.pure-u-1
+        [:div.pure-g {:style {:cursor 'pointer}}
+         [:div.pure-u-1-5 {:on-click #(reset! expand (not @expand))}
+          [:img.pure-img-responsive.graphic {:src graphic :title name :alt name}]]
+         [:div.pure-u-2-5 {:on-click #(reset! expand (not @expand))
+                           :style {:display 'flex :text-align 'center}}
+          [:h3.title {:style    {:margin 'auto}} name]]
+         [:div.pure-u-1-5 {:on-click #(reset! expand (not @expand))
+                           :style {:cursor 'pointer :display 'flex}}
+          [:div.pure-g {:style {:margin 'auto}}
+           (when (and rep (< 0 rep))
+             [:div.pure-u
+              [:div.pure-g
+               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} rep]
+               [:div.pure-u {:style {:padding-top 10}} "reps"]]])]
+          [:div.pure-g {:style {:margin 'auto}}
+           (when (and distance (< 0 distance))
+             [:div.pure-u
+              [:div.pure-g
+               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} distance]
+               [:div.pure-u {:style {:padding-top 10}} "m"]]])]
+          [:div.pure-g {:style {:margin 'auto}}
+           (when (and duration (< 0 duration))
+             [:div.pure-u
+              [:div.pure-g
+               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} duration]
+               [:div.pure-u {:style {:padding-top 10}} "s"]]])]
+          [:div.pure-g {:style {:margin 'auto}}
+           (when (and weight (< 0 weight))
+             [:div.pure-u
+              [:div.pure-g
+               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} weight]
+               [:div.pure-u {:style {:padding-top 10}} "kg"]]])]
+          [:div.pure-g {:style {:margin 'auto}}
+           (when (and rest (< 0 rest))
+             [:div.pure-u
+              [:div.pure-g
+               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} rest]
+               [:div.pure-u {:style {:padding-top 10}} "s"]]])]]
+         [:div.pure-u-1-5 {:style {:cursor 'pointer :border "2px solid lightgray"}}
+          [:div.pure-g
+           [:div.pure-u-1 {:style {:text-align 'center :margin-top 10 :opacity 0.25}} "set"]]
+          [:div.pure-g {:style {:display 'flex}}
+           [:div.pure-u {:style {:margin 'auto :opacity 0.15 :font-size "300%"}} set]]]]
 
-       [:div.pure-u-1-5
-        [:img.pure-img-responsive.graphic {:src graphic :title name :alt name}]]
-       [:div.pure-u-2-5 {:style {:display 'flex :text-align 'center}}
-        [:h3.title {:style    {:margin 'auto}
-                    :on-click #(reset! expand (not @expand))} name]]
+        (when @expand
+          [:div
+           [:div.pure-g
+            [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
+                                    :on-click #(remove-movement m title) :title "Fjern øvelse"}
+             [:i.fa.fa-remove {:style {:color "#CC9999" :opacity 0.8}}]
+             "Fjern øvelse"]
+            [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
+                                    :on-click #(refresh-movement m title) :title "Bytt øvelse"}
+             [:i.fa.fa-random {:style {:color "#99cc99" :opacity 0.8}}]
+             "Bytt ut øvelse"]
+            (when easier
+              [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
+                                      :on-click #(refresh-movement m title :easier) :title "Bytt med enklere"}
+               [:i.fa.fa-arrow-down {:style {:color "#99cc99" :opacity 0.8}}]
+               "Bytt med enklere"])
+            (when harder
+              [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
+                                      :on-click #(refresh-movement m title :harder) :title "Bytt med vanskeligere"}
+               [:i.fa.fa-arrow-up {:style {:color "#99cc99" :opacity 0.8}}]
+               "Bytt med vanskeligere"])]
 
-       [:div.pure-u-1-5 {:style {:cursor 'pointer :display 'flex}}
-        #_[:div.pure-g
-           [:div.pure-u-1-2.refresh [:i.fa.fa-random {:on-click #(refresh-movement m title) :title "Swap with another movement"}]]
-           [:div.pure-u-1-2.destroy [:i.fa.fa-remove {:on-click #(remove-movement m title) :title "Remove movement"}]]]
-        #_[:div.pure-g
-           (if easier
-             [:div.pure-u-1-2.refresh [:i.fa.fa-arrow-down {:on-click #(refresh-movement m title :easier) :title "Swap with easier progression"}]]
-             [:div.pure-u-1-2.refresh])
-           (if harder
-             [:div.pure-u-1-2.refresh [:i.fa.fa-arrow-up {:on-click #(refresh-movement m title :harder) :title "Swap with harder progression"}]]
-             [:div.pure-u-1-2.refresh])]
-        [:div.pure-g {:style    {:margin 'auto}}
-         (when (and rep (< 0 rep))
-           [:div.pure-u
-            [:div.pure-g
-             [:div.pure-u.rep-set {:on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} rep]
-             [:div.pure-u {:on-click  #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))
-                           :className (str (if-not (and rep (< 0 rep)) " no-data" " data")
-                                           (when @rep-clicked? " selected"))} "reps"]]])]
-        [:div.pure-g {:style    {:margin 'auto}}
-         (when (and distance (< 0 distance))
-           [:div.pure-u
-            [:div.pure-g
-             [:div.pure-u.rep-set {:on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} distance]
-             [:div.pure-u {:on-click  #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))
-                           :className (str (if-not (and distance (< 0 distance)) " no-data" " data"))}
-              (if (and distance (< 0 distance)) "m" "distance")]]])]
-        [:div.pure-g {:style    {:margin 'auto}}
-         (when (and duration (< 0 duration))
-           [:div.pure-u
-            [:div.pure-g
-             [:div.pure-u.rep-set {:on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))} duration]
-             [:div.pure-u {:on-click  #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))
-                           :className (str (if-not (and duration (< 0 duration)) " no-data" " data"))}
-              (if (and duration (< 0 duration)) "s" "time")]]])]
-        [:div.pure-g {:style    {:margin 'auto}}
-         (when (and weight (< 0 weight))
-           [:div.pure-u
-            [:div.pure-g
-             [:div.pure-u.rep-set {:on-click #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))} weight]
-             [:div.pure-u {:on-click  #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))
-                           :className (str (if-not (and weight (< 0 weight)) " no-data" " data"))}
-              (if (and weight (< 0 weight)) "kg" "weight")]]])]
-        [:div.pure-g {:style    {:margin 'auto}}
-         (when (and rest (< 0 rest))
-           [:div.pure-u
-            [:div.pure-g
-             [:div.pure-u.rep-set {:on-click #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))} rest]
-             [:div.pure-u {:on-click  #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))
-                           :className (str (if-not (and rest (< 0 rest)) " no-data" " data")
-                                           (when @rest-clicked? " selected"))}
-              (if (and rest (< 0 rest)) "s" "rest time")]]])]]
-       [:div.pure-u-1-5 {:style {:border "2px solid lightgray"}}
-        [:div.pure-g
-         [:div.pure-u-1 "set"]]
-        [:div.pure-g
-         (when (and set (< 0 set))
-           [:div.pure-u
-            [:div.pure-g
-             [:div.pure-u.rep-set {:on-click #(handler-fn (reset! set-clicked? (not @set-clicked?)))} set]
-             [:div.pure-u {:on-click  #(handler-fn (reset! set-clicked? (not @set-clicked?)))
-                           :className (str (if-not (and set (< 0 set)) " no-data" " data")
-                                           (when @set-clicked? " selected"))} "set"]]])]]
+           [:div.pure-g
+            [rep-component rep id position-in-parts]]]
+
+          )]
 
        #_[:div.pure-u
           [:div.pure-g
@@ -379,40 +386,14 @@
              :style    {:cursor 'pointer}}])]]])))
 
 (defn part-component []
-  (let [part-selected? (atom false)]
+  (let []
     (fn [{:keys [title movements categories] :as part} i]
-      [:div
-       #_[:div.pure-g {:style {:cursor 'pointer}}
-          [:h2.pure-u-21-24 {:on-click #(reset! part-selected? (not @part-selected?))} title]
-          (when @part-selected?
-            [:h2.pure-u-1-24.no-data [:i.fa.fa-arrow-down {:on-click #(move-part i :down) :title "Move part down"}]])
-          (when @part-selected?
-            [:h2.pure-u-1-24.no-data [:i.fa.fa-arrow-up {:on-click #(move-part i :up) :title "Move part up"}]])
-          (when @part-selected?
-            [:h2.pure-u-1-24.no-data [:i.fa.fa-times {:on-click #(remove-part i) :title "Remove part"}]])]
-       [:div.pure-g.movements
-        [:div.pure-u-1
-         (for [m (vals movements)]
-           ^{:key (str m (rand-int 100000))} [movement-component m title categories i])
-         (when-not (empty? categories)
-           [add-movement-component title i])]]])))
-
-(defn header-component []
-  (let [months {0 "January" 1 "February" 2 "March" 3 "April" 4 "May" 5 "June"
-                6 "July" 7 "August" 8 "September" 9 "October" 10 "November" 11 "December"}
-        date (js/Date.)
-        day (.getDate date)
-        month (get months (.getMonth date))]
-    (fn [{:keys [title description]}]
-      [:div.pure-g
-       #_[:div.pure-u-1-2
-          [:div.pure-g
-           [:div.pure-u-1 [:h1 title]]]]
-       [:div.pure-u-1-2
-        [:div.pure-g
-         [:div.pure-u-1 (str month " " day)]]
-        #_[:div.pure-g
-           [:div.pure-u-1 [:p.subtitle description]]]]])))
+      [:div.pure-g.movements
+       [:div.pure-u-1
+        (for [m (vals movements)]
+          ^{:key (str m (rand-int 100000))} [movement-component m title categories i])
+        (when-not (empty? categories)
+          [add-movement-component title i])]])))
 
 (defn template-component [t]
   [:div.pure-u.button.button-primary {:on-click #(create-session-from-template (:db/id t))
@@ -557,19 +538,23 @@
                                                   :style    {:margin "0 0 5px 5px"}} (:group/title g)]))])])))
 
 (defn date-component []
-  (let [months {0 "January" 1 "February" 2 "March" 3 "April" 4 "May" 5 "June"
-                6 "July" 7 "August" 8 "September" 9 "October" 10 "November" 11 "December"}
+  (let [months {0 "januar" 1 "februar" 2 "mars" 3 "april" 4 "mai" 5 "juni"
+                6 "juli" 7 "august" 8 "september" 9 "oktober" 10 "november" 11 "desember"}
         date (js/Date.)
         day (.getDate date)
         month (get months (.getMonth date))]
     (fn [{:keys [title description]}]
-      [:div.pure-u-1 (str month " " day)])))
+      [:div.pure-u-1
+       [:div.pure-g
+        [:div.pure-u-1-3 (str day ". " month)]
+        [:div.pure-u-1-3
+         [:a.pure-button "Sett en annen dato"]]]])))
 
 (defn time-component []
-  [:div.pure-u-1 {:style {:margin-left 0}}
+  [:div.pure-u-1
    [:div.pure-g
-    [:label.pure-u-1-2 "minutes"]
-    [:label.pure-u-1-2 "seconds"]]
+    [:label.pure-u-1-2 "min"]
+    [:label.pure-u-1-2 "sek"]]
    [:div.pure-g
     [:input.pure-u-1-2 {:type      "number"
                         :value     (session/get-in [:movement-session :time :minutes])
@@ -599,40 +584,35 @@
 
 (defn image-upload-component []
   [:div.pure-g {:style {:margin-top '10}}
-   [:div.pure-u-1 "Last opp bilde"]])
+   [:div.pure-u-1
+    [:a.pure-button "Last opp bilde"]]])
 
 (defn finish-session-component []
-  (let [finish-button-clicked? (atom false)
-        session-stored-successfully? (atom false)]
+  (let [session-stored-successfully? (atom false)]
     (fn []
       [:div {:style {:margin-top '50}}
        (if @session-stored-successfully?
          (let []
            (go (<! (timeout 3000))
                (session/remove! :movement-session)
-               (reset! finish-button-clicked? false)
                (reset! session-stored-successfully? false))
            [:div.pure-g
-            [:div.pure-u-1 {:style {:color "green" :font-size 24}} "Session stored successfully!"]])
+            [:div.pure-u-1.center {:style {:color "green" :font-size 30}} "Økta er lagret!"]])
          [:div.pure-g
-          (if @finish-button-clicked?
-            [:div.pure-u-1.button.button-secondary
-             {:on-click #(let [min (session/get-in [:movement-session :time :minutes])
-                               min (when-not (nil? min) (int (reader/read-string min)))
-                               sec (session/get-in [:movement-session :time :seconds])
-                               sec (when-not (nil? sec) (int (reader/read-string sec)))]
-                          (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
-                          (POST "store-session"
-                                {:params        {:session (session/get :movement-session)
-                                                 :user    (session/get :user)}
-                                 :handler       (fn [response] (do
-                                                                 (reset! session-stored-successfully? true)
-                                                                 (get-stored-sessions)))
-                                 :error-handler (fn [response] (pr response))}))}
-             "Confirm Finish Session"]
-            [:div.pure-u-1.button.button-primary
-             {:on-click #(handler-fn (reset! finish-button-clicked? true))}
-             "Finish Movement Session"])])])))
+          [:a.pure-u-1.pure-button.pure-button-primary.button-xlarge
+           {:on-click #(let [min (session/get-in [:movement-session :time :minutes])
+                             min (when-not (nil? min) (int (reader/read-string min)))
+                             sec (session/get-in [:movement-session :time :seconds])
+                             sec (when-not (nil? sec) (int (reader/read-string sec)))]
+                        (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
+                        (POST "store-session"
+                              {:params        {:session (session/get :movement-session)
+                                               :user    (session/get :user)}
+                               :handler       (fn [response] (do
+                                                               (reset! session-stored-successfully? true)
+                                                               (get-stored-sessions)))
+                               :error-handler (fn [response] (pr response))}))}
+           "Avslutt og lagre økta"]])])))
 
 (defn plan-completed []
   [:div {:style {:margin-top 50}}
@@ -659,12 +639,12 @@
              (do
                (get-ongoing-plan)
                (plan-completed))
-             [:div.session
-              [header-component session]
-              (let [parts (:parts session)]
-                (doall
-                  (for [i (range (count parts))]
-                    ^{:key i} [part-component (get parts i) i])))
+             [:div
+              [:article.session
+               (let [parts (:parts session)]
+                 (doall
+                   (for [i (range (count parts))]
+                     ^{:key i} [part-component (get parts i) i])))]
               [:div.pure-g {:style {:margin-top '50}}
                [:div.pure-u-1-2 [date-component]]
                [:div.pure-u-1-2 (time-component)]]

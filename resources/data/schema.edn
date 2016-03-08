@@ -1,5 +1,16 @@
 [
 
+ ; session/part
+
+ ; part/slot
+
+ ; slot/category
+ ; slot/movement
+ ; slot/repetition slot/distance slot/duration
+ ; slot/set slot/weight slot/rest
+
+ ; date time comment image
+
  ;; user
  {:db/id                 #db/id[:db.part/db]
   :db/ident              :user/email
