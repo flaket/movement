@@ -4,8 +4,6 @@
             [movement.menu :refer [menu-component]]
             [movement.util :refer [POST text-input get-user-info]]))
 
-
-
 (defn change-password-component []
   (let [show-change-password? (atom false)
         pass (atom {:info "" :error ""})]

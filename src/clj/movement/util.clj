@@ -171,86 +171,7 @@
 
 ;;;;;;;;;;;;;; EXPERIMENTAL LAB ;;;;;;;;;;;;;;;;;;;;;;;
 
-#_"Time to practice running fast. Warm up well by running, doing mobility work and/or practicing explosive jumps. Finish the warm up by running a 100m run at 80% of max speed.
-Perform between four and ten 50-200 meter sprints at close to max effort. Rest between sets by walking back to the starting position slowly.",
-
-#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "chrhage@gmail.com"
-                       :user/valid-subscription? true}]]
-    (d/transact conn tx-user-data))
-
-#_(let [
-        tx-user-data [{:db/id         #db/id[:db.part/user]
-                       :user/email    "martinarnesen1@gmail.com"
-                       :user/password (hashers/encrypt "Dg86AS721Gas1")}]]
-    (d/transact conn tx-user-data))
-
-#_(let [tx-user-data [{:db/id                    #db/id[:db.part/user]
-                       :user/email               "chrhage@gmail.com"
-                       :user/valid-subscription? true}]]
-    (d/transact conn tx-user-data))
-
-#_(let []
-    (empty? (d/q '[:find [?username ...]
-                   :in $ ?username
-                   :where
-                   [?e :user/name ?username]]
-                 db
-                 "flaket")))
-
-#_(flatten (d/q '[:find (pull ?u [*])
-                  :where
-                  [?u :user/email ?e]]
-                db))
-
-#_(d/q '[:find (pull ?u [*])
-         :where [?u :user/email ?n]]
-       db)
-
-#_(d/q '[:find (pull ?u [*])
-         :where [?u :category/name ?n]]
-       db)
-
-#_(d/q '[:find (pull ?u [*])
-         :where [?u :movement/unique-name ?n]]
-       db)
-
-#_(let [templates ["Natural Movement" "Locomotion" "4x4 Interval Run"]
-        template-ids (map (pull))])
-
-#_(flatten (d/q '[:find (pull ?t [*])
-                  :in $ ?name
-                  :where
-                  [?t :template/created-by ?u]
-                  [?u :user/name ?name]]
-                db
-                "andreasflakstad"))
-
-#_(flatten (d/q '[:find (pull ?t [*])
-                  :in $ ?email
-                  :where
-                  [?e :user/email ?email]
-                  [?e :user/group ?t]]
-                db
-                "andflak@gmail.com"))
-
-#_(def db (d/db conn))
-#_(d/pull db '[*] 17592186045815)
-
-;; begin-plan!
-#_(let [user-id 17592186045808
-        plan-id 17592186046127
-        plan (d/pull db '[*] plan-id)
-        current-day (:db/id (first (:plan/day plan)))
-        tx-data [[:db/add plan-id :plan/started (Date.)]
-                 [:db/add plan-id :plan/current-day current-day]
-                 [:db/add user-id :user/ongoing-plan plan-id]]]
-    (d/transact conn tx-data))
-
-(defn positions [pred coll]
-  (keep-indexed (fn [idx x]
-                  (when (pred x) idx)) coll))
-;; progress-plan!
+ ;; progress-plan!
 #_(let [;conn (:conn @tx)
         user-id 17592186045808
         plan-id 17592186046127
@@ -275,8 +196,6 @@ Perform between four and ten 50-200 meter sprints at close to max effort. Rest b
                  [:db/add plan-id :plan/completed? all-completed?]
                  [:db/retract user-id :user/ongoing-plan plan-id]]]
     (d/transact conn tx-data))
-
-
 
 #_(empty? (d/q '[:find [?u ...]
                  :in $

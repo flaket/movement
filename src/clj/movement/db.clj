@@ -8,8 +8,8 @@
             [movement.activation :refer [generate-activation-id send-activation-email]]
             [clojure.set :as set]))
 
-#_(def uri "datomic:dev://localhost:4334/test-db")
-(def uri "datomic:ddb://eu-west-1/movementsession/prod-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+(def uri "datomic:dev://localhost:4334/test-db")
+#_(def uri "datomic:ddb://eu-west-1/movementsession/prod-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
 
@@ -125,12 +125,12 @@
                email)
         ;movements
         #_(for [movement movements]
-          (if-let [user-movement (some #(when
-                                         (= (:movement/unique-name movement) (:movement/name %))
-                                         %)
-                                       user-movements)]
-            (merge movement (dissoc user-movement :db/id))
-            movement))]
+            (if-let [user-movement (some #(when
+                                           (= (:movement/unique-name movement) (:movement/name %))
+                                           %)
+                                         user-movements)]
+              (merge movement (dissoc user-movement :db/id))
+              movement))]
     movements))
 
 (defn get-n-movements-from-categories
@@ -876,9 +876,9 @@
                     [?e :user/movements ?m]
                     [?m :movement/name ?name]]
                   db email name)
-        tx-data [{:db/id m-id
+        tx-data [{:db/id         m-id
                   :movement/zone #db/id[:db.part/user -100]}
-                 {:db/id #db/id[:db.part/user -100]
+                 {:db/id    #db/id[:db.part/user -100]
                   :db/ident zone}]]
     (d/transact conn tx-data)))
 
