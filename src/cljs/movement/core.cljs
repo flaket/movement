@@ -4,7 +4,7 @@
             [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
             [goog.history.EventType :as EventType]
-            [cljsjs.react :as react]
+            #_[cljsjs.react :as react]
             [movement.util :refer [get-all-categories get-all-movements get-templates hook-browser-navigation! set-page!]]
             [movement.user :refer [user-component]]
             [movement.template :refer [template-creator-component]]
@@ -41,7 +41,7 @@
   (when (session/get :user)
     (set-page! #'generator-component))
 
-  (.initializeTouchEvents js/React true)
+  #_(.initializeTouchEvents js/React true)
   (mount-root))
 
 (init!)

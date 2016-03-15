@@ -7,7 +7,6 @@
     [reagent.core :refer [atom]]
     [cljs.core.async :as async :refer [timeout <!]]
     [cljs.reader :as reader]
-    [goog.events :as events]
     [clojure.string :as str]
     [movement.util :refer [handler-fn positions GET POST get-plans get-ongoing-plan
                            get-stored-sessions get-groups]]
@@ -173,20 +172,59 @@
          :on-change   #(reset! data (-> % .-target .-value))}]])))
 
 (defn rep-component [rep id position-in-parts]
-  (let [rep-clicked? (atom false)]
-    (fn [rep]
+  (let [rep-clicked? (atom false)
+        has-data? (and rep (< 0 rep))]
+    (fn []
       [:div
-       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
-                               :className (str (if-not (and rep (< 0 rep)) " no-data" " data") (when @rep-clicked? " selected"))
-                               :on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} "reps"]
+       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
+                                       :opacity (if has-data? 1 0.2)}
+                               :on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} "Repetisjoner"]
        (when @rep-clicked?
          [slider-component position-in-parts id :rep 0 50 1])])))
 
-;(defn distance [])
-;(defn duration [])
-;(defn rest [])
-;(defn weight [])
-;(defn set [])
+(defn distance-component [distance id position-in-parts]
+  (let [distance-clicked? (atom false)
+        has-data? (and distance (< 0 distance))]
+    (fn []
+      [:div
+       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
+                                       :opacity (if has-data? 1 0.2)}
+                               :on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} "Avstand"]
+       (when @distance-clicked?
+         [slider-component position-in-parts id :distance 0 400 5])])))
+
+(defn duration-component [duration id position-in-parts]
+  (let [duration-clicked? (atom false)
+        has-data? (and duration (< 0 duration))]
+    (fn []
+      [:div
+       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
+                                       :opacity (if has-data? 1 0.2)}
+                               :on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))} "Tid"]
+       (when @duration-clicked?
+         [slider-component position-in-parts id :duration 0 1800 10])])))
+
+
+(defn weight-component [weight id position-in-parts]
+  (let [weight-clicked? (atom false)
+        has-data? (and weight (< 0 weight))]
+    (fn []
+      [:div
+       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
+                              :opacity (if has-data? 1 0.2)}
+                      :on-click #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))} "Vekt"]
+       (when @weight-clicked?
+         [slider-component position-in-parts id :weight 0 200 2.5])])))
+(defn rest-component [rest id position-in-parts]
+  (let [rest-clicked? (atom false)
+        has-data? (and rest (< 0 rest))]
+    (fn []
+      [:div
+       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
+                                       :opacity (if has-data? 1 0.2)}
+                               :on-click #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))} "Hvile"]
+       (when @rest-clicked?
+         [slider-component position-in-parts id :rest 0 240 10])])))
 
 (defn movement-component
   [{:keys [id unique name category measurement easier harder description zone
@@ -267,7 +305,11 @@
                "Bytt med vanskeligere"])]
 
            [:div.pure-g
-            [rep-component rep id position-in-parts]]]
+            [rep-component rep id position-in-parts]
+            [distance-component distance id position-in-parts]
+            [duration-component duration id position-in-parts]
+            [weight-component weight id position-in-parts]
+            [rest-component rest id position-in-parts]]]
 
           )]
 
@@ -542,7 +584,8 @@
                 6 "juli" 7 "august" 8 "september" 9 "oktober" 10 "november" 11 "desember"}
         date (js/Date.)
         day (.getDate date)
-        month (get months (.getMonth date))]
+        month (get months (.getMonth date))
+        ]
     (fn [{:keys [title description]}]
       [:div.pure-u-1
        [:div.pure-g
