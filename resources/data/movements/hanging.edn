@@ -10,14 +10,14 @@
  {:db/id #db/id[:db.part/user -5] :category/name "Bent Arm Strength"}
 
  {:db/id                #db/id[:db.part/user -100]
-  :movement/unique-name "Pull Up"}
+  :movement/name "Pull Up"}
  {:db/id                #db/id[:db.part/user -101]
-  :movement/unique-name "Elbow Pull Up"}
+  :movement/name "Elbow Pull Up"}
 
  ;; hanging
 
  {:db/id                #db/id[:db.part/user -200]
-  :movement/unique-name "Passive Hang"
+  :movement/name "Passive Hang"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -33]]
@@ -25,7 +25,7 @@
   :movement/harder      [#db/id[:db.part/user -201]]}
 
  {:db/id                #db/id[:db.part/user -201]
-  :movement/unique-name "Active Hang"
+  :movement/name "Active Hang"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
@@ -35,7 +35,7 @@
   :movement/harder      [#db/id[:db.part/user -202]]}
 
  {:db/id                #db/id[:db.part/user -202]
-  :movement/unique-name "Hanging Pull"
+  :movement/name "Hanging Pull"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
@@ -46,7 +46,7 @@
                          #db/id[:db.part/user -101]]}
 
  {:db/id                #db/id[:db.part/user -203]
-  :movement/unique-name "Arching Hang"
+  :movement/name "Arching Hang"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
@@ -55,7 +55,7 @@
   :movement/easier      [#db/id[:db.part/user -202]]}
 
  {:db/id                #db/id[:db.part/user -204]
-  :movement/unique-name "False Grip Hang"
+  :movement/name "False Grip Hang"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -33]]
@@ -63,7 +63,7 @@
   :movement/easier      [#db/id[:db.part/user -200]]}
 
  {:db/id                #db/id[:db.part/user -205]
-  :movement/unique-name "One Arm Passive Hang"
+  :movement/name "One Arm Passive Hang"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -33]]
@@ -72,7 +72,7 @@
   :movement/harder      [#db/id[:db.part/user -206]]}
 
  {:db/id                #db/id[:db.part/user -206]
-  :movement/unique-name "One Arm Active Hang"
+  :movement/name "One Arm Active Hang"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
@@ -82,7 +82,7 @@
   :movement/harder      [#db/id[:db.part/user -207]]}
 
  {:db/id                #db/id[:db.part/user -207]
-  :movement/unique-name "One Arm Pull"
+  :movement/name "One Arm Pull"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
@@ -92,7 +92,7 @@
 
  ;; Brachiating
  {:db/id                #db/id[:db.part/user -208]
-  :movement/unique-name "Lateral Swing"
+  :movement/name "Lateral Swing"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -102,7 +102,7 @@
   :movement/harder      [#db/id[:db.part/user -209]]}
 
  {:db/id                #db/id[:db.part/user -209]
-  :movement/unique-name "Release Hand Lateral Swing"
+  :movement/name "Release Hand Lateral Swing"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -112,7 +112,7 @@
   :movement/easier      [#db/id[:db.part/user -208]]}
 
  {:db/id                #db/id[:db.part/user -210]
-  :movement/unique-name "Lateral Swing Holds"
+  :movement/name "Lateral Swing Holds"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -123,7 +123,7 @@
                          #db/id[:db.part/user -208]]}
 
  {:db/id                #db/id[:db.part/user -211]
-  :movement/unique-name "Linear Swing"
+  :movement/name "Linear Swing"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -131,7 +131,7 @@
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -300]
-  :movement/unique-name "Figure 8 Swing"
+  :movement/name "Figure 8 Swing"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -142,7 +142,7 @@
  ;; suspension swing - "archer drill": two rings far apart, large swings
 
  {:db/id                #db/id[:db.part/user -212]
-  :movement/unique-name "Bent Arm Lateral Traverse"
+  :movement/name "Bent Arm Lateral Traverse"
   :movement/category    [#db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -5]
@@ -152,7 +152,7 @@
                          #db/id[:db.part/user -209]]}
 
  {:db/id                #db/id[:db.part/user -213]
-  :movement/unique-name "Swinging Lateral Traverse"
+  :movement/name "Swinging Lateral Traverse"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -162,7 +162,7 @@
   :movement/easier      [#db/id[:db.part/user -209]]}
 
  {:db/id                #db/id[:db.part/user -214]
-  :movement/unique-name "Bent Arm Linear Traverse"
+  :movement/name "Bent Arm Linear Traverse"
   :movement/category    [#db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -5]
@@ -172,7 +172,7 @@
                          #db/id[:db.part/user -209]]}
 
  {:db/id                #db/id[:db.part/user -215]
-  :movement/unique-name "Swinging Linear Traverse"
+  :movement/name "Swinging Linear Traverse"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]

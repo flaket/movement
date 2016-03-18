@@ -4,149 +4,149 @@
 
  ;; abdominal
  {:db/id                #db/id[:db.part/user -98]
-  :movement/unique-name "Sit Up"
+  :movement/name "Sit Up"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/harder      [#db/id[:db.part/user -99]]}
 
  {:db/id                #db/id[:db.part/user -99]
-  :movement/unique-name "Sit Up Pike"
+  :movement/name "Sit Up Pike"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/easier      [#db/id[:db.part/user -98]]}
 
  {:db/id                #db/id[:db.part/user -100]
-  :movement/unique-name "Tuck V Up"
+  :movement/name "Tuck V Up"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions
   :movement/harder      [#db/id[:db.part/user -101]]}
 
  {:db/id                #db/id[:db.part/user -101]
-  :movement/unique-name "V Up"
+  :movement/name "V Up"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -100]]}
 
  {:db/id                #db/id[:db.part/user -102]
-  :movement/unique-name "Sitting Leg Lift"
+  :movement/name "Sitting Leg Lift"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -103]
-  :movement/unique-name "Lying Leg Lift"
+  :movement/name "Lying Leg Lift"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -200]
-  :movement/unique-name "Lying Leg Circle"
+  :movement/name "Lying Leg Circle"
   :movement/category    [#db/id[:db.part/user -1]]}
 
  {:db/id                #db/id[:db.part/user -104]
-  :movement/unique-name "Incline Bench Leg Lift"
+  :movement/name "Incline Bench Leg Lift"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -103]]
   :movement/harder      [#db/id[:db.part/user -105]]}
 
  {:db/id                #db/id[:db.part/user -105]
-  :movement/unique-name "Hanging Leg Lift"
+  :movement/name "Hanging Leg Lift"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -104]]}
 
  {:db/id                #db/id[:db.part/user -106]
-  :movement/unique-name "Hollow Body"
+  :movement/name "Hollow Body"
   :movement/measurement :measurement/duration
   :movement/category    [#db/id[:db.part/user -1]]}
 
  {:db/id                #db/id[:db.part/user -107]
-  :movement/unique-name "Hollow Body Rock"
+  :movement/name "Hollow Body Rock"
   :movement/measurement :measurement/repetitions
   :movement/category    [#db/id[:db.part/user -1]]}
 
  {:db/id                #db/id[:db.part/user -108]
-  :movement/unique-name "Parallell Bar Tuck L Sit"
+  :movement/name "Parallell Bar Tuck L Sit"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/harder      [#db/id[:db.part/user -109]]
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -109]
-  :movement/unique-name "Parallell Bar L Sit"
+  :movement/name "Parallell Bar L Sit"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/duration
   :movement/easier      [#db/id[:db.part/user -108]]
   :movement/harder      [#db/id[:db.part/user -110]]}
 
  {:db/id                #db/id[:db.part/user -110]
-  :movement/unique-name "L Sit"
+  :movement/name "L Sit"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/duration
   :movement/easier      [#db/id[:db.part/user -109]]
   :movement/harder      [#db/id[:db.part/user -111]]}
 
  {:db/id                #db/id[:db.part/user -111]
-  :movement/unique-name "L Straddle"
+  :movement/name "L Straddle"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/easier      [#db/id[:db.part/user -110]]
   :movement/harder      [#db/id[:db.part/user -112]]
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -112]
-  :movement/unique-name "Ring L Sit"
+  :movement/name "Ring L Sit"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/duration
   :movement/easier      [#db/id[:db.part/user -109]]}
 
  {:db/id                #db/id[:db.part/user -113]
-  :movement/unique-name "Rotational Rocking"
+  :movement/name "Rotational Rocking"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions}
 
 ; back
  {:db/id                #db/id[:db.part/user -114]
-  :movement/unique-name "Headstand Leg Lift"
+  :movement/name "Headstand Leg Lift"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions
   :movement/harder      [#db/id[:db.part/user -115]]}
 
  {:db/id                #db/id[:db.part/user -115]
-  :movement/unique-name "Headstand Straight Leg Lift"
+  :movement/name "Headstand Straight Leg Lift"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -114]]}
 
  {:db/id                #db/id[:db.part/user -116]
-  :movement/unique-name "Arch Up"
+  :movement/name "Arch Up"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -117]
-  :movement/unique-name "Superman"
+  :movement/name "Superman"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -118]
-  :movement/unique-name "Superman Rocking"
+  :movement/name "Superman Rocking"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions}
 
 ; plank
  {:db/id                #db/id[:db.part/user -119]
-  :movement/unique-name "Plank"
+  :movement/name "Plank"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/duration
   :movement/harder      [#db/id[:db.part/user -122]]}
 
  {:db/id                #db/id[:db.part/user -120]
-  :movement/unique-name "Side Plank"
+  :movement/name "Side Plank"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -121]
-  :movement/unique-name "Inverted Plank"
+  :movement/name "Inverted Plank"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -122]
-  :movement/unique-name "One Arm Plank"
+  :movement/name "One Arm Plank"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/duration
   :movement/easier      [#db/id[:db.part/user -119]
@@ -154,13 +154,13 @@
 
  ; hanging lifting legs
  {:db/id                #db/id[:db.part/user -123]
-  :movement/unique-name "Hanging Knee Tuck"}
+  :movement/name "Hanging Knee Tuck"}
 
  {:db/id                #db/id[:db.part/user -124]
-  :movement/unique-name "Toes To Bar"}
+  :movement/name "Toes To Bar"}
 
  {:db/id                #db/id[:db.part/user -125]
-  :movement/unique-name "Hanging Leg Lift"
+  :movement/name "Hanging Leg Lift"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -123]
@@ -168,20 +168,20 @@
   :movement/harder      [#db/id[:db.part/user -126]]}
 
  {:db/id                #db/id[:db.part/user -126]
-  :movement/unique-name "Hanging 90 Leg Lift"
+  :movement/name "Hanging 90 Leg Lift"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -125]]
   :movement/harder      [#db/id[:db.part/user -128]]}
 
  {:db/id                #db/id[:db.part/user -127]
-  :movement/unique-name "Hanging 90 90 Hold"
+  :movement/name "Hanging 90 90 Hold"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/duration
   :movement/easier      [#db/id[:db.part/user -126]]}
 
  {:db/id                #db/id[:db.part/user -128]
-  :movement/unique-name "Hanging One Arm Leg Lift"
+  :movement/name "Hanging One Arm Leg Lift"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -126]]}

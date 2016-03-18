@@ -241,7 +241,7 @@
               (doall
                 (for [m movements]
                   ^{:key (:db/id m)}
-                  [movement-component (if (nil? (:movement/unique-name m)) (:movement/name m) (:movement/unique-name m)) (atom (:db/ident (:movement/zone m))) false (:movement/category m)]))]
+                  [movement-component (if (nil? (:movement/name m)) (:movement/name m) (:movement/name m)) (atom (:db/ident (:movement/zone m))) false (:movement/category m)]))]
              (when-let [movement (:selected-movement @explore-state)]
                (let [easier (:movement/easier movement)
                      harder (:movement/harder movement)]
@@ -252,14 +252,14 @@
                      [:div.pure-u-3-4
                       (for [m easier]
                         [:div.pure-g.center
-                         [movement-component (if (nil? (:movement/unique-name m)) (:movement/name m) (:movement/unique-name m)) (atom (:db/ident (:movement/zone m))) false (:movement/category m)]])]
+                         [movement-component (if (nil? (:movement/name m)) (:movement/name m) (:movement/name m)) (atom (:db/ident (:movement/zone m))) false (:movement/category m)]])]
                      [:div.pure-u-1-4
                       (when-not (empty? easier)
                         [:div.explore-green [:i.fa.fa-arrow-right]])]]]
 
                    [:div.pure-u-1-3
                     [:div.pure-g
-                     [movement-component (if (nil? (:movement/unique-name movement)) (:movement/name movement) (:movement/unique-name movement)) (atom (:db/ident (:movement/zone movement))) true (:movement/category movement)]]]
+                     [movement-component (if (nil? (:movement/name movement)) (:movement/name movement) (:movement/name movement)) (atom (:db/ident (:movement/zone movement))) true (:movement/category movement)]]]
 
                    [:div.pure-u-1-3
                     [:div.pure-g
@@ -270,7 +270,7 @@
                       (for [m harder]
                         [:div.pure-g
                          [:div.pure-u-1-5]
-                         [movement-component (if (nil? (:movement/unique-name m)) (:movement/name m) (:movement/unique-name m)) (atom (:db/ident (:movement/zone m))) false (:movement/category m)]])]]]]]))))]]])))
+                         [movement-component (if (nil? (:movement/name m)) (:movement/name m) (:movement/name m)) (atom (:db/ident (:movement/zone m))) false (:movement/category m)]])]]]]]))))]]])))
 
 (defn template-result [t]
   (let [selected (atom false)

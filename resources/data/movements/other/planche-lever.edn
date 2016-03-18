@@ -13,7 +13,7 @@
  ;; {:movement/unique-name "Assisted Tuck Back Lever"}
 
  {:db/id                #db/id[:db.part/user -100]
-  :movement/unique-name "Tuck Back Lever"
+  :movement/name "Tuck Back Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]
@@ -22,7 +22,7 @@
   :movement/harder      [#db/id[:db.part/user -101]]}
 
  {:db/id                #db/id[:db.part/user -101]
-  :movement/unique-name "Flat Back Lever"
+  :movement/name "Flat Back Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]
@@ -32,7 +32,7 @@
   :movement/harder      [#db/id[:db.part/user -102]]}
 
  {:db/id                #db/id[:db.part/user -102]
-  :movement/unique-name "One Leg Extended Back Lever"
+  :movement/name "One Leg Extended Back Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]
@@ -42,7 +42,7 @@
   :movement/harder      [#db/id[:db.part/user -103]]}
 
  {:db/id                #db/id[:db.part/user -103]
-  :movement/unique-name "Straddle Back Lever"
+  :movement/name "Straddle Back Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]
@@ -52,7 +52,7 @@
   :movement/harder      [#db/id[:db.part/user -104]]}
 
  {:db/id                #db/id[:db.part/user -104]
-  :movement/unique-name "Back Lever"
+  :movement/name "Back Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]
@@ -65,7 +65,7 @@
  ;; {:movement/unique-name "Assisted Tuck Front Lever"}
 
  {:db/id                #db/id[:db.part/user -105]
-  :movement/unique-name "Tuck Front Lever"
+  :movement/name "Tuck Front Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -74,7 +74,7 @@
   :movement/harder      [#db/id[:db.part/user -106]]}
 
  {:db/id                #db/id[:db.part/user -106]
-  :movement/unique-name "Flat Front Lever"
+  :movement/name "Flat Front Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -84,7 +84,7 @@
   :movement/harder      [#db/id[:db.part/user -107]]}
 
  {:db/id                #db/id[:db.part/user -107]
-  :movement/unique-name "One Leg Extended Front Lever"
+  :movement/name "One Leg Extended Front Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -94,7 +94,7 @@
   :movement/harder      [#db/id[:db.part/user -108]]}
 
  {:db/id                #db/id[:db.part/user -108]
-  :movement/unique-name "Straddle Front Lever"
+  :movement/name "Straddle Front Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -104,7 +104,7 @@
   :movement/harder      [#db/id[:db.part/user -109]]}
 
  {:db/id                #db/id[:db.part/user -109]
-  :movement/unique-name "Front Lever"
+  :movement/name "Front Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -114,7 +114,7 @@
 
  ;; Side lever
  {:db/id                #db/id[:db.part/user -110]
-  :movement/unique-name "Tuck Side Lever"
+  :movement/name "Tuck Side Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -7]]
@@ -122,7 +122,7 @@
   :movement/harder      [#db/id[:db.part/user -111]]}
 
  {:db/id                #db/id[:db.part/user -111]
-  :movement/unique-name "Flat Side Lever"
+  :movement/name "Flat Side Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -7]]
@@ -131,7 +131,7 @@
   :movement/harder      [#db/id[:db.part/user -112]]}
 
  {:db/id                #db/id[:db.part/user -112]
-  :movement/unique-name "Straddle Side Lever"
+  :movement/name "Straddle Side Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -7]]
@@ -140,7 +140,7 @@
   :movement/harder      [#db/id[:db.part/user -113]]}
 
  {:db/id                #db/id[:db.part/user -113]
-  :movement/unique-name "Side Lever"
+  :movement/name "Side Lever"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -7]]
@@ -149,17 +149,17 @@
 
  ;; Planche
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Scapula Push Up"
+  :movement/name "Scapula Push Up"
   :movement/category    [#db/id[:db.part/user -1]]}
 
  {:db/id                #db/id[:db.part/user -114]
-  :movement/unique-name "Planche Lean"
+  :movement/name "Planche Lean"
   :movement/measurement :measurement/duration
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/harder      [#db/id[:db.part/user -115]]}
 
  {:db/id                #db/id[:db.part/user -115]
-  :movement/unique-name "Handstand Lean"
+  :movement/name "Handstand Lean"
   :movement/measurement :measurement/duration
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/easier      [#db/id[:db.part/user -114]]}
@@ -167,14 +167,14 @@
  ;; {:movement/unique-name "Assisted Tuck Planche"}
 
  {:db/id                #db/id[:db.part/user -117]
-  :movement/unique-name "Tuck Planche"
+  :movement/name "Tuck Planche"
   :movement/measurement :measurement/duration
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -5]]
   :movement/harder      [#db/id[:db.part/user -118]]}
 
  {:db/id                #db/id[:db.part/user -118]
-  :movement/unique-name "Flat Planche"
+  :movement/name "Flat Planche"
   :movement/measurement :measurement/duration
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -5]]
@@ -182,7 +182,7 @@
   :movement/harder      [#db/id[:db.part/user -119]]}
 
  {:db/id                #db/id[:db.part/user -119]
-  :movement/unique-name "One Leg Extended Planche"
+  :movement/name "One Leg Extended Planche"
   :movement/measurement :measurement/duration
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -5]]
@@ -190,7 +190,7 @@
   :movement/harder      [#db/id[:db.part/user -120]]}
 
  {:db/id                #db/id[:db.part/user -120]
-  :movement/unique-name "Straddle Planche"
+  :movement/name "Straddle Planche"
   :movement/measurement :measurement/duration
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -5]]
@@ -198,7 +198,7 @@
   :movement/harder      [#db/id[:db.part/user -121]]}
 
  {:db/id                #db/id[:db.part/user -121]
-  :movement/unique-name "Planche"
+  :movement/name "Planche"
   :movement/measurement :measurement/duration
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -5]]
@@ -206,14 +206,14 @@
 
  ;; other
  {:db/id                #db/id[:db.part/user -122]
-  :movement/unique-name "Hanging To German Hang"
+  :movement/name "Hanging To German Hang"
   :movement/measurement :measurement/repetitions
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -7]]}
 
  {:db/id                #db/id[:db.part/user -123]
-  :movement/unique-name "Pull From German Hang"
+  :movement/name "Pull From German Hang"
   :movement/measurement :measurement/repetitions
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]

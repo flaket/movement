@@ -13,14 +13,14 @@
  {:db/id #db/id[:db.part/user -11] :category/name "Acrobatic"}
 
  {:db/id             #db/id[:db.part/user -300]
-  :movement/unique-name     "Running Lateral Jump"}
+  :movement/name     "Running Lateral Jump"}
  {:db/id             #db/id[:db.part/user -301]
-  :movement/unique-name     "Box Jump"}
+  :movement/name     "Box Jump"}
 
  ;; more leg strength in lifting.edn
 
  {:db/id                #db/id[:db.part/user -100]
-  :movement/unique-name "Front Flip"
+  :movement/name "Front Flip"
   :movement/category    [#db/id[:db.part/user -10]
                          #db/id[:db.part/user -11]]
   :movement/easier      [#db/id[:db.part/user -300]
@@ -28,14 +28,14 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -101]
-  :movement/unique-name "Back Flip"
+  :movement/name "Back Flip"
   :movement/category    [#db/id[:db.part/user -10]
                          #db/id[:db.part/user -300]
                          #db/id[:db.part/user -301]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -102]
-  :movement/unique-name "Back Squat"
+  :movement/name "Back Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -43,7 +43,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -103]
-  :movement/unique-name "Overhead Squat"
+  :movement/name "Overhead Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -51,7 +51,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -104]
-  :movement/unique-name "Back Lunge"
+  :movement/name "Back Lunge"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -59,7 +59,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -105]
-  :movement/unique-name "Overhead Lunge"
+  :movement/name "Overhead Lunge"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -67,7 +67,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -106]
-  :movement/unique-name "Snatch"
+  :movement/name "Snatch"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -75,7 +75,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -107]
-  :movement/unique-name "Thruster"
+  :movement/name "Thruster"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -84,41 +84,41 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -108]
-  :movement/unique-name "Squat"
+  :movement/name "Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -109]
-  :movement/unique-name "Lunge"
+  :movement/name "Lunge"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -5]]
   :movement/measurement :measurement/repetitions
   :movement/harder      [#db/id[:db.part/user -109]]}
 
  {:db/id                #db/id[:db.part/user -110]
-  :movement/unique-name "Elevated Split Squat"
+  :movement/name "Elevated Split Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/repetitions
   :movement/harder      [#db/id[:db.part/user -111]]}
 
  {:db/id                #db/id[:db.part/user -111]
-  :movement/unique-name "Chair Pistol Squat"
+  :movement/name "Chair Pistol Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/repetitions
   :movement/harder      [#db/id[:db.part/user -112]]}
 
  {:db/id                #db/id[:db.part/user -112]
-  :movement/unique-name "Pistol Squat"
+  :movement/name "Pistol Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -7]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -113]
-  :movement/unique-name "Shin Shrimp Squat"
+  :movement/name "Shin Shrimp Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -7]]
@@ -126,7 +126,7 @@
   :movement/harder      [#db/id[:db.part/user -114]]}
 
  {:db/id                #db/id[:db.part/user -114]
-  :movement/unique-name "Knee Shrimp Squat"
+  :movement/name "Knee Shrimp Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -7]]
@@ -135,7 +135,7 @@
   :movement/harder      [#db/id[:db.part/user -115]]}
 
  {:db/id                #db/id[:db.part/user -115]
-  :movement/unique-name "Shrimp Squat"
+  :movement/name "Shrimp Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -7]]
@@ -143,7 +143,7 @@
   :movement/easier      [#db/id[:db.part/user -114]]}
 
  {:db/id                #db/id[:db.part/user -116]
-  :movement/unique-name "Elevated Crossing Pistol Squat"
+  :movement/name "Elevated Crossing Pistol Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -7]]
@@ -152,7 +152,7 @@
   :movement/harder      [#db/id[:db.part/user -117]]}
 
  {:db/id                #db/id[:db.part/user -117]
-  :movement/unique-name "Crossing Pistol Squat"
+  :movement/name "Crossing Pistol Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -7]]

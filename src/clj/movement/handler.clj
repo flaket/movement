@@ -37,7 +37,8 @@
             [movement.pages.session :refer [view-session-page view-sub-activated-page]]
             [movement.activation :refer [generate-activation-id send-email send-activation-email]])
   (:import java.security.MessageDigest
-           java.math.BigInteger))
+           java.math.BigInteger
+           (java.util UUID)))
 
 (selmer.parser/set-resource-path! (clojure.java.io/resource "templates"))
 
@@ -61,7 +62,7 @@
     (str padding sig)))
 
 (defn valid-user? [user password]
-  (hashers/check password (:user/password user)))
+  (hashers/check password (:password user)))
 
 (def secret "mysupersecret")
 
@@ -69,18 +70,16 @@
 
 (defn jws-login
   [email password]
-  (let [user (old-db/find-user email)]
+  (let [user (db/find-user email)]
     (cond
-      (nil? (:db/id user)) (response {:message "Unknown user"} 400)
-      (false? (:user/activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
-      (false? (:user/valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
+      (nil? user) (response {:message "Unknown user"} 400)
+      (false? (:activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
+      (false? (:valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
       (valid-user? user password) (let [claims {:user (keyword email)
                                                 :exp  (-> 3 hours from-now)}
                                         token (jws/sign claims secret {:alg :hs512})]
                                     (response {:token    token
-                                               :user     (:user/email user)
-                                               :email    (:user/email user)
-                                               :username (:user/name user)}))
+                                               :email    email}))
       :else (response {:message "Incorrect password"} 401))))
 
 ;;;;;;;;;;;
@@ -92,30 +91,11 @@
       (response {:message "User email lacking from client data" :session session} 400)
       (try
         (do
-          (when (:last-session? session)
-            (old-db/progress-plan! (:plan-id session)))
-          (old-db/transact-session! user session)
-          (old-db/transact-new-movements! user (:parts session)))
+          (db/add-session! user session)
+          #_(db/add-new-movements! user session))
         (catch Exception e
           (error e (str "error transacting session: user: " user " session: " session)))
-        (finally (do (update-tx-db!)
-                     (response {:message "Session stored successfully"})))))))
-
-(defn try-assoc-template! [email template]
-  (try
-    (old-db/assoc-template! email template)
-    (catch Exception e
-      (response (str "Exception: " e)))
-    (finally (do (update-tx-db!)
-                 (response "Template added successfully.")))))
-
-(defn assoc-template! [req]
-  (let [email (:email (:params req))
-        id (:id (:params req))
-        template (old-db/entity-by-id id)]
-    (if (nil? email)
-      (response "User email lacking from client data" 400)
-      (try-assoc-template! email template))))
+        (finally (response {:message "Session stored successfully"}))))))
 
 (defn add-template!
   "Adds the new template to the database."
@@ -133,181 +113,20 @@
                        (response "Template added successfully."))))
         (response "You already have a template with this title. Please choose a unique title for your template." 400)))))
 
-(defn dissoc-template! [req]
-  (let [email (:email (:params req))
-        id (:id (:params req))]
-    (if (nil? email)
-      (response "User email lacking from client data" 400)
-      (try
-        (old-db/dissoc-template! email id)
-        (catch Exception e
-          (response (str "Exception: " e)))
-        (finally (update-tx-db!))))))
-
-(defn assoc-group! [req]
-  (let [email (:email (:params req))
-        group (old-db/entity-by-id (:id (:params req)))]
-    (if (nil? email)
-      (response "User email lacking from client data" 400)
-      (try
-        (old-db/assoc-group! email group)
-        (catch Exception e
-          (response (str "Exception: " e)))
-        (finally (update-tx-db!))))))
-
-(defn dissoc-group! [req]
-  (let [email (:email (:params req))
-        id (:id (:params req))]
-    (if (nil? email)
-      (response "User email lacking from client data" 400)
-      (try
-        (old-db/dissoc-group! email id)
-        (catch Exception e
-          (response (str "Exception: " e)))
-        (finally (update-tx-db!))))))
-
-(defn assoc-plan! [req]
-  (let [email (:email (:params req))
-        plan (old-db/entity-by-id (:id (:params req)))]
-    (if (nil? email)
-      (response "User email lacking from client data" 400)
-      (try
-        (old-db/assoc-plan! email plan)
-        (catch Exception e
-          (response (str "Exception: " e)))
-        (finally (update-tx-db!))))))
-
-(defn add-group! [req]
-  (let [email (:email (:params req))
-        group (:group (:params req))]
-    (if (nil? email)
-      (response "User email lacking from client data" 400)
-      (if (old-db/new-unique-group? email (:title group))
-        (try
-          (old-db/transact-group! group)
-          (catch Exception e
-            (response (str "Exception: " e)))
-          (finally (do (update-tx-db!)
-                       (response "New group stored successfully."))))
-        (response "You already have a group with this title. Please choose a unique title for your group." 400)))))
-
-(defn add-plan! [req]
-  (let [email (:email (:params req))
-        plan (:plan (:params req))]
-    (if (nil? email)
-      (response "User email lacking from client data" 400)
-      (if (old-db/new-unique-plan? email (:title plan))
-        (try
-          (old-db/transact-plan! plan)
-          (catch Exception e
-            (response (str "Exception: " e)))
-          (finally (do (update-tx-db!)
-                       (response "New plan stored successfully."))))
-        (response "You already have a plan with this title. Please choose a unique title for your plan." 400)))))
-
-(defn add-routine! [req]
-  (let [email (:email (:params req))
-        routine (:routine (:params req))]
-    (if (nil? email)
-      (response "User email lacking from client data" 400)
-      (if (old-db/new-unique-routine? email (:name routine))
-        (try
-          (old-db/transact-routine! routine)
-          (catch Exception e
-            (response (str "Exception: " e)))
-          (finally (do (update-tx-db!)
-                       (response "New routine stored successfully."))))
-        (response "You already have a routine with this title. Please choose a unique title for your routine." 400)))))
-
 (defn add-user! [email password]
-  (if (nil? (:db/id (old-db/find-user email)))
-    (let [activation-id (generate-activation-id)]
-      (old-db/transact-new-user! email password activation-id)
+  (if (nil? (db/find-user email))
+    (let [activation-id (str (UUID/randomUUID))]
+      (db/add-user! email password activation-id)
       (send-activation-email email activation-id)
       (send-email "admin@movementsession.com" "A new user registered!" "")
-      (update-tx-db!)
       (activation-page "To verify your email address we have sent you an activation email."))
     (pricing-page (str email " is already registered as a user."))))
 
-(defn set-zone! [email name zone]
+(defn set-zone! [email movement zone]
   (try
-    (old-db/transact-zone-data! email name zone)
+    (db/update-zone! email movement zone)
     (catch Exception e
-      (response (str "Exception: " e)))
-    (finally (do (update-tx-db!)
-                 (response "Zone set successfully!")))))
-
-(defn begin-plan! [user-id plan-id]
-  (try
-    (old-db/begin-plan! user-id plan-id)
-    (catch Exception e
-      (response "An error occured trying to begin this plan."))
-    (finally (do (update-tx-db!)
-                 (response "Plan started successfully!")))))
-
-(defn progress-plan! [plan-id]
-  (try
-    (old-db/progress-plan! plan-id)
-    (catch Exception e
-      (response (str "Exception: " e)))
-    (finally (do (update-tx-db!)
-                 (response "Plan progressed successfully!")))))
-
-(defn end-plan! [user-id plan-id]
-  (try
-    (old-db/end-plan! user-id plan-id)
-    (catch Exception e
-      (response (str "Exception: " e)))
-    (finally (do (update-tx-db!)
-                 (response "Plan ended successfully!")))))
-
-(defn next-session-from-plan [req]
-  (let [user-entity (old-db/find-user (:email (:params req)))
-        plan (old-db/entity-by-id (:db/id (:user/ongoing-plan user-entity)))
-        current-day (old-db/entity-by-id (:db/id (:plan/current-day plan)))
-        templates (:day/template current-day)
-        ;;todo: group (:day/group current-day)
-
-        current (:plan/current-day plan)
-        days (:plan/day plan)
-        ]
-    ; if finished (current is last day and day is completed): end-plan, return stats
-    (if (and (= current (last days)) (:day/completed? current-day))
-      (do
-        (end-plan! (:db/id user-entity) (:db/id plan))
-        {:title "Plan completed!"
-         :plan-completed? true})
-      (cond
-        ; if no templates today; progress plan and return rest day
-        (nil? templates) (do
-                           (old-db/progress-plan! (:db/id plan))
-                           (old-db/update-tx-conn!)
-                           (old-db/update-tx-db!)
-                           {:title       "A Rest Day"
-                            :description "The plan calls for a rest day. How about playing some sports or going for a hike?"})
-        ; if one template; return session with last-session? flag true
-        (= 1 (count templates)) (let [template (old-db/entity-by-id (:db/id (first templates)))
-                                      template (assoc template :plan-id (:db/id plan) :last-session? true)]
-                                  (old-db/create-session (:user/email user-entity) template))
-        ; else; it gets tricky..
-        :else (let [last-session (atom false)
-              last-planned-session (last (filter #(= (:db/id plan)
-                                                     (:db/id (:session/plan (old-db/entity-by-id (:db/id %)))))
-                                                 (:user/session user-entity)))
-              template-id (if (nil? last-planned-session)
-                            (first templates)
-                            (let [s (:session/title (old-db/entity-by-id (:db/id last-planned-session)))
-                                  pos (vec (positions #{s} (map (fn [t] (:template/title (old-db/entity-by-id (:db/id t)))) templates)))]
-                              (if-not (empty? pos)
-                                (do
-                                  (when (= (get templates (first pos)) (last templates))
-                                    (reset! last-session true))
-                                  (get templates (inc (first pos))))
-                                (first templates))))
-              template (old-db/entity-by-id (:db/id template-id))
-              template (assoc template :plan-id (:db/id plan)
-                                       :last-session? @last-session)]
-          (old-db/create-session (:user/email user-entity) template))))))
+      (response (str "Exception: " e)))))
 
 (defn activate-user! [id]
   (let [user (old-db/entity-by-lookup-ref :user/activation-id id)]
@@ -324,28 +143,22 @@
   (let [email (:username (:params req))
         password (:password (:params req))
         new-password (:new-password (:params req))
-        user (old-db/find-user email)]
+        user (db/find-user email)]
     (if (valid-user? user password)
       (try
-        (response (old-db/transact-new-password! user new-password))
+        (response (db/update-password! email new-password))
         (catch Exception e
-          (error e "error changing password: ")
-          (response "Error changing password" 500))
-        (finally (update-tx-db!)))
+          (response "Error changing password" 500)))
       (response "Wrong old password" 400))))
 
 (defn change-username! [req]
   (let [email (:email (:params req))
         username (:username (:params req))]
-    (if (old-db/new-unique-username? username)
-      (try
-        (response {:message  (old-db/transact-username! email username)
-                   :username username})
-        (catch Exception e
-          (error e "error changing username: ")
-          (response "Error changing username" 500))
-        (finally (update-tx-db!)))
-      (response "This username is already taken" 400))))
+    (try
+      (response {:message  (db/update-name! email username)
+                 :username username})
+      (catch Exception e
+        (response {:message  "Error changing username"} 500)))))
 
 (defn update-subscription-status! [{:keys [security_data security_hash
                                            SubscriptionReferrer SubscriptionIsTest
@@ -362,7 +175,7 @@
                        "SubscriptionQuantity: " SubscriptionQuantity "\n"
                        "SubscriptionCustomerUrl: " SubscriptionCustomerUrl))
       (when value
-        (old-db/transact-subscription-status! SubscriptionReferrer value)))))
+        (db/update-subscription! SubscriptionReferrer value)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -379,96 +192,36 @@
            (GET "/activated/:user" [user] (payment-page user "Account successfully activated!"))
            (GET "/app" [] (render-file "app.html" {:dev (env :dev?) :csrf-token *anti-forgery-token*}))
 
-           (GET "/movements" req (if-not (authenticated? req) (throw-unauthorized) (response (db/all-movement-names))))
-           (GET "/categories" req (if-not (authenticated? req) (throw-unauthorized) (response (db/all-category-names))))
-           ;; --------------------------------------------------------
+           (GET "/movements" req (if (authenticated? req) (response (db/movements)) (throw-unauthorized)))
+           (GET "/categories" req (if (authenticated? req) (response (db/categories)) (throw-unauthorized)))
 
-           (GET "/activate/:id" [id] (do (when (nil? (:conn @tx)) (update-tx-conn!))
-                                         (when (nil? (:db @tx)) (update-tx-db!))
-                                       (activate-user! id)))
-
+           (GET "/activate/:id" [id] (db/activate-user! id))
            (GET "/subscription-activated" req (update-subscription-status! (:params req) true))
            (GET "/subscription-deactivated" req (update-subscription-status! (:params req) false))
 
-           (POST "/signup" [email password] (do
-                                              (when (nil? (:conn @tx))
-                                                (update-tx-conn!))
-                                              (update-tx-db!)
-                                              (add-user! email password)))
-           (POST "/login" [username password] (do
-                                                (when (nil? (:conn @tx))
-                                                  (update-tx-conn!))
-                                                (update-tx-db!)
-                                                (jws-login username password)))
+           (POST "/signup" [email password] (add-user! email password))
+           (POST "/login" [username password] (jws-login username password))
 
-
+           (GET "/user" req (if (authenticated? req)
+                              (let [email (:email (:params req))]
+                                (response (dissoc (db/find-user email)
+                                                  :password
+                                                  :activation-id
+                                                  :activated?
+                                                  :valid-subscription?))) (throw-unauthorized)))
+           (POST "/change-password" req (if (authenticated? req) (change-password! req) (throw-unauthorized)))
+           (POST "/change-username" req (if (authenticated? req) (change-username! req) (throw-unauthorized)))
+           (POST "/store-session" req (if (authenticated? req) (add-session! req) (throw-unauthorized)))
 
            ;; --------------------------------------------------------
 
-
-           (POST "/store-session" req (if-not (authenticated? req)
-                                        (throw-unauthorized)
-                                        (add-session! req)))
-           (POST "/template" req (if-not (authenticated? req)
-                                   (throw-unauthorized)
-                                   (add-template! req)))
-           (POST "/group" req (if-not (authenticated? req)
-                                (throw-unauthorized)
-                                (add-group! req)))
-           (POST "/routine" req (if-not (authenticated? req)
-                                  (throw-unauthorized)
-                                  (add-routine! req)))
-           (POST "/plan" req (if-not (authenticated? req)
-                               (throw-unauthorized)
-                               (add-plan! req)))
-           (POST "/change-password" req (if-not (authenticated? req)
-                                          (throw-unauthorized)
-                                          (change-password! req)))
-           (POST "/change-username" req (if-not (authenticated? req)
-                                          (throw-unauthorized)
-                                          (change-username! req)))
-           (POST "/assoc/template" req (if-not (authenticated? req)
-                                         (throw-unauthorized)
-                                         (assoc-template! req)))
-           (POST "/dissoc/template" req (if-not (authenticated? req)
-                                          (throw-unauthorized)
-                                          (dissoc-template! req)))
-           (POST "/assoc/group" req (if-not (authenticated? req)
-                                      (throw-unauthorized)
-                                      (assoc-group! req)))
-           (POST "/dissoc/group" req (if-not (authenticated? req)
-                                       (throw-unauthorized)
-                                       (dissoc-group! req)))
-           (POST "/assoc/plan" req (if-not (authenticated? req)
-                                     (throw-unauthorized)
-                                     (assoc-plan! req)))
-           (POST "/begin-plan" req (if-not (authenticated? req)
-                                     (throw-unauthorized)
-                                     (let [user-id (:db/id (old-db/find-user (:email (:params req))))
-                                           plan-id (:id (:params req))]
-                                       (begin-plan! user-id plan-id))))
-           (POST "/progress-plan" req (if-not (authenticated? req)
-                                     (throw-unauthorized)
-                                     (progress-plan! (:id (:params req)))))
-           (POST "/end-plan" req (if-not (authenticated? req)
-                                     (throw-unauthorized)
-                                     (let [user-id (:db/id (old-db/find-user (:email (:params req))))
-                                           plan-id (:id (:params req))]
-                                       (end-plan! user-id plan-id))))
            (POST "/set-zone" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (let [email (:email (:params req))
                                          name (:name (:params req))
                                          zone (:zone (:params req))]
                                      (set-zone! email name zone))))
-           (GET "/user" req (if-not (authenticated? req)
-                              (throw-unauthorized)
-                              (let [email (:email (:params req))]
-                                (response (dissoc (old-db/find-user email)
-                                                  :user/password
-                                                  :user/activation-id
-                                                  :user/activated?
-                                                  :user/valid-subscription?)))))
+
            (GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (response (old-db/retrieve-sessions req))))
@@ -479,40 +232,11 @@
                                         template (old-db/entity-by-id (if (string? id) (read-string id) id))
                                         email (:email (:params req))]
                                     (response (old-db/create-session email template)))))
-           (GET "/next-session-from-plan" req (if-not (authenticated? req)
-                                                (throw-unauthorized)
-                                                (response (next-session-from-plan req))))
+
            (GET "/templates" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (response (old-db/all-templates (str (:user (:params req)))))))
-           (GET "/group" req (if-not (authenticated? req)
-                               (throw-unauthorized)
-                               (let [group (:group (:params req))
-                                     email (:email (:params req))]
-                                 (response (old-db/create-session email
-                                             (old-db/random-template-from-group email group))))))
-           (GET "/groups" req (if-not (authenticated? req)
-                                (throw-unauthorized)
-                                (response (old-db/all-groups (str (:email (:params req)))))))
-           (GET "/plan" req (if-not (authenticated? req)
-                              (throw-unauthorized)
-                              (let [plan (:plan (:params req))
-                                    email (:email (:params req))]
-                                (response ""))))
-           (GET "/plans" req (if-not (authenticated? req)
-                               (throw-unauthorized)
-                               (response (old-db/all-plans (str (:email (:params req)))))))
-           (GET "/ongoing-plan" req (if-not (authenticated? req)
-                                     (throw-unauthorized)
-                                     (response (old-db/ongoing-plan (str (:email (:params req)))))))
-           (GET "/routine" req (if-not (authenticated? req)
-                                 (throw-unauthorized)
-                                 (let [routine (:routine (:params req))
-                                       email (:email (:params req))]
-                                   (response (old-db/get-routine email routine)))))
-           (GET "/routines" req (if-not (authenticated? req)
-                                  (throw-unauthorized)
-                                  (response (old-db/all-routines (str (:email (:params req)))))))
+
            (GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (response (old-db/movement
@@ -547,17 +271,6 @@
                                                  (old-db/get-movements-from-category
                                                    (read-string (:n (:params req)))
                                                    (:category (:params req))))))
-
-
-           #_(GET "/search/template" req (if-not (authenticated? req)
-                                         (throw-unauthorized)
-                                         (response (old-db/search :template (:template (:params req))))))
-           #_(GET "/search/group" req (if-not (authenticated? req)
-                                      (throw-unauthorized)
-                                      (response (old-db/search :group (:group (:params req))))))
-           #_(GET "/search/plan" req (if-not (authenticated? req)
-                                     (throw-unauthorized)
-                                     (response (old-db/search :plan (:plan (:params req))))))
            (resources "/")
            (not-found "Not Found"))
 

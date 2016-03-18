@@ -9,14 +9,14 @@
 
  ;; jumping
  {:db/id             #db/id[:db.part/user -100]
-  :movement/unique-name     "Single Leg Jump"
+  :movement/name     "Single Leg Jump"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/harder      [#db/id[:db.part/user -101]]}
 
  {:db/id             #db/id[:db.part/user -101]
-  :movement/unique-name     "Broad Jump"
+  :movement/name     "Broad Jump"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
@@ -24,7 +24,7 @@
   :movement/harder      [#db/id[:db.part/user -102]]}
 
  {:db/id             #db/id[:db.part/user -102]
-  :movement/unique-name     "Running Jump"
+  :movement/name     "Running Jump"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
@@ -32,21 +32,21 @@
   :movement/harder      [#db/id[:db.part/user -105]]}
 
  {:db/id             #db/id[:db.part/user -103]
-  :movement/unique-name     "Box Jump"
+  :movement/name     "Box Jump"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -101]]}
 
  {:db/id             #db/id[:db.part/user -104]
-  :movement/unique-name     "Depth Jump"
+  :movement/name     "Depth Jump"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -101]]}
 
  {:db/id             #db/id[:db.part/user -105]
-  :movement/unique-name     "Running Lateral Jump"
+  :movement/name     "Running Lateral Jump"
   :movement/category [#db/id[:db.part/user -1]
                       #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions

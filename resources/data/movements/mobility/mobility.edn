@@ -17,32 +17,32 @@
  {:db/id #db/id[:db.part/user -12] :category/name "Acrobatic"}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Tripod Transition"
+  :movement/name "Tripod Transition"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -11]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Ostrich Walk"
+  :movement/name "Ostrich Walk"
   :movement/category    [#db/id[:db.part/user -1]]
   :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Horse Stance Walk"
+  :movement/name "Horse Stance Walk"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/distance}
 
  ;; Hip
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Squat Hip Rotation"
+  :movement/name "Squat Hip Rotation"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Squat"
+  :movement/name "Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -11]
@@ -50,7 +50,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Resting Squat"
+  :movement/name "Resting Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -5]
@@ -59,7 +59,7 @@
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Split Squat"
+  :movement/name "Split Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -11]
@@ -67,14 +67,14 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Lunge"
+  :movement/name "Lunge"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Squat To Kneeling"
+  :movement/name "Squat To Kneeling"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -5]
@@ -83,7 +83,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Split Kneeling To Sitting"
+  :movement/name "Split Kneeling To Sitting"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -11]
@@ -91,7 +91,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Split Kneeling Walk"
+  :movement/name "Split Kneeling Walk"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -5]
@@ -99,7 +99,7 @@
   :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Squat To Tall Kneeling"
+  :movement/name "Squat To Tall Kneeling"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -5]
@@ -108,7 +108,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Deep Knee Bend"
+  :movement/name "Deep Knee Bend"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -11]
@@ -116,7 +116,7 @@
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Split Sit"
+  :movement/name "Split Sit"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -11]
@@ -124,82 +124,82 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Knee Push Away"
+  :movement/name "Knee Push Away"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Dynamic Soleus Stretch"
+  :movement/name "Dynamic Soleus Stretch"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Floor Hip Rotation"
+  :movement/name "Floor Hip Rotation"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Toes Stretch"
+  :movement/name "Toes Stretch"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Dynamic Toes Stretch"
+  :movement/name "Dynamic Toes Stretch"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Squat Sky Reach"
+  :movement/name "Squat Sky Reach"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Sky Reach Hold"
+  :movement/name "Sky Reach Hold"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Prayer Squat"
+  :movement/name "Prayer Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Squat Bow"
+  :movement/name "Squat Bow"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Front Leg Swing"
+  :movement/name "Front Leg Swing"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Side Leg Swing"
+  :movement/name "Side Leg Swing"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Back Leg Swing"
+  :movement/name "Back Leg Swing"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Kneeling To Tall Half Kneeling"
+  :movement/name "Kneeling To Tall Half Kneeling"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -11]
@@ -207,7 +207,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Kneeling To Tall Kneeling"
+  :movement/name "Kneeling To Tall Kneeling"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -11]
@@ -215,7 +215,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Lateral Half Kneeling"
+  :movement/name "Lateral Half Kneeling"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -5]
@@ -223,7 +223,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Sit To Tall Half Kneeling"
+  :movement/name "Sit To Tall Half Kneeling"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -11]
@@ -233,83 +233,83 @@
 
  ;; Shoulder
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band Shoulder Dislocation"
+  :movement/name "Band Shoulder Dislocation"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band External Rotation"
+  :movement/name "Band External Rotation"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band Lateral Raise"
+  :movement/name "Band Lateral Raise"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band Overhead Rotation"
+  :movement/name "Band Overhead Rotation"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band Side Rotation"
+  :movement/name "Band Side Rotation"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band Low Rotation"
+  :movement/name "Band Low Rotation"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band Overhead Fly"
+  :movement/name "Band Overhead Fly"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band Side Fly"
+  :movement/name "Band Side Fly"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band Low Fly"
+  :movement/name "Band Low Fly"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Scapula Push Up"
+  :movement/name "Scapula Push Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Band Overhead Pull Down"
+  :movement/name "Band Overhead Pull Down"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -9]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Cuban Rotation"
+  :movement/name "Cuban Rotation"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -10]]
@@ -317,7 +317,7 @@
 
  ;; Wrist
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Wrist Stretches"
+  :movement/name "Wrist Stretches"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]]
   :movement/measurement :measurement/repetitions}
@@ -326,7 +326,7 @@
 
  ;; Ankle
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Dynamic Reach"
+  :movement/name "Dynamic Reach"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -5]]
   :movement/measurement :measurement/repetitions}
@@ -336,20 +336,20 @@
  ;; Spine
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Four Way Spine Stretch"
+  :movement/name "Four Way Spine Stretch"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Jefferson Curl"
+  :movement/name "Jefferson Curl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -6]
                          #db/id[:db.part/user -10]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -200]
-  :movement/unique-name "Wall Rotation"
+  :movement/name "Wall Rotation"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]]
@@ -357,7 +357,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -201]
-  :movement/unique-name "Slide Into Low Bridge"
+  :movement/name "Slide Into Low Bridge"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
@@ -367,7 +367,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -202]
-  :movement/unique-name "Rotate Into Low Bridge"
+  :movement/name "Rotate Into Low Bridge"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -377,7 +377,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -203]
-  :movement/unique-name "High Bridge"
+  :movement/name "High Bridge"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
@@ -387,7 +387,7 @@
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -204]
-  :movement/unique-name "Bridge Push Up"
+  :movement/name "Bridge Push Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
@@ -398,7 +398,7 @@
  ; bridge push up one leg, bridge push up one arm
 
  {:db/id                #db/id[:db.part/user -205]
-  :movement/unique-name "Rotate Into High Bridge"
+  :movement/name "Rotate Into High Bridge"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]
@@ -409,13 +409,13 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -206]
-  :movement/unique-name "Backward Sprawl"
+  :movement/name "Backward Sprawl"
   :movement/category    [#db/id[:db.part/user -11]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -207]
-  :movement/unique-name "Gymnastic Backward Roll"
+  :movement/name "Gymnastic Backward Roll"
   :movement/category    [#db/id[:db.part/user -12]]
   :movement/measurement :measurement/repetitions}
 

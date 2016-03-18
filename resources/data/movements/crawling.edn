@@ -11,49 +11,49 @@
 
  ;; crawling
  {:db/id                #db/id[:db.part/user -100]
-  :movement/unique-name "Baby Crawl"
+  :movement/name "Baby Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/harder      [#db/id[:db.part/user -106]]}
 
  {:db/id                #db/id[:db.part/user -101]
-  :movement/unique-name "Elbow Knee Crawl"
+  :movement/name "Elbow Knee Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/harder      [#db/id[:db.part/user -102]]}
 
  {:db/id                #db/id[:db.part/user -102]
-  :movement/unique-name "Elbow Foot Crawl"
+  :movement/name "Elbow Foot Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -101]]}
 
  {:db/id                #db/id[:db.part/user -103]
-  :movement/unique-name "Army Crawl"
+  :movement/name "Army Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/harder      [#db/id[:db.part/user -109]]}
 
  {:db/id                #db/id[:db.part/user -104]
-  :movement/unique-name "Shoulder Crawl"
+  :movement/name "Shoulder Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/harder      [#db/id[:db.part/user -105]]}
 
  {:db/id                #db/id[:db.part/user -105]
-  :movement/unique-name "Hip Thrust Crawl"
+  :movement/name "Hip Thrust Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/easier      [#db/id[:db.part/user -104]]}
 
  {:db/id                #db/id[:db.part/user -106]
-  :movement/unique-name "Bear Crawl"
+  :movement/name "Bear Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -63,7 +63,7 @@
   :movement/harder      [#db/id[:db.part/user -107]]}
 
  {:db/id                #db/id[:db.part/user -107]
-  :movement/unique-name "Backward Bear Crawl"
+  :movement/name "Backward Bear Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -73,7 +73,7 @@
   :movement/harder      [#db/id[:db.part/user -108]]}
 
  {:db/id                #db/id[:db.part/user -108]
-  :movement/unique-name "Lateral Bear Crawl"
+  :movement/name "Lateral Bear Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -82,7 +82,7 @@
   :movement/easier      [#db/id[:db.part/user -107]]}
 
  {:db/id                #db/id[:db.part/user -109]
-  :movement/unique-name "Spiderman Crawl"
+  :movement/name "Spiderman Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -92,7 +92,7 @@
   :movement/harder      [#db/id[:db.part/user -110]]}
 
  {:db/id                #db/id[:db.part/user -110]
-  :movement/unique-name "Lizard Crawl"
+  :movement/name "Lizard Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -102,14 +102,14 @@
                          #db/id[:db.part/user -109]]}
 
  {:db/id                #db/id[:db.part/user -111]
-  :movement/unique-name "Inchworm"
+  :movement/name "Inchworm"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]]
   :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user -112]
-  :movement/unique-name "Inverted Crawl"
+  :movement/name "Inverted Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -118,7 +118,7 @@
   :movement/harder      [#db/id[:db.part/user -113]]}
 
  {:db/id                #db/id[:db.part/user -113]
-  :movement/unique-name "Backward Inverted Crawl"
+  :movement/name "Backward Inverted Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -128,7 +128,7 @@
   :movement/harder      [#db/id[:db.part/user -114]]}
 
  {:db/id                #db/id[:db.part/user -114]
-  :movement/unique-name "Lateral Inverted Crawl"
+  :movement/name "Lateral Inverted Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -137,7 +137,7 @@
   :movement/easier      [#db/id[:db.part/user -113]]}
 
  {:db/id                #db/id[:db.part/user -115]
-  :movement/unique-name "Gallop Crawl"
+  :movement/name "Gallop Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -147,7 +147,7 @@
   :movement/harder      [#db/id[:db.part/user -116]]}
 
  {:db/id                #db/id[:db.part/user -116]
-  :movement/unique-name "Hover Crawl"
+  :movement/name "Hover Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]]
@@ -156,7 +156,7 @@
   :movement/harder      [#db/id[:db.part/user -301]]}
 
  {:db/id                #db/id[:db.part/user -117]
-  :movement/unique-name "Traveling Squat"
+  :movement/name "Traveling Squat"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -3]
                          #db/id[:db.part/user -6]
@@ -165,7 +165,7 @@
   :movement/easier      [#db/id[:db.part/user -106]]}
 
  {:db/id                #db/id[:db.part/user -118]
-  :movement/unique-name "Bridge Crawl"
+  :movement/name "Bridge Crawl"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -176,7 +176,7 @@
   :movement/easier      [#db/id[:db.part/user -112]
                          #db/id[:db.part/user -300]]}
 
- {:db/id #db/id[:db.part/user -300] :movement/unique-name "High Bridge"}
- {:db/id #db/id[:db.part/user -301] :movement/unique-name "Handstand Walk"}
+ {:db/id #db/id[:db.part/user -300] :movement/name "High Bridge"}
+ {:db/id #db/id[:db.part/user -301] :movement/name "Handstand Walk"}
 
  ]

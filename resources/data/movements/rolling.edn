@@ -5,7 +5,7 @@
  {:db/id #db/id[:db.part/user -1] :category/name "Roll"}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Forward Roll"
+  :movement/name "Forward Roll"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
@@ -16,13 +16,13 @@
  ;; sideways roll?
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Backward Roll To Lying"
+  :movement/name "Backward Roll To Lying"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user]
-  :movement/unique-name "Lying To Forward Roll"
+  :movement/name "Lying To Forward Roll"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}

@@ -143,7 +143,7 @@
           x (d/q '[:find ?e
                    :in $ ?name
                    :where
-                   [?e :movement/unique-name ?name]]
+                   [?e :movement/name ?name]]
                  db
                  name)]
       (empty? x)))
@@ -151,7 +151,7 @@
 #_(defn find-no-image-movements []
     (let [movements (flatten (seq (d/q '[:find ?name
                                          :where
-                                         [_ :movement/unique-name ?name]]
+                                         [_ :movement/name ?name]]
                                        db)))
           no-image-movements (filter #(has-no-image? %) movements)]
       {:#                  (count no-image-movements)
@@ -214,14 +214,14 @@
     (d/q '[:find [?name ...]
            :in $
            :where
-           [?e :movement/unique-name ?name]]
+           [?e :movement/name ?name]]
          db))
 
 #_(defn movements-from-category [category]
     (d/q '[:find [?name ...]
            :in $ ?cname
            :where
-           [?e :movement/unique-name ?name]
+           [?e :movement/name ?name]
            [?e :movement/category ?c]
            [?c :category/name ?cname]]
          db category))

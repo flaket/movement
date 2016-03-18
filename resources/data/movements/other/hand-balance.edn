@@ -10,21 +10,21 @@
 
  ;; Handstand
  {:db/id                #db/id[:db.part/user -200]
-  :movement/unique-name "Wall Walk"
+  :movement/name "Wall Walk"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -201]
-  :movement/unique-name "Straighten Into Line"
+  :movement/name "Straighten Into Line"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -202]
-  :movement/unique-name "Kick To Handstand"
+  :movement/name "Kick To Handstand"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]]
@@ -33,7 +33,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -100]
-  :movement/unique-name "Cartwheel"
+  :movement/name "Cartwheel"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]
@@ -41,7 +41,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -203]
-  :movement/unique-name "Handstand Walk"
+  :movement/name "Handstand Walk"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]
@@ -50,7 +50,7 @@
   :movement/measurement :measurement/distance}
 
  {:db/id                #db/id[:db.part/user -204]
-  :movement/unique-name "Handstand Push Up Kip"
+  :movement/name "Handstand Push Up Kip"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]]
@@ -60,7 +60,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -205]
-  :movement/unique-name "Backward Roll To Handstand"
+  :movement/name "Backward Roll To Handstand"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]]
@@ -70,7 +70,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -206]
-  :movement/unique-name "L Handstand"
+  :movement/name "L Handstand"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]]
@@ -80,7 +80,7 @@
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -207]
-  :movement/unique-name "One Arm Wall Handstand"
+  :movement/name "One Arm Wall Handstand"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]]
@@ -90,7 +90,7 @@
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -208]
-  :movement/unique-name "Handstand"
+  :movement/name "Handstand"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]]
@@ -100,7 +100,7 @@
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -209]
-  :movement/unique-name "Handstand Push Up"
+  :movement/name "Handstand Push Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -4]
                          #db/id[:db.part/user -5]]
@@ -109,7 +109,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -210]
-  :movement/unique-name "Back Extend To Handstand"
+  :movement/name "Back Extend To Handstand"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]
@@ -121,14 +121,14 @@
 
  ;; Air Baby
  {:db/id                #db/id[:db.part/user -300]
-  :movement/unique-name "Frog Stance"
+  :movement/name "Frog Stance"
   :movement/category    [#db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]]
   :movement/harder      [#db/id[:db.part/user -301]]
   :movement/measurement :measurement/duration}
 
  {:db/id                #db/id[:db.part/user -301]
-  :movement/unique-name "Air Baby Extend Leg"
+  :movement/name "Air Baby Extend Leg"
   :movement/category    [#db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]]
   :movement/measurement :measurement/repetitions
@@ -136,7 +136,7 @@
   :movement/harder      [#db/id[:db.part/user -302]]}
 
  {:db/id                #db/id[:db.part/user -302]
-  :movement/unique-name "Air Baby Extend Rotate"
+  :movement/name "Air Baby Extend Rotate"
   :movement/category    [#db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]]
   :movement/measurement :measurement/repetitions
@@ -144,7 +144,7 @@
   :movement/harder      [#db/id[:db.part/user -303]]}
 
  {:db/id                #db/id[:db.part/user -303]
-  :movement/unique-name "Static Air Baby Two Arms"
+  :movement/name "Static Air Baby Two Arms"
   :movement/category    [#db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]]
   :movement/measurement :measurement/duration
@@ -152,7 +152,7 @@
   :movement/harder      [#db/id[:db.part/user -304]]}
 
  {:db/id                #db/id[:db.part/user -304]
-  :movement/unique-name "Static Air Baby Fingertips"
+  :movement/name "Static Air Baby Fingertips"
   :movement/category    [#db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]]
   :movement/measurement :measurement/duration
@@ -160,7 +160,7 @@
   :movement/harder      [#db/id[:db.part/user -305]]}
 
  {:db/id                #db/id[:db.part/user -305]
-  :movement/unique-name "Static Air Baby"
+  :movement/name "Static Air Baby"
   :movement/category    [#db/id[:db.part/user -3]
                          #db/id[:db.part/user -4]]
   :movement/measurement :measurement/duration
@@ -168,7 +168,7 @@
 
  ;; Headstand
  {:db/id                #db/id[:db.part/user -400]
-  :movement/unique-name "Frog Stance To Headstand"
+  :movement/name "Frog Stance To Headstand"
   :movement/category    [#db/id[:db.part/user -2]
                          #db/id[:db.part/user -4]]
   :movement/measurement :measurement/repetitions
@@ -176,21 +176,21 @@
   :movement/harder      [#db/id[:db.part/user -401]]}
 
  {:db/id                #db/id[:db.part/user -401]
-  :movement/unique-name "Headstand"
+  :movement/name "Headstand"
   :movement/category    [#db/id[:db.part/user -2]]
   :movement/measurement :measurement/duration
   :movement/easier      [#db/id[:db.part/user -400]]
   :movement/harder      [#db/id[:db.part/user -402]]}
 
  {:db/id                #db/id[:db.part/user -402]
-  :movement/unique-name "Headstand Leg Lift"
+  :movement/name "Headstand Leg Lift"
   :movement/category    [#db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -401]]
   :movement/harder      [#db/id[:db.part/user -403]]}
 
  {:db/id                #db/id[:db.part/user -403]
-  :movement/unique-name "Headstand Straight Leg Lift"
+  :movement/name "Headstand Straight Leg Lift"
   :movement/category    [#db/id[:db.part/user -2]]
   :movement/measurement :measurement/repetitions
   :movement/easier      [#db/id[:db.part/user -402]]

@@ -6,25 +6,25 @@
  ;{:db/id #db/id[:db.part/user -2] :category/name "Catching"}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/unique-name      "Chest Throw"
+  :movement/name      "Chest Throw"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/unique-name      "Overhead Throw"
+  :movement/name      "Overhead Throw"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/unique-name      "Front Swing Throw"
+  :movement/name      "Front Swing Throw"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}
 
  {:db/id              #db/id[:db.part/user]
-  :movement/unique-name      "Rotational Throw"
+  :movement/name      "Rotational Throw"
   :movement/category  [#db/id[:db.part/user -1]
                        #db/id[:db.part/user -33]]
   :movement/measurement :measurement/repetitions}

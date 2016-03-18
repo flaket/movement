@@ -8,14 +8,14 @@
  ;{:db/id #db/id[:db.part/user -3] :category/name "Running Drills"}
 
  {:db/id                #db/id[:db.part/user -100]
-  :movement/unique-name "Run"
+  :movement/name "Run"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance
   :movement/harder      [#db/id[:db.part/user -101]]}
 
  {:db/id                #db/id[:db.part/user -101]
-  :movement/unique-name "Sprint"
+  :movement/name "Sprint"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -33]]
   :movement/measurement :measurement/distance

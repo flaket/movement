@@ -26,13 +26,13 @@
   :user/name "movementsession"}
 
  {:db/id     #db/id[:db.part/user -5040]
-  :movement/unique-name "Box Jump"}
+  :movement/name "Box Jump"}
  {:db/id     #db/id[:db.part/user -5041]
-  :movement/unique-name "Depth Jump"}
+  :movement/name "Depth Jump"}
  {:db/id     #db/id[:db.part/user -5080]
-  :movement/unique-name "Wrist Stretches"}
+  :movement/name "Wrist Stretches"}
  {:db/id     #db/id[:db.part/user -5081]
-  :movement/unique-name "Dynamic Reach"}
+  :movement/name "Dynamic Reach"}
 
  ;; ----------------------------------------------------------------
 

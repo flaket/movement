@@ -612,7 +612,7 @@
 
  ;; movement
  {:db/id                 #db/id[:db.part/db]
-  :db/ident              :movement/unique-name
+  :db/ident              :movement/name
   :db/fulltext           true
   :db/index              true
   :db/valueType          :db.type/string

@@ -6,7 +6,7 @@
  {:db/id #db/id[:db.part/user -4] :category/name "Bar"}
 
  {:db/id                #db/id[:db.part/user -100]
-  :movement/unique-name "Row"
+  :movement/name "Row"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -16,7 +16,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -101]
-  :movement/unique-name "Chin Up"
+  :movement/name "Chin Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -26,7 +26,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -103]
-  :movement/unique-name "Wide Pull Up"
+  :movement/name "Wide Pull Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -36,7 +36,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -104]
-  :movement/unique-name "Chest Pull Up"
+  :movement/name "Chest Pull Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -47,7 +47,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -105]
-  :movement/unique-name "Archer Pull Up"
+  :movement/name "Archer Pull Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -57,7 +57,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -106]
-  :movement/unique-name "Assisted One Arm Pull Up"
+  :movement/name "Assisted One Arm Pull Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -67,7 +67,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -107]
-  :movement/unique-name "Negative One Arm Pull Up"
+  :movement/name "Negative One Arm Pull Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]
@@ -77,7 +77,7 @@
   :movement/measurement :measurement/repetitions}
 
  {:db/id                #db/id[:db.part/user -108]
-  :movement/unique-name "One Arm Pull Up"
+  :movement/name "One Arm Pull Up"
   :movement/category    [#db/id[:db.part/user -1]
                          #db/id[:db.part/user -2]
                          #db/id[:db.part/user -3]

@@ -9,7 +9,6 @@
             [clojure.set :as set]))
 
 (def uri "datomic:dev://localhost:4334/test-db")
-#_(def uri "datomic:ddb://eu-west-1/movementsession/prod-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 (def tx (atom {}))
 
@@ -24,7 +23,7 @@
 (defn all-movement-names
   "Returns the names of all movements in the database."
   []
-  (d/q '[:find [?n ...] :where [_ :movement/unique-name ?n]] (:db @tx)))
+  (d/q '[:find [?n ...] :where [_ :movement/name ?n]] (:db @tx)))
 
 (defn all-category-names
   "Returns the names of all categories in the database."
@@ -34,7 +33,7 @@
 (defn entity-by-movement-name
   "Returns the whole entity of a named movement."
   [name]
-  (d/pull (:db @tx) '[*] [:movement/unique-name name]))
+  (d/pull (:db @tx) '[*] [:movement/name name]))
 
 (defn entity-by-id
   "Returns the whole entity of some id."
@@ -67,7 +66,7 @@
                                        :measurement/duration {:rep nil :distance nil :duration duration}
                                        nil)]
     (merge rep-dist-dur
-           {:unique      (:movement/unique-name movement)
+           {:unique      (:movement/name movement)
             :name        (:movement/name movement)
             :category    (:movement/category movement)
             :easier      (:movement/easier movement)
@@ -95,7 +94,7 @@
                                        nil)
         movement (merge movement rep-dist-dur)
         movement (rename-keys movement {:movement/category    :category
-                                        :movement/unique-name :unique
+                                        :movement/name :unique
                                         :movement/easier      :easier
                                         :movement/harder      :harder
                                         :movement/description :description
@@ -112,9 +111,9 @@
                          :where
                          [?c :category/name ?cat]
                          [?m :movement/category ?c]
-                         [?m :movement/unique-name _]]
+                         [?m :movement/name _]]
                        (:db @tx) category)
-        movements (->> movements flatten (sort-by :movement/unique-name) (take n))
+        movements (->> movements flatten (sort-by :movement/name) (take n))
         ;user-movements
         #_(d/q '[:find [(pull ?m [*]) ...]
                  :in $ ?email
@@ -126,7 +125,7 @@
         ;movements
         #_(for [movement movements]
             (if-let [user-movement (some #(when
-                                           (= (:movement/unique-name movement) (:movement/name %))
+                                           (= (:movement/name movement) (:movement/name %))
                                            %)
                                          user-movements)]
               (merge movement (dissoc user-movement :db/id))
@@ -145,14 +144,14 @@
                               [?m :movement/category ?c]
                               [?d :category/name ?cname]
                               [?m :movement/category ?d]
-                              [?m :movement/unique-name _]]
+                              [?m :movement/name _]]
                             db categories)
                        (d/q '[:find [?m ...]
                               :in $ [?cname ...]
                               :where
                               [?c :category/name ?cname]
                               [?m :movement/category ?c]
-                              [?m :movement/unique-name _]]
+                              [?m :movement/name _]]
                             db categories))
         movements (->> movement-ids
                        shuffle
@@ -178,7 +177,7 @@
                             db
                             email)
         movement (if-let [user-movement (some #(when
-                                                (= (:movement/unique-name movement) (:movement/name %))
+                                                (= (:movement/name movement) (:movement/name %))
                                                 %)
                                               user-movements)]
                    (merge movement (dissoc user-movement :db/id))
@@ -188,7 +187,7 @@
                          m
                          (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))]
                            (if-let [user-movement (some #(when
-                                                          (= (:movement/unique-name new) (:movement/name %))
+                                                          (= (:movement/name new) (:movement/name %))
                                                           (dissoc % :db/id))
                                                         user-movements)]
                              (merge new user-movement)
@@ -211,7 +210,7 @@
   (let [db (:db @tx)
         movement (entity-by-movement-name unique-name)
         user-movements (d/q '[:find [(pull ?m [*]) ...] :in $ ?email :where [?u :user/email ?email] [?u :user/movements ?m]] db email)
-        movement (if-let [user-movement (some #(when (= (:movement/unique-name movement) (:movement/name %)) %) user-movements)]
+        movement (if-let [user-movement (some #(when (= (:movement/name movement) (:movement/name %)) %) user-movements)]
                    (merge movement (dissoc user-movement :db/id))
                    movement)
         movement (assoc movement :movement/easier (map #(entity-by-id (:db/id %)) (:movement/easier movement)))
@@ -238,7 +237,7 @@
                             db
                             email)
         movement (if-let [user-movement (some #(when
-                                                (= (:movement/unique-name movement) (:movement/name %))
+                                                (= (:movement/name movement) (:movement/name %))
                                                 %)
                                               user-movements)]
                    (merge movement (dissoc user-movement :db/id))
@@ -268,7 +267,7 @@
                      generated-movements (for [movement generated-movements]
                                            ; if the user has done the movement before
                                            (if-let [user-movement (some #(when
-                                                                          (= (:movement/unique-name movement) (:movement/name %))
+                                                                          (= (:movement/name movement) (:movement/name %))
                                                                           (dissoc % :db/id))
                                                                         user-movements)]
                                              ; assoc :zone data
@@ -280,7 +279,7 @@
                                                    m
                                                    (let [new (d/pull db '[*] (:db/id (first (shuffle easier))))]
                                                      (if-let [user-movement (some #(when
-                                                                                    (= (:movement/unique-name new) (:movement/name %))
+                                                                                    (= (:movement/name new) (:movement/name %))
                                                                                     (dissoc % :db/id))
                                                                                   user-movements)]
                                                        (let [zone (:db/ident (:movement/zone user-movement))]

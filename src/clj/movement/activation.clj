@@ -1,10 +1,11 @@
 (ns movement.activation
   (:require [postal.core :refer [send-message]]
             [taoensso.timbre :refer [info error]]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]])
+  (:import (java.util UUID)))
 
 (defn generate-activation-id []
-  (str (java.util.UUID/randomUUID)))
+  (str (UUID/randomUUID)))
 
 (def url (if (env :dev?) "http://localhost:8000/activate/"
                           "http://www.movementsession.com/activate/"))
