@@ -32,6 +32,5 @@
                       :size        size
                       :autofocus   false})])))
 
-
 (def text-edit-component
   (with-meta text-input-component {:component-did-mount #(do (.focus (dom-node %)))}))

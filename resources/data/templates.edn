@@ -1,5 +1,40 @@
 [
 
+ ;; template: title description background part
+ ;; part: slot(s)
+ ;; slot: category natural movement rep distance duration set weight rest
+
+ {:table      :templates
+  :throughput {:read 1 :write 1}
+  :attrs      {:title :string :creator :string}
+  :keys       [:title :creator]}
+
+ {:title               "Naturlige Bevegelser 2"
+  :creator            "Andreas"
+  :description       ""
+  :background ""
+  :part [[{:category #{:natural :crawl :sit-stand-transition}
+           :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
+          {:category #{:natural :crawl :sit-stand-transition}
+           :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
+          {:category #{:natural :crawl :sit-stand-transition}
+           :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
+          {:category #{:natural :jump}
+           :repetition [2 4 6] :set 4}
+          {:category #{:natural :jump}
+           :repetition [2 4 6] :set 4}
+          {:category #{:natural :hang}
+           :repetition 1 :duration [15 30 45] :set 4}]]}
+
+ (h/put! creds :templates {})
+
+
+
+
+
+
+
+
  {:db/id #db/id[:db.part/user -1] :category/name "Mobility"}
  {:db/id #db/id[:db.part/user -2] :category/name "Balance"}
  {:db/id #db/id[:db.part/user -3] :category/name "Crawl"}

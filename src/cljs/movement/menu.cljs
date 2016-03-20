@@ -7,8 +7,6 @@
 
 (defn menu-component []
   (let [menu-item-session " Session"
-        menu-item-create " Create"
-        menu-item-explore " Explore"
         menu-item-user " User"]
     (fn []
       [:div
@@ -26,23 +24,9 @@
                                     " menu-item-divided pure-menu-selected"))
                   :on-click  #(do
                                (session/put! :selected-menu-item menu-item-session)
-                               (dispatch! "/generator"))}
+                               (dispatch! "/session"))}
 
              [:a.pure-menu-link menu-item-session]]
-            [:li {:className (str "pure-menu-item"
-                                  (when (= menu-item-explore selected)
-                                    " menu-item-divided pure-menu-selected"))
-                  :on-click  #(do
-                               (session/put! :selected-menu-item menu-item-explore)
-                               (dispatch! "/explore"))}
-             [:a.pure-menu-link menu-item-explore]]
-            [:li {:className (str "pure-menu-item"
-                                  (when (= menu-item-create selected)
-                                    " menu-item-divided pure-menu-selected"))
-                  :on-click  #(do
-                               (session/put! :selected-menu-item menu-item-create)
-                               (dispatch! "/create"))}
-             [:a.pure-menu-link menu-item-create]]
             [:li {:className (str "pure-menu-item"
                                   (when (= menu-item-user selected)
                                     " menu-item-divided pure-menu-selected"))

@@ -1,153 +1,63 @@
 [
- {:name     "Negative Pull Up" :previous [] :next ["Pull Up"]
-  :category #{:climbing :natural :pulling :bent-arm-strength} ::measurement :repetition}
+ {:name     "Balancing Walk"
+  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
+  :next     ["Balancing Lateral Walk" "Balancing Backward Walk" "Balancing Low Walk"
+             "Balancing Bear Crawl" "Balancing Inverted Crawl"]}
 
- {:db/id                #db/id[:db.part/user -100]
-  :name                 "Balancing Walk"
-  :category             #{:balance :walk :beam :balancing-locomotion :natural}
-  :measurement :distance
-  :next      ["Balancing Lateral Walk"
-              "Balancing Backward Walk"
-              "Balancing Low Walk"
-              "Balancing Bear Crawl"
-              "Balancing Inverted Crawl"]}
+ {:name     "Balancing Lateral Walk"
+  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Balancing Walk"] :next ["Balancing Backward Walk"]}
 
- {:db/id                #db/id[:db.part/user -101]
-  :name "Balancing Lateral Walk"
-  :category    [:balance
-                         :walk
-                         :beam
-                         :balancing-locomotion
-                         :natural]
-  :measurement :distance
-  :previous      [#db/id[:db.part/user -100]]
-  :next      [#db/id[:db.part/user -102]]}
+ {:name     "Balancing Backward Walk"
+  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Balancing Lateral Walk"]}
 
- {:db/id                #db/id[:db.part/user -102]
-  :name "Balancing Backward Walk"
-  :category    [:balance
-                         :walk
-                         :beam
-                         :balancing-locomotion
-                         :natural]
-  :measurement :distance
-  :previous      [#db/id[:db.part/user -101]]}
+ {:name     "Balancing Low Walk"
+  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Balancing Walk"] :next ["Balancing Lateral Low Walk"]}
 
- {:db/id                #db/id[:db.part/user -103]
-  :name "Balancing Low Walk"
-  :category    ["Balance"
-                         :walk
-                         :beam
-                         :balancing-locomotion
-                         :natural]
-  :measurement :distance
-  :previous      [#db/id[:db.part/user -100]]
-  :next      [#db/id[:db.part/user -104]]}
+ {:name     "Balancing Lateral Low Walk"
+  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Balancing Lateral Walk" "Balancing Backward Walk"] :next ["Balancing Backward Low Walk"]}
 
- {:db/id                #db/id[:db.part/user -104]
-  :name "Balancing Lateral Low Walk"
-  :category    ["Balance"
-                         :walk
-                         :beam
-                         :balancing-locomotion
-                         :natural]
-  :measurement :distance
-  :previous      [#db/id[:db.part/user -101]
-                         #db/id[:db.part/user -103]]
-  :next      [#db/id[:db.part/user -105]]}
+ {:name     "Balancing Backward Low Walk"
+  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Balancing Lateral Walk" "Balancing Lateral Low Walk"]}
 
- {:db/id                #db/id[:db.part/user -105]
-  :name "Balancing Backward Low Walk"
-  :category    ["Balance"
-                         :walk
-                         :beam
-                         :balancing-locomotion
-                         :natural]
-  :measurement :distance
-  :previous      [#db/id[:db.part/user -102]
-                         #db/id[:db.part/user -104]]}
+ {:name     "Stealth Walk"
+  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Balancing Low Walk"] :next ["Lateral Stealth Walk"]}
 
- {:db/id                #db/id[:db.part/user -106]
-  :name "Stealth Walk"
-  :category    ["Balance"
-                         :walk
-                         :beam
-                         :balancing-locomotion
-                         :natural]
-  :measurement :distance
-  :previous      [#db/id[:db.part/user -103]]
-  :next      [#db/id[:db.part/user -107]]}
+ {:name     "Lateral Stealth Walk"
+  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Balancing Lateral Low Walk" "Stealth Walk"]}
 
- {:db/id                #db/id[:db.part/user -107]
-  :name "Lateral Stealth Walk"
-  :category    ["Balance"
-                         :walk
-                         :beam
-                         :balancing-locomotion
-                         :natural]
-  :measurement :distance
-  :previous      [#db/id[:db.part/user -104]
-                         #db/id[:db.part/user -106]]}
+ {:name     "Balancing Tripod Transition"
+  :category #{:balance :beam :natural} :measurement :repetitions
+  :previous ["Tripod Transition"]}
 
- {:db/id                #db/id[:db.part/user -109]
-  :name "Balancing Tripod Transition"
-  :category    ["Balance"
-                         :beam
-                         :natural]
-  :measurement :repetitions
-  :previous      ["Tripod Transition"]}
+ {:name     "Balancing Bear Crawl"
+  :category #{:balance :crawl :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Bear Crawl"]}
 
- {:db/id                #db/id[:db.part/user -110]
-  :name "Balancing Bear Crawl"
-  :category    ["Balance"
-                         :crawl
-                         :beam
-                         :balancing-locomotion
-                         :natural]
-  :measurement :distance
-  :previous      [#db/id[:db.part/user -100]]}
+ {:name     "Balancing Inverted Crawl"
+  :category #{:balance :crawl :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Bear Crawl"]}
 
- {:db/id                #db/id[:db.part/user -111]
-  :name "Balancing Inverted Crawl"
-  :category    ["Balance"
-                         :crawl
-                         :beam
-                         :balancing-locomotion
-                         :natural]
-  :measurement :distance
-  :previous      [#db/id[:db.part/user -100]]}
+ {:name     "Balancing Turn"
+  :category #{:balance :beam :natural} :measurement :repetitions
+  :next     ["Balancing Split Squat Turn"]}
 
- {:db/id                #db/id[:db.part/user -112]
-  :name "Balancing Turn"
-  :category    ["Balance"
-                         :beam
-                         :natural]
-  ::measurement :repetitions
-  :next      [#db/id[:db.part/user -115]]}
+ {:name     "Balancing Cross Turn"
+  :category #{:balance :beam :natural} :measurement :repetitions
+  :next     ["Balancing Split Squat Turn"]}
 
- {:db/id                #db/id[:db.part/user -113]
-  :name "Balancing Cross Turn"
-  :category    ["Balance"
-                         :beam
-                         :natural]
-  :measurement :repetitions
-  :next      [#db/id[:db.part/user -115]]}
+ {:name     "Balancing Split Squat"
+  :category #{:balance :beam :natural} :measurement :repetitions
+  :next     ["Balancing Split Squat Turn"]}
 
- {:db/id                #db/id[:db.part/user -114]
-  :name "Balancing Split Squat"
-  :category    ["Balance"
-                         :beam
-                         :natural]
-  :measurement :repetitions
-  :next      [#db/id[:db.part/user -115]]}
-
- {:db/id                #db/id[:db.part/user -115]
-  :name "Balancing Split Squat Turn"
-  :category    ["Balance"
-                         :beam
-                         :natural]
-  :measurement :repetitions
-  :previous      [#db/id[:db.part/user -112]
-                         #db/id[:db.part/user -114]]}
+ {:name     "Balancing Split Squat Turn"
+  :category #{:balance :beam :natural} :measurement :repetitions
+  :previous ["Balancing Turn" "Balancing Split Squat"]}
 
  ]

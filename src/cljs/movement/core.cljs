@@ -2,19 +2,10 @@
   (:require [reagent.core :refer [atom render-component]]
             [reagent.session :as session]
             [secretary.core :as secretary :include-macros true]
-            [goog.events :as events]
-            [goog.history.EventType :as EventType]
-            #_[cljsjs.react :as react]
-            [movement.util :refer [get-all-categories get-all-movements get-templates hook-browser-navigation! set-page!]]
-            [movement.user :refer [user-component]]
-            [movement.template :refer [template-creator-component]]
-            [movement.generator :refer [generator-component]]
-            [movement.group :refer [group-creator-component]]
-            [movement.routine :refer [routine-creator-component]]
-            [movement.plan :refer [plan-creator-component]]
-            [movement.create :refer [create-component]]
-            [movement.explore :refer [explore-component]]
-            [movement.components.login :refer [login-page]])
+            [movement.util :refer [hook-browser-navigation! set-page!]]
+            [movement.user :refer [user-page]]
+            [movement.session :refer [session-page]]
+            [movement.login :refer [login-page]])
   (:import goog.History))
 
 (enable-console-print!)
@@ -22,10 +13,8 @@
 ;; -------------------------
 ;; Client side routes
 (secretary/defroute "/" [] (set-page! #'login-page))
-(secretary/defroute "/generator" [] (set-page! #'generator-component))
-(secretary/defroute "/create" [] (set-page! #'create-component))
-(secretary/defroute "/explore" [] (set-page! #'explore-component))
-(secretary/defroute "/user" [] (set-page! #'user-component))
+(secretary/defroute "/session" [] (set-page! #'session-page))
+(secretary/defroute "/user" [] (set-page! #'user-page))
 
 ;---------------------------
 (defn page []
@@ -38,9 +27,8 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (when (session/get :user)
-    (set-page! #'generator-component))
-
+  (when (session/get :email)
+    (set-page! #'session-page))
   #_(.initializeTouchEvents js/React true)
   (mount-root))
 

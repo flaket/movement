@@ -31,6 +31,7 @@
                  [hiccup "1.0.5"]
                  [reagent "0.6.0-alpha"]
                  [reagent-forms "0.5.21"]
+                 [cljs-pikaday "0.1.2"]
                  [reagent-utils "0.1.7"]
                  [secretary "1.2.3"]
                  [cljs-ajax "0.5.4"]

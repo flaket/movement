@@ -1,278 +1,101 @@
 [
- ;; categories
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ ;;-------------- Dip --------------
+ {:name     "Jumping Dip"
+  :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
+  :next     ["Dip"]}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Climb"}
- {:db/id #db/id[:db.part/user -2] :category/name "Bar"}
- {:db/id #db/id[:db.part/user -3] :category/name "Rope"}
- {:db/id #db/id[:db.part/user -4] :category/name "Dip"}
- {:db/id #db/id[:db.part/user -5] :category/name "Push"}
- {:db/id #db/id[:db.part/user -6] :category/name "Pull Up"}
- {:db/id #db/id[:db.part/user -7] :category/name "Pull"}
- {:db/id #db/id[:db.part/user -8] :category/name "Bent Arm Strength"}
- {:db/id #db/id[:db.part/user -9] :category/name "Muscle Up"}
+ {:name     "Negative Dip"
+  :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
+  :next     ["Dip"]}
 
- {:db/id                #db/id[:db.part/user -400]
-  :movement/name "Hanging Pull"}
- {:db/id                #db/id[:db.part/user -401]
-  :movement/name "Ring Dip"}
- {:db/id                #db/id[:db.part/user -402]
-  :movement/name "Hanging Pull"}
+ {:name     "Dip"
+  :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
+  :previous ["Jumping Dip" "Negative Dip"] :next ["Russian Dip" "Single Bar Dip"]}
 
- ; negative dip
+ {:name     "Russian Dip"
+  :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
+  :previous ["Dip"]}
 
- {:db/id                #db/id[:db.part/user -99]
-  :movement/name "Jumping Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -101]]}
+ {:name     "Single Bar Dip"
+  :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
+  :previous ["Dip"]}
 
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Negative Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -101]]}
+ ;;-------------- Pull up --------------
+ {:name     "Jumping Pull Up"
+  :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetitions
+  :next     ["Pull Up"]}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -99]
-                         #db/id[:db.part/user -100]]
-  :movement/harder      [#db/id[:db.part/user -102]
-                         #db/id[:db.part/user -401]]}
+ {:name     "Negative Pull Up"
+  :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetitions
+  :next     ["Pull Up"]}
 
- {:db/id                #db/id[:db.part/user -102]
-  :movement/name "Russian Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -101]]
-  :movement/harder      [#db/id[:db.part/user -103]]}
+ {:name     "Pull Up"
+  :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetition
+  :previous ["Negative Pull Up" "Jumping Pull Up"] :next ["Pull Up Reach"]}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Single Bar Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]]}
+ {:name     "Pull Up Reach"
+  :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetition
+  :previous ["Pull Up"] :next ["Explosive Pull Up"]}
 
- ;; Pull up
+ {:name     "Explosive Pull Up"
+  :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetition
+  :previous ["Pull Up Reach"]}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Jumping Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -106]]}
+ ;;-------------- Lifting legs --------------
+ {:name     "Hanging Knee Tuck"
+  :category #{:climb :bar :natural :leg-lift} :measurement :repetitions
+  :next     ["Toes To Bar"]}
 
- {:db/id                #db/id[:db.part/user -105]
-  :movement/name "Negative Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -106]]}
+ {:name     "Toes To Bar"
+  :category #{:climb :bar :natural :leg-lift} :measurement :repetitions
+  :previous ["Hanging Knee Tuck"] :next ["Hanging Side Foot Lift"]}
 
- {:db/id                #db/id[:db.part/user -106]
-  :movement/name "Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -104]
-                         #db/id[:db.part/user -105]]
-  :movement/harder      [#db/id[:db.part/user -107]]}
+ {:name     "Hanging Side Foot Lift"
+  :category #{:climb :bar :natural :leg-lift} :measurement :repetitions
+  :previous ["Toes To Bar"] :next ["Hanging Leg Hook"]}
 
- {:db/id                #db/id[:db.part/user -107]
-  :movement/name "Pull Up Reach"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -106]]
-  :movement/harder      [#db/id[:db.part/user -108]]}
+ {:name     "Hanging Leg Hook"
+  :category #{:climb :bar :natural :leg-lift} :measurement :repetitions
+  :previous ["Hanging Side Foot Lift" "Side Swing"]}
 
- {:db/id                #db/id[:db.part/user -108]
-  :movement/name "Explosive Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -8]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -107]]}
+ ;;-------------- Climbing --------------
+ {:name     "Sliding Swing Up"
+  :category #{:climb :bar :natural} :measurement :repetitions
+  :previous ["Hanging Leg Hook"] :next ["Elbow Swing Up"]}
 
- ;; Lifting legs
- {:db/id                #db/id[:db.part/user -109]
-  :movement/name "Hanging Knee Tuck"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -110]]}
+ {:name     "Elbow Swing Up"
+  :category #{:climb :bar :natural} :measurement :repetitions
+  :previous ["Sliding Swing Up"] :next ["Hand Swing Up"]}
 
- {:db/id                #db/id[:db.part/user -110]
-  :movement/name "Toes To Bar"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -109]]
-  :movement/harder      [#db/id[:db.part/user -111]]}
+ {:name     "Hand Swing Up"
+  :category #{:climb :bar :natural} :measurement :repetitions
+  :previous ["Elbow Swing Up"] :next ["Elbow Pull Up"]}
 
- {:db/id                #db/id[:db.part/user -111]
-  :movement/name "Hanging Side Foot Lift"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -110]]
-  :movement/harder      [#db/id[:db.part/user -112]]}
+ {:name     "Elbow Pull Up"
+  :category #{:climb :bar :natural} :measurement :repetitions
+  :previous ["Hanging Pull"]}
 
- {:db/id                #db/id[:db.part/user -112]
-  :movement/name "Hanging Leg Hook"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -111]]}
+ {:name     "Swing Pop Up"
+  :category #{:climb :bar :natural} :measurement :repetitions
+  :previous ["Elbow Pull Up"] :next ["Tuck Pop Up"]}
 
- ;; Climbing
- {:db/id                #db/id[:db.part/user -113]
-  :movement/name "Sliding Swing Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -112]]
-  :movement/harder      [#db/id[:db.part/user -114]]}
+ {:name     "Tuck Pop Up"
+  :category #{:climb :bar :natural} :measurement :repetitions
+  :previous ["Swing Pop Up"] :next ["Muscle Up"]}
 
- {:db/id                #db/id[:db.part/user -114]
-  :movement/name "Elbow Swing Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -113]]
-  :movement/harder      [#db/id[:db.part/user -115]]}
+ {:name     "Negative Muscle Up"
+  :category #{:climb :bar :natural :muscle-up} :measurement :repetitions
+  :next     ["Muscle Up"]}
 
- {:db/id                #db/id[:db.part/user -115]
-  :movement/name "Hand Swing Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -114]]
-  :movement/harder      [#db/id[:db.part/user -116]]}
+ {:name     "Muscle Up"
+  :category #{:climb :bar :muscle-up :natural :bent-arm-strength} :measurement :repetitions
+  :previous ["Single Bar Dip" "Explosive Pull Up" "Negative Muscle Up"]}
 
- {:db/id                #db/id[:db.part/user -116]
-  :movement/name "Elbow Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/easier      [#db/id[:db.part/user -400]
-                         #db/id[:db.part/user -402]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Pull Over"
+  :category #{:climb :bar :natural} :measurement :repetitions
+  :previous ["Pull Up" "Toes To Bar"]}
 
- {:db/id                #db/id[:db.part/user -117]
-  :movement/name "Swing Pop Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -116]]
-  :movement/harder      [#db/id[:db.part/user -118]]}
-
- {:db/id                #db/id[:db.part/user -118]
-  :movement/name "Tuck Pop Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -117]]
-  :movement/harder      [#db/id[:db.part/user -121]]}
-
- {:db/id                #db/id[:db.part/user -119]
-  :movement/name "Pull Over"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -105]
-                         #db/id[:db.part/user -110]]}
-
- {:db/id                #db/id[:db.part/user -120]
-  :movement/name "Negative Muscle Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -9]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -121]]}
-
- ; {:db/id                #db/id[:db.part/user -500]
- ; :movement/unique-name "Muscle Up Transition"
- ; :movement/category    [#db/id[:db.part/user -1]
- ;                        #db/id[:db.part/user -2]
- ;                        #db/id[:db.part/user -9]]
- ; :movement/measurement :measurement/repetitions
- ; :movement/easier      [#db/id[:db.part/user -120]]
- ; :movement/harder      [#db/id[:db.part/user -121]]}
-
- {:db/id                #db/id[:db.part/user -121]
-  :movement/name "Muscle Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -9]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -103]
-                         #db/id[:db.part/user -108]
-                         #db/id[:db.part/user -120]]}
-
- {:db/id                #db/id[:db.part/user -122]
-  :movement/name "Rope Climb"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
+ {:name     "Rope Climb"
+  :category #{:climb :rope :natural} :measurement :distance}
 
  ]

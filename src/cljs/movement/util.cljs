@@ -47,31 +47,16 @@
                :error-handler #(pr (str "error retrieving user information: " %))}))
 
 (defn get-templates []
-  (GET "templates" {:params        {:user (session/get :user)}
+  (GET "templates" {:params        {:user (session/get :email)}
                     :handler       #(session/put! :templates %)
                     :error-handler #(pr (str "error retrieving templates: " %))}))
 
-(defn get-groups []
-  (GET "groups" {:params        {:email (session/get :email)}
-                 :handler       #(session/put! :groups %)
-                 :error-handler #(pr (str "error retrieving groups: " %))}))
-
-(defn get-plans []
-  (GET "plans" {:params        {:email (session/get :email)}
-                :handler       #(session/put! :plans %)
-                :error-handler #(pr (str "error retrieving plans: " %))}))
-
-(defn get-ongoing-plan []
-  (GET "ongoing-plan" {:params        {:email (session/get :email)}
-                       :handler       #(session/put! :ongoing-plan %)
-                       :error-handler #(pr (str "error retrieving ongoing-plan: " %))}))
-
-(defn get-all-categories []
-  (GET "categories" {:handler       #(session/put! :all-categories %)
-                     :error-handler #(pr (str "error retrieving categories: " %))}))
-
-(defn get-all-movements []
+(defn get-movements []
   (GET "movements" {:handler       #(session/put! :all-movements %)
+                    :error-handler #(pr (str "error retrieving movements: " %))}))
+
+(defn get-categories []
+  (GET "categories" {:handler       #(session/put! :all-categories %)
                     :error-handler #(pr (str "error retrieving movements: " %))}))
 
 (defn get-stored-sessions []
@@ -102,3 +87,21 @@
   This is a React requirement."
   [func]
   (fn [] func nil))
+
+(def temp-state (atom {}))
+
+(defn preview-file []
+  (let [file (.getElementById js/document "upload")
+        reader (js/FileReader.)]
+    (when-let [file (aget (.-files file) 0)]
+      (set! (.-onloadend reader) #(swap! temp-state assoc :background (-> % .-target .-result str)))
+      (.readAsDataURL reader file))))
+
+(defn upload-background-component []
+  [:div.pure-g
+   [:div.pure-u "Upload a custom background image for your template: "]
+   [:input.pure-u {:id   "upload"
+                   :type "file" :on-change #(preview-file)}]
+   (when (:background @temp-state)
+     [:div.pure-u {:on-click #(swap! temp-state dissoc :background)
+                   :style    {:color "blue"}} "Remove custom background"])])

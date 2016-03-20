@@ -110,7 +110,7 @@
        (when @set-new-username?
          [set-username-component])])))
 
-(defn user-component []
+(defn user-page []
   (let []
     (fn []
       [:div#layout {:class (str "" (when (session/get :active?) "active"))}

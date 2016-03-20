@@ -27,7 +27,6 @@
 
             [movement.db.db :as db]
 
-            [movement.db :refer [tx update-tx-conn! update-tx-db!] :as old-db]
             [movement.pages.landing :refer [landing-page]]
             [movement.pages.signup :refer [signup-page payment-page activation-page]]
             [movement.pages.contact :refer [contact-page]]
@@ -53,14 +52,6 @@
 
 ;;;;;; login ;;;;;;
 
-(defn md5 [s]
-  (let [algorithm (MessageDigest/getInstance "MD5")
-        size (* 2 (.getDigestLength algorithm))
-        raw (.digest algorithm (.getBytes s))
-        sig (.toString (BigInteger. 1 raw) 16)
-        padding (apply str (repeat (- size (count sig)) "0"))]
-    (str padding sig)))
-
 (defn valid-user? [user password]
   (hashers/check password (:password user)))
 
@@ -76,13 +67,13 @@
       (false? (:activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
       (false? (:valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
       (valid-user? user password) (let [claims {:user (keyword email)
-                                                :exp  (-> 3 hours from-now)}
+                                                :exp  (-> 72 hours from-now)}
                                         token (jws/sign claims secret {:alg :hs512})]
                                     (response {:token    token
                                                :email    email}))
       :else (response {:message "Incorrect password"} 401))))
 
-;;;;;;;;;;;
+;;;;;; end login ;;;;;;
 
 (defn add-session! [req]
   (let [session (:session (:params req))
@@ -96,22 +87,6 @@
         (catch Exception e
           (error e (str "error transacting session: user: " user " session: " session)))
         (finally (response {:message "Session stored successfully"}))))))
-
-(defn add-template!
-  "Adds the new template to the database."
-  [req]
-  (let [email (:email (:params req))
-        template (:template (:params req))]
-    (if (nil? email)
-      (response "User email lacking from client data" 400)
-      (if (old-db/new-unique-template? email (:title template))
-        (try
-          (old-db/transact-template! template)
-          (catch Exception e
-            (response (str "Exception transact-template!: " e)))
-          (finally (do (update-tx-db!)
-                       (response "Template added successfully."))))
-        (response "You already have a template with this title. Please choose a unique title for your template." 400)))))
 
 (defn add-user! [email password]
   (if (nil? (db/find-user email))
@@ -129,7 +104,7 @@
       (response (str "Exception: " e)))))
 
 (defn activate-user! [id]
-  (let [user (old-db/entity-by-lookup-ref :user/activation-id id)]
+  #_(let [user (old-db/entity-by-lookup-ref :user/activation-id id)]
     (if-not (nil? (:db/id user))
       (let []
         (old-db/transact-activated-user! (:user/email user))
@@ -159,6 +134,14 @@
                  :username username})
       (catch Exception e
         (response {:message  "Error changing username"} 500)))))
+
+(defn md5 [s]
+  (let [algorithm (MessageDigest/getInstance "MD5")
+        size (* 2 (.getDigestLength algorithm))
+        raw (.digest algorithm (.getBytes s))
+        sig (.toString (BigInteger. 1 raw) 16)
+        padding (apply str (repeat (- size (count sig)) "0"))]
+    (str padding sig)))
 
 (defn update-subscription-status! [{:keys [security_data security_hash
                                            SubscriptionReferrer SubscriptionIsTest
@@ -200,7 +183,7 @@
            (GET "/subscription-deactivated" req (update-subscription-status! (:params req) false))
 
            (POST "/signup" [email password] (add-user! email password))
-           (POST "/login" [username password] (jws-login username password))
+           (POST "/login" [email password] (jws-login email password))
 
            (GET "/user" req (if (authenticated? req)
                               (let [email (:email (:params req))]
@@ -212,9 +195,6 @@
            (POST "/change-password" req (if (authenticated? req) (change-password! req) (throw-unauthorized)))
            (POST "/change-username" req (if (authenticated? req) (change-username! req) (throw-unauthorized)))
            (POST "/store-session" req (if (authenticated? req) (add-session! req) (throw-unauthorized)))
-
-           ;; --------------------------------------------------------
-
            (POST "/set-zone" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (let [email (:email (:params req))
@@ -222,50 +202,57 @@
                                          zone (:zone (:params req))]
                                      (set-zone! email name zone))))
 
-           (GET "/sessions" req (if-not (authenticated? req)
+           (GET "/create-session" req (if (authenticated? req)
+                                        (let [type (:type (:params req))
+                                              email (:email (:params req))]
+                                          (response (db/create-session email type))) (throw-unauthorized)))
+
+           ;; --------------------------------------------------------
+
+           #_(GET "/sessions" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (response (old-db/retrieve-sessions req))))
-           (GET "/session/:url" [url] (view-session-page (old-db/get-session url)))
-           (GET "/template" req (if-not (authenticated? req)
+           #_(GET "/session/:url" [url] (view-session-page (old-db/get-session url)))
+           #_(GET "/template" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (let [id (:template-id (:params req))
                                         template (old-db/entity-by-id (if (string? id) (read-string id) id))
                                         email (:email (:params req))]
                                     (response (old-db/create-session email template)))))
 
-           (GET "/templates" req (if-not (authenticated? req)
+           #_(GET "/templates" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (response (old-db/all-templates (str (:user (:params req)))))))
 
-           (GET "/movement" req (if-not (authenticated? req)
+           #_(GET "/movement" req (if-not (authenticated? req)
                                   (throw-unauthorized)
                                   (response (old-db/movement
                                               (:email (:params req))
                                               :name
                                               (:name (:params req))
                                               (:part (:params req))))))
-           (GET "/explore-movement" req (if-not (authenticated? req)
+           #_(GET "/explore-movement" req (if-not (authenticated? req)
                                           (throw-unauthorized)
                                           (let [unique-name (:unique-name (:params req))
                                                 email (:email (:params req))]
                                             (response (old-db/explore-movement email unique-name)))))
-           (GET "/user-movements" req (if-not (authenticated? req)
+           #_(GET "/user-movements" req (if-not (authenticated? req)
                                           (throw-unauthorized)
                                           (let [email (:email (:params req))]
                                             (response (old-db/user-movements email)))))
-           (GET "/singlemovement" req (if-not (authenticated? req)
+           #_(GET "/singlemovement" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (let [email (:email (:params req))
                                               part (:part (:params req))]
                                           (response (old-db/single-movement email part)))))
-           (GET "/movement-by-id" req (if-not (authenticated? req)
+           #_(GET "/movement-by-id" req (if-not (authenticated? req)
                                         (throw-unauthorized)
                                         (response (old-db/movement
                                                     (:email (:params req))
                                                     :id
                                                     (read-string (:id (:params req)))
                                                     (:part (:params req))))))
-           (GET "/movements-by-category" req (if-not (authenticated? req)
+           #_(GET "/movements-by-category" req (if-not (authenticated? req)
                                                (throw-unauthorized)
                                                (response
                                                  (old-db/get-movements-from-category
