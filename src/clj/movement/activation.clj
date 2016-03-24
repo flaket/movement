@@ -1,7 +1,8 @@
 (ns movement.activation
   (:require [postal.core :refer [send-message]]
             [taoensso.timbre :refer [info error]]
-            [environ.core :refer [env]])
+            [environ.core :refer [env]]
+            [buddy.hashers :as hashers])
   (:import (java.util UUID)))
 
 (defn generate-activation-id []
@@ -9,6 +10,24 @@
 
 (def url (if (env :dev?) "http://localhost:8000/activate/"
                           "http://www.movementsession.com/activate/"))
+
+(defn send-email-2 [to-email subject body]
+  (try
+    (send-message
+      ^{:host "smtpin.isphuset.no"
+        :port 587
+        :user "andreas@mumrik.no"
+        :pass "mumrikM9n8b7v6"
+        ;:ssl :yes
+        }
+      {:from    "andreas@mumrik.no"
+       :to      to-email
+       :subject subject
+       :body    body})
+    (info "sent email to: " to-email)
+    true
+    (catch Exception e
+      (error e "could not send email!\n"))))
 
 (defn send-email [email subject body]
   (try

@@ -1,63 +1,64 @@
 [
- {:name     "Balancing Walk"
-  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :next     ["Balancing Lateral Walk" "Balancing Backward Walk" "Balancing Low Walk"
-             "Balancing Bear Crawl" "Balancing Inverted Crawl"]}
 
- {:name     "Balancing Lateral Walk"
+ {:name     "Balansegang"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Balancing Walk"] :next ["Balancing Backward Walk"]}
+  :next     ["Balansere sideveis" "Balansere baklengs" "Lav balansegang"
+             "Balanserende bjørnekravle" "Balanserende krabbekravle"]}
 
- {:name     "Balancing Backward Walk"
+ {:name     "Balansere sideveis"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Balancing Lateral Walk"]}
+  :previous ["Balansegang"] next ["Lav balansegang"]}
 
- {:name     "Balancing Low Walk"
+ {:name     "Balansere baklengs"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Balancing Walk"] :next ["Balancing Lateral Low Walk"]}
+  :previous ["Balansegang"] next ["Lav balansegang"]}
 
- {:name     "Balancing Lateral Low Walk"
+ {:name     "Lav balansegang"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Balancing Lateral Walk" "Balancing Backward Walk"] :next ["Balancing Backward Low Walk"]}
+  :previous ["Balansegang" "Balansere baklengs" "Balansere sideveis"] :next ["Balansere lavt sideveis"]}
 
- {:name     "Balancing Backward Low Walk"
+ {:name     "Balansere lavt sideveis"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Balancing Lateral Walk" "Balancing Lateral Low Walk"]}
+  :previous ["Lav balansegang"]}
 
- {:name     "Stealth Walk"
+ {:name     "Balansere lavt baklengs"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Balancing Low Walk"] :next ["Lateral Stealth Walk"]}
+  :previous ["Lav balansegang"]}
 
- {:name     "Lateral Stealth Walk"
+ {:name     "Balanserende sniking"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Balancing Lateral Low Walk" "Stealth Walk"]}
+  :previous ["Lav balansegang"] :next ["Balanserende sideveis sniking"]}
 
- {:name     "Balancing Tripod Transition"
+ {:name     "Balanserende sideveis sniking"
+  :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
+  :previous ["Balanserende sniking"]}
+
+ {:name     "Balanserende overgang"
   :category #{:balance :beam :natural} :measurement :repetitions
-  :previous ["Tripod Transition"]}
+  :previous ["Overgang"]}
 
- {:name     "Balancing Bear Crawl"
+ {:name     "Balanserende bjørnekravle"
   :category #{:balance :crawl :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Bear Crawl"]}
+  :previous ["Bjørnekravle"]}
 
- {:name     "Balancing Inverted Crawl"
+ {:name     "Balanserende krabbekravle"
   :category #{:balance :crawl :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Bear Crawl"]}
+  :previous ["Krabbekravle"]}
 
- {:name     "Balancing Turn"
+ {:name     "Balanserende vending"
   :category #{:balance :beam :natural} :measurement :repetitions
-  :next     ["Balancing Split Squat Turn"]}
+  :next     ["Balanserende vending i splittknebøy"]}
 
- {:name     "Balancing Cross Turn"
+ {:name     "Balanserende kryssvending"
   :category #{:balance :beam :natural} :measurement :repetitions
-  :next     ["Balancing Split Squat Turn"]}
+  :next     ["Balanserende vending i splittknebøy"]}
 
- {:name     "Balancing Split Squat"
+ {:name     "Balanserende splittknebøy"
   :category #{:balance :beam :natural} :measurement :repetitions
-  :next     ["Balancing Split Squat Turn"]}
+  :next     ["Balanserende vending i splittknebøy"]}
 
- {:name     "Balancing Split Squat Turn"
+ {:name     "Balanserende vending i splittknebøy"
   :category #{:balance :beam :natural} :measurement :repetitions
-  :previous ["Balancing Turn" "Balancing Split Squat"]}
+  :previous ["Balanserende vending" "Balanserende splittknebøy"]}
 
  ]
