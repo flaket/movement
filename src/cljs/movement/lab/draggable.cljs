@@ -1,4 +1,4 @@
-(ns movement.draggable
+(ns movement.lab.draggable
   (:import [goog.events EventType])
   (:require [goog.events :as events]
             [reagent.core :refer [atom]]))

@@ -1,4 +1,4 @@
-(ns movement.sparkline)
+(ns movement.lab.sparkline)
 
 (defn sparkline
   "

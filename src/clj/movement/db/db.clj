@@ -12,146 +12,91 @@
             :secret-key "..."
             :endpoint   "http://localhost:8080"})
 
+(def movements-table {:table :movements :throughput {:read 1 :write 1}
+                      :attrs {:name :string} :keys [:name]})
+(def user-movements-table {:table   :user-movements :throughput {:read 1 :write 1}
+                           :attrs   {:user-id :string :movement-name :string} :keys [:user-id :movement-name]
+                           :indexes {:global [{:name       :movements-by-user-id
+                                               :keys       [:user-id]
+                                               :throughput {:read 1 :write 1}
+                                               :project    [:all]}]}})
+(def templates-table {:table :templates :throughput {:read 1 :write 1}
+                      :attrs {:title :string} :keys [:title]})
+(def users-table {:table   :users :throughput {:read 1 :write 1}
+                  :attrs   {:user-id :string :activation-id :string :email :string :name :string} :keys [:user-id]
+                  :indexes {:global [{:name       :user-by-activation-id
+                                      :keys       [:activation-id]
+                                      :project    [:keys-only]
+                                      :throughput {:read 1 :write 1}}
+                                     {:name       :user-by-email
+                                      :keys       [:email]
+                                      :project    [:all]
+                                      :throughput {:read 1 :write 1}}
+                                     {:name       :user-by-name
+                                      :keys       [:name]
+                                      :project    [:all]
+                                      :throughput {:read 1 :write 1}}]}})
+(def sessions-table {:table   :sessions :throughput {:read 1 :write 1}
+                     :attrs   {:url :string :user-id :string} :keys [:url]
+                     :indexes {:global [{:name       :session-by-user-id
+                                         :keys       [:user-id]
+                                         :project    [:keys-only]
+                                         :throughput {:read 1 :write 1}}]}})
+
+#_(let [c (h/list-tables! creds {})] (<!! c))
+#_(let [c (h/describe-table! creds :users)] (<!! c))
+#_(h/create-table! creds users-table)
+#_(h/delete-table! creds :users)
 #_(let [tables (<!! (h/list-tables! creds {}))]
     (doseq [i (range (count tables))]
       (h/delete-table! creds (get tables i))))
-
-#_(h/delete-table! creds :users)                   ; :users :movements :sessions :templates :user-movements
-
-#_(def tables [{:table      :movements
-                :throughput {:read 1 :write 1}
-                :attrs      {:name :string}
-                :keys       [:name]}
-
-               {:table      :users
-                :throughput {:read 1 :write 1}
-                :attrs      {:email :string :activation-id :string}
-                :keys       [:email]
-                :indexes    {:global [{:name       :user-by-activation-id
-                                       :keys       [:activation-id]
-                                       :project    [:keys-only]
-                                       :throughput {:read 1 :write 1}}]}}
-
-               {:table      :templates
-                :throughput {:read 1 :write 1}
-                :attrs      {:title :string :creator :string}
-                :keys       [:title :creator]}
-
-               {:table      :sessions
-                :throughput {:read 1 :write 1}
-                :attrs      {:url :string :email :string}
-                :keys       [:url]
-                :indexes    {:global [{:name       :session-by-email
-                                       :keys       [:email]
-                                       :project    [:keys-only]
-                                       :throughput {:read 1 :write 1}}]}}
-
-               {:table      :user-movements
-                :throughput {:read 1 :write 1}
-                :attrs      {:email :string :movement-name :string}
-                :keys       [:email :movement-name]
-                :indexes    {:global [{:name       :movements-by-user
-                                       :keys       [:email]
-                                       :throughput {:read 1 :write 1}
-                                       :project    [:all]}]}}])
-
-#_(defn create-tables! [tables]
-    (doseq [i (range (count tables))]
-      (let [c (h/create-table! creds (get tables i))]
-        (pr (<!! c)))))
-
-#_(h/create-table! creds {:table      :user-movements
-                          :throughput {:read 1 :write 1}
-                          :attrs      {:email :string :movement-name :string}
-                          :keys       [:email :movement-name]
-                          :indexes    {:global [{:name       :movements-by-user
-                                                 :keys       [:email]
-                                                 :throughput {:read 1 :write 1}
-                                                 :project    [:all]}]}})
-
-#_(h/delete-table! creds :user-movements)
-
-#_(let [c (h/list-tables! creds {})] (<!! c))
-
-#_(h/put-item! creds :user-movements {:email "fsa" :movement-name "Pull Up" :zone 2})
-
-#_(let [c (h/query! creds :user-movements
-                    {:email [:= "a"]}
-                    {:index :movements-by-user})]
-    (<!! c))
 
 ;; template: title description background part
 ;; parts: slot(s)
 ;; slot: category natural movement rep distance duration set weight rest
 #_(let [t {:title       "Test"
-         :creator     "Andreas"
-         :description "test"
-         :background  "test"
-         :parts        [[{:category   #{:natural :balance}
-                         :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
-                        {:category   #{:natural :climb}
-                         :repetition [2 4 6] :set 4}]]}]
-  (h/put-item! creds :templates t))
+           :creator     "Andreas"
+           :description "test"
+           :background  "test"
+           :parts       [[{:category   #{:natural :balance}
+                           :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
+                          {:category   #{:natural :climb}
+                           :repetition [2 4 6] :set 4}]]}]
+    (h/put-item! creds :templates t))
 
-;; stored-sessions: email url template date
-;; comment time part->movement(rep set duration distance weight rest)
-;; time-taken image location
-
-#_(let [c (h/list-tables! creds {})] (<!! c))
-#_(let [c (h/describe-table! creds :user-movements)] (<!! c))
+;; stored-sessions:
+;; url user-id template date comment time(minutter/timer) image location tags(skrapes fra comment backend)
+;; parts [[{movement-name rep set duration distance weight rest}]]
 
 #_(let [balancing (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
-        climbing (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
-        all-movements (vec (concat balancing climbing))]
-    (map #(h/put-item! creds :movements %) all-movements))
-
-#_(let [user {:email             "andflak@gmail.com"
-              :password          (hashers/encrypt "pw")
-              :sign-up-timestamp (.getTime (Date.))
-              :activation-id     (str (UUID/randomUUID))}]
-    (h/put-item! creds :users user))
-
-; look-up on known item
-#_(let [c (h/get-item! creds :templates
-                       {:title "Test"
-                        :creator "Andreas"
-                        })] (<!! c))
-
-#_(let [c (h/scan-count! creds :user-movements)] (<!! c))
-
-; query looks up values given keys
-#_(let [c (h/query! creds :movements {:name "Pull Up"} {:filter [:contains [:name] "Pull"]})]
-    (<!! c))
-
-; scan is query without key constraint
-#_(let [c (h/scan! creds :user-movements {:filter [:contains [:email] "andflak@gmail.com"]})]
-    (<!! c))
-
-#_(let [c (h/scan! creds :user-movements {})]
-    (<!! c))
-
-#_(let [c (h/get-item! creds :movement {:name "Dip"})
-        previous (first (shuffle (:previous (<!! c))))
-        c (h/get-item! creds :movement {:name previous})]
-    (<!! c))
-
-#_(<!! (h/get-item! creds :movements {:name "Balancing Walk"}))
-
-#_(h/put-item! creds :user-movements {:email "andflak@gmail.com" :name "Pull Up" :zone 1})
-
-#_(keyword (str/replace (str/lower-case name) " " "-"))
+        ;climbing (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
+        ;all-movements (vec (concat balancing climbing))
+        ]
+    (map #(h/put-item! creds :movements %) balancing))
 
 ;; ----------------------------------------------------
 
-(defn find-user [email]
-  (let [c (h/get-item! creds :users {:email email})] (<!! c)))
-#_(find-user "andflak@gmail.com")
+(defn user [user-id]
+  (<!! (h/get-item! creds :users {:user-id user-id})))
+#_(user "b3b4196b-a131-463f-8ddf-bd174ae44d19")
 
-(defn item-by-id [id]
+(defn user-by-email [email]
+  (->>
+    (h/query! creds :users {:email [:= email]} {:index :user-by-email})
+    <!!
+    first))
+#_(user-by-email "andflak@gmail.com")
+
+(defn user-by-activation-id [id]
   (->>
     (h/query! creds :users {:activation-id [:= id]} {:index :user-by-activation-id})
     <!!
     first))
+
+(defn user-by-name [name]
+  (->>
+    (h/query! creds :users {:name [:= name]} {:index :user-by-name})
+    <!!))
 
 ;;---------- get data ----------
 
@@ -178,43 +123,43 @@
   (let [c (h/scan! creds :movements {:filter [:contains [:category] category]})
         movements (take n (sort-by :name (<!! c)))]
     movements))
-#_(movements-from-category 3 :pushing)
+#_(movements-from-category 3 :pull)
 
 (defn template [title creator]
-  (<!! (h/get-item! creds :templates {:title   title :creator creator})))
+  (<!! (h/get-item! creds :templates {:title title :creator creator})))
 #_(template "Naturlige Bevegelser 2" "Andreas")
 
 (defn create-session [email session-type]
   (let [session {:description "hellu"
                  :template    {:creator "Andreas" :title "Test"}
                  :parts       [[
-                                {:name     "Balancing Backward Walk"
+                                {:name          "Balancing Backward Walk"
                                  :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
-                                 :measurement :distance
-                                 :previous ["Balancing Lateral Walk"]
-                                 :distance 10
-                                 :set 4}
-                                {:name     "Toes To Bar"
-                                 :rep      5
-                                 :set      4
-                                 :category #{:natural :climb}
+                                 :measurement   :distance
+                                 :previous      ["Balancing Lateral Walk"]
+                                 :distance      10
+                                 :set           4}
+                                {:name        "Toes To Bar"
+                                 :rep         5
+                                 :set         4
+                                 :category    #{:natural :climb}
                                  :measurement :repetitions
-                                 :previous ["Hanging Knee Tuck"] :next ["Hanging Side Foot Lift"]}
+                                 :previous    ["Hanging Knee Tuck"] :next ["Hanging Side Foot Lift"]}
 
                                 ]
                                [
-                                {:name     "Balancing Backward Walk"
+                                {:name          "Balancing Backward Walk"
                                  :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
-                                 :measurement :distance
-                                 :previous ["Balancing Lateral Walk"]
-                                 :distance 10
-                                 :set 4}
-                                {:name     "Toes To Bar"
-                                 :rep      5
-                                 :set      4
-                                 :category #{:natural :climb}
+                                 :measurement   :distance
+                                 :previous      ["Balancing Lateral Walk"]
+                                 :distance      10
+                                 :set           4}
+                                {:name        "Toes To Bar"
+                                 :rep         5
+                                 :set         4
+                                 :category    #{:natural :climb}
                                  :measurement :repetitions
-                                 :previous ["Hanging Knee Tuck"] :next ["Hanging Side Foot Lift"]}
+                                 :previous    ["Hanging Knee Tuck"] :next ["Hanging Side Foot Lift"]}
 
                                 ]]}]
     session
@@ -222,54 +167,75 @@
 
 ;;---------- add/update data ----------
 
-(defn add-user! [email password activation-id]
-  (let [user {:email               email
-              :password            (hashers/encrypt password)
-              :sign-up-timestamp   (.getTime (Date.))
-              :activation-id       activation-id
-              :activated?          false
-              :valid-subscription? false
-              :badges              #{:newbie}
-              :settings            {:receive-push-notifications? true
-                                    :goals                       []
-                                    :priorities                  []}}]
+(defn add-user! [email name password activation-id]
+  (let [user {:user-id                     (str (UUID/randomUUID))
+              :email                       email
+              :name                        name
+              :password                    (hashers/encrypt password)
+              :sign-up-timestamp           (.getTime (Date.))
+              :activation-id               activation-id
+              :activated?                  false
+              :valid-subscription?         false
+              :receive-push-notifications? true
+              :follows                     []
+              :badges                      []
+              :goals                       []
+              :priorities                  []}]
     (h/put-item! creds :users user)))
-#_(add-user! "andflak@gmail.com" "pw" "1")
+#_(add-user! "andflak@gmail.com" "andreas" "pw" (str (UUID/randomUUID)))
+
+(defn follow-user! [user-id follow-id]
+  (h/update-item! creds :users {:user-id user-id}
+                  {:follows [:concat [follow-id]]}))
+#_(follow-user! "andreas@roebuck.com" (str (UUID/randomUUID)))
+#_(user-by-email "andreas@roebuck.com")
+
+(defn add-badge! [user-id badge]
+  (h/update-item! creds :users {:user-id user-id}
+                  {:badges [:concat [badge]]}))
+#_(add-badge! "andreas@roebuck.com" {:name "Newbie" :achieved-at (.getTime (Date.))})
 
 (defn add-session! [user session]
-  (let [session (assoc session :url (str (UUID/randomUUID))
-                               :email (:email user))]
+  (let [tags []                                             ;scan comment-felt etter hashtagger -> lag liste ["løpetur" "sol" "vårstemning"]
+        session (assoc session :url (str (UUID/randomUUID))
+                               :user-id (:user-id user)
+                               :tags tags)]
     (h/put-item! creds :sessions session)))
 
-(defn activate-user! [id]
-  (let [email (:email (item-by-id id))]
-    (h/update-item! creds :users {:email email}
+(defn activate-user! [uuid]
+  (let [user (:user-id (user-by-activation-id uuid))]
+    (h/update-item! creds :users {:user-id user}
                     {:activated?    [:set true]
                      :activation-id [:remove]})))
-#_(activate-user! "1")
+#_(activate-user! "28e5835d-0415-44c5-95a9-ab5a37eaa31d")
 
-(defn add-movement! [email movement]
+(defn add-movement! [user-id movement]
   ; todo: filter; don't add if exists
   (h/put-item! creds :user-movements
-               {:email email :movement-name movement :zone 1}))
+               {:user-id user-id :movement-name movement :zone 1}))
 
-(defn update-subscription! [email value]
-  (h/update-item! creds :users {:email email}
+(defn update-subscription! [user-id value]
+  (h/update-item! creds :users {:user-id user-id}
                   {:valid-subscription? [:set value]}))
 #_(update-subscription! "andflak@gmail.com" true)
 
 (defn update-name!
-  [email value]
-  (h/update-item! creds :users {:email email} {:name [:set value]})
+  [user-id value]
+  (h/update-item! creds :users {:user-id user-id} {:name [:set value]})
   "Username changed successfully!")
 #_(update-name! "andflak@gmail.com" "Andreas")
 
+(defn update-email!
+  [user-id value]
+  (h/update-item! creds :users {:user-id user-id} {:email [:set value]})
+  "Email changed successfully!")
+
 (defn update-password!
-  [email password]
+  [user-id password]
   (let [value (hashers/encrypt password)]
-    (h/update-item! creds :users {:email email} {:password [:set value]})
+    (h/update-item! creds :users {:user-id user-id} {:password [:set value]})
     "Password changed successfully!"))
 
-(defn update-zone! [email movement zone]
+(defn update-zone! [user-id movement zone]
   (h/put-item! creds :user-movements
-               {:email email :movement-name movement :zone zone}))
+               {:user-id user-id :movement-name movement :zone zone}))

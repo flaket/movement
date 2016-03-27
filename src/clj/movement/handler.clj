@@ -61,15 +61,19 @@
 
 (defn jws-login
   [email password]
-  (let [user (db/find-user email)]
+  (let [user (db/user-by-email email)]
     (cond
       (nil? user) (response {:message "Unknown user"} 400)
       (false? (:activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
-      (false? (:valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
-      (valid-user? user password) (let [claims {:user (keyword email)
+      ;(false? (:valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
+      (valid-user? user password) (let [claims {:user (keyword (:email user))
                                                 :exp  (-> 72 hours from-now)}
                                         token (jws/sign claims secret {:alg :hs512})]
-                                    (response {:token    token
+                                    (response (-> user
+                                                  (assoc :token token)
+                                                  (dissoc :password :activated?))
+
+                                      #_{:token    token
                                                :email    email}))
       :else (response {:message "Incorrect password"} 401))))
 
@@ -81,15 +85,14 @@
     (if (nil? user)
       (response {:message "User email lacking from client data" :session session} 400)
       (try
-        (do
-          (db/add-session! user session)
-          #_(db/add-new-movements! user session))
+        (db/add-session! user session)
+        #_(db/add-new-movements! user session)
         (catch Exception e
           (error e (str "error transacting session: user: " user " session: " session)))
         (finally (response {:message "Session stored successfully"}))))))
 
 (defn add-user! [email password]
-  (if (nil? (db/find-user email))
+  #_(if (nil? (db/user-by-email email))
     (let [activation-id (str (UUID/randomUUID))]
       (db/add-user! email password activation-id)
       (send-activation-email email activation-id)
@@ -118,7 +121,7 @@
   (let [email (:username (:params req))
         password (:password (:params req))
         new-password (:new-password (:params req))
-        user (db/find-user email)]
+        user (db/user-by-email email)]
     (if (valid-user? user password)
       (try
         (response (db/update-password! email new-password))
@@ -187,7 +190,7 @@
 
            (GET "/user" req (if (authenticated? req)
                               (let [email (:email (:params req))]
-                                (response (dissoc (db/find-user email)
+                                (response (dissoc (db/user-by-email email)
                                                   :password
                                                   :activation-id
                                                   :activated?
