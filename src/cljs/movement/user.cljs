@@ -1,6 +1,7 @@
 (ns movement.user
   (:require [reagent.core :refer [atom]]
             [reagent.session :as session]
+            [secretary.core :include-macros true :refer [dispatch!]]
             [movement.menu :refer [menu-component]]
             [movement.util :refer [POST text-input get-user-info]]))
 
@@ -110,6 +111,10 @@
        (when @set-new-username?
          [set-username-component])])))
 
+(defn log-out []
+  (session/clear!)
+  (dispatch! "/"))
+
 (defn user-page []
   (let []
     (fn []
@@ -119,5 +124,7 @@
         [logged-in-as]
         [logged-sessions-component]
         [change-password-component]
+        [:div.pure-g
+         [:div.button.pure-u.pure-u-md-2-5 {:onClick #(log-out) :onTouchEnd #(log-out)} "Log out"]]
         ]])))
 

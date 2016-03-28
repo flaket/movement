@@ -31,6 +31,7 @@ html, button, input, select, textarea,
 
 html {
   font-size: 18px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {

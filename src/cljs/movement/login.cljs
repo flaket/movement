@@ -2,12 +2,28 @@
   (:require [reagent.core :refer [atom]]
             [reagent.session :as session]
             [secretary.core :include-macros true :refer [dispatch!]]
-            [movement.util :refer [GET POST
-                                   text-input
-                                   get-stored-sessions
-                                   get-templates
-                                   get-movements
-                                   get-categories]]))
+            [movement.util :refer [GET POST text-input get-stored-sessions
+                                   get-templates get-movements get-categories]]))
+
+(defn login-handler [user password loading? error show-payment?]
+  (if-not (and (seq @user) (seq @password))
+    (reset! error "Both fields are required.")
+    (do
+      (reset! loading? true)
+      (POST "login" {:params        {:email    @user
+                                     :password @password}
+                     :handler       (fn [{:keys [token email]}]
+                                      (session/put! :token token)
+                                      (session/put! :email email)
+                                      (session/put! :selected-menu-item :feed)
+                                      (dispatch! "/session"))
+                     :error-handler (fn [response]
+                                      (let [r (:response response)
+                                            update-payment? (:update-payment? r)]
+                                        (reset! loading? false)
+                                        (reset! error (:message (:response response)))
+                                        (when update-payment?
+                                          (reset! show-payment? true))))}))))
 
 (defn login []
   (let [user (atom "")
@@ -40,26 +56,8 @@
        [:div.pure-g
         [:button.pure-u-1.button.button-primary
          {:class    (when @loading? " disabled")
-          :on-click #(if-not (and (seq @user) (seq @password))
-                      (reset! error "Both fields are required.")
-                      (do
-                        (reset! loading? true)
-                        (POST "login" {:params        {:email @user
-                                                       :password @password}
-                                       :handler       (fn [response] (do
-                                                                       (session/put! :token (:token response))
-                                                                       (session/put! :email (:email response))
-                                                                       (get-templates)
-                                                                       (get-movements)
-                                                                       (get-categories)
-                                                                       (session/put! :selected-menu-item " Session")
-                                                                       (dispatch! "/session")))
-                                       :error-handler (fn [response] (let [r (:response response)
-                                                                           update-payment? (:update-payment? r)]
-                                                                       (reset! loading? false)
-                                                                       (reset! error (:message (:response response)))
-                                                                       (when update-payment?
-                                                                         (reset! show-payment? true))))})))}
+          :onClick #(login-handler user password loading? error show-payment?)
+          :onTouchEnd #(login-handler user password loading? error show-payment?)}
          (if @loading? "Logging in..." "Log In")]]])))
 
 (defn login-page []

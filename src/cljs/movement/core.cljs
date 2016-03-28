@@ -17,19 +17,18 @@
 (secretary/defroute "/user" [] (set-page! #'user-page))
 
 ;---------------------------
-(defn page []
+(defn application-view []
   [(session/get :current-page)])
 
 ;; -------------------------
 (defn mount-root []
-  (render-component [page] (.getElementById js/document "app")))
+  (render-component [application-view] (.getElementById js/document "app")))
 
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
   (when (session/get :email)
     (set-page! #'session-page))
-  #_(.initializeTouchEvents js/React true)
   (mount-root))
 
 (init!)

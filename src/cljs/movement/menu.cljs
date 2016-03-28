@@ -5,38 +5,23 @@
     [movement.util :refer [POST]]
     [secretary.core :include-macros true :refer [dispatch!]]))
 
+(defn menu-click-handler [selected-item dispatch-page]
+  (session/put! :selected-menu-item selected-item)
+  (dispatch! dispatch-page))
+
 (defn menu-component []
-  (let [menu-item-session " Session"
-        menu-item-user " User"]
-    (fn []
-      [:div
-       [:div {:id "menu-hamburger"
-            :name "menu-hamburger"
-            :class    (str "menu-link " (when (session/get :active?) "active"))
-            :on-click  #(session/put! :active? (not (session/get :active?)))}
-        [:span]]
-       (let [selected (session/get :selected-menu-item)]
-         [:div#menu {:class (str "" (when (session/get :active?) "active"))}
-          [:div.pure-menu
-           [:ul.pure-menu-list
-            [:li {:className (str "pure-menu-item"
-                                  (when (= menu-item-session selected)
-                                    " menu-item-divided pure-menu-selected"))
-                  :on-click  #(do
-                               (session/put! :selected-menu-item menu-item-session)
-                               (dispatch! "/session"))}
-
-             [:a.pure-menu-link menu-item-session]]
-            [:li {:className (str "pure-menu-item"
-                                  (when (= menu-item-user selected)
-                                    " menu-item-divided pure-menu-selected"))
-                  :on-click  #(do
-                               (session/put! :selected-menu-item menu-item-user)
-                               (dispatch! "/user"))}
-
-             [:a.pure-menu-link menu-item-user]]
-            [:li {:className (str "pure-menu-item")
-                  :on-click  #(do (session/clear!)
-                                  (dispatch! "/"))
-                  :style {:margin-top "50px"}}
-             [:a.pure-menu-link "Log Out"]]]]])])))
+  (let [selected (session/get :selected-menu-item)]
+    [:div#menu
+     [:ul.pure-g
+      [:li.pure-u-1-3 {:className  (when (= selected :feed) "active")
+                       :onClick    #(menu-click-handler :feed "/session")
+                       :onTouchEnd #(menu-click-handler :feed "/session")}
+       [:a [:i.fa.fa-book.fa-2x]]]
+      [:li.pure-u-1-3 {:className  (when (= selected :discover) "active")
+                       :onClick    #(menu-click-handler :discover "/user")
+                       :onTouchEnd #(menu-click-handler :discover "/user")}
+       [:a [:i.fa.fa-search.fa-2x]]]
+      [:li.pure-u-1-3 {:className  (when (= selected :user) "active")
+                       :onClick    #(menu-click-handler :user "/user")
+                       :onTouchEnd #(menu-click-handler :user "/user")}
+       [:a [:i.fa.fa-user.fa-2x]]]]]))
