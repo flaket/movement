@@ -9,9 +9,9 @@
   (:import datomic.Util)
   (:import java.util.Date))
 
-#_(def uri "datomic:dev://localhost:4334/test-db")
+#_(def uri "datomic:dev://localhost:4334/test-movement.db")
 
-#_(def uri "datomic:ddb://eu-west-1/movementsession/prod-db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
+#_(def uri "datomic:ddb://eu-west-1/movementsession/prod-movement.db?aws_access_key_id=AKIAJI5GV57L43PZ6MSA&aws_secret_key=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")
 
 #_(d/delete-database uri)
 
@@ -480,21 +480,21 @@
 ; q([:find ?customer
 ;    :in $database ?email
 ;    :where [$database ?customer :email ?email]],
-;    db,
+;    movement.db,
 ;    "joe@example.com");
 
 ; It's idiomatic to make the database name really short.
 ; q([:find ?customer
 ;    :in $ ?email
 ;    :where [$ ?customer :email ?email]],
-;    db,
+;    movement.db,
 ;    "joe@example.com");
 
 ; In fact, it's idiomatic to leave it out of data patterns.
 ; q([:find ?customer
 ;    :in $ ?email
 ;    :where [?customer :email ?email]],
-;    db,
+;    movement.db,
 ;    "joe@example.com");
 
 ; Predicates are functional constraints that appear in the :where clause.
@@ -593,5 +593,5 @@
    [?release :release/artists ?artist]
    [?release :release/name ?release-name]]
 ;; inputs:
-; db, [["John Lennon" "Mind Games"] ["Paul McCartney" "Ram"]]
+; movement.db, [["John Lennon" "Mind Games"] ["Paul McCartney" "Ram"]]
 

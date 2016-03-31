@@ -3,7 +3,7 @@
  {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
 
  {:db/id #db/id[:db.part/user -1] :category/name "Throw"}
- ;{:db/id #db/id[:db.part/user -2] :category/name "Catching"}
+ ;{:movement.db/id #movement.db/id[:movement.db.part/user -2] :category/name "Catching"}
 
  {:db/id              #db/id[:db.part/user]
   :movement/name      "Chest Throw"

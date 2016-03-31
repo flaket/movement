@@ -4,8 +4,8 @@
  {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
 
  {:db/id #db/id[:db.part/user -1] :category/name "Run"}
- ;{:db/id #db/id[:db.part/user -2] :category/name "Running Technique"}
- ;{:db/id #db/id[:db.part/user -3] :category/name "Running Drills"}
+ ;{:movement.db/id #movement.db/id[:movement.db.part/user -2] :category/name "Running Technique"}
+ ;{:movement.db/id #movement.db/id[:movement.db.part/user -3] :category/name "Running Drills"}
 
  {:db/id                #db/id[:db.part/user -100]
   :movement/name "Run"

@@ -1,12 +1,12 @@
 (ns movement.db.db
-  (:require [clojure.core.async :as async :refer [<!! <! go]]
-            [hildebrand.core :as h]
-            [clojure.set :as set]
-            [buddy.hashers :as hashers]
-            [clojure.string :as str]
-            [clojure.java.io :as io])
-  (:import (java.util UUID Date)
-           datomic.Util))
+      (:require [clojure.core.async :as async :refer [<!! <! go]]
+                [hildebrand.core :as h]
+                [clojure.set :as set]
+                [buddy.hashers :as hashers]
+                [clojure.string :as str]
+                [clojure.java.io :as io])
+      (:import (java.util UUID Date)
+               datomic.Util))
 
 (def creds {:access-key "..."
             :secret-key "..."

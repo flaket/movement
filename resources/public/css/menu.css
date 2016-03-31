@@ -1,4 +1,8 @@
-#menu {  }
+#menu { position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 9999;
+          width: 100%; }
 
 #menu ul { list-style-type: none;
            margin: 0;
@@ -7,7 +11,8 @@
            border: 1px solid #e7e7e7;
            background-color: #f3f3f3; }
 
-#menu ul .active { background-color: #ddd; }
+#menu ul .active { background-color: #ddd;
+                   text-decoration: underline; }
 
 #menu li { float: left; }
 

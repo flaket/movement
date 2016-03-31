@@ -48,11 +48,16 @@ input, textarea {
 
 .content {
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 100px;
   padding: 1rem 1rem;
   max-width: 1200px;
   margin-bottom: 50px;
 }
+
+.feed {
+  margin: 0 auto;
+  margin-top: 100px;
+  }
 
 h1 {
   font-weight: 400;
@@ -95,7 +100,7 @@ h1, h2, p.subtitle {
 }
 
 .movements {
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 .rep-set {
@@ -138,10 +143,8 @@ a:hover {
   cursor: pointer;
 }
 
-.blank-state {
-  margin-top: 3rem;
-  text-align: center;
-}
+.feed a { color: #227aee; }
+
 
 
 article .pure-g [class *= "pure-u"] {
@@ -182,6 +185,11 @@ AmaticSC,
   border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(150,150,150,0.6);
 }
+
+.activity { border-bottom: 1px solid lightgray;
+            cursor: pointer; }
+
+.activity:hover { background-color: lightgray; }
 
 .title { padding: 0 0 0 15px;}
 

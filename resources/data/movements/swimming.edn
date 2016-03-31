@@ -1,7 +1,7 @@
 [
 
  {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
- ;{:db/id #db/id[:db.part/user -1] :category/name "Swim"}
- ;{:db/id #db/id[:db.part/user -2] :category/name "Dive"}
+ ;{:movement.db/id #movement.db/id[:movement.db.part/user -1] :category/name "Swim"}
+ ;{:movement.db/id #movement.db/id[:movement.db.part/user -2] :category/name "Dive"}
 
  ]
