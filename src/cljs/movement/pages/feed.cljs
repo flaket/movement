@@ -3,76 +3,100 @@
             [reagent.core :refer [atom]]
             [clojure.string :as str]))
 
-(def sessions [{:user-name "Kårinator"
-                :user-image "images/movements/pull-up.png"
-                :url "1"
-                :text "en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
-                :date "3 timer siden"
-                :time "45:00"
-                :activity "Styrkeøkt"
-                :session-data [[{:movement-name "Push Up" :rep 10 :set 3}
-                                {:movement-name "Pull Up" :rep 5 :set 3}
-                                {:movement-name "Push Up" :rep 10 :set 3}
-                                {:movement-name "Pull Up" :rep 5 :set 3}]
-                               [{:movement-name "Push Up" :rep 10 :set 3}
-                                {:movement-name "Pull Up" :rep 5 :set 3}
-                                {:movement-name "Push Up" :rep 10 :set 3}
-                                {:movement-name "Pull Up" :rep 5 :set 3}]]
-                :comments [{:comment "Ser bra ut!" :user "Bobby"}
-                           {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
-                :likes 10
-                :image "images/field.jpg"}
-               {:user-name "Bobby D"
-                :url "2"
-                :text "sliten.."
-                :date "igår 16:00"
-                :comments []
-                :likes 4
-                :activity "Naturlig bevegelse"
-                :image "images/forest.jpg"
-                :session-data []}
-               {:url "3"
-                :user-image "images/movements/push-up.png"
-                :user-name "Andreas Flaksviknes"
-                :text "en fin økt"
-                :date "ddmmyy"
-                :likes 0
-                :comments []
-                :activity "Løping"
-                :session-data []}
-               {:url "4"
-                :user-name "kari"
-                :text "sliten"
-                :date "ddmmyy"
-                :comments []
-                :likes 0
-                :time "11:45"
-                :activity "Mobilitet"
-                :image "images/winter.jpg"
-                :session-data []}
-               {:url "5"
-                :user-name "timmy"
-                :date "ddmmyy"
-                :text ""
-                :likes 503
-                :time "1:11:00"
-                :activity "Styrkeøkt"
-                :comments []
-                :session-data []}
-               {:url "6"
-                :user-image "images/movements/arch-up.png"
-                :user-name "tammy"
-                :date "ddmmyy"
-                :likes 4
-                :text "Fakkamakkalakka"
-                :time "21:05"
-                :activity "Løping"
-                :comments []
-                :session-data []}])
+(def feed-data (atom [{:user-name    "Kårinator"
+                      :user-image   "images/movements/pull-up.png"
+                      :url          "1"
+                      :text         "en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
+                      :date         "3 timer siden"
+                      :time         "45:00"
+                      :activity     "Styrkeøkt"
+                      :session-data [[{:movement-name "Push Up" :rep 10 :set 3}
+                                      {:movement-name "Pull Up" :rep 5 :set 3}
+                                      {:movement-name "Push Up" :rep 10 :set 3}
+                                      {:movement-name "Pull Up" :rep 5 :set 3}]
+                                     [{:movement-name "Push Up" :rep 10 :set 3}
+                                      {:movement-name "Pull Up" :rep 5 :set 3}
+                                      {:movement-name "Push Up" :rep 10 :set 3}
+                                      {:movement-name "Pull Up" :rep 5 :set 3}]]
+                      :comments     [{:comment "Ser bra ut!" :user "Bobby"}
+                                     {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
+                      :likes        10
+                      :image        "images/field.jpg"}
+                     {:user-name    "Bobby D"
+                      :url          "2"
+                      :text         "sliten.."
+                      :date         "igår 16:00"
+                      :comments     []
+                      :likes        4
+                      :activity     "Naturlig bevegelse"
+                      :image        "images/forest.jpg"
+                      :session-data []}
+                     {:url          "3"
+                      :user-image   "images/movements/push-up.png"
+                      :user-name    "Andreas Flaksviknes"
+                      :text         "en fin økt"
+                      :date         "ddmmyy"
+                      :likes        0
+                      :comments     []
+                      :activity     "Løping"
+                      :session-data []}
+                     {:url          "4"
+                      :user-name    "kari"
+                      :text         "sliten"
+                      :date         "ddmmyy"
+                      :comments     []
+                      :likes        0
+                      :time         "11:45"
+                      :activity     "Mobilitet"
+                      :image        "images/winter.jpg"
+                      :session-data []}
+                     {:url          "5"
+                      :user-name    "timmy"
+                      :date         "ddmmyy"
+                      :text         ""
+                      :likes        503
+                      :time         "1:11:00"
+                      :activity     "Styrkeøkt"
+                      :comments     []
+                      :session-data []}
+                     {:url          "6"
+                      :user-image   "images/movements/arch-up.png"
+                      :user-name    "tammy"
+                      :date         "ddmmyy"
+                      :likes        4
+                      :text         "Fakkamakkalakka"
+                      :time         "21:05"
+                      :activity     "Løping"
+                      :comments     []
+                      :session-data []}]))
+
+(defn load-more [event]
+  (.preventDefault event)
+  (swap! feed-data conj {:user-name    "Kårinator"
+                         :user-image   "images/movements/pull-up.png"
+                         :url          "7"
+                         :text         "en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
+                         :date         "3 timer siden"
+                         :time         "45:00"
+                         :activity     "Styrkeøkt"
+                         :session-data [[{:movement-name "Push Up" :rep 10 :set 3}
+                                         {:movement-name "Pull Up" :rep 5 :set 3}
+                                         {:movement-name "Push Up" :rep 10 :set 3}
+                                         {:movement-name "Pull Up" :rep 5 :set 3}]
+                                        [{:movement-name "Push Up" :rep 10 :set 3}
+                                         {:movement-name "Pull Up" :rep 5 :set 3}
+                                         {:movement-name "Push Up" :rep 10 :set 3}
+                                         {:movement-name "Pull Up" :rep 5 :set 3}]]
+                         :comments     [{:comment "Ser bra ut!" :user "Bobby"}
+                                        {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
+                         :likes        10
+                         :image        "images/field.jpg"}))
 
 (defn image-url [movement-name]
   (when-not (nil? movement-name)
     (str "images/movements/" (str/replace (str/lower-case movement-name) " " "-") ".png")))
+
+
 
 (defn movement-component []
   (let []
@@ -135,7 +159,7 @@
   (let [show-session-data? (atom false)]
     (fn [{:keys [url activity user-image user-name date time text comments image session-data likes]
           :or   {user-image "images/movements/static-air-baby.png"}}]
-      [:div {:style {:border-bottom "5px solid red"}}
+      [:div {:style {:border-bottom "1px solid lightgray"}}
        [:div.pure-g
         [:div.pure-u-1-6.center [:img {:src   user-image :width "100px"
                                        :style {:cursor 'pointer}
@@ -176,28 +200,31 @@
         [:div.pure-g
          [:p.pure-u-1 {:style {:padding-bottom 40 :border-bottom 'dotted}} [:a user-name] (str " " text)]]
         [:div.pure-g
-         [:p.pure-u-1 (str likes " likes")]]
+         [:p.pure-u-1 (str likes " tomler opp")]]
         (doall
           (for [{:keys [comment user]} comments]
             ^{:key (str user comment)}
             [:div.pure-g {:style {:margin-bottom 10}}
              [:div.pure-u-1 [:a user] (str " " comment)]]))
-        [:div.pure-g
-         [:div.pure-u
-          [:i.fa.fa-heart.fa-2x]
-          [:i.fa.fa-comment.fa-2x]]]]
-
-       ])))
-
-
+        [:div.pure-g {:style {:margin-bottom 20}}
+         [:div.pure-u-1
+          [:i.fa.fa-heart.fa-2x {:style {:cursor 'pointer
+                                         :color 'lightgray}}]
+          [:i.fa.fa-comment.fa-2x {:style {:margin-left 40
+                                           :cursor 'pointer
+                                           :color 'lightgray}}]]]]])))
 
 (defn feed-page []
   (let []
     (fn []
-      [:div#layout
+      [:div
        [menu-component]
-       [:div.feed
-        (doall
-          (for [session sessions]
-            ^{:key (:url session)}
-            [session-view session]))]])))
+       [:div#feed
+        (let [sessions @feed-data]
+          (doall
+            (for [session sessions]
+              ^{:key (:url session)}
+              [session-view session])))
+        [:div.pure-g [:div.pure-u-1.pure-button {:onClick #(load-more %)
+                                                 :onTouchEnd #(load-more %)} "Last flere"]]]])))
+

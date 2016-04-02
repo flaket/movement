@@ -54,7 +54,10 @@ input, textarea {
   margin-bottom: 50px;
 }
 
-.feed {
+.set-area { border-width: 2px;
+            box-shadow: -5px 0px 5px -5px rgba(100,100,100,0.5); }
+
+#feed {
   margin: 0 auto;
   margin-top: 100px;
   }

@@ -125,10 +125,27 @@
    :distance 10
    :set 4}
 
+(defn inc-set-completed [event m part-number]
+  (.preventDefault event)
+  (let [part (session/get-in [:movement-session :parts part-number])
+        pos (positions #{m} part)
+        new-part (assoc part (first pos) (update m :performed-sets inc))]
+    (session/assoc-in! [:movement-session :parts part-number] new-part)))
+
+(defn dec-set-completed [event m part-number]
+  (.preventDefault event)
+  (let [part (session/get-in [:movement-session :parts part-number])
+        pos (positions #{m} part)
+        new-part (assoc part (first pos)
+                             (if (pos? (dec (:performed-sets m)))
+                               (update m :performed-sets dec)
+                               (dissoc m :performed-sets)))]
+    (session/assoc-in! [:movement-session :parts part-number] new-part)))
+
 (defn movement-component
   [{:keys [name slot-category measurement previous next
-           rep set distance duration weight rest] :as m}
-   title categories i]
+           rep set performed-sets distance duration weight rest] :as m}
+   part-number]
   (let [;parts (session/get-in [:movement-session :parts])
         ;position-in-parts (first (positions #{title} (map :title parts)))
         expand (atom false)]
@@ -173,11 +190,26 @@
               [:div.pure-g
                [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} rest]
                [:div.pure-u {:style {:padding-top 10}} "s"]]])]]
-         [:div.pure-u-1-5 {:style {:border "2px solid lightgray"}}
-          [:div.pure-g {:style {:display 'flex}}
-           [:div.pure-u {:style {:margin 'auto :margin-top 30 :opacity 0.15 :font-size "300%"}} set]]
+
+         [:div.pure-u-1-5.set-area {:onClick #(inc-set-completed % m part-number) :onTouchEnd #(inc-set-completed % m part-number)}
           [:div.pure-g
-           [:div.pure-u-1 [:div.center {:style {:margin-top 0 :opacity 0.25}} "set"]]]]]
+           [:div.pure-u-1
+            [:i.fa.fa-minus {:onClick    #(dec-set-completed % m part-number)
+                             :onTouchEnd #(dec-set-completed % m part-number)
+                             :style      {:opacity (when-not performed-sets 0.05)
+                                          :color (when performed-sets 'red)
+                                          :margin-top 5 :margin-right 5
+                                          :float      'right}}]]]
+          [:div.pure-g {:style {:display 'flex}}
+           [:div.pure-u {:style {:margin 'auto :margin-top 10 :opacity 0.05 :font-size "300%"}} set]]
+          (when performed-sets
+            [:div.pure-g
+             [:div.pure-u-1 [:h1.center {:style {:color 'red :margin-top -70 :font-size "350%"}} performed-sets]
+              ]])
+          [:div.pure-g
+           [:div.pure-u-1 [:div.center {:style {:margin-top (if performed-sets -24 -6)
+                                                :opacity 0.15}} "set"]]]]]
+
         (when @expand
           [:div
            [:div.pure-g
@@ -253,16 +285,17 @@
 
 (defn part-component []
   (let []
-    (fn [movements]
+    (fn [movements i]
       [:div.pure-g.movements
        [:div.pure-u-1
         (for [m movements]
-          ^{:key (str m (rand-int 100000))} [movement-component m])
+          ^{:key (str m (rand-int 100000))} [movement-component m i])
         [add-movement-component movements]]])))
 
 (defn list-of-activities []
-  (let [activites ["Styrke" "Naturlig bevegelse" "Løp" "Crossfit"
-                   "Yoga" "Gåtur" "Svømme" "Sport" "Ski"]]
+  (let [activites ["Styrke" "Naturlig bevegelse" "Løping" "Crossfit"
+                   "Yoga" "Gym" "Gåtur" "Parkour" "Svømming" "Sport" "Ski"
+                   "Sykling"  "Annen bevegelse"]]
     (fn []
       [:div.movements
        [:div.pure-g
@@ -354,7 +387,7 @@
    [:div.pure-u-1-3.center
     [:a.pure-button "Sett geoposisjon"]]
    [:div.pure-u-1-3.center
-    [:a.pure-button "Last opp bilde"]]])
+    [:a.pure-button "Del"]]])
 
 (defn finish-session-component []
   ;; Etter trykk på avslutt&lagre bør den oppdaterte feeden vises
