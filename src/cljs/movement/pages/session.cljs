@@ -1,5 +1,6 @@
 (ns movement.pages.session
-  (:import [goog.events EventType])
+  (:import [goog.events EventType]
+           [goog.date Date])
   (:require-macros
     [cljs.core.async.macros :refer [go]])
   (:require
@@ -362,11 +363,25 @@
                 6 "juli" 7 "august" 8 "september" 9 "oktober" 10 "november" 11 "desember"}
         date (js/Date.)
         day (.getDate date)
-        month (get months (.getMonth date))]
+        month (.getMonth date)
+        year (.getYear date)
+        date-value (str year "-" month "-" day)
+        _ (pr date-value)
+        month (get months (.getMonth date))
+
+
+        goog-date (Date.)
+        year (str (.getFullYear goog-date))
+        month (inc (.getMonth goog-date))
+        month (if (> 10 month) (str 0 month) (str month))
+        day (.getDate goog-date)
+        day (if (> 10 day) (str 0 day) (str day))
+        date-value (str year "-" month "-" day)]
     ;; Benytt pikaday her? https://github.com/dbushell/Pikaday
     ;; ..og Moment.js er aktuelt, spesielt for norsk støtte http://momentjs.com/
     [:div.pure-u.pure-u-md-1-3
-     [:div.pure-button (str day ". " month)]]))
+     [:input {:id "startdate" :name "startdate" :type "date" :value date-value}]
+     #_[:div.pure-button (str day ". " month)]]))
 
 
 (defn text-component []

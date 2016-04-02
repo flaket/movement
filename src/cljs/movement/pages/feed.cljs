@@ -74,18 +74,12 @@
   (.preventDefault event)
   (swap! feed-data conj {:user-name    "Kårinator"
                          :user-image   "images/movements/pull-up.png"
-                         :url          "7"
-                         :text         "en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
+                         :url          "17"
+                         :text         "en finasdasd økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
                          :date         "3 timer siden"
                          :time         "45:00"
                          :activity     "Styrkeøkt"
                          :session-data [[{:movement-name "Push Up" :rep 10 :set 3}
-                                         {:movement-name "Pull Up" :rep 5 :set 3}
-                                         {:movement-name "Push Up" :rep 10 :set 3}
-                                         {:movement-name "Pull Up" :rep 5 :set 3}]
-                                        [{:movement-name "Push Up" :rep 10 :set 3}
-                                         {:movement-name "Pull Up" :rep 5 :set 3}
-                                         {:movement-name "Push Up" :rep 10 :set 3}
                                          {:movement-name "Pull Up" :rep 5 :set 3}]]
                          :comments     [{:comment "Ser bra ut!" :user "Bobby"}
                                         {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
