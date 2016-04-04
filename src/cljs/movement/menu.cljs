@@ -21,7 +21,7 @@
       [:li.pure-u-1-4 {:className  (when (= selected :session) "active")
                        :onClick    #(menu-click-handler % :session "/session")
                        :onTouchEnd #(menu-click-handler % :session "/session")}
-       [:a [:i.fa.fa-plus.fa-2x]]]
+       [:a [:i.fa.fa-pencil-square-o.fa-2x]]]
       [:li.pure-u-1-4 {:className  (when (= selected :discover) "active")
                        :onClick    #(menu-click-handler % :discover "/discover")
                        :onTouchEnd #(menu-click-handler % :discover "/discover")}

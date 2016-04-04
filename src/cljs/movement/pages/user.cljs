@@ -116,15 +116,39 @@
   (dispatch! "/"))
 
 (defn user-page []
-  (let []
+  (let [selection (atom :feed)]
     (fn []
-      [:div#layout {:class (str "" (when (session/get :active?) "active"))}
+      [:div
        [menu-component]
        [:div.content
-        [logged-in-as]
-        [logged-sessions-component]
-        [change-password-component]
-        [:div.pure-g
-         [:div.button.pure-u.pure-u-md-2-5 {:onClick #(log-out) :onTouchEnd #(log-out)} "Log out"]]
+
+        [:div.pure-g {:style {:border-bottom "1px solid lightgray"}}
+         [:div.pure-u-1-4
+          #_[:i.fa.fa-user.fa-4x]
+          [:img {:width "100%" :src "images/movements/arch-up.png"}]]
+         [:div.pure-u-3-4
+          [:div.pure-g [:div.pure-u-1 "0 økter 0 følger 0 følgere"]]
+          [:div.pure-g [:div.pure-u-1 (session/get :email)]]
+          [:div.pure-g [:div.pure-u-1 "Profiltekst"]]
+          [:div.pure-g
+           [:a.pure-u-1-2.pure-button "Endre innstillinger"]
+           [:a.pure-u-1-2.pure-button.pure-button-primary {:onClick #(log-out) :onTouchEnd #(log-out)} "Logg ut"]]]]
+
+        [:div
+         [:div.pure-g [:div.pure-u-1 [:h2 "Min treningsdagbok"]]]
+         [:div.pure-g
+          [:a {:onClick #(reset! selection :feed) :onTouchEnd #(reset! selection :feed)
+               :className (str "pure-u-1-4 pure-button" (when (= @selection :feed) " pure-button-primary"))} "Feed"]
+          [:a {:onClick #(reset! selection :calendar) :onTouchEnd #(reset! selection :calendar)
+               :className (str "pure-u-1-4 pure-button" (when (= @selection :calendar) " pure-button-primary"))} "Kalender"]
+          [:a {:onClick #(reset! selection :stat) :onTouchEnd #(reset! selection :stat)
+               :className (str "pure-u-1-4 pure-button" (when (= @selection :stat) " pure-button-primary"))} "Statistikk"]
+          [:a {:onClick #(reset! selection :tag) :onTouchEnd #(reset! selection :tag)
+               :className (str "pure-u-1-4 pure-button" (when (= @selection :tag) " pure-button-primary"))} "Mine hashtagger"]]]
+
+        #_[logged-in-as]
+        #_[logged-sessions-component]
+        #_[change-password-component]
+
         ]])))
 

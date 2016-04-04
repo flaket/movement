@@ -14,14 +14,11 @@
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]))
 
-(def test-template {:title       "Test"
-                    :creator     "Andreas"
-                    :description "test"
-                    :background  "test"
-                    :part        [[{:category   #{:natural :balance}
-                                    :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
-                                   {:category   #{:natural :climb}
-                                    :repetition [2 4 6] :set 4}]]})
+(def test-template {:title "Test" :description "test" :background "test"
+                    :part  [[{:category   #{:natural :balance}
+                              :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
+                             {:category   #{:natural :climb}
+                              :repetition [2 4 6] :set 4}]]})
 
 (defonce m-counter (atom 0))
 
@@ -37,7 +34,7 @@
 (defn add-movement [])
 (defn add-movement-from-search [])
 
-(defn remove-session-handler [event]
+(defn remove-session [event]
   (.preventDefault event)
   (session/remove! :movement-session))
 
@@ -69,9 +66,9 @@
         has-data? (and rep (< 0 rep))]
     (fn []
       [:div
-       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
-                                       :opacity (if has-data? 1 0.2)}
-                               :on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} "Repetisjoner"]
+       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
+                                   :opacity (if has-data? 1 0.2)}
+                        :on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} "Repetisjoner"]
        (when @rep-clicked?
          [slider-component position-in-parts id :rep 0 50 1])])))
 
@@ -80,9 +77,9 @@
         has-data? (and distance (< 0 distance))]
     (fn []
       [:div
-       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
-                                       :opacity (if has-data? 1 0.2)}
-                               :on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} "Avstand"]
+       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
+                                   :opacity (if has-data? 1 0.2)}
+                        :on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} "Avstand"]
        (when @distance-clicked?
          [slider-component position-in-parts id :distance 0 400 5])])))
 
@@ -91,40 +88,33 @@
         has-data? (and duration (< 0 duration))]
     (fn []
       [:div
-       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
-                                       :opacity (if has-data? 1 0.2)}
-                               :on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))} "Tid"]
+       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
+                                   :opacity (if has-data? 1 0.2)}
+                        :on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))} "Tid"]
        (when @duration-clicked?
          [slider-component position-in-parts id :duration 0 1800 10])])))
-
 
 (defn weight-component [weight id position-in-parts]
   (let [weight-clicked? (atom false)
         has-data? (and weight (< 0 weight))]
     (fn []
       [:div
-       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
-                                       :opacity (if has-data? 1 0.2)}
-                               :on-click #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))} "Vekt"]
+       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
+                                   :opacity (if has-data? 1 0.2)}
+                        :on-click #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))} "Vekt"]
        (when @weight-clicked?
          [slider-component position-in-parts id :weight 0 200 2.5])])))
+
 (defn rest-component [rest id position-in-parts]
   (let [rest-clicked? (atom false)
         has-data? (and rest (< 0 rest))]
     (fn []
       [:div
-       [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"
-                                       :opacity (if has-data? 1 0.2)}
-                               :on-click #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))} "Hvile"]
+       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
+                                   :opacity (if has-data? 1 0.2)}
+                        :on-click #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))} "Hvile"]
        (when @rest-clicked?
          [slider-component position-in-parts id :rest 0 240 10])])))
-
-#_{:name     "Balancing Backward Walk"
-   :slot-category #{:balance :natural}
-   :measurement :distance
-   :previous ["Balancing Lateral Walk"]
-   :distance 10
-   :set 4}
 
 (defn inc-set-completed [event m part-number]
   (.preventDefault event)
@@ -157,10 +147,10 @@
          [:div.pure-u-1-5 {:on-click #(reset! expand (not @expand))}
           [:img.pure-img-responsive.graphic {:src (image-url name) :title name :alt name}]]
          [:div.pure-u-2-5 {:on-click #(reset! expand (not @expand))
-                           :style {:display 'flex :text-align 'center}}
-          [:h3.title {:style    {:margin 'auto}} name]]
+                           :style    {:display 'flex :text-align 'center}}
+          [:h3.title {:style {:margin 'auto}} name]]
          [:div.pure-u-1-5 {:on-click #(reset! expand (not @expand))
-                           :style {:cursor 'pointer :display 'flex}}
+                           :style    {:cursor 'pointer :display 'flex}}
           [:div.pure-g {:style {:margin 'auto}}
            (when (and rep (< 0 rep))
              [:div.pure-u
@@ -192,13 +182,14 @@
                [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} rest]
                [:div.pure-u {:style {:padding-top 10}} "s"]]])]]
 
-         [:div.pure-u-1-5.set-area {:onClick #(inc-set-completed % m part-number) :onTouchEnd #(inc-set-completed % m part-number)}
+         [:div.pure-u-1-5.set-area {:onClick    #(inc-set-completed % m part-number)
+                                    :onTouchEnd #(inc-set-completed % m part-number)}
           [:div.pure-g
            [:div.pure-u-1
             [:i.fa.fa-minus {:onClick    #(dec-set-completed % m part-number)
                              :onTouchEnd #(dec-set-completed % m part-number)
-                             :style      {:opacity (when-not performed-sets 0.05)
-                                          :color (when performed-sets 'red)
+                             :style      {:opacity    (when-not performed-sets 0)
+                                          :color      (when performed-sets 'red)
                                           :margin-top 5 :margin-right 5
                                           :float      'right}}]]]
           [:div.pure-g {:style {:display 'flex}}
@@ -209,35 +200,35 @@
               ]])
           [:div.pure-g
            [:div.pure-u-1 [:div.center {:style {:margin-top (if performed-sets -24 -6)
-                                                :opacity 0.15}} "set"]]]]]
+                                                :opacity    0.15}} "set"]]]]]
 
         (when @expand
           [:div
            [:div.pure-g
-            [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
+            [:a.pure-u.pure-button {:style    {:margin "5px 5px 5px 5px"}
                                     :on-click #(remove-movement) :title "Fjern øvelse"}
              [:i.fa.fa-remove {:style {:color "#CC9999" :opacity 0.8}}]
              "Fjern øvelse"]
-            [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
+            [:a.pure-u.pure-button {:style    {:margin "5px 5px 5px 5px"}
                                     :on-click #(swap-movement) :title "Bytt øvelse"}
              [:i.fa.fa-random {:style {:color "#99cc99" :opacity 0.8}}]
              "Bytt ut øvelse"]
             (when previous
-              [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
+              [:a.pure-u.pure-button {:style    {:margin "5px 5px 5px 5px"}
                                       :on-click #(previous-movement) :title "Bytt med enklere"}
                [:i.fa.fa-arrow-down {:style {:color "#99cc99" :opacity 0.8}}]
                "Bytt med enklere"])
             (when next
-              [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
+              [:a.pure-u.pure-button {:style    {:margin "5px 5px 5px 5px"}
                                       :on-click #(next-movement) :title "Bytt med vanskeligere"}
                [:i.fa.fa-arrow-up {:style {:color "#99cc99" :opacity 0.8}}]
                "Bytt med vanskeligere"])]
-           #_ [:div.pure-g
-               [rep-component rep id position-in-parts]
-               [distance-component distance id position-in-parts]
-               [duration-component duration id position-in-parts]
-               [weight-component weight id position-in-parts]
-               [rest-component rest id position-in-parts]]])]])))
+           #_[:div.pure-g
+              [rep-component rep id position-in-parts]
+              [distance-component distance id position-in-parts]
+              [duration-component duration id position-in-parts]
+              [weight-component weight id position-in-parts]
+              [rest-component rest id position-in-parts]]])]])))
 
 (defn add-movement-component []
   (let [show-search-input? (atom false)]
@@ -296,7 +287,7 @@
 (defn list-of-activities []
   (let [activites ["Styrke" "Naturlig bevegelse" "Løping" "Crossfit"
                    "Yoga" "Gym" "Gåtur" "Parkour" "Svømming" "Sport" "Ski"
-                   "Sykling"  "Annen bevegelse"]]
+                   "Sykling" "Annen bevegelse"]]
     (fn []
       [:div.movements
        [:div.pure-g
@@ -306,103 +297,38 @@
            ^{:key a}
            [:div.pure-g.activity {:onClick #(create-session-from-activity % a) :onTouchEnd #(create-session-from-activity % a)}
             [:div.pure-u [:img {:width 200 :height 'auto :src "images/movements/pull-up.png"}]]
-            [:div.pure-u [:h2 {:style {:margin-top 85}} a]]]))
-
-
-
-
-
-
-       #_[:div.pure-g
-        [:div.pure-u.pure-u-md-1-8]
-        [:div.pure-u-1.pure-u-md-3-4
-         [:div.pure-g
-          [:div.pure-u-1.button.button-primary
-           {:style    {:margin-bottom 5}
-            :on-click #(GET "create-session"
-                            {:params        {:type  "abc"
-                                             :email (session/get :email)}
-                             :handler       (fn [session] (session/put! :movement-session session))
-                             :error-handler (fn [r] (pr r))}) #_pick-random-template} "From random template"]]]
-        [:div.pure-u.pure-u-md-1-8]]])))
+            [:div.pure-u [:h2 {:style {:margin-top 85}} a]]]))])))
 
 (defn time-component []
-  [:div.pure-u.pure-u-md-1-3
-   [:div.pure-g
-    [:label.pure-u-1-3 "timer"]
-    [:label.pure-u-1-3 "minutter"]
-    [:label.pure-u-1-3 "sekunder"]]
-   [:div.pure-g
-    [:input.pure-u-1-3 {:type      "number"
-                        :value     (session/get-in [:movement-session :time :hours])
-                        :min       0
-                        :on-change #(try
-                                     (let [value (-> % .-target .-value)]
-                                       (session/assoc-in! [:movement-session :time :hours] value))
-                                     (catch js/Error e
-                                       (pr (str "Caught exception: " e))))}]
-    [:input.pure-u-1-3 {:type      "number"
-                        :value     (session/get-in [:movement-session :time :minutes])
-                        :min       0
-                        :on-change #(try
-                                     (let [value (-> % .-target .-value)]
-                                       (session/assoc-in! [:movement-session :time :minutes] value))
-                                     (catch js/Error e
-                                       (pr (str "Caught exception: " e))))}]
-    [:input.pure-u-1-3 {:type      "number"
-                        :value     (session/get-in [:movement-session :time :seconds])
-                        :min       0
-                        :on-change #(try
-                                     (let [value (-> % .-target .-value)]
-                                       (session/assoc-in! [:movement-session :time :seconds] value))
-                                     (catch js/Error e
-                                       (pr (str "Caught exception: " e))))}]]])
+  (let [time-value (session/get-in [:movement-session :time])]
+    [:input {:type      "time" :name "time" :step 1
+             :on-change #(session/assoc-in! [:movement-session :time] (.-value (.-target %)))
+             :value     (if time-value time-value "00:00:00")}]))
 
-(defn date-component []
-  (let [months {0 "januar" 1 "februar" 2 "mars" 3 "april" 4 "mai" 5 "juni"
-                6 "juli" 7 "august" 8 "september" 9 "oktober" 10 "november" 11 "desember"}
-        date (js/Date.)
-        day (.getDate date)
-        month (.getMonth date)
-        year (.getYear date)
-        date-value (str year "-" month "-" day)
-        _ (pr date-value)
-        month (get months (.getMonth date))
-
-
-        goog-date (Date.)
+(defn date-string []
+  (let [goog-date (Date.)
         year (str (.getFullYear goog-date))
         month (inc (.getMonth goog-date))
         month (if (> 10 month) (str 0 month) (str month))
         day (.getDate goog-date)
-        day (if (> 10 day) (str 0 day) (str day))
-        date-value (str year "-" month "-" day)]
-    ;; Benytt pikaday her? https://github.com/dbushell/Pikaday
-    ;; ..og Moment.js er aktuelt, spesielt for norsk støtte http://momentjs.com/
-    [:div.pure-u.pure-u-md-1-3
-     [:input {:id "startdate" :name "startdate" :type "date" :value date-value}]
-     #_[:div.pure-button (str day ". " month)]]))
+        day (if (> 10 day) (str 0 day) (str day))]
+    (str year "-" month "-" day)))
 
+(defn date-component []
+  ;; Moment.js er aktuelt, spesielt for norsk støtte http://momentjs.com/
+  (let [date-value (session/get-in [:movement-session :date])]
+    (session/assoc-in! [:movement-session :date] date-value)
+    [:input {:style     {:float 'right} :id "date" :name "date" :type "date"
+             :value     (if date-value date-value (date-string))
+             :on-change #(session/assoc-in! [:movement-session :date] (-> % .-target .-value))}]))
 
 (defn text-component []
   [:div.pure-g {:style {:margin-top '25}}
    [:div.pure-u-1
-    [:textarea {
-                :rows      10
-                :cols      120
-                :style {:resize 'vertical}
-                :placeholder "Hvordan gikk økta? #styrke #mandag"
+    [:textarea {:rows      10 :cols 120
+                :style     {:resize 'vertical} :placeholder "Hvordan gikk økta? #styrke #mandag"
                 :on-change #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
                 :value     (session/get-in [:movement-session :comment])}]]])
-
-(defn image-geo-component []
-  [:div.pure-g {:style {:margin-top '10}}
-   [:div.pure-u-1-3.center
-    [:a.pure-button "Last opp bilde"]]
-   [:div.pure-u-1-3.center
-    [:a.pure-button "Sett geoposisjon"]]
-   [:div.pure-u-1-3.center
-    [:a.pure-button "Del"]]])
 
 (defn finish-session-component []
   ;; Etter trykk på avslutt&lagre bør den oppdaterte feeden vises
@@ -432,6 +358,8 @@
                                :error-handler (fn [response] (pr response))}))}
            "Avslutt og lagre økta"]])])))
 
+
+
 (defn session-page []
   (let []
     (fn []
@@ -440,10 +368,10 @@
        (if-let [session (session/get :movement-session)]
          [:div {:style {:margin-top "100px"}}
           [:div.pure-g
-           [:a.pure-u {:style    {:margin-left 60 :margin-top 20}
-                       :onClick #(remove-session-handler %)
-                       :onTouchEnd #(remove-session-handler %)}
-            [:i.fa.fa-arrow-left.fa-4x ]]]
+           [:a.pure-u {:style      {:margin-left 60 :margin-top 20}
+                       :onClick    #(remove-session %)
+                       :onTouchEnd #(remove-session %)}
+            [:i.fa.fa-arrow-left.fa-4x]]]
           [:div.content {:style {:margin-top "20px"}}
            [:div
             [:article.session
@@ -451,12 +379,21 @@
                (doall
                  (for [i (range (count parts))]
                    ^{:key i} [part-component (get parts i) i])))]
-            [:div.pure-g {:style {:margin-top '50}}
-             [:h2.pure-u.pure-u-md-1-3 (str (:activity session) " i ")]
-             (time-component)
-             (date-component)]
+            [:div.pure-g
+             [:div.pure-u-1 (date-component)]]
+            [:h2.pure-g
+             [:div.pure-u (str (:activity session) " i ")]
+             [:div.pure-u (time-component)]]
+
             (text-component)
-            (image-geo-component)
+
+            [:div.pure-g {:style {:margin-top '10}}
+             [:a.pure-u-1-3.pure-button "Legg ved bilde"]
+             #_[:div.pure-u-1-3.center
+                [:a.pure-button "Sett geoposisjon"]]
+             #_[:div.pure-u-1-3.center
+                [:a.pure-button "Del"]]]
+
             [finish-session-component]]]]
          [:div.content
           [list-of-activities]])])))
