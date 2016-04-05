@@ -7,7 +7,7 @@
 
 (defn login-handler [event login-state]
   (.preventDefault event)
-  (let [{:keys [user password loading? error show-payment?]} @login-state]
+  (let [{:keys [user password]} @login-state]
     (if-not (and (seq user) (seq password))
       (swap! login-state assoc :error "Both fields are required.")
       (do

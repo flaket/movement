@@ -117,26 +117,20 @@
          :body    ""})
       "<h1>This activation-id is invalid.</h1>")))
 
-(defn change-password! [req]
-  (let [email (:username (:params req))
-        password (:password (:params req))
-        new-password (:new-password (:params req))
-        user (db/user-by-email email)]
-    (if (valid-user? user password)
-      (try
-        (response (db/update-password! email new-password))
-        (catch Exception e
-          (response "Error changing password" 500)))
-      (response "Wrong old password" 400))))
-
-(defn change-username! [req]
-  (let [email (:email (:params req))
-        username (:username (:params req))]
+(defn change-password! [{:keys [email password new-password]}]
+  (if (valid-user? (db/user-by-email email) password)
     (try
-      (response {:message  (db/update-name! email username)
-                 :username username})
+      (response (db/update-password! email new-password))
       (catch Exception e
-        (response {:message  "Error changing username"} 500)))))
+        (response "Error changing password" 500)))
+    (response "Wrong old password" 400)))
+
+(defn change-username! [{:keys [email username]}]
+  (try
+    (response {:message  (db/update-name! email username)
+               :username username})
+    (catch Exception e
+      (response {:message "Error changing username"} 500))))
 
 (defn md5 [s]
   (let [algorithm (MessageDigest/getInstance "MD5")
@@ -195,8 +189,8 @@
                                                   :activation-id
                                                   :activated?
                                                   :valid-subscription?))) (throw-unauthorized)))
-           (POST "/change-password" req (if (authenticated? req) (change-password! req) (throw-unauthorized)))
-           (POST "/change-username" req (if (authenticated? req) (change-username! req) (throw-unauthorized)))
+           (POST "/change-password" req (if (authenticated? req) (change-password! (:params req)) (throw-unauthorized)))
+           (POST "/change-username" req (if (authenticated? req) (change-username! (:params req)) (throw-unauthorized)))
            (POST "/store-session" req (if (authenticated? req) (add-session! req) (throw-unauthorized)))
            (POST "/set-zone" req (if-not (authenticated? req)
                                    (throw-unauthorized)
@@ -210,6 +204,71 @@
                                               email (:email (:params req))]
                                           (response (db/create-session email type))) (throw-unauthorized)))
 
+           (POST "/feed" req (if (authenticated? req)
+                               (let [email (:email (:params req))]
+                                 (response [{:user-name    "Kaare"
+                                             :user-image   "images/movements/pull-up.png"
+                                             :url          "1"
+                                             :text         "en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
+                                             :date         "3 timer siden"
+                                             :time         "45:00"
+                                             :activity     "Styrkeøkt"
+                                             :session-data [[{:name "Push Up" :rep 10 :set 3 :image "push-up.png"}
+                                                             {:name "Pull Up" :rep 5 :set 3 :image "pull-up-reach.png"}]]
+                                             :comments     [{:comment "Ser bra ut!" :user "Bobby"}
+                                                            {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
+                                             :likes        10
+                                             :image        "images/field.jpg"}
+                                            {:user-name    "Bobby D"
+                                             :url          "2"
+                                             :text         "sliten.."
+                                             :date         "igår 16:00"
+                                             :comments     []
+                                             :likes        4
+                                             :activity     "Naturlig bevegelse"
+                                             :image        "images/forest.jpg"
+                                             :session-data []}
+                                            {:url          "3"
+                                             :user-image   "images/movements/push-up.png"
+                                             :user-name    "Andreas Flaksviknes"
+                                             :text         "en fin økt"
+                                             :date         "ddmmyy"
+                                             :likes        0
+                                             :comments     []
+                                             :activity     "Løping"
+                                             :session-data []}
+                                            {:url          "4"
+                                             :user-name    "kari"
+                                             :text         "sliten"
+                                             :date         "ddmmyy"
+                                             :comments     []
+                                             :likes        0
+                                             :time         "11:45"
+                                             :activity     "Mobilitet"
+                                             :image        "images/winter.jpg"
+                                             :session-data []}
+                                            {:url          "5"
+                                             :user-name    "timmy"
+                                             :date         "ddmmyy"
+                                             :text         ""
+                                             :likes        503
+                                             :time         "1:11:00"
+                                             :activity     "Styrkeøkt"
+                                             :comments     []
+                                             :session-data []}
+                                            {:url          "6"
+                                             :user-image   "images/movements/arch-up.png"
+                                             :user-name    "tammy"
+                                             :date         "ddmmyy"
+                                             :likes        4
+                                             :text         "Fakkamakkalakka"
+                                             :time         "21:05"
+                                             :activity     "Løping"
+                                             :comments     []
+                                             :session-data []}])) (throw-unauthorized))
+
+
+             )
            ;; --------------------------------------------------------
 
            #_(GET "/sessions" req (if-not (authenticated? req)
@@ -272,7 +331,7 @@
                     (wrap-params)
                     (wrap-session)
                     (wrap-defaults site-defaults)
-                    (wrap-frame-options {:allow-from "http://www.movementsession.com"}))]
+                    (wrap-frame-options {:allow-from "http://mumrik.no"}))]
     (if (env :dev?)
       (wrap-reload (wrap-exceptions handler))
       handler)))

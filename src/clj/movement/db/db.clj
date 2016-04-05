@@ -45,7 +45,7 @@
 
 #_(let [c (h/list-tables! creds {})] (<!! c))
 #_(let [c (h/describe-table! creds :users)] (<!! c))
-#_(h/create-table! creds users-table)
+#_(h/create-table! creds movements-table)
 #_(h/delete-table! creds :users)
 #_(let [tables (<!! (h/list-tables! creds {}))]
     (doseq [i (range (count tables))]
@@ -125,44 +125,61 @@
     movements))
 #_(movements-from-category 3 :pull)
 
-(defn template [title creator]
-  (<!! (h/get-item! creds :templates {:title title :creator creator})))
-#_(template "Naturlige Bevegelser 2" "Andreas")
+(defn template [title]
+  (<!! (h/get-item! creds :templates {:title title})))
+#_(template "Naturlige Bevegelser 2")
 
 (defn create-session [email session-type]
   (let [session {:description "hellu"
-                 :template    {:creator "Andreas" :title "Test"}
+                 :template    "template-title-1"
                  :parts       [[
-                                {:name          "Balancing Backward Walk"
+                                {:name          "Balansere"
+                                 :image         "balancing-walk.png"
                                  :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
                                  :measurement   :distance
-                                 :previous      ["Balancing Lateral Walk"]
+                                 :next      ["Balansere sideveis"]
                                  :distance      10
                                  :set           4}
-                                {:name        "Toes To Bar"
+                                {:name        "Tærne til stanga"
+                                 :image       "toes-to-bar.png"
                                  :rep         5
                                  :set         4
                                  :category    #{:natural :climb}
                                  :measurement :repetitions
-                                 :previous    ["Hanging Knee Tuck"] :next ["Hanging Side Foot Lift"]}
+                                 :previous    ["Hengende kneløft"] :next ["Hengende sideveis fotløft"]}
 
                                 ]
                                [
-                                {:name          "Balancing Backward Walk"
+                                {:name          "Balansere baklengs"
+                                 :image         "balancing-backward-walk.png"
                                  :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
                                  :measurement   :distance
-                                 :previous      ["Balancing Lateral Walk"]
+                                 :previous      ["Balansere sideveis"]
                                  :distance      10
                                  :set           4}
-                                {:name        "Toes To Bar"
+                                {:name        "Tærne til stanga"
+                                 :image         "toes-to-bar.png"
                                  :rep         5
                                  :set         4
                                  :category    #{:natural :climb}
                                  :measurement :repetitions
-                                 :previous    ["Hanging Knee Tuck"] :next ["Hanging Side Foot Lift"]}
+                                 :previous    ["Hengende kneløft"] :next ["Hengende sideveis fotløft"]}
 
-                                ]]}]
-    session
+                                ]]}
+        session-2 {:template "template-title-2"
+                   :description "Her er hva du skal gjøre!"
+                   :parts [[{:name          "Balansere baklengs"
+                             :image         "balancing-backward-walk.png"
+                             :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
+                             :measurement   :distance
+                             :previous      ["Balancing Lateral Walk"]
+                             :distance      10
+                             :set           4}]]}
+        ]
+    (case session-type
+      "Naturlig bevegelse" session-2
+      "Styrke" session
+      :default {:parts []})
     #_(<!! (h/get-item! creds :templates {:title title :creator creator}))))
 
 ;;---------- add/update data ----------
@@ -207,7 +224,7 @@
     (h/update-item! creds :users {:user-id user}
                     {:activated?    [:set true]
                      :activation-id [:remove]})))
-#_(activate-user! "28e5835d-0415-44c5-95a9-ab5a37eaa31d")
+#_(activate-user! "b794271f-cbca-4118-bf92-66cc15db477e")
 
 (defn add-movement! [user-id movement]
   ; todo: filter; don't add if exists

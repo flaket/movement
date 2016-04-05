@@ -48,6 +48,27 @@
                                        (assoc session :activity session-type)))
         :error-handler (fn [r] (pr r))}))
 
+(defn preview-file []
+  (let [file (.getElementById js/document "upload")
+        reader (js/FileReader.)]
+    (when-let [file (aget (.-files file) 0)]
+      (set! (.-onloadend reader) #(session/update-in! [:movement-session] assoc :photo (-> % .-target .-result str)))
+      (.readAsDataURL reader file))))
+
+(defn add-photo-component []
+  (if-let [photo (session/get-in [:movement-session :photo])]
+    [:div.pure-g
+     [:div.pure-u [:img {:style {:height 200
+                                 :border " 1px solid #000"
+                                 :margin "10px 5px 0 0"}
+                         :src   photo}]]
+     [:div.pure-u {:on-click #(session/update-in! [:movement-session] dissoc :photo)
+                   :style    {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
+    [:div.pure-g
+     [:input.pure-u {:id   "upload" :placeholder "Legg ved bilde"
+                     :style {} :translate "yes"
+                     :type "file" :on-change #(preview-file)}]]))
+
 ;;;;;; Components ;;;;;;
 (defn slider-component []
   (let [data (atom 0)]
@@ -141,7 +162,7 @@
      [:div.pure-u {:style {:padding-top 10}} name]]]])
 
 (defn movement-component
-  [{:keys [name slot-category measurement previous next
+  [{:keys [name image slot-category measurement previous next
            rep set performed-sets distance duration weight rest] :as m}
    part-number]
   (let [;parts (session/get-in [:movement-session :parts])
@@ -152,7 +173,7 @@
        [:div.pure-u-1
         [:div.pure-g {:style {:cursor 'pointer}}
          [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))}
-          [:img.graphic {:src (image-url name) :title name :alt name}]]
+          [:img.graphic {:src (str "images/movements/" image) :title name :alt name}]]
          [:div.pure-u-2-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))
                            :style    {:display 'flex :text-align 'center}}
           [:h3.title {:style {:margin 'auto}} name]]
@@ -267,9 +288,9 @@
         [add-movement-component movements]]])))
 
 (defn list-of-activities []
-  (let [activites ["Styrke" "Naturlig bevegelse" "Løping" "Crossfit"
-                   "Yoga" "Gym" "Gåtur" "Parkour" "Svømming" "Sport" "Ski"
-                   "Sykling" "Annen bevegelse"]]
+  (let [activites ["Naturlig bevegelse" "Styrke" "Løping" "Crossfit"
+                   "Gym" "Yoga" "Gåtur" "Sport" "Sykling" "Ski"
+                   "Svømming" "Annen aktivitet"]]
     (fn []
       [:div.movements
        [:div.pure-g
@@ -312,35 +333,37 @@
                 :on-change #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
                 :value     (session/get-in [:movement-session :comment])}]]])
 
+(defn store-session [event s]
+  (.preventDefault event)
+  (let [session (session/get :movement-session)
+        new-parts (mapv (fn [part]
+                         (mapv (fn [m]
+                                (dissoc m :category :slot-category :measurement :previous :next :image)) part))
+                       (:parts session))
+        date (if-let [date (:date session)] date (date-string))]
+    (pr (assoc session :parts new-parts :date date))
+    (reset! s true)
+    #_(POST "store-session"
+          {:params        {:session (session/get :movement-session)
+                           :user    (session/get :user)}
+           :handler       (fn [_] (reset! s true))
+           :error-handler (fn [response] (pr response))})))
+
 (defn finish-session-component []
   ;; Etter trykk på avslutt&lagre bør den oppdaterte feeden vises
-  (let [session-stored-successfully? (atom false)]
+  (let [s (atom false)]
     (fn []
       [:div {:style {:margin-top '50}}
-       (if @session-stored-successfully?
+       (if @s
          (let []
            (go (<! (timeout 3000))
                (session/remove! :movement-session)
-               (reset! session-stored-successfully? false))
+               (reset! s false))
            [:div.pure-g
-            [:div.pure-u-1.center {:style {:color "green" :font-size 30}} "Økta ble lagret!"]])
+            [:div.pure-u-1.center {:style {:color "green" :font-size 30}} "Økta er loggført!"]])
          [:div.pure-g
           [:a.pure-u-1.pure-button.pure-button-primary.button-xlarge
-           {:on-click #(let [min (session/get-in [:movement-session :time :minutes])
-                             min (when-not (nil? min) (int (reader/read-string min)))
-                             sec (session/get-in [:movement-session :time :seconds])
-                             sec (when-not (nil? sec) (int (reader/read-string sec)))]
-                        (session/assoc-in! [:movement-session :time] (+ (* 60 min) sec))
-                        (POST "store-session"
-                              {:params        {:session (session/get :movement-session)
-                                               :user    (session/get :user)}
-                               :handler       (fn [response]
-                                                (reset! session-stored-successfully? true)
-                                                (get-stored-sessions))
-                               :error-handler (fn [response] (pr response))}))}
-           "Avslutt og lagre økta"]])])))
-
-
+           {:onClick #(store-session % s) :onTouchEnd #(store-session % s)} "Logg økta"]])])))
 
 (defn session-page []
   (let []
@@ -370,11 +393,13 @@
             (text-component)
 
             [:div.pure-g {:style {:margin-top '10}}
-             [:a.pure-u-1-3.pure-button "Legg ved bilde"]
+             #_[:a.pure-u-1-3.pure-button "Legg ved bilde"]
+
              #_[:div.pure-u-1-3.center
                 [:a.pure-button "Sett geoposisjon"]]
              #_[:div.pure-u-1-3.center
                 [:a.pure-button "Del"]]]
+            (add-photo-component)
 
             [finish-session-component]]]]
          [:div.content

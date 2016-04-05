@@ -1,76 +1,17 @@
 (ns movement.pages.feed
   (:require [movement.menu :refer [menu-component]]
             [reagent.core :refer [atom]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [movement.util :refer [GET POST]]))
 
-(def feed-data (atom [{:user-name    "Kårinator"
-                      :user-image   "images/movements/pull-up.png"
-                      :url          "1"
-                      :text         "en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
-                      :date         "3 timer siden"
-                      :time         "45:00"
-                      :activity     "Styrkeøkt"
-                      :session-data [[{:movement-name "Push Up" :rep 10 :set 3}
-                                      {:movement-name "Pull Up" :rep 5 :set 3}
-                                      {:movement-name "Push Up" :rep 10 :set 3}
-                                      {:movement-name "Pull Up" :rep 5 :set 3}]
-                                     [{:movement-name "Push Up" :rep 10 :set 3}
-                                      {:movement-name "Pull Up" :rep 5 :set 3}
-                                      {:movement-name "Push Up" :rep 10 :set 3}
-                                      {:movement-name "Pull Up" :rep 5 :set 3}]]
-                      :comments     [{:comment "Ser bra ut!" :user "Bobby"}
-                                     {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
-                      :likes        10
-                      :image        "images/field.jpg"}
-                     {:user-name    "Bobby D"
-                      :url          "2"
-                      :text         "sliten.."
-                      :date         "igår 16:00"
-                      :comments     []
-                      :likes        4
-                      :activity     "Naturlig bevegelse"
-                      :image        "images/forest.jpg"
-                      :session-data []}
-                     {:url          "3"
-                      :user-image   "images/movements/push-up.png"
-                      :user-name    "Andreas Flaksviknes"
-                      :text         "en fin økt"
-                      :date         "ddmmyy"
-                      :likes        0
-                      :comments     []
-                      :activity     "Løping"
-                      :session-data []}
-                     {:url          "4"
-                      :user-name    "kari"
-                      :text         "sliten"
-                      :date         "ddmmyy"
-                      :comments     []
-                      :likes        0
-                      :time         "11:45"
-                      :activity     "Mobilitet"
-                      :image        "images/winter.jpg"
-                      :session-data []}
-                     {:url          "5"
-                      :user-name    "timmy"
-                      :date         "ddmmyy"
-                      :text         ""
-                      :likes        503
-                      :time         "1:11:00"
-                      :activity     "Styrkeøkt"
-                      :comments     []
-                      :session-data []}
-                     {:url          "6"
-                      :user-image   "images/movements/arch-up.png"
-                      :user-name    "tammy"
-                      :date         "ddmmyy"
-                      :likes        4
-                      :text         "Fakkamakkalakka"
-                      :time         "21:05"
-                      :activity     "Løping"
-                      :comments     []
-                      :session-data []}]))
+(defonce feed-data (atom nil))
 
-(defn load-more [event]
+(defn load-feed [feed-data]
+  (POST "feed" {:params        {:email ""}
+                :handler       (fn [r] (reset! feed-data r))
+                :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
+
+(defn load-more [event feed-data]
   (.preventDefault event)
   (swap! feed-data conj {:user-name    "Kårinator"
                          :user-image   "images/movements/pull-up.png"
@@ -79,8 +20,8 @@
                          :date         "3 timer siden"
                          :time         "45:00"
                          :activity     "Styrkeøkt"
-                         :session-data [[{:movement-name "Push Up" :rep 10 :set 3}
-                                         {:movement-name "Pull Up" :rep 5 :set 3}]]
+                         :session-data [[{:name "Push Up" :rep 10 :set 3 :image "push-up.png"}
+                                         {:name "Pull Up" :rep 5 :set 3 :image "pull-up.png"}]]
                          :comments     [{:comment "Ser bra ut!" :user "Bobby"}
                                         {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
                          :likes        10
@@ -99,14 +40,14 @@
 
 (defn movement-component []
   (let []
-    (fn [{:keys [movement-name rep set distance duration weight rest]}]
+    (fn [{:keys [name image rep set distance duration weight rest]}]
       [:div.pure-g.movement
        [:div.pure-u-1
         [:div.pure-g
          [:div.pure-u-1-5
-          [:img.pure-img-responsive.graphic {:src (image-url movement-name) :title movement-name :alt movement-name}]]
+          [:img.pure-img-responsive.graphic {:src (str "images/movements/" image) :title name :alt name}]]
          [:div.pure-u-2-5 {:style {:display 'flex :text-align 'center}}
-          [:h3.title {:style {:margin 'auto}} movement-name]]
+          [:h3.title {:style {:margin 'auto}} name]]
          [:div.pure-u-1-5 {:style {:display 'flex}}
           (when (pos? rep) (r-component {:data rep :name "reps"}))
           (when (pos? distance) (r-component {:data distance :name "m"}))
@@ -189,16 +130,21 @@
                                            :color 'lightgray}}]]]]])))
 
 (defn feed-page []
-  (let []
+  (let [
+        _ (load-feed feed-data)
+        ]
     (fn []
       [:div
        [menu-component]
        [:div#feed
-        (let [sessions @feed-data]
+        (if-let [sessions @feed-data]
           (doall
             (for [session sessions]
               ^{:key (:url session)}
-              [session-view session])))
-        [:div.pure-g [:div.pure-u-1.pure-button {:onClick #(load-more %)
-                                                 :onTouchEnd #(load-more %)} "Last flere"]]]])))
-
+              [session-view session]))
+          [:div.pure-g {:style {:margin-top 200}}
+           [:div.pure-u-1.center
+            [:i.fa.fa-spinner.fa-pulse.fa-4x]]])
+        (when @feed-data
+          [:div.pure-g [:div.pure-u-1.pure-button {:onClick    #(load-more % feed-data)
+                                                   :onTouchEnd #(load-more % feed-data)} "Last flere"]])]])))

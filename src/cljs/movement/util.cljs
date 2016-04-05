@@ -90,18 +90,3 @@
 
 (def temp-state (atom {}))
 
-(defn preview-file []
-  (let [file (.getElementById js/document "upload")
-        reader (js/FileReader.)]
-    (when-let [file (aget (.-files file) 0)]
-      (set! (.-onloadend reader) #(swap! temp-state assoc :background (-> % .-target .-result str)))
-      (.readAsDataURL reader file))))
-
-(defn upload-background-component []
-  [:div.pure-g
-   [:div.pure-u "Upload a custom background image for your template: "]
-   [:input.pure-u {:id   "upload"
-                   :type "file" :on-change #(preview-file)}]
-   (when (:background @temp-state)
-     [:div.pure-u {:on-click #(swap! temp-state dissoc :background)
-                   :style    {:color "blue"}} "Remove custom background"])])
