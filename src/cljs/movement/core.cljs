@@ -32,7 +32,7 @@
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
   (when (session/get :email)
-    (set-page! #'user-page))
+    (set-page! #'feed-page))
   (mount-root))
 
 (init!)

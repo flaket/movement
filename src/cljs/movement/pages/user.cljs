@@ -111,12 +111,14 @@
        (when @set-new-username?
          [set-username-component])])))
 
-(defn log-out []
+(defn log-out [event]
+  (.preventDefault event)
   (session/clear!)
   (dispatch! "/"))
 
 (defn user-page []
-  (let [selection (atom :feed)]
+  (let [selection (atom :feed)
+        changing-settings? (atom false)]
     (fn []
       [:div
        [menu-component]
@@ -126,13 +128,26 @@
          [:div.pure-u-1-4
           #_[:i.fa.fa-user.fa-4x]
           [:img {:width "100%" :src "images/movements/arch-up.png"}]]
-         [:div.pure-u-3-4
-          [:div.pure-g [:div.pure-u-1 "0 økter 0 følger 0 følgere"]]
-          [:div.pure-g [:div.pure-u-1 (session/get :email)]]
-          [:div.pure-g [:div.pure-u-1 "Profiltekst"]]
-          [:div.pure-g
-           [:a.pure-u-1-2.pure-button "Endre innstillinger"]
-           [:a.pure-u-1-2.pure-button.pure-button-primary {:onClick #(log-out) :onTouchEnd #(log-out)} "Logg ut"]]]]
+         (if @changing-settings?
+           [:div.pure-u-3-4
+
+            [:div.pure-g [:div.pure-u-1 [:input {:size 60 :type "text" :placeholder "Brukernavn"}]]]
+            [:div.pure-g [:div.pure-u-1 [:input {:size 60 :type "text" :placeholder "Profiltekst"}]]]
+            [:div.pure-g [:div.pure-u-1 [:input {:size 60 :type "text" :placeholder "Profiltekst"}]]]
+            [:div.pure-g [:div.pure-u-1 [:input {:size 60 :type "text" :placeholder "Profiltekst"}]]]
+            [:div.pure-g [:a.pure-u-1.pure-button "Velg profilbilde"]]
+            [:div.pure-g
+             [:a.pure-u-1.pure-button.pure-button-primary
+              {:onClick #(reset! changing-settings? false)
+               :onTouchEnd #(reset! changing-settings? false)} "Lagre"]]]
+           [:div.pure-u-3-4
+            [:div.pure-g [:div.pure-u-1 "Brukernavn"]]
+            [:div.pure-g [:div.pure-u-1 "Profiltekst"]]
+            [:div.pure-g
+             [:a.pure-u-1-3.pure-button {:onClick #(reset! changing-settings? true)
+                                         :onTouchEnd #(reset! changing-settings? true)} "Endre innstillinger"]
+             [:div.pure-u-1-3]
+             [:a.pure-u-1-3.pure-button {:onClick #(log-out %) :onTouchEnd #(log-out %)} "Logg ut"]]])]
 
         [:div
          [:div.pure-g [:div.pure-u-1 [:h2 "Min treningsdagbok"]]]

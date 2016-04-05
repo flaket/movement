@@ -90,7 +90,12 @@
   (when-not (nil? movement-name)
     (str "images/movements/" (str/replace (str/lower-case movement-name) " " "-") ".png")))
 
-
+(defn r-component [{:keys [data name]}]
+  [:div.pure-g {:style {:margin 'auto}}
+   [:div.pure-u
+    [:div.pure-g
+     [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} data]
+     [:div.pure-u {:style {:padding-top 10}} name]]]])
 
 (defn movement-component []
   (let []
@@ -103,36 +108,11 @@
          [:div.pure-u-2-5 {:style {:display 'flex :text-align 'center}}
           [:h3.title {:style {:margin 'auto}} movement-name]]
          [:div.pure-u-1-5 {:style {:display 'flex}}
-          [:div.pure-g {:style {:margin 'auto}}
-           (when (and rep (< 0 rep))
-             [:div.pure-u
-              [:div.pure-g
-               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} rep]
-               [:div.pure-u {:style {:padding-top 10}} "reps"]]])]
-          [:div.pure-g {:style {:margin 'auto}}
-           (when (and distance (< 0 distance))
-             [:div.pure-u
-              [:div.pure-g
-               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} distance]
-               [:div.pure-u {:style {:padding-top 10}} "m"]]])]
-          [:div.pure-g {:style {:margin 'auto}}
-           (when (and duration (< 0 duration))
-             [:div.pure-u
-              [:div.pure-g
-               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} duration]
-               [:div.pure-u {:style {:padding-top 10}} "s"]]])]
-          [:div.pure-g {:style {:margin 'auto}}
-           (when (and weight (< 0 weight))
-             [:div.pure-u
-              [:div.pure-g
-               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} weight]
-               [:div.pure-u {:style {:padding-top 10}} "kg"]]])]
-          [:div.pure-g {:style {:margin 'auto}}
-           (when (and rest (< 0 rest))
-             [:div.pure-u
-              [:div.pure-g
-               [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} rest]
-               [:div.pure-u {:style {:padding-top 10}} "s"]]])]]
+          (when (pos? rep) (r-component {:data rep :name "reps"}))
+          (when (pos? distance) (r-component {:data distance :name "m"}))
+          (when (pos? duration) (r-component {:data duration :name "s"}))
+          (when (pos? weight) (r-component {:data weight :name "kg"}))
+          (when (pos? rest) (r-component {:data rest :name "s"}))]
          [:div.pure-u-1-5
           [:div.pure-g {:style {:display 'flex}}
            [:div.pure-u {:style {:margin 'auto :margin-top 30 :opacity 0.05 :font-size "300%"}} set]]

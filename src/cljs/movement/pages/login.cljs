@@ -5,61 +5,61 @@
             [movement.util :refer [GET POST text-input get-stored-sessions
                                    get-templates get-movements get-categories]]))
 
-(defn login-handler [event user password loading? error show-payment?]
+(defn login-handler [event login-state]
   (.preventDefault event)
-  (if-not (and (seq @user) (seq @password))
-    (reset! error "Both fields are required.")
-    (do
-      (reset! loading? true)
-      (POST "login" {:params        {:email    @user
-                                     :password @password}
-                     :handler       (fn [{:keys [token email]}]
-                                      (session/put! :token token)
-                                      (session/put! :email email)
-                                      (session/put! :selected-menu-item :feed)
-                                      (dispatch! "/feed"))
-                     :error-handler (fn [response]
-                                      (let [r (:response response)
-                                            update-payment? (:update-payment? r)]
-                                        (reset! loading? false)
-                                        (reset! error (:message (:response response)))
-                                        (when update-payment?
-                                          (reset! show-payment? true))))}))))
+  (let [{:keys [user password loading? error show-payment?]} @login-state]
+    (if-not (and (seq user) (seq password))
+      (swap! login-state assoc :error "Both fields are required.")
+      (do
+        (swap! login-state assoc :loading? true)
+        (POST "login" {:params        {:email    user
+                                       :password password}
+                       :handler       (fn [{:keys [token email]}]
+                                        (session/put! :token token)
+                                        (session/put! :email email)
+                                        (session/put! :selected-menu-item :feed)
+                                        (dispatch! "/feed"))
+                       :error-handler (fn [response]
+                                        (let [r (:response response)
+                                              update-payment? (:update-payment? r)]
+                                          (swap! login-state assoc :loading? false)
+                                          (swap! login-state assoc :error (:message (:response response)))
+                                          (when update-payment?
+                                            (swap! login-state assoc :show-payment? true))))})))))
 
 (defn login []
-  (let [user (atom "")
-        password (atom "")
-        error (atom "")
-        loading? (atom false)
-        show-payment? (atom false)]
+  (let [login-state (atom {:user "" :password "" :error "" :loading? false :show-payment? false})]
     (fn []
       [:div {:style {:font-size 24}}
-       (when @show-payment?
+       (when (:show-payment? @login-state)
          [:div.pure-g
           [:a.pure-u-1.button.button-primary
            {:href (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
                        "?referrer="
-                       @user)} "Purchase subscription"]])
+                       (:user @login-state))} "Purchase subscription"]])
        [:div.pure-g {:style {:padding 5}}
-        [text-input user
-         {:class       (str "pure-u-1" (when @loading? " disabled"))
-          :name        "email"
-          :placeholder "email"}]]
+        [:input {:type        "text"
+                 :className   "pure-u-1"
+                 :name        "email"
+                 :placeholder "email"
+                 :on-change   #(swap! login-state assoc :user (-> % .-target .-value))
+                 :value       (:user @login-state)}]]
        [:div.pure-g {:style {:padding 5}}
-        [text-input password
-         {:class       (str "pure-u-1" (when @loading? " disabled"))
-          :type        "password"
-          :name        "password"
-          :placeholder "password"}]]
-       (when-let [e @error]
+        [:input {:type        "password"
+                 :className   "pure-u-1"
+                 :name        "password"
+                 :placeholder "password"
+                 :on-change   #(swap! login-state assoc :password (-> % .-target .-value))
+                 :value       (:password @login-state)}]]
+       (when-let [e (:error @login-state)]
          [:div.pure-g
           [:div.pure-u-1.notice.center e]])
        [:div.pure-g
         [:button.pure-u-1.button.button-primary
-         {:className    (when @loading? " disabled")
-          :onClick #(login-handler % user password loading? error show-payment?)
-          :onTouchEnd #(login-handler % user password loading? error show-payment?)}
-         (if @loading? "Logging in..." "Log In")]]])))
+         {:disabled   (when (:loading? @login-state) "disabled")
+          :onClick    #(login-handler % login-state)
+          :onTouchEnd #(login-handler % login-state)}
+         (if (:loading? @login-state) "Logging in..." "Log In")]]])))
 
 (defn login-page []
   [:div
