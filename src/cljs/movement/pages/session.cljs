@@ -65,9 +65,9 @@
      [:div.pure-u {:on-click #(session/update-in! [:movement-session] dissoc :photo)
                    :style    {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
     [:div.pure-g
-     [:input.pure-u {:id   "upload" :placeholder "Legg ved bilde"
-                     :style {} :translate "yes"
-                     :type "file" :on-change #(preview-file)}]]))
+     [:div.pure-u-1-3.pure-button.fileUpload
+      [:span "Legg ved bilde"]
+      [:input {:id   "upload" :className "upload" :type "file" :on-change #(preview-file)}]]]))
 
 ;;;;;; Components ;;;;;;
 (defn slider-component []
