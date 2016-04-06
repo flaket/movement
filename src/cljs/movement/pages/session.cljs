@@ -26,13 +26,76 @@
   (when-not (nil? movement-name)
     (str "images/movements/" (str/replace (str/lower-case movement-name) " " "-") ".png")))
 
-(defn remove-movement [])
-(defn swap-movement [])
-(defn previous-movement [])
-(defn next-movement [])
+
+(defn swap-movement [event movement part-number]
+  (.preventDefault event)
+  (let [category (name (first (shuffle (:category movement))))]
+    (GET "movement-from-category" {:params        {:category category}
+                                   :handler       (fn [new-movement]
+                                                    (let [part (session/get-in [:movement-session :parts part-number])
+                                                          pos (first (positions #{movement} part))
+                                                          new-part (assoc part pos (first new-movement))]
+                                                      (session/assoc-in! [:movement-session :parts part-number] new-part)))
+                                   :error-handler (fn [r] nil)})))
+
+(defn replace-movement [event {:keys [kw movement part-number]}]
+  (.preventDefault event)
+  (cond
+    (= :swap kw) (let [category (name (first (shuffle (:category movement))))]
+                   (GET "movement-from-category" {:params        {:category category}
+                                                  :handler       (fn [new-movement]
+                                                                   (let [part (session/get-in [:movement-session :parts part-number])
+                                                                         pos (first (positions #{movement} part))
+                                                                         new-part (assoc part pos (first new-movement))]
+                                                                     (session/assoc-in! [:movement-session :parts part-number] new-part)))
+                                                  :error-handler (fn [r] nil)}))
+    (or (= :next kw)
+        (= :previous kw)) (let [new-movement (first (shuffle (kw movement)))]
+                            (GET "movement" {:params        {:name new-movement}
+                                             :handler       (fn [new-movement]
+                                                              (let [part (session/get-in [:movement-session :parts part-number])
+                                                                    pos (first (positions #{movement} part))
+                                                                    new-part (assoc part pos new-movement)]
+                                                                (session/assoc-in! [:movement-session :parts part-number] new-part)))
+                                             :error-handler (fn [r] nil)}))
+    :else nil)
+  )
 
 (defn add-movement [])
+
 (defn add-movement-from-search [])
+
+(defn inc-set-completed [event m part-number]
+  (.preventDefault event)
+  (let [part (session/get-in [:movement-session :parts part-number])
+        pos (positions #{m} part)
+        new-part (assoc part (first pos) (update m :performed-sets inc))]
+    (session/assoc-in! [:movement-session :parts part-number] new-part)))
+
+(defn dec-set-completed [event m part-number]
+  (.preventDefault event)
+  (let [part (session/get-in [:movement-session :parts part-number])
+        pos (positions #{m} part)
+        new-part (assoc part (first pos)
+                             (if (pos? (dec (:performed-sets m)))
+                               (update m :performed-sets dec)
+                               (dissoc m :performed-sets)))]
+    (session/assoc-in! [:movement-session :parts part-number] new-part)))
+
+(defn vec-remove
+  [coll pos]
+  (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
+
+(defn remove-movement [event m part-number]
+  (.preventDefault event)
+  (let [part (session/get-in [:movement-session :parts part-number])
+        pos (first (positions #{m} part))
+        new-part (vec-remove part pos)]
+    (if (empty? new-part)
+      (let [parts (session/get-in [:movement-session :parts])
+            new-parts (vec-remove parts part-number)]
+        (session/assoc-in! [:movement-session :parts] new-parts))
+      (session/assoc-in! [:movement-session :parts part-number] new-part))))
 
 (defn remove-session [event]
   (.preventDefault event)
@@ -42,7 +105,7 @@
   (.preventDefault event)
   (GET "create-session"
        {:params        {:type  session-type
-                        :email (session/get :email)}
+                        :email (:email (session/get :user))}
         :handler       (fn [session]
                          (session/put! :movement-session
                                        (assoc session :activity session-type)))
@@ -67,7 +130,9 @@
     [:div.pure-g
      [:div.pure-u-1-3.pure-button.fileUpload
       [:span "Legg ved bilde"]
-      [:input {:id   "upload" :className "upload" :type "file" :on-change #(preview-file)}]]]))
+      [:input {:id "upload" :className "upload" :type "file" :on-change #(preview-file)}]]]))
+
+
 
 ;;;;;; Components ;;;;;;
 (defn slider-component []
@@ -137,23 +202,6 @@
        (when @rest-clicked?
          [slider-component position-in-parts id :rest 0 240 10])])))
 
-(defn inc-set-completed [event m part-number]
-  (.preventDefault event)
-  (let [part (session/get-in [:movement-session :parts part-number])
-        pos (positions #{m} part)
-        new-part (assoc part (first pos) (update m :performed-sets inc))]
-    (session/assoc-in! [:movement-session :parts part-number] new-part)))
-
-(defn dec-set-completed [event m part-number]
-  (.preventDefault event)
-  (let [part (session/get-in [:movement-session :parts part-number])
-        pos (positions #{m} part)
-        new-part (assoc part (first pos)
-                             (if (pos? (dec (:performed-sets m)))
-                               (update m :performed-sets dec)
-                               (dissoc m :performed-sets)))]
-    (session/assoc-in! [:movement-session :parts part-number] new-part)))
-
 (defn r-component [{:keys [data name]}]
   [:div.pure-g {:style {:margin 'auto}}
    [:div.pure-u
@@ -175,10 +223,10 @@
          [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))}
           [:img.graphic {:src (str "images/movements/" image) :title name :alt name}]]
          [:div.pure-u-2-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))
-                           :style    {:display 'flex :text-align 'center}}
+                           :style   {:display 'flex :text-align 'center}}
           [:h3.title {:style {:margin 'auto}} name]]
          [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))
-                           :style {:display 'flex}}
+                           :style   {:display 'flex}}
           (when (pos? rep) (r-component {:data rep :name "reps"}))
           (when (pos? distance) (r-component {:data distance :name "m"}))
           (when (pos? duration) (r-component {:data duration :name "s"}))
@@ -195,8 +243,11 @@
                                           :color      (when performed-sets 'red)
                                           :margin-top 5 :margin-right 5
                                           :float      'right}}]]]
-          [:div.pure-g {:style {:display 'flex}}
-           [:div.pure-u {:style {:margin 'auto :margin-top 10 :opacity 0.05 :font-size "300%"}} set]]
+          (if set
+            [:div.pure-g {:style {:display 'flex}}
+             [:div.pure-u {:style {:margin 'auto :margin-top 10 :opacity 0.05 :font-size "300%"}} set]]
+            [:div.pure-g {:style {:display 'flex}}
+             [:div.pure-u {:style {:margin 'auto :margin-top 10 :opacity 0 :font-size "300%"}} 1]])
           (when performed-sets
             [:div.pure-g
              [:div.pure-u-1 [:h1.center {:style {:color 'red :margin-top -70 :font-size "350%"}} performed-sets]
@@ -208,22 +259,23 @@
         (when @expand
           [:div
            [:div.pure-g
-            [:a.pure-u.pure-button {:style    {:margin "5px 5px 5px 5px"}
-                                    :on-click #(remove-movement) :title "Fjern øvelse"}
+            [:a.pure-u.pure-button {:style   {:margin "5px 5px 5px 5px"}
+                                    :onClick #(remove-movement % m part-number) :onTouchEnd #(remove-movement % m part-number)
+                                    :title   "Fjern øvelse"}
              [:i.fa.fa-remove {:style {:color "#CC9999" :opacity 0.8}}]
              "Fjern øvelse"]
-            [:a.pure-u.pure-button {:style    {:margin "5px 5px 5px 5px"}
-                                    :on-click #(swap-movement) :title "Bytt øvelse"}
-             [:i.fa.fa-random {:style {:color "#99cc99" :opacity 0.8}}]
-             "Bytt ut øvelse"]
+            [:a.pure-u.pure-button {:style      {:margin "5px 5px 5px 5px"} :title "Bytt øvelse"
+                                    :onClick    #(replace-movement % {:kw :swap :movement m :part-number part-number})
+                                    :onTouchEnd #(replace-movement % {:kw :swap :movement m :part-number part-number})} [:i.fa.fa-random {:style {:color "#99cc99" :opacity 0.8}}] "Bytt ut øvelse"]
             (when previous
-              [:a.pure-u.pure-button {:style    {:margin "5px 5px 5px 5px"}
-                                      :on-click #(previous-movement) :title "Bytt med enklere"}
-               [:i.fa.fa-arrow-down {:style {:color "#99cc99" :opacity 0.8}}]
-               "Bytt med enklere"])
+              [:a.pure-u.pure-button {:style      {:margin "5px 5px 5px 5px"}
+                                      :onClick    #(replace-movement % {:kw :previous :movement m :part-number part-number})
+                                      :onTouchEnd #(replace-movement % {:kw :previous :movement m :part-number part-number}) :title "Bytt med enklere"}
+               [:i.fa.fa-arrow-down {:style {:color "#99cc99" :opacity 0.8}}] "Bytt med enklere"])
             (when next
-              [:a.pure-u.pure-button {:style    {:margin "5px 5px 5px 5px"}
-                                      :on-click #(next-movement) :title "Bytt med vanskeligere"}
+              [:a.pure-u.pure-button {:style      {:margin "5px 5px 5px 5px"}
+                                      :onClick    #(replace-movement % {:kw :next :movement m :part-number part-number})
+                                      :onTouchEnd #(replace-movement % {:kw :next :movement m :part-number part-number}) :title "Bytt med vanskeligere"}
                [:i.fa.fa-arrow-up {:style {:color "#99cc99" :opacity 0.8}}]
                "Bytt med vanskeligere"])]
            #_[:div.pure-g
@@ -335,19 +387,19 @@
 
 (defn store-session [event s]
   (.preventDefault event)
-  (let [session (session/get :movement-session)
-        new-parts (mapv (fn [part]
-                         (mapv (fn [m]
-                                (dissoc m :category :slot-category :measurement :previous :next :image)) part))
-                       (:parts session))
-        date (if-let [date (:date session)] date (date-string))]
-    (pr (assoc session :parts new-parts :date date))
-    (reset! s true)
-    #_(POST "store-session"
-          {:params        {:session (session/get :movement-session)
-                           :user    (session/get :user)}
-           :handler       (fn [_] (reset! s true))
-           :error-handler (fn [response] (pr response))})))
+  (pr (session/get :movement-session))
+  #_(let [session (session/get :movement-session)
+          new-parts (mapv (fn [part]
+                            (mapv (fn [m]
+                                    (dissoc m :category :slot-category :measurement :previous :next :image)) part))
+                          (:parts session))
+          date (if-let [date (:date session)] date (date-string))
+          session (assoc session :parts new-parts :date date)]
+      (POST "store-session"
+            {:params        {:session session
+                             :user-id (:user-id (session/get :user))}
+             :handler       (fn [] (reset! s true))
+             :error-handler (fn [r] (pr r))})))
 
 (defn finish-session-component []
   ;; Etter trykk på avslutt&lagre bør den oppdaterte feeden vises
@@ -371,37 +423,40 @@
       [:div
        [menu-component]
        (if-let [session (session/get :movement-session)]
-         [:div {:style {:margin-top "100px"}}
-          [:div.pure-g
-           [:a.pure-u {:style      {:margin-left 60 :margin-top 20}
-                       :onClick    #(remove-session %)
-                       :onTouchEnd #(remove-session %)}
-            [:i.fa.fa-arrow-left.fa-4x]]]
-          [:div.content {:style {:margin-top "20px"}}
-           [:div
-            [:article.session
-             (let [parts (:parts session)]
-               (doall
-                 (for [i (range (count parts))]
-                   ^{:key i} [part-component (get parts i) i])))]
+         (let [] #_[parts (mapv (fn [part] (mapv (fn [m] (swap! m-counter update inc) (assoc m :id @m-counter)) part))
+                                (:parts session))
+                    session (assoc session :parts parts)]
+           [:div {:style {:margin-top "100px"}}
             [:div.pure-g
-             [:div.pure-u-1 (date-component)]]
-            [:h2.pure-g
-             [:div.pure-u (str (:activity session) " i ")]
-             [:div.pure-u (time-component)]]
+             [:a.pure-u {:style      {:margin-left 60 :margin-top 20}
+                         :onClick    #(remove-session %)
+                         :onTouchEnd #(remove-session %)}
+              [:i.fa.fa-arrow-left.fa-4x]]]
+            [:div.content {:style {:margin-top "20px"}}
+             [:div
+              [:article.session
+               (let [parts (:parts session)]
+                 (doall
+                   (for [i (range (count parts))]
+                     ^{:key i} [part-component (get parts i) i])))]
+              [:div.pure-g
+               [:div.pure-u-1 (date-component)]]
+              [:h2.pure-g
+               [:div.pure-u (str (:activity session) " i ")]
+               [:div.pure-u (time-component)]]
 
-            (text-component)
+              (text-component)
 
-            [:div.pure-g {:style {:margin-top '10}}
-             #_[:a.pure-u-1-3.pure-button "Legg ved bilde"]
+              [:div.pure-g {:style {:margin-top '10}}
+               #_[:a.pure-u-1-3.pure-button "Legg ved bilde"]
 
-             #_[:div.pure-u-1-3.center
-                [:a.pure-button "Sett geoposisjon"]]
-             #_[:div.pure-u-1-3.center
-                [:a.pure-button "Del"]]]
-            (add-photo-component)
+               #_[:div.pure-u-1-3.center
+                  [:a.pure-button "Sett geoposisjon"]]
+               #_[:div.pure-u-1-3.center
+                  [:a.pure-button "Del"]]]
+              (add-photo-component)
 
-            [finish-session-component]]]]
+              [finish-session-component]]]])
          [:div.content
           [list-of-activities]])])))
 

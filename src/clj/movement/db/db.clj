@@ -40,13 +40,13 @@
                      :attrs   {:url :string :user-id :string} :keys [:url]
                      :indexes {:global [{:name       :session-by-user-id
                                          :keys       [:user-id]
-                                         :project    [:keys-only]
+                                         :project    [:all]
                                          :throughput {:read 1 :write 1}}]}})
 
 #_(let [c (h/list-tables! creds {})] (<!! c))
-#_(let [c (h/describe-table! creds :users)] (<!! c))
-#_(h/create-table! creds movements-table)
-#_(h/delete-table! creds :users)
+#_(let [c (h/describe-table! creds :movements)] (<!! c))
+#_(h/create-table! creds sessions-table)
+#_(h/delete-table! creds :sessions)
 #_(let [tables (<!! (h/list-tables! creds {}))]
     (doseq [i (range (count tables))]
       (h/delete-table! creds (get tables i))))
@@ -98,6 +98,15 @@
     (h/query! creds :users {:name [:= name]} {:index :user-by-name})
     <!!))
 
+(defn sessions-by-user-id [user-id]
+  (let [
+        ;sessions2 (<!! (h/scan! creds :sessions {:user-id user-id}))
+        sessions (->>
+                   (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id})
+                   <!!)]
+    sessions))
+#_(sessions-by-user-id "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")
+
 ;;---------- get data ----------
 
 (defn movements []
@@ -116,14 +125,14 @@
 (defn movement [name]
   (let [c (h/get-item! creds :movements {:name name})]
     (<!! c)))
-#_(movement "Pull Up")
+#_(movement "Balansegang")
 
 (defn movements-from-category [n category]
   "todo: accept several categories"
   (let [c (h/scan! creds :movements {:filter [:contains [:category] category]})
-        movements (take n (sort-by :name (<!! c)))]
+        movements (take n (shuffle (<!! c)))]
     movements))
-#_(movements-from-category 3 :pull)
+#_(movements-from-category 1 :balance)
 
 (defn template [title]
   (<!! (h/get-item! creds :templates {:title title})))
@@ -135,7 +144,7 @@
                  :parts       [[
                                 {:name          "Balansere"
                                  :image         "balancing-walk.png"
-                                 :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
+                                 :category #{:balance :walk :beam :balancing-locomotion :natural}
                                  :measurement   :distance
                                  :next      ["Balansere sideveis"]
                                  :distance      10
@@ -152,7 +161,7 @@
                                [
                                 {:name          "Balansere baklengs"
                                  :image         "balancing-backward-walk.png"
-                                 :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
+                                 :category #{:balance :walk :beam :balancing-locomotion :natural}
                                  :measurement   :distance
                                  :previous      ["Balansere sideveis"]
                                  :distance      10
@@ -179,7 +188,7 @@
     (case session-type
       "Naturlig bevegelse" session-2
       "Styrke" session
-      :default {:parts []})
+      {:parts [[]]})
     #_(<!! (h/get-item! creds :templates {:title title :creator creator}))))
 
 ;;---------- add/update data ----------
@@ -212,12 +221,15 @@
                   {:badges [:concat [badge]]}))
 #_(add-badge! "andreas@roebuck.com" {:name "Newbie" :achieved-at (.getTime (Date.))})
 
-(defn add-session! [user session]
-  (let [tags []                                             ;scan comment-felt etter hashtagger -> lag liste ["løpetur" "sol" "vårstemning"]
+(defn add-session! [params]
+  (let [{:keys [user-id session]} params
+        tags []                                             ;scan comment-felt etter hashtagger -> lag liste ["løpetur" "sol" "vårstemning"]
         session (assoc session :url (str (UUID/randomUUID))
-                               :user-id (:user-id user)
+                               :user-id user-id
                                :tags tags)]
-    (h/put-item! creds :sessions session)))
+    (.println System/out (str session))
+    (h/put-item! creds :sessions session)
+    :ok))
 
 (defn activate-user! [uuid]
   (let [user (:user-id (user-by-activation-id uuid))]

@@ -66,30 +66,21 @@
       (nil? user) (response {:message "Unknown user"} 400)
       (false? (:activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
       ;(false? (:valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
-      (valid-user? user password) (let [claims {:user (keyword (:email user))
+      (valid-user? user password) (let [claims {:user (keyword (:user-id user))
                                                 :exp  (-> 72 hours from-now)}
                                         token (jws/sign claims secret {:alg :hs512})]
                                     (response (-> user
                                                   (assoc :token token)
-                                                  (dissoc :password :activated?))
-
-                                      #_{:token    token
-                                               :email    email}))
+                                                  (dissoc :password :activated?))))
       :else (response {:message "Incorrect password"} 401))))
 
 ;;;;;; end login ;;;;;;
 
-(defn add-session! [req]
-  (let [session (:session (:params req))
-        user (:user (:params req))]
-    (if (nil? user)
-      (response {:message "User email lacking from client data" :session session} 400)
-      (try
-        (db/add-session! user session)
-        #_(db/add-new-movements! user session)
-        (catch Exception e
-          (error e (str "error transacting session: user: " user " session: " session)))
-        (finally (response {:message "Session stored successfully"}))))))
+(defn store-session! [params]
+  (try
+    (response (db/add-session! params))
+    #_(db/add-new-movements! user session)
+    (catch Exception e (error e "error storing session"))))
 
 (defn add-user! [email password]
   #_(if (nil? (db/user-by-email email))
@@ -191,7 +182,7 @@
                                                   :valid-subscription?))) (throw-unauthorized)))
            (POST "/change-password" req (if (authenticated? req) (change-password! (:params req)) (throw-unauthorized)))
            (POST "/change-username" req (if (authenticated? req) (change-username! (:params req)) (throw-unauthorized)))
-           (POST "/store-session" req (if (authenticated? req) (add-session! req) (throw-unauthorized)))
+           (POST "/store-session" req (if (authenticated? req) (store-session! (:params req)) (throw-unauthorized)))
            (POST "/set-zone" req (if-not (authenticated? req)
                                    (throw-unauthorized)
                                    (let [email (:email (:params req))
@@ -206,69 +197,14 @@
 
            (POST "/feed" req (if (authenticated? req)
                                (let [email (:email (:params req))]
-                                 (response [{:user-name    "Kaare"
-                                             :user-image   "images/movements/pull-up.png"
-                                             :url          "1"
-                                             :text         "en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
-                                             :date         "3 timer siden"
-                                             :time         "45:00"
-                                             :activity     "Styrkeøkt"
-                                             :session-data [[{:name "Push Up" :rep 10 :set 3 :image "push-up.png"}
-                                                             {:name "Pull Up" :rep 5 :set 3 :image "pull-up-reach.png"}]]
-                                             :comments     [{:comment "Ser bra ut!" :user "Bobby"}
-                                                            {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
-                                             :likes        10
-                                             :image        "images/field.jpg"}
-                                            {:user-name    "Bobby D"
-                                             :url          "2"
-                                             :text         "sliten.."
-                                             :date         "igår 16:00"
-                                             :comments     []
-                                             :likes        4
-                                             :activity     "Naturlig bevegelse"
-                                             :image        "images/forest.jpg"
-                                             :session-data []}
-                                            {:url          "3"
-                                             :user-image   "images/movements/push-up.png"
-                                             :user-name    "Andreas Flaksviknes"
-                                             :text         "en fin økt"
-                                             :date         "ddmmyy"
-                                             :likes        0
-                                             :comments     []
-                                             :activity     "Løping"
-                                             :session-data []}
-                                            {:url          "4"
-                                             :user-name    "kari"
-                                             :text         "sliten"
-                                             :date         "ddmmyy"
-                                             :comments     []
-                                             :likes        0
-                                             :time         "11:45"
-                                             :activity     "Mobilitet"
-                                             :image        "images/winter.jpg"
-                                             :session-data []}
-                                            {:url          "5"
-                                             :user-name    "timmy"
-                                             :date         "ddmmyy"
-                                             :text         ""
-                                             :likes        503
-                                             :time         "1:11:00"
-                                             :activity     "Styrkeøkt"
-                                             :comments     []
-                                             :session-data []}
-                                            {:url          "6"
-                                             :user-image   "images/movements/arch-up.png"
-                                             :user-name    "tammy"
-                                             :date         "ddmmyy"
-                                             :likes        4
-                                             :text         "Fakkamakkalakka"
-                                             :time         "21:05"
-                                             :activity     "Løping"
-                                             :comments     []
-                                             :session-data []}])) (throw-unauthorized))
+                                 (response (vec (db/sessions-by-user-id "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")))) (throw-unauthorized)))
 
-
-             )
+           (GET "/movement-from-category" req (if (authenticated? req)
+                                                (let [category (keyword (:category (:params req)))]
+                                                  (response (db/movements-from-category 1 category))) (throw-unauthorized)))
+           (GET "/movement" req (if (authenticated? req)
+                                  (let [name (:name (:params req))]
+                                    (response (db/movement name))) (throw-unauthorized)))
            ;; --------------------------------------------------------
 
            #_(GET "/sessions" req (if-not (authenticated? req)

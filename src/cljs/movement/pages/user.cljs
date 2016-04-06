@@ -66,7 +66,7 @@
          [:div.pure-g
           [:button.pure-u.pure-u-md-2-5.button.button-primary
            {:on-click #(POST "/change-username"
-                             {:params        {:email    (session/get :user)
+                             {:params        {:email    (:email (session/get :user))
                                               :username (:new-username @username)}
                               :handler       (fn [response]
                                                (let []
@@ -99,15 +99,14 @@
 
 (defn logged-in-as []
   (let [set-new-username? (atom false)
-        username (session/get :username)
-        email (session/get :user)]
+        {:keys [email name]} (session/get :user)]
     (fn []
       [:div
        [:div.pure-g
         [:h4.pure-u "Logged in as " [:span {:style    {:text-decoration 'underline
                                                        :cursor 'pointer}
                                             :on-click #(reset! set-new-username? true)}
-                                     (if username username email)]]]
+                                     (if name name email)]]]
        (when @set-new-username?
          [set-username-component])])))
 

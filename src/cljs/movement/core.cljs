@@ -31,8 +31,8 @@
 (defn init! []
   (hook-browser-navigation!)
   (secretary/set-config! :prefix "#")
-  (when (session/get :email)
-    (set-page! #'feed-page))
+  (when (session/get :user)
+    (set-page! #'session-page))
   (mount-root))
 
 (init!)

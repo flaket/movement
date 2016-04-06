@@ -72,7 +72,7 @@
 
 (defn session-view []
   (let [show-session-data? (atom false)]
-    (fn [{:keys [url activity user-image user-name date time text comments image session-data likes]
+    (fn [{:keys [url activity user-image user-name date time comment comments image parts likes]
           :or   {user-image "images/movements/static-air-baby.png"}}]
       [:div {:style {:border-bottom "1px solid lightgray"}}
        [:div.pure-g
@@ -92,7 +92,7 @@
        [:div {:style {:margin "0 40px 0 40px"}}
         [:div.pure-g
          [:h2.pure-u-5-6 (str activity (when time (str " i " time)))]
-         (when-not (empty? session-data)
+         (when-not (empty? (flatten parts))
            (if @show-session-data?
              [:div.pure-u-1-6 [:i.fa.fa-minus-square.fa-4x {:onClick    #(reset! show-session-data? false)
                 :onTouchEnd #(reset! show-session-data? false)
@@ -109,13 +109,14 @@
         (when @show-session-data?
           [:article.session
            (doall
-             (for [part session-data]
+             (for [part parts]
                ^{:key (rand-int 1000)}
                [part-component part]))])
         [:div.pure-g
-         [:p.pure-u-1 {:style {:padding-bottom 40 :border-bottom 'dotted}} [:a user-name] (str " " text)]]
-        [:div.pure-g
-         [:p.pure-u-1 (str likes " tomler opp")]]
+         [:p.pure-u-1 {:style {:padding-bottom 40 :border-bottom 'dotted}} [:a user-name] (str " " comment)]]
+        (when likes
+          [:div.pure-g
+           [:p.pure-u-1 (str likes " tomler opp")]])
         (doall
           (for [{:keys [comment user]} comments]
             ^{:key (str user comment)}

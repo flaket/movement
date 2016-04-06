@@ -23,7 +23,7 @@
                   (when (pred x) idx)) coll))
 
 (defn GET [url & [opts]]
-  (let [token (str/trim (str "Token " (session/get :token)))
+  (let [token (str/trim (str "Token " (:token (session/get :user))))
         base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
                    ;:with-credentials true
@@ -32,7 +32,7 @@
     (cljs-ajax/GET url (merge base-opts opts))))
 
 (defn POST [url & [opts]]
-  (let [token (str/trim (str "Token " (session/get :token)))
+  (let [token (str/trim (str "Token " (:token (session/get :user))))
         base-opts {:format          (edn-request-format)
                    :response-format (edn-response-format)
                    ;:with-credentials true
@@ -42,12 +42,12 @@
     (cljs-ajax/POST url (merge base-opts opts))))
 
 (defn get-user-info []
-  (GET "user" {:params        {:email (session/get :user)}
+  (GET "user" {:params        {:email (:email (session/get :user))}
                :handler       #(session/put! :username (:username %))
                :error-handler #(pr (str "error retrieving user information: " %))}))
 
 (defn get-templates []
-  (GET "templates" {:params        {:user (session/get :email)}
+  (GET "templates" {:params        {:user (:email (session/get :user))}
                     :handler       #(session/put! :templates %)
                     :error-handler #(pr (str "error retrieving templates: " %))}))
 

@@ -14,9 +14,8 @@
         (swap! login-state assoc :loading? true)
         (POST "login" {:params        {:email    user
                                        :password password}
-                       :handler       (fn [{:keys [token email]}]
-                                        (session/put! :token token)
-                                        (session/put! :email email)
+                       :handler       (fn [user]
+                                        (session/put! :user user)
                                         (session/put! :selected-menu-item :feed)
                                         (dispatch! "/feed"))
                        :error-handler (fn [response]
