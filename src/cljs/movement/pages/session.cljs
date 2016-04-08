@@ -41,19 +41,23 @@
 (defn replace-movement [event {:keys [kw movement part-number]}]
   (.preventDefault event)
   (cond
-    (= :swap kw) (let [category (name (first (shuffle (:category movement))))]
+    (= :swap kw) (let [slot-category (:slot-category movement)
+                       category (name (first (shuffle (:category movement))))]
                    (GET "movement-from-category" {:params        {:category category}
                                                   :handler       (fn [new-movement]
-                                                                   (let [part (session/get-in [:movement-session :parts part-number])
+                                                                   (let [new-movement (assoc (first new-movement) :slot-category slot-category)
+                                                                         part (session/get-in [:movement-session :parts part-number])
                                                                          pos (first (positions #{movement} part))
-                                                                         new-part (assoc part pos (first new-movement))]
+                                                                         new-part (assoc part pos new-movement)]
                                                                      (session/assoc-in! [:movement-session :parts part-number] new-part)))
                                                   :error-handler (fn [r] nil)}))
     (or (= :next kw)
-        (= :previous kw)) (let [new-movement (first (shuffle (kw movement)))]
+        (= :previous kw)) (let [slot-category (:slot-category movement)
+                                    new-movement (first (shuffle (kw movement)))]
                             (GET "movement" {:params        {:name new-movement}
                                              :handler       (fn [new-movement]
-                                                              (let [part (session/get-in [:movement-session :parts part-number])
+                                                              (let [new-movement (assoc new-movement :slot-category slot-category)
+                                                                    part (session/get-in [:movement-session :parts part-number])
                                                                     pos (first (positions #{movement} part))
                                                                     new-part (assoc part pos new-movement)]
                                                                 (session/assoc-in! [:movement-session :parts part-number] new-part)))
