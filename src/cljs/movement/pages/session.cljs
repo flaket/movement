@@ -1,6 +1,6 @@
 (ns movement.pages.session
   (:import [goog.events EventType]
-           [goog.date Date])
+           [goog.date Date DateTime])
   (:require-macros
     [cljs.core.async.macros :refer [go]])
   (:require
@@ -365,13 +365,24 @@
              :value     (if time-value time-value "00:00:00")}]))
 
 (defn date-string []
-  (let [goog-date (Date.)
-        year (str (.getFullYear goog-date))
+  (let [goog-date (DateTime.)
+        year (.getFullYear goog-date)
         month (inc (.getMonth goog-date))
         month (if (> 10 month) (str 0 month) (str month))
         day (.getDate goog-date)
-        day (if (> 10 day) (str 0 day) (str day))]
+        day (if (> 10 day) (str 0 day) (str day))
+        ;1996-12-19T16:39:57
+        ]
     (str year "-" month "-" day)))
+
+(defn time-string []
+  (let [goog-date (DateTime.)
+        hours (.getHours goog-date)
+        minutes (.getMinutes goog-date)
+        minutes (if (> 10 minutes) (str 0 minutes) (str minutes))
+        seconds (.getSeconds goog-date)
+        seconds (if (> 10 seconds) (str 0 seconds) (str seconds))]
+    (str hours ":" minutes ":" seconds)))
 
 (defn date-component []
   ;; Moment.js er aktuelt, spesielt for norsk støtte http://momentjs.com/
@@ -398,10 +409,11 @@
                                   (dissoc m :category :slot-category :measurement :previous :next :image)) part))
                         (:parts session))
         date (if-let [date (:date session)] date (date-string))
-        session (assoc session :parts new-parts :date date)
+        time (time-string)
+        date-time (str date "T" time)
         hash-tags (vec (re-seq #"#[\w]+" (:comment session)))
-        session (assoc session :tags hash-tags)]
-      (POST "store-session"
+        session (assoc session :parts new-parts :date-time date-time :tags hash-tags)]
+    (POST "store-session"
             {:params        {:session session
                              :user-id (:user-id (session/get :user))}
              :handler       (fn [] (reset! s true))

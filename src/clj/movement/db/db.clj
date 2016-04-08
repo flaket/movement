@@ -144,7 +144,7 @@
                  :parts       [[
                                 {:name          "Balansere"
                                  :image         "balancing-walk.png"
-                                 :category #{:balance :walk :beam :balancing-locomotion :natural}
+                                 :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
                                  :measurement   :distance
                                  :next      ["Balansere sideveis"]
                                  :distance      10
@@ -153,7 +153,7 @@
                                  :image       "toes-to-bar.png"
                                  :rep         5
                                  :set         4
-                                 :category    #{:natural :climb}
+                                 :slot-category    #{:natural :climb}
                                  :measurement :repetitions
                                  :previous    ["Hengende kneløft"] :next ["Hengende sideveis fotløft"]}
 
@@ -161,7 +161,7 @@
                                [
                                 {:name          "Balansere baklengs"
                                  :image         "balancing-backward-walk.png"
-                                 :category #{:balance :walk :beam :balancing-locomotion :natural}
+                                 :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
                                  :measurement   :distance
                                  :previous      ["Balansere sideveis"]
                                  :distance      10
@@ -170,7 +170,7 @@
                                  :image         "toes-to-bar.png"
                                  :rep         5
                                  :set         4
-                                 :category    #{:natural :climb}
+                                 :slot-category    #{:natural :climb}
                                  :measurement :repetitions
                                  :previous    ["Hengende kneløft"] :next ["Hengende sideveis fotløft"]}
 
