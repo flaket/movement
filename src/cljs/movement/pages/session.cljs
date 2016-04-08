@@ -105,14 +105,14 @@
   (.preventDefault event)
   (session/remove! :movement-session))
 
-(defn create-session-from-activity [event session-type]
+(defn create-session-from-activity [event activity]
   (.preventDefault event)
   (GET "create-session"
-       {:params        {:type  session-type
+       {:params        {:type  (:title activity)
                         :email (:email (session/get :user))}
         :handler       (fn [session]
                          (session/put! :movement-session
-                                       (assoc session :activity session-type)))
+                                       (assoc session :activity activity)))
         :error-handler (fn [r] (pr r))}))
 
 (defn preview-file []
@@ -304,19 +304,28 @@
         [add-movement-component movements]]])))
 
 (defn list-of-activities []
-  (let [activites ["Naturlig bevegelse" "Styrke" "Løping" "Crossfit"
-                   "Gym" "Yoga" "Gåtur" "Sport" "Sykling" "Ski"
-                   "Svømming" "Annen aktivitet"]]
+  (let [activites [{:title "Naturlig bevegelse" :graphic 'lightblue}
+                   {:title "Styrke" :graphic 'lightgreen}
+                   {:title "Løping" :graphic 'cyan}
+                   {:title "Crossfit" :graphic 'brown}
+                   {:title "Gym" :graphic 'red}
+                   {:title "Yoga" :graphic 'purple}
+                   {:title "Gåtur" :graphic 'gray}
+                   {:title "Sport" :graphic 'orange}
+                   {:title "Sykling" :graphic 'darkgreen}
+                   {:title "Ski" :graphic 'lime}
+                   {:title "Svømming" :graphic 'blue}
+                   {:title "Annen aktivitet" :graphic 'lightgray}]]
     (fn []
       [:div.movements
        [:div.pure-g
         [:div.pure-u-1 [:h1 "Logg en aktivitet"]]]
        (doall
-         (for [a activites]
-           ^{:key a}
+         (for [{:keys [title graphic] :as a} activites]
+           ^{:key title}
            [:div.pure-g.activity {:onClick #(create-session-from-activity % a) :onTouchEnd #(create-session-from-activity % a)}
-            [:div.pure-u [:img {:width 200 :height 'auto :src "images/movements/pull-up.png"}]]
-            [:div.pure-u [:h2 {:style {:margin-top 85}} a]]]))])))
+            [:div.pure-u {:style {:width 150 :background-color graphic}}]
+            [:div.pure-u [:h2 {:style {:padding "25px 25px 25px 25px"}} title]]]))])))
 
 (defn time-component []
   (let [time-value (session/get-in [:movement-session :time])]
@@ -398,40 +407,27 @@
       [:div
        [menu-component]
        (if-let [session (session/get :movement-session)]
-         (let [] #_[parts (mapv (fn [part] (mapv (fn [m] (swap! m-counter update inc) (assoc m :id @m-counter)) part))
-                                (:parts session))
-                    session (assoc session :parts parts)]
-           [:div {:style {:margin-top "100px"}}
+         [:div {:style {:margin-top "100px"}}
+          [:div.pure-g
+           [:a.pure-u {:style      {:margin-left 20 :margin-top 20 :color (:graphic (:activity session)) :opacity 1}
+                       :onClick    #(remove-session %)
+                       :onTouchEnd #(remove-session %)}
+            [:i.fa.fa-arrow-left.fa-4x]]]
+          [:div.content {:style {:margin-top "20px"}}
+           [:div
+            [:article.session
+             (let [parts (:parts session)]
+               (doall
+                 (for [i (range (count parts))]
+                   ^{:key i} [part-component (get parts i) i])))]
             [:div.pure-g
-             [:a.pure-u {:style      {:margin-left 60 :margin-top 20}
-                         :onClick    #(remove-session %)
-                         :onTouchEnd #(remove-session %)}
-              [:i.fa.fa-arrow-left.fa-4x]]]
-            [:div.content {:style {:margin-top "20px"}}
-             [:div
-              [:article.session
-               (let [parts (:parts session)]
-                 (doall
-                   (for [i (range (count parts))]
-                     ^{:key i} [part-component (get parts i) i])))]
-              [:div.pure-g
-               [:div.pure-u-1 (date-component)]]
-              [:h2.pure-g
-               [:div.pure-u (str (:activity session) " i ")]
-               [:div.pure-u (time-component)]]
-
-              (text-component)
-
-              [:div.pure-g {:style {:margin-top '10}}
-               #_[:a.pure-u-1-3.pure-button "Legg ved bilde"]
-
-               #_[:div.pure-u-1-3.center
-                  [:a.pure-button "Sett geoposisjon"]]
-               #_[:div.pure-u-1-3.center
-                  [:a.pure-button "Del"]]]
-              (add-photo-component)
-
-              [finish-session-component]]]])
+             [:div.pure-u-1 (date-component)]]
+            [:h2.pure-g
+             [:div.pure-u (str (:title (:activity session)) " i ")]
+             [:div.pure-u (time-component)]]
+            (text-component)
+            (add-photo-component)
+            [finish-session-component]]]]
          [:div.content
           [list-of-activities]])])))
 

@@ -147,5 +147,5 @@
            [:div.pure-u-1.center
             [:i.fa.fa-spinner.fa-pulse.fa-4x]]])
         (when @feed-data
-          [:div.pure-g [:div.pure-u-1.pure-button {:onClick    #(load-more % feed-data)
+          [:div.pure-g [:div.pure-u-1.pure-button.x-large {:onClick    #(load-more % feed-data)
                                                    :onTouchEnd #(load-more % feed-data)} "Last flere"]])]])))
