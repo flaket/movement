@@ -136,75 +136,7 @@
       [:span "Legg ved bilde"]
       [:input {:id "upload" :className "upload" :type "file" :on-change #(preview-file)}]]]))
 
-
-
 ;;;;;; Components ;;;;;;
-(defn slider-component []
-  (let [data (atom 0)]
-    (fn [position-in-parts id r min max step]
-      [:div.pure-g
-       [:div.pure-u-1-5 @data]
-       [:input.pure-u-4-5
-        {:type        "range" :value @data :min min :max max :step step
-         :style       {:width "100%"}
-         :on-mouse-up #(session/assoc-in!
-                        [:movement-session :parts position-in-parts :movements id r] (int @data))
-         :on-change   #(reset! data (-> % .-target .-value))}]])))
-
-(defn rep-component [rep id position-in-parts]
-  (let [rep-clicked? (atom false)
-        has-data? (and rep (< 0 rep))]
-    (fn []
-      [:div
-       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
-                                   :opacity (if has-data? 1 0.2)}
-                        :on-click #(handler-fn (reset! rep-clicked? (not @rep-clicked?)))} "Repetisjoner"]
-       (when @rep-clicked?
-         [slider-component position-in-parts id :rep 0 50 1])])))
-
-(defn distance-component [distance id position-in-parts]
-  (let [distance-clicked? (atom false)
-        has-data? (and distance (< 0 distance))]
-    (fn []
-      [:div
-       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
-                                   :opacity (if has-data? 1 0.2)}
-                        :on-click #(handler-fn (reset! distance-clicked? (not @distance-clicked?)))} "Avstand"]
-       (when @distance-clicked?
-         [slider-component position-in-parts id :distance 0 400 5])])))
-
-(defn duration-component [duration id position-in-parts]
-  (let [duration-clicked? (atom false)
-        has-data? (and duration (< 0 duration))]
-    (fn []
-      [:div
-       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
-                                   :opacity (if has-data? 1 0.2)}
-                        :on-click #(handler-fn (reset! duration-clicked? (not @duration-clicked?)))} "Tid"]
-       (when @duration-clicked?
-         [slider-component position-in-parts id :duration 0 1800 10])])))
-
-(defn weight-component [weight id position-in-parts]
-  (let [weight-clicked? (atom false)
-        has-data? (and weight (< 0 weight))]
-    (fn []
-      [:div
-       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
-                                   :opacity (if has-data? 1 0.2)}
-                        :on-click #(handler-fn (reset! weight-clicked? (not @weight-clicked?)))} "Vekt"]
-       (when @weight-clicked?
-         [slider-component position-in-parts id :weight 0 200 2.5])])))
-
-(defn rest-component [rest id position-in-parts]
-  (let [rest-clicked? (atom false)
-        has-data? (and rest (< 0 rest))]
-    (fn []
-      [:div
-       [:a.pure-button {:style    {:margin  "5px 5px 5px 5px"
-                                   :opacity (if has-data? 1 0.2)}
-                        :on-click #(handler-fn (reset! rest-clicked? (not @rest-clicked?)))} "Hvile"]
-       (when @rest-clicked?
-         [slider-component position-in-parts id :rest 0 240 10])])))
 
 (defn r-component [{:keys [data name]}]
   [:div.pure-g {:style {:margin 'auto}}
@@ -217,8 +149,8 @@
   [{:keys [name image slot-category measurement previous next
            rep set performed-sets distance duration weight rest] :as m}
    part-number]
-  (let [;parts (session/get-in [:movement-session :parts])
-        ;position-in-parts (first (positions #{title} (map :title parts)))
+  (let [parts  (session/get-in [:movement-session :parts])
+        pos (positions #{m} (get parts part-number))
         expand (atom false)]
     (fn []
       [:div.pure-g.movement #_{:id (str "m-" id)}
@@ -282,12 +214,36 @@
                                       :onTouchEnd #(replace-movement % {:kw :next :movement m :part-number part-number}) :title "Bytt med vanskeligere"}
                [:i.fa.fa-arrow-up {:style {:color "#99cc99" :opacity 0.8}}]
                "Bytt med vanskeligere"])]
-           #_[:div.pure-g
-              [rep-component rep id position-in-parts]
-              [distance-component distance id position-in-parts]
-              [duration-component duration id position-in-parts]
-              [weight-component weight id position-in-parts]
-              [rest-component rest id position-in-parts]]])]])))
+           [:div.pure-g
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Repetisjoner"]
+             [:input {:style {:width 75}
+                      :type  "number" :value rep :min 0 :on-change (fn [v] (let [new-movement (assoc m :rep (int (-> v .-target .-value)))
+                                                                                 new-part (assoc (get parts part-number) (int pos) new-movement)]
+                                                                             (session/assoc-in! [:movement-session :parts part-number] new-part)))}]]
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Avstand"]
+             [:input {:style {:width 75}
+                      :type "number" :value distance :min 0 :on-change #(pr "changed!")}]]
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Tid"]
+             [:input {:style {:width 75}
+                      :type "number" :value duration :min 0 :on-change #(pr "changed!")}]]
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Vekt"]
+             [:input {:style {:width 75}
+                      :type "number" :value weight :min 0 :on-change #(pr "changed!")}]]
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Hvile"]
+             [:input {:style {:width 75}
+                      :type "number" :value rest :min 0 :on-change #(pr "changed!")}]]
+
+
+            #_[rep-component rep m part-number]
+              #_[distance-component distance m part-number]
+              #_[duration-component duration m part-number]
+              #_[weight-component weight m part-number]
+              #_[rest-component rest m part-number]]])]])))
 
 (defn add-movement-component []
   (let [show-search-input? (atom false)]
@@ -370,9 +326,7 @@
         month (inc (.getMonth goog-date))
         month (if (> 10 month) (str 0 month) (str month))
         day (.getDate goog-date)
-        day (if (> 10 day) (str 0 day) (str day))
-        ;1996-12-19T16:39:57
-        ]
+        day (if (> 10 day) (str 0 day) (str day))]
     (str year "-" month "-" day)))
 
 (defn time-string []
@@ -385,7 +339,6 @@
     (str hours ":" minutes ":" seconds)))
 
 (defn date-component []
-  ;; Moment.js er aktuelt, spesielt for norsk støtte http://momentjs.com/
   (let [date-value (session/get-in [:movement-session :date])]
     (session/assoc-in! [:movement-session :date] date-value)
     [:input {:style     {:float 'right} :id "date" :name "date" :type "date"
