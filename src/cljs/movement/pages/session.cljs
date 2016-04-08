@@ -387,14 +387,16 @@
 
 (defn store-session [event s]
   (.preventDefault event)
-  (pr (session/get :movement-session))
-  #_(let [session (session/get :movement-session)
-          new-parts (mapv (fn [part]
-                            (mapv (fn [m]
-                                    (dissoc m :category :slot-category :measurement :previous :next :image)) part))
-                          (:parts session))
-          date (if-let [date (:date session)] date (date-string))
-          session (assoc session :parts new-parts :date date)]
+  (let [session (session/get :movement-session)
+        session (if-not (:comment session) (assoc session :comment "") session)
+        new-parts (mapv (fn [part]
+                          (mapv (fn [m]
+                                  (dissoc m :category :slot-category :measurement :previous :next :image)) part))
+                        (:parts session))
+        date (if-let [date (:date session)] date (date-string))
+        session (assoc session :parts new-parts :date date)
+        hash-tags (vec (re-seq #"#[\w]+" (:comment session)))
+        session (assoc session :tags hash-tags)]
       (POST "store-session"
             {:params        {:session session
                              :user-id (:user-id (session/get :user))}
