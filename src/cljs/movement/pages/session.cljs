@@ -53,7 +53,7 @@
                                                   :error-handler (fn [r] nil)}))
     (or (= :next kw)
         (= :previous kw)) (let [slot-category (:slot-category movement)
-                                    new-movement (first (shuffle (kw movement)))]
+                                new-movement (first (shuffle (kw movement)))]
                             (GET "movement" {:params        {:name new-movement}
                                              :handler       (fn [new-movement]
                                                               (let [new-movement (assoc new-movement :slot-category slot-category)
@@ -149,7 +149,7 @@
   [{:keys [name image slot-category measurement previous next
            rep set performed-sets distance duration weight rest] :as m}
    part-number]
-  (let [parts  (session/get-in [:movement-session :parts])
+  (let [parts (session/get-in [:movement-session :parts])
         pos (positions #{m} (get parts part-number))
         expand (atom false)]
     (fn []
@@ -195,6 +195,39 @@
         (when @expand
           [:div
            [:div.pure-g
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Repetisjoner"]
+             [:input {:style {:width 75}
+                      :id    "rep-input" :type "number" :defaultValue rep :min 0}]]
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Avstand"]
+             [:input {:style {:width 75}
+                      :id    "distance-input" :type "number" :defaultValue distance :min 0}]]
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Tid"]
+             [:input {:style {:width 75}
+                      :id    "duration-input" :type "number" :defaultValue duration :min 0}]]
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Vekt"]
+             [:input {:style {:width 75}
+                      :id    "weight-input" :type "number" :defaultValue weight :min 0}]]
+            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+             [:label "Hvile"]
+             [:input {:style {:width 75}
+                      :id    "rest-input" :type "number" :defaultValue rest :min 0}]]
+            [:a.pure-u-1-3.pure-button.pure-button-primary {:style    {:margin "5px 5px 5px 5px"}
+                                                            :on-click #(let [rep-input (-> (.getElementById js/document "rep-input") .-value int)
+                                                                             distance-input (-> (.getElementById js/document "distance-input") .-value int)
+                                                                             duration-input (-> (.getElementById js/document "duration-input") .-value int)
+                                                                             weight-input (-> (.getElementById js/document "weight-input") .-value int)
+                                                                             rest-input (-> (.getElementById js/document "rest-input") .-value int)
+                                                                             new-movement (assoc m :rep rep-input :distance distance-input :duration duration-input
+                                                                                                   :weight weight-input :rest rest-input)
+                                                                             new-part (assoc (get parts part-number) (int pos) new-movement)
+                                                                             ;; todo: strategi for å bestemme hvilke data som har presedens når flere verdier sammen ikke gir mening.
+                                                                             ]
+                                                                        (session/assoc-in! [:movement-session :parts part-number] new-part))} "Oppdater"]]
+           [:div.pure-g
             [:a.pure-u.pure-button {:style   {:margin "5px 5px 5px 5px"}
                                     :onClick #(remove-movement % m part-number) :onTouchEnd #(remove-movement % m part-number)
                                     :title   "Fjern øvelse"}
@@ -214,36 +247,7 @@
                                       :onTouchEnd #(replace-movement % {:kw :next :movement m :part-number part-number}) :title "Bytt med vanskeligere"}
                [:i.fa.fa-arrow-up {:style {:color "#99cc99" :opacity 0.8}}]
                "Bytt med vanskeligere"])]
-           [:div.pure-g
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Repetisjoner"]
-             [:input {:style {:width 75}
-                      :type  "number" :value rep :min 0 :on-change (fn [v] (let [new-movement (assoc m :rep (int (-> v .-target .-value)))
-                                                                                 new-part (assoc (get parts part-number) (int pos) new-movement)]
-                                                                             (session/assoc-in! [:movement-session :parts part-number] new-part)))}]]
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Avstand"]
-             [:input {:style {:width 75}
-                      :type "number" :value distance :min 0 :on-change #(pr "changed!")}]]
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Tid"]
-             [:input {:style {:width 75}
-                      :type "number" :value duration :min 0 :on-change #(pr "changed!")}]]
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Vekt"]
-             [:input {:style {:width 75}
-                      :type "number" :value weight :min 0 :on-change #(pr "changed!")}]]
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Hvile"]
-             [:input {:style {:width 75}
-                      :type "number" :value rest :min 0 :on-change #(pr "changed!")}]]
-
-
-            #_[rep-component rep m part-number]
-              #_[distance-component distance m part-number]
-              #_[duration-component duration m part-number]
-              #_[weight-component weight m part-number]
-              #_[rest-component rest m part-number]]])]])))
+           ])]])))
 
 (defn add-movement-component []
   (let [show-search-input? (atom false)]
@@ -367,10 +371,10 @@
         hash-tags (vec (re-seq #"#[\w]+" (:comment session)))
         session (assoc session :parts new-parts :date-time date-time :tags hash-tags)]
     (POST "store-session"
-            {:params        {:session session
-                             :user-id (:user-id (session/get :user))}
-             :handler       (fn [] (reset! s true))
-             :error-handler (fn [r] (pr r))})))
+          {:params        {:session session
+                           :user-id (:user-id (session/get :user))}
+           :handler       (fn [] (reset! s true))
+           :error-handler (fn [r] (pr r))})))
 
 (defn finish-session-component []
   ;; Etter trykk på avslutt&lagre bør den oppdaterte feeden vises
