@@ -9,7 +9,6 @@
     [cljs.core.async :as async :refer [timeout <!]]
     [cljs.reader :as reader]
     [clojure.string :as str]
-    [cljs-pikaday.reagent :as pikaday]
     [movement.util :refer [handler-fn positions GET POST get-stored-sessions]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]))
@@ -139,11 +138,9 @@
 ;;;;;; Components ;;;;;;
 
 (defn r-component [{:keys [data name]}]
-  [:div.pure-g {:style {:margin 'auto}}
-   [:div.pure-u
-    [:div.pure-g
-     [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} data]
-     [:div.pure-u {:style {:padding-top 10}} name]]]])
+  [:div.pure-g
+   [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'center}} data]
+   [:span.pure-u {:style {:padding-top 10}} name]])
 
 (defn movement-component
   [{:keys [name image slot-category measurement previous next
@@ -162,12 +159,19 @@
                            :style   {:display 'flex :text-align 'center}}
           [:h3.title {:style {:margin 'auto}} name]]
          [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))
-                           :style   {:display 'flex}}
-          (when (pos? rep) (r-component {:data rep :name "reps"}))
-          (when (pos? distance) (r-component {:data distance :name "m"}))
-          (when (pos? duration) (r-component {:data duration :name "s"}))
-          (when (pos? weight) (r-component {:data weight :name "kg"}))
-          (when (pos? rest) (r-component {:data rest :name "s"}))]
+                           :style   {
+                                     ;:display 'flex
+                                     }}
+
+          [:div.pure-g [:div.pure-u-1
+                        (if (pos? weight) (r-component {:data weight :name "kg"})
+                                          [:div.pure-g {:style {:opacity 0.0}} [:div.pure-u {:style {:font-size "200%"}} 0]])]]
+          [:div.pure-g [:div.pure-u-1
+                        (when (pos? rep) (r-component {:data rep :name "reps"}))
+                        (when (pos? distance) (r-component {:data distance :name "m"}))
+                        (when (pos? duration) (r-component {:data duration :name "s"}))]]
+          [:div.pure-g [:div.pure-u-1
+                        (when (pos? rest) (r-component {:data rest :name "s pause"}))]]]
 
          [:div.pure-u-1-5.set-area {:onClick    #(inc-set-completed % m part-number)
                                     :onTouchEnd #(inc-set-completed % m part-number)}
@@ -210,17 +214,17 @@
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Vekt"]
              [:input {:style {:width 75}
-                      :id    "weight-input" :type "number" :defaultValue weight :min 0}]]
+                      :id    "weight-input" :type "number" :defaultValue weight :min 0 :step 0.5}]]
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Hvile"]
              [:input {:style {:width 75}
                       :id    "rest-input" :type "number" :defaultValue rest :min 0}]]
             [:a.pure-u-1-3.pure-button.pure-button-primary {:style    {:margin "5px 5px 5px 5px"}
-                                                            :on-click #(let [rep-input (-> (.getElementById js/document "rep-input") .-value int)
-                                                                             distance-input (-> (.getElementById js/document "distance-input") .-value int)
-                                                                             duration-input (-> (.getElementById js/document "duration-input") .-value int)
-                                                                             weight-input (-> (.getElementById js/document "weight-input") .-value int)
-                                                                             rest-input (-> (.getElementById js/document "rest-input") .-value int)
+                                                            :on-click #(let [rep-input (-> (.getElementById js/document "rep-input") .-value double)
+                                                                             distance-input (-> (.getElementById js/document "distance-input") .-value double)
+                                                                             duration-input (-> (.getElementById js/document "duration-input") .-value double)
+                                                                             weight-input (-> (.getElementById js/document "weight-input") .-value double)
+                                                                             rest-input (-> (.getElementById js/document "rest-input") .-value double)
                                                                              new-movement (assoc m :rep rep-input :distance distance-input :duration duration-input
                                                                                                    :weight weight-input :rest rest-input)
                                                                              new-part (assoc (get parts part-number) (int pos) new-movement)
