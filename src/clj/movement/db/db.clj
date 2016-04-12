@@ -109,7 +109,9 @@
 
 ;;---------- get data ----------
 
-(defn movements []
+(defn movements
+  "Gives a lazy sequence over all movement names as strings in the :movements table."
+  []
   (let [c (h/scan! creds :movements {})
         x (map :name (<!! c))]
     x))
@@ -122,17 +124,22 @@
     (seq x)))
 #_(categories)
 
-(defn movement [name]
-  (let [c (h/get-item! creds :movements {:name name})]
-    (<!! c)))
+(defn movement
+  "Returns a map representing a movement with a new unique id."
+  [name]
+  (let [c (h/get-item! creds :movements {:name name})
+        id (str (UUID/randomUUID))]
+    (assoc (<!! c) :id id)))
 #_(movement "Balansegang")
 
 (defn movements-from-category [n category]
-  "todo: accept several categories"
+  "Returns a random lazy sequence over n movements that share a given category.
+  todo: accept several categories. Or should the category be picked randomly on the client side?"
   (let [c (h/scan! creds :movements {:filter [:contains [:category] category]})
-        movements (take n (shuffle (<!! c)))]
+        movements (take n (shuffle (<!! c)))
+        movements (map #(assoc % :id (str (UUID/randomUUID))) movements)]
     movements))
-#_(movements-from-category 1 :balance)
+#_(movements-from-category 3 :balance)
 
 (defn template [title]
   (<!! (h/get-item! creds :templates {:title title})))
@@ -142,14 +149,16 @@
   (let [session {:description "hellu"
                  :template    "template-title-1"
                  :parts       [[
-                                {:name          "Balansere"
+                                {:id (str (UUID/randomUUID))
+                                 :name          "Balansere"
                                  :image         "balancing-walk.png"
                                  :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
                                  :measurement   :distance
                                  :next      ["Balansere sideveis"]
                                  :distance      10
                                  :set           4}
-                                {:name        "Tærne til stanga"
+                                {:id (str (UUID/randomUUID))
+                                 :name        "Tærne til stanga"
                                  :image       "toes-to-bar.png"
                                  :rep         5
                                  :set         4
@@ -159,14 +168,16 @@
 
                                 ]
                                [
-                                {:name          "Balansere baklengs"
+                                {:id (str (UUID/randomUUID))
+                                 :name          "Balansere baklengs"
                                  :image         "balancing-backward-walk.png"
                                  :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
                                  :measurement   :distance
                                  :previous      ["Balansere sideveis"]
                                  :distance      10
                                  :set           4}
-                                {:name        "Tærne til stanga"
+                                {:id (str (UUID/randomUUID))
+                                 :name        "Tærne til stanga"
                                  :image         "toes-to-bar.png"
                                  :rep         5
                                  :set         4
@@ -177,7 +188,8 @@
                                 ]]}
         session-2 {:template "template-title-2"
                    :description "Her er hva du skal gjøre!"
-                   :parts [[{:name          "Balansere baklengs"
+                   :parts [[{:id (str (UUID/randomUUID))
+                             :name          "Balansere baklengs"
                              :image         "balancing-backward-walk.png"
                              :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
                              :measurement   :distance

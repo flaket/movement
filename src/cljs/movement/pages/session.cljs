@@ -66,7 +66,13 @@
 
 (defn add-movement [])
 
-(defn add-movement-from-search [])
+(defn add-movement-from-search [name part-number]
+  (GET "movement" {:params        {:name name}
+                   :handler       (fn [new-movement]
+                                    (let [part (session/get-in [:movement-session :parts part-number])
+                                          new-part (conj part new-movement)]
+                                      (session/assoc-in! [:movement-session :parts part-number] new-part)))
+                   :error-handler (fn [r] nil)}))
 
 (defn inc-set-completed [event m part-number]
   (.preventDefault event)
@@ -135,6 +141,19 @@
       [:span "Legg ved bilde"]
       [:input {:id "upload" :className "upload" :type "file" :on-change #(preview-file)}]]]))
 
+(defn update-movement [{:keys [id m parts part-number pos]}]
+  (let [rep-input (-> (.getElementById js/document (str "rep-input" id)) .-value double)
+        distance-input (-> (.getElementById js/document (str "distance-input" id)) .-value double)
+        duration-input (-> (.getElementById js/document (str "duration-input" id)) .-value double)
+        weight-input (-> (.getElementById js/document (str "weight-input" id)) .-value double)
+        rest-input (-> (.getElementById js/document (str "rest-input" id)) .-value double)
+        new-movement (assoc m :rep rep-input :distance distance-input :duration duration-input
+                               :weight weight-input :rest rest-input)
+        new-part (assoc (get parts part-number) (int (first pos)) new-movement)
+        ;; todo: strategi for å bestemme hvilke data som har presedens når flere verdier sammen ikke gir mening.
+        ]
+    (session/assoc-in! [:movement-session :parts part-number] new-part)))
+
 ;;;;;; Components ;;;;;;
 
 (defn r-component [{:keys [data name]}]
@@ -143,14 +162,14 @@
    [:span.pure-u {:style {:padding-top 10}} name]])
 
 (defn movement-component
-  [{:keys [name image slot-category measurement previous next
+  [{:keys [id name image slot-category measurement previous next
            rep set performed-sets distance duration weight rest] :as m}
    part-number]
   (let [parts (session/get-in [:movement-session :parts])
         pos (positions #{m} (get parts part-number))
         expand (atom false)]
     (fn []
-      [:div.pure-g.movement #_{:id (str "m-" id)}
+      [:div.pure-g.movement {:id id}
        [:div.pure-u-1
         [:div.pure-g {:style {:cursor 'pointer}}
          [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))}
@@ -158,10 +177,7 @@
          [:div.pure-u-2-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))
                            :style   {:display 'flex :text-align 'center}}
           [:h3.title {:style {:margin 'auto}} name]]
-         [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))
-                           :style   {
-                                     ;:display 'flex
-                                     }}
+         [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))}
 
           [:div.pure-g [:div.pure-u-1
                         (if (pos? weight) (r-component {:data weight :name "kg"})
@@ -202,35 +218,27 @@
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Repetisjoner"]
              [:input {:style {:width 75}
-                      :id    "rep-input" :type "number" :defaultValue rep :min 0}]]
+                      :id    (str "rep-input" id) :type "number" :defaultValue rep :min 0}]]
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Avstand"]
              [:input {:style {:width 75}
-                      :id    "distance-input" :type "number" :defaultValue distance :min 0}]]
+                      :id    (str "distance-input" id) :type "number" :defaultValue distance :min 0}]
+             [:span {:style {:margin-left 3}} "m"]]
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Tid"]
              [:input {:style {:width 75}
-                      :id    "duration-input" :type "number" :defaultValue duration :min 0}]]
+                      :id    (str "duration-input" id) :type "number" :defaultValue duration :min 0}]
+             [:span {:style {:margin-left 3}} "sek"]]
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Vekt"]
              [:input {:style {:width 75}
-                      :id    "weight-input" :type "number" :defaultValue weight :min 0 :step 0.5}]]
+                      :id    (str "weight-input" id) :type "number" :defaultValue weight :min 0 :step 0.5}]]
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Hvile"]
              [:input {:style {:width 75}
-                      :id    "rest-input" :type "number" :defaultValue rest :min 0}]]
+                      :id    (str "rest-input" id) :type "number" :defaultValue rest :min 0}]]
             [:a.pure-u-1-3.pure-button.pure-button-primary {:style    {:margin "5px 5px 5px 5px"}
-                                                            :on-click #(let [rep-input (-> (.getElementById js/document "rep-input") .-value double)
-                                                                             distance-input (-> (.getElementById js/document "distance-input") .-value double)
-                                                                             duration-input (-> (.getElementById js/document "duration-input") .-value double)
-                                                                             weight-input (-> (.getElementById js/document "weight-input") .-value double)
-                                                                             rest-input (-> (.getElementById js/document "rest-input") .-value double)
-                                                                             new-movement (assoc m :rep rep-input :distance distance-input :duration duration-input
-                                                                                                   :weight weight-input :rest rest-input)
-                                                                             new-part (assoc (get parts part-number) (int pos) new-movement)
-                                                                             ;; todo: strategi for å bestemme hvilke data som har presedens når flere verdier sammen ikke gir mening.
-                                                                             ]
-                                                                        (session/assoc-in! [:movement-session :parts part-number] new-part))} "Oppdater"]]
+                                                            :on-click #(update-movement {:id id :m m :parts parts :part-number part-number :pos pos})} "Oppdater"]]
            [:div.pure-g
             [:a.pure-u.pure-button {:style   {:margin "5px 5px 5px 5px"}
                                     :onClick #(remove-movement % m part-number) :onTouchEnd #(remove-movement % m part-number)
@@ -255,36 +263,41 @@
 
 (defn add-movement-component []
   (let [show-search-input? (atom false)]
-    (fn [movements]
+    (fn [movements part-number]
       [:div.pure-g.movement.search
        [:div.pure-u-1
         [:div.pure-g.add-movement
-         [:div.pure-u-2-5]
+         [:div.pure-u-2-5 {:on-click #(session/remove! :all-movements)}]
          [:div.pure-u
           [:i.fa.fa-plus.fa-3x
            {:on-click #(add-movement)
-            :style    {:margin-right '50 :cursor 'pointer}}]]
-         [:i.fa.fa-search-plus.fa-3x
-          {:on-click #(handler-fn (reset! show-search-input? true))
-           :style    {:cursor 'pointer}}]
-         #_(if @show-search-input?
-             (let [id (str "mtags" i)
-                   movements-ac-comp (with-meta text-input-component
-                                                {:component-did-mount #(auto-complete-did-mount
-                                                                        (str "#" id)
-                                                                        (vec (session/get :all-movements)))})]
-               [movements-ac-comp {:id          id
-                                   :class       "edit"
-                                   :placeholder "type to find and add movement.."
-                                   :size        32
-                                   :auto-focus  true
-                                   :on-save     #(when (some #{%} (session/get :all-movements))
-                                                  (do
-                                                    (reset! show-search-input? false)
-                                                    (add-movement-from-search movements %)))}])
-             [:i.fa.fa-search-plus.fa-3x
-              {:on-click #(handler-fn (reset! show-search-input? true))
-               :style    {:cursor 'pointer}}])]]])))
+            :style    {:margin-right '50 :cursor 'pointer}}]
+          [:i.fa.fa-search-plus.fa-3x
+           {:onClick    (fn [] (if (session/get :all-movements)
+                                 (reset! show-search-input? true)
+                                 (GET "movements" {:handler (fn [movements] (session/put! :all-movements movements)
+                                                              (reset! show-search-input? true))
+                                                   :error-handler (fn [] nil)})))
+            :onTouchEnd (fn [] (if (session/get :all-movements)
+                                 (reset! show-search-input? true)
+                                 (GET "movements" {:handler (fn [movements] (session/put! :all-movements movements)
+                                                              (reset! show-search-input? true))
+                                                   :error-handler (fn [] nil)})))
+            :style      {:cursor 'pointer}}]]
+         (when @show-search-input?
+           (let [id (str "mtags" part-number)
+                 movements-ac-comp (with-meta text-input-component
+                                              {:component-did-mount #(auto-complete-did-mount
+                                                                      (str "#" id)
+                                                                      (vec (session/get :all-movements)))})]
+             [movements-ac-comp {:id          id
+                                 :class       "edit"
+                                 :placeholder "type to find and add movement.."
+                                 :size        32
+                                 :auto-focus  true
+                                 :on-save     #(when (some #{%} (session/get :all-movements))
+                                                (reset! show-search-input? false)
+                                                (add-movement-from-search % part-number))}]))]]])))
 
 #_[
    [
@@ -305,7 +318,7 @@
        [:div.pure-u-1
         (for [m movements]
           ^{:key (str m (rand-int 100000))} [movement-component m i])
-        [add-movement-component movements]]])))
+        [add-movement-component movements i]]])))
 
 (defn list-of-activities []
   (let [activites [{:title "Naturlig bevegelse" :graphic 'lightblue}
