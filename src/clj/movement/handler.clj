@@ -200,8 +200,7 @@
                                  (response (vec (db/sessions-by-user-id "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")))) (throw-unauthorized)))
 
            (GET "/movement-from-category" req (if (authenticated? req)
-                                                (let [category (keyword (:category (:params req)))]
-                                                  (response (db/movements-from-category 1 category))) (throw-unauthorized)))
+                                                (response (db/movements-from-category 1 (:category (:params req)))) (throw-unauthorized)))
            (GET "/movement" req (if (authenticated? req)
                                   (let [name (:name (:params req))]
                                     (response (db/movement name))) (throw-unauthorized)))

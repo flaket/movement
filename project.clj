@@ -10,6 +10,8 @@
                  [org.clojure/clojurescript "1.7.228"]
 
                  [org.clojure/core.async "0.2.374"]
+                 [com.datomic/datomic-pro "0.9.5201" :exclusions [joda-time]]
+                 [org.clojure/core.match "0.3.0-alpha4"]
                  [clj-time "0.11.0"]
 
                  [ring "1.4.0" :exclusions [org.clojure/java.classpath]]
@@ -25,9 +27,11 @@
 
                  [io.nervous/hildebrand "0.4.3"]
 
+
                  [hiccup "1.0.5"]
                  [reagent "0.6.0-alpha"]
                  [reagent-forms "0.5.21"]
+
                  [reagent-utils "0.1.7"]
                  [secretary "1.2.3"]
                  [cljs-ajax "0.5.4"]
@@ -88,6 +92,8 @@
 
                    :source-paths ["env/dev/clj"]
                    :plugins [[lein-figwheel "0.5.0-6"]]
+
+                   ;:injections [(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)]
 
                    :figwheel {:http-server-root "public"
                               :server-port 3449

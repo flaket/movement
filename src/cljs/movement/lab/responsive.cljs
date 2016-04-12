@@ -1,8 +1,8 @@
 (ns movement.lab.responsive
-  (:require-macros
+  #_(:require-macros
     [cljs.core.async.macros :refer [go]]
     [cljs.core.match.macros :refer [match]])
-  (:require
+  #_(:require
     [cljs.core.match]
     [cljs.core.async :refer [>! <! alts! chan]]
     [movement.utils.dom :as dom]
@@ -12,6 +12,7 @@
 
 ;; -----------------------------------------------------------------------------
 ;; Declarations
+#_(
 
 (def ENTER 13)
 (def UP_ARROW 38)
@@ -214,3 +215,5 @@
                     (fn [events]
                       (selector (highlighter events ui) ui
                                 ["pynchon" "proust" "faulkner" "melville"])))))
+
+  )

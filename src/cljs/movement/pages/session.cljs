@@ -64,13 +64,19 @@
     :else nil)
   )
 
-(defn add-movement [])
+(defn add-movement [category part-number]
+  (GET "movement-from-category" {:params        {:category (name category)}
+                                 :handler       (fn [[new-movement]]
+                                                  (let [part (session/get-in [:movement-session :parts part-number])
+                                                        new-part (conj part new-movement)]
+                                                    (session/assoc-in! [:movement-session :parts part-number] new-part)))
+                                 :error-handler (fn [r] nil)}))
 
 (defn add-movement-from-search [name part-number]
   (GET "movement" {:params        {:name name}
                    :handler       (fn [new-movement]
                                     (let [part (session/get-in [:movement-session :parts part-number])
-                                          new-part (conj part new-movement)]
+                                          new-part (conj part  new-movement)]
                                       (session/assoc-in! [:movement-session :parts part-number] new-part)))
                    :error-handler (fn [r] nil)}))
 
@@ -270,16 +276,21 @@
          [:div.pure-u-2-5 {:on-click #(session/remove! :all-movements)}]
          [:div.pure-u
           [:i.fa.fa-plus.fa-3x
-           {:on-click #(add-movement)
-            :style    {:margin-right '50 :cursor 'pointer}}]
+           {:onClick #(let [part (session/get-in [:movement-session :parts part-number])
+                            categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
+                       (add-movement (first categories) part-number))
+            :onTouchEnd #(let [part (session/get-in [:movement-session :parts part-number])
+                               categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
+                          (add-movement (first categories) part-number))
+            :style   {:margin-right '50 :cursor 'pointer}}]
           [:i.fa.fa-search-plus.fa-3x
            {:onClick    (fn [] (if (session/get :all-movements)
-                                 (reset! show-search-input? true)
+                                 (reset! show-search-input? (not @show-search-input?))
                                  (GET "movements" {:handler (fn [movements] (session/put! :all-movements movements)
                                                               (reset! show-search-input? true))
                                                    :error-handler (fn [] nil)})))
             :onTouchEnd (fn [] (if (session/get :all-movements)
-                                 (reset! show-search-input? true)
+                                 (reset! show-search-input? (not @show-search-input?))
                                  (GET "movements" {:handler (fn [movements] (session/put! :all-movements movements)
                                                               (reset! show-search-input? true))
                                                    :error-handler (fn [] nil)})))

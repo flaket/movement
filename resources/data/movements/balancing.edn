@@ -1,6 +1,7 @@
 [
 
  {:name     "Balansegang"
+  :image    "balancing.png"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
   :next     ["Balansere sideveis" "Balansere baklengs" "Lav balansegang"
              "Balanserende bjørnekravle" "Balanserende krabbekravle"]}
