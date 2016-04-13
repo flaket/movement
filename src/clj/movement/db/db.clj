@@ -46,7 +46,7 @@
                                          :throughput {:read 1 :write 1}}]}})
 
 #_(let [c (h/list-tables! creds {})] (<!! c))
-#_(let [c (h/describe-table! creds :movements)] (<!! c))
+#_(let [c (h/describe-table! creds :sessions)] (<!! c))
 #_(h/create-table! creds sessions-table)
 #_(h/delete-table! creds :sessions)
 #_(let [tables (<!! (h/list-tables! creds {}))]
@@ -240,16 +240,17 @@
 
 (defn add-session! [params]
   (let [{:keys [user-id session]} params
-        url (str (UUID/randomUUID))
-        session (assoc session :url url :user-id user-id)
         file (:photo session)
-        [_ file-type _ photo] (str/split file #"[:;,]")
-        session (dissoc session :photo)]
+        [_ file-type _ photo] (if file (str/split file #"[:;,]") [])
+        session (dissoc session :photo)
+        url (str (UUID/randomUUID))
+        session (assoc session :url url :user-id user-id :comments [] :likes [])]
+    (.println System/out session)
     ; Store image to disk if png or jpeg.
-    (when (or (= file-type "image/png")
+    #_(when (or (= file-type "image/png")
             (= file-type "image/jpeg"))
       (let [decoded-photo (b64/decode (.getBytes photo))]
-        (with-open [w (io/output-stream (str url ".jpg"))]
+        (with-open [w (io/output-stream (str "/uploads/" url ".jpg"))]
           (.write w decoded-photo))))
     (h/put-item! creds :sessions session)
     :ok))

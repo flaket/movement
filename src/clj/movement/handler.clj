@@ -196,7 +196,7 @@
                                           (response (db/create-session email type))) (throw-unauthorized)))
 
            (POST "/feed" req (if (authenticated? req)
-                               (let [email (:email (:params req))]
+                               (let [user-id (:user-id (:params req))]
                                  (response (vec (db/sessions-by-user-id "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")))) (throw-unauthorized)))
 
            (GET "/movement-from-category" req (if (authenticated? req)

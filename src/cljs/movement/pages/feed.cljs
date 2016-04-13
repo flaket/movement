@@ -71,64 +71,111 @@
             [movement-component m]))]])))
 
 (defn session-view []
-  (let [show-session-data? (atom false)]
-    (fn [{:keys [url activity user-image user-name date time comment comments image parts likes]
+  (let [show-session-data? (atom false)
+        adding-comment? (atom false)]
+    (fn [{:keys [url activity user-image user-id user-name date time comment comments image parts likes]
           :or   {user-image "images/movements/static-air-baby.png"}}]
       [:div {:style {:border-bottom "1px solid lightgray"}}
+
+       ; user image, name and timestamp
        [:div.pure-g
         [:div.pure-u-1-6.center [:img {:src   user-image :width "100px"
                                        :style {:cursor 'pointer}
                                        ; onClick/onTouchEnd -> show profile
                                        }]]
         [:div.pure-u-5-6
-         [:div.pure-g [:h2 [:span.pure-u {:style {:cursor 'pointer
+         [:div.pure-g [:h2 [:span.pure-u {:style {:cursor     'pointer
                                                   :margin-top 0}
-                                       ; onClick/onTouchEnd -> show profile
-                                       } user-name]]]
+                                          ; onClick/onTouchEnd -> show profile
+                                          } user-id]]]
          [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} date]]]]
-       [:div.center [:img {:src image :width "100%"}]]
-
 
        [:div {:style {:margin "0 40px 0 40px"}}
+
+        ; photo
+        [:div.center [:img {:src image :width "100%"}]]
+
         [:div.pure-g
+
+         ; Activity and time
          [:h2.pure-u-5-6 (str activity (when time (str " i " time)))]
+
          (when-not (empty? (flatten parts))
            (if @show-session-data?
              [:div.pure-u-1-6 [:i.fa.fa-minus-square.fa-4x {:onClick    #(reset! show-session-data? false)
-                :onTouchEnd #(reset! show-session-data? false)
-                :style      {:cursor       'pointer
-                             :float        'right
-                             :margin-right 15
-                             :color        'lightgray}}]]
+                                                            :onTouchEnd #(reset! show-session-data? false)
+                                                            :style      {:cursor       'pointer
+                                                                         :float        'right
+                                                                         :margin-right 15
+                                                                         :color        'lightgray}}]]
              [:div.pure-u-1-6 [:i.fa.fa-plus-square.fa-4x {:onClick    #(reset! show-session-data? true)
                                                            :onTouchEnd #(reset! show-session-data? true)
-                                                           :style      {:cursor 'pointer
+                                                           :style      {:cursor       'pointer
                                                                         :float        'right
                                                                         :margin-right 15
-                                                                        :color  'lightgray}}]]))]
+                                                                        :color        'lightgray}}]]))]
         (when @show-session-data?
           [:article.session
            (doall
              (for [part parts]
                ^{:key (rand-int 1000)}
                [part-component part]))])
+
+        ; Username and session comment text if user typed a comment.
         [:div.pure-g
-         [:p.pure-u-1 {:style {:padding-bottom 40 :border-bottom 'dotted}} [:a user-name] (str " " comment)]]
-        (when likes
+         [:p.pure-u-1 {:style {:padding-bottom 20 :border-bottom 'dotted}}
+          (when comment
+            [:a user-name] (str " " comment))]]
+
+        ; If session has any likes -> show
+        (when-not (empty? likes)
           [:div.pure-g
-           [:p.pure-u-1 (str likes " tomler opp")]])
+           [:p.pure-u-1 (str (count likes) " tomler opp")]])
+
+        ; Possible additional comments from user or other users
         (doall
           (for [{:keys [comment user]} comments]
             ^{:key (str user comment)}
             [:div.pure-g {:style {:margin-bottom 10}}
              [:div.pure-u-1 [:a user] (str " " comment)]]))
+
+        ; Buttons for "liking" or "commenting"
         [:div.pure-g {:style {:margin-bottom 20}}
          [:div.pure-u-1
-          [:i.fa.fa-heart.fa-2x {:style {:cursor 'pointer
-                                         :color 'lightgray}}]
-          [:i.fa.fa-comment.fa-2x {:style {:margin-left 40
-                                           :cursor 'pointer
-                                           :color 'lightgray}}]]]]])))
+          [:i.fa.fa-heart.fa-2x {:onClick    (fn []
+                                               (if ((set likes) user-id)
+                                                 (pr "liked!") ; post to server adding user to list of likers. Server should return updated session that will replace the old one.
+                                                 (pr "unliked!") ; post to server removeing user from list of likers. Server should return updated session that will replace the old one.
+                                                 ))
+                                 :onTouchEnd #()
+                                 :style      {:cursor 'pointer
+                                              :color  (if ((set likes) user-id) 'red 'lightgray)}}]
+
+          [:i.fa.fa-comment.fa-2x {:onClick #(
+                                              reset! adding-comment? true
+                                                     ; update local state
+                                                     ; post to endpoint
+                                                     )
+                                   :style   {:margin-left 40
+                                             :cursor      'pointer
+                                             :color       'lightgray}}]]]
+        (when @adding-comment?
+          (let [text (atom "")]
+            [:div
+             [:div.pure-g {:style {:margin-bottom 20}}
+              [:div.pure-u-1
+               [:textarea {:rows      5 :cols 120
+                           :style     {:resize 'vertical} :placeholder ""
+                           :on-change #(reset! text (-> % .-target .-value))
+                           :value     @text}]]]
+             [:div.pure-g {:style {:margin-bottom 20}}
+              [:a.pure-u-1.pure-button.pure-button-primary.button-xlarge
+               {:onClick (fn []
+                           (reset! adding-comment? false)
+                           ; post kommentar til server. Server returnerer oppdatert session som erstatter nåværende.
+                           )
+                :onTouchEnd #()} "Kommenter"]]]))]
+       ])))
 
 (defn feed-page []
   (let [
@@ -148,4 +195,4 @@
             [:i.fa.fa-spinner.fa-pulse.fa-4x]]])
         (when @feed-data
           [:div.pure-g [:div.pure-u-1.pure-button.x-large {:onClick    #(load-more % feed-data)
-                                                   :onTouchEnd #(load-more % feed-data)} "Last flere"]])]])))
+                                                           :onTouchEnd #(load-more % feed-data)} "Last flere"]])]])))
