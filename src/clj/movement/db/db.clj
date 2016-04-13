@@ -4,9 +4,11 @@
                 [clojure.set :as set]
                 [buddy.hashers :as hashers]
                 [clojure.string :as str]
-                [clojure.java.io :as io])
-      (:import (java.util UUID Date)
-               datomic.Util))
+                [clojure.java.io :as io]
+                [clojure.data.codec.base64 :as b64])
+  (:import (java.util UUID Date)
+           datomic.Util
+           (java.io File)))
 
 (def creds {:access-key "..."
             :secret-key "..."
@@ -238,11 +240,17 @@
 
 (defn add-session! [params]
   (let [{:keys [user-id session]} params
-        tags []                                             ;scan comment-felt etter hashtagger -> lag liste ["løpetur" "sol" "vårstemning"]
-        session (assoc session :url (str (UUID/randomUUID))
-                               :user-id user-id
-                               :tags tags)]
-    (.println System/out (str session))
+        url (str (UUID/randomUUID))
+        session (assoc session :url url :user-id user-id)
+        file (:photo session)
+        [_ file-type _ photo] (str/split file #"[:;,]")
+        session (dissoc session :photo)]
+    ; Store image to disk if png or jpeg.
+    (when (or (= file-type "image/png")
+            (= file-type "image/jpeg"))
+      (let [decoded-photo (b64/decode (.getBytes photo))]
+        (with-open [w (io/output-stream (str url ".jpg"))]
+          (.write w decoded-photo))))
     (h/put-item! creds :sessions session)
     :ok))
 

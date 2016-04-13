@@ -130,7 +130,7 @@
   (let [file (.getElementById js/document "upload")
         reader (js/FileReader.)]
     (when-let [file (aget (.-files file) 0)]
-      (set! (.-onloadend reader) #(session/update-in! [:movement-session] assoc :photo (-> % .-target .-result str)))
+      (set! (.-onloadend reader) #(session/update-in! [:movement-session] assoc :photo (-> % .-target .-result)))
       (.readAsDataURL reader file))))
 
 (defn add-photo-component []
@@ -406,7 +406,8 @@
         time (time-string)
         date-time (str date "T" time)
         hash-tags (vec (re-seq #"#[\w]+" (:comment session)))
-        session (assoc session :parts new-parts :date-time date-time :tags hash-tags)]
+        session (assoc session :activity (:title (:activity session)) :parts new-parts :date-time date-time :tags hash-tags)
+        session (dissoc session :date)]
     (POST "store-session"
           {:params        {:session session
                            :user-id (:user-id (session/get :user))}
