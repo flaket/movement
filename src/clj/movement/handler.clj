@@ -180,12 +180,13 @@
            (POST "/login" [email password] (jws-login email password))
 
            (GET "/user" req (if (authenticated? req)
-                              (let [email (:email (:params req))]
-                                (response (dissoc (db/user-by-email email)
-                                                  :password
-                                                  :activation-id
-                                                  :activated?
-                                                  :valid-subscription?))) (throw-unauthorized)))
+                              (let [{:keys [email user-id user-name]} (:params req)]
+                                (cond
+                                  email (response (dissoc (db/user-by-email email) :password :activation-id :activated? :valid-subscription?))
+                                  user-id (response (dissoc (db/user user-id) :password :activation-id :activated? :valid-subscription?))
+                                  user-name (response (dissoc (db/user-by-name user-name) :password :activation-id :activated? :valid-subscription?))
+                                  :else "missing email, user-id or user-name"))
+                              (throw-unauthorized)))
            (POST "/change-password" req (if (authenticated? req) (change-password! (:params req)) (throw-unauthorized)))
            (POST "/change-username" req (if (authenticated? req) (change-username! (:params req)) (throw-unauthorized)))
            (POST "/store-session" req (if (authenticated? req) (store-session! (:params req)) (throw-unauthorized)))
@@ -203,7 +204,7 @@
 
            (POST "/feed" req (if (authenticated? req)
                                (let [user-id (:user-id (:params req))]
-                                 (response (vec (db/sessions-by-user-id user-id)))) (throw-unauthorized)))
+                                 (response (vec (db/create-feed user-id)))) (throw-unauthorized)))
 
            (GET "/movement-from-category" req (if (authenticated? req)
                                                 (response (db/movements-from-category 1 (:category (:params req)))) (throw-unauthorized)))

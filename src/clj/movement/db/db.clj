@@ -46,7 +46,7 @@
                                          :throughput {:read 1 :write 1}}]}})
 
 #_(let [c (h/list-tables! creds {})] (<!! c))
-#_(let [c (h/describe-table! creds :sessions)] (<!! c))
+#_(let [c (h/describe-table! creds :users)] (<!! c))
 #_(h/create-table! creds sessions-table)
 #_(h/delete-table! creds :sessions)
 #_(let [tables (<!! (h/list-tables! creds {}))]
@@ -82,7 +82,7 @@
 
 (defn user [user-id]
   (<!! (h/get-item! creds :users {:user-id user-id})))
-#_(user "b3b4196b-a131-463f-8ddf-bd174ae44d19")
+#_(user "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")
 
 (defn user-by-email [email]
   (->>
@@ -90,6 +90,7 @@
     <!!
     first))
 #_(user-by-email "andflak@gmail.com")
+#_(user-by-email "andreas.flakstad@gmail.com")
 
 (defn user-by-activation-id [id]
   (->>
@@ -101,18 +102,21 @@
   (->>
     (h/query! creds :users {:name [:= name]} {:index :user-by-name})
     <!!))
+#_(user-by-name "andreas")
 
 (defn sessions-by-user-id [user-id]
-  (let [
-        sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
-        sessions (map #(assoc % :user-name (:name (user (:user-id %)))) sessions)
-        ;sessions (->> (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}) <!!)
-        ;sessions (map #(dissoc % :likes) sessions)
-        ]
+  (let [sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
+        sessions (map #(assoc % :user-name (:name (user (:user-id %)))) sessions)]
     sessions))
 #_(sessions-by-user-id "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")
 
 ;;---------- get data ----------
+
+(defn create-feed [user-id]
+  (let [users (conj (:follows (user user-id)) user-id)
+        sessions (flatten (for [u users] (sessions-by-user-id u)))
+        sessions (reverse (sort-by :date-time sessions))]
+    sessions))
 
 (defn movements
   "Gives a lazy sequence over all movement names as strings in the :movements table."
@@ -229,12 +233,15 @@
               :priorities                  []}]
     (h/put-item! creds :users user)))
 #_(add-user! "andflak@gmail.com" "andreas" "pw" (str (UUID/randomUUID)))
+#_(add-user! "andreas.flakstad@gmail.com" "bob" "pw" (str (UUID/randomUUID)))
 
 (defn follow-user! [user-id follow-id]
   (h/update-item! creds :users {:user-id user-id}
                   {:follows [:concat [follow-id]]}))
-#_(follow-user! "andreas@roebuck.com" (str (UUID/randomUUID)))
-#_(user-by-email "andreas@roebuck.com")
+#_(follow-user! "4fbc0650-a82c-4385-8c41-7e179d5e3f24" "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")
+
+#_(user-by-email "andflak@gmail.com")
+#_(user-by-email "andreas.flakstad@gmail.com")
 
 (defn add-badge! [user-id badge]
   (h/update-item! creds :users {:user-id user-id}
@@ -263,7 +270,7 @@
     (h/update-item! creds :users {:user-id user}
                     {:activated?    [:set true]
                      :activation-id [:remove]})))
-#_(activate-user! "b794271f-cbca-4118-bf92-66cc15db477e")
+#_(activate-user! "bbb538d1-8d6b-4890-9e76-651384f64d2c")
 
 (defn add-movement! [user-id movement]
   ; todo: filter; don't add if exists

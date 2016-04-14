@@ -69,7 +69,7 @@
        [:div.pure-u-1
         (doall
           (for [m movements]
-            ^{:key (str (:movement-name m) (rand-int 100000))}
+            ^{:key (rand-int 10000000)}
             [movement-component m]))]])))
 
 (defn add-comment [{:keys [adding-comment? comments session-url]}]
@@ -142,7 +142,7 @@
           [:article.session
            (doall
              (for [part parts]
-               ^{:key (rand-int 1000)}
+               ^{:key (rand-int 1000000)}
                [part-component part]))])
 
         ; Username and session comment text if user typed a comment.
@@ -151,7 +151,13 @@
            [:p.pure-u-1
             [:a.user {:onClick (fn [e]
                                  (.preventDefault e)
-                                 (dispatch! "/user")) :onTouchEnd #()}
+                                 (GET "user" {:params        {:user-id user-id}
+                                              :handler       (fn [r]
+                                                               (session/put! :viewing-user r)
+                                                               (session/remove! :selected-menu-item)
+                                                               (dispatch! "/user"))
+                                              :error-handler (fn [r] nil)}))
+                      :onTouchEnd #()}
              user-name]
             (str " " comment)]])
 
@@ -165,7 +171,17 @@
           (for [{:keys [comment user]} comments]
             ^{:key (str user comment)}
             [:div.pure-g {:style {:margin-bottom 10}}
-             [:div.pure-u-1 [:a.user user] (str " " comment)]]))
+             [:div.pure-u-1
+              [:a.user {:onClick (fn [e]
+                                   (.preventDefault e)
+                                   (GET "user" {:params        {:user-id user-id}
+                                                :handler       (fn [r]
+                                                                 (session/put! :viewing-user r)
+                                                                 (session/remove! :selected-menu-item)
+                                                                 (dispatch! "/user"))
+                                                :error-handler (fn [r] nil)}))
+                        :onTouchEnd #()} user]
+              (str " " comment)]]))
 
         ; Buttons for "liking" or "commenting"
         [:div.pure-g {:style {:margin-top 30 :margin-bottom 30}}

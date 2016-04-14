@@ -60,7 +60,7 @@
       ;; Resultat fra søk på brukere sorteres etter en treffscore
       [:div
        [menu-component]
-       [:div.content
+       #_[:div.content
         [:h1.pure-g
          [:a {:className (str "pure-u-1-2 pure-button" (when (= @selection :user) " pure-button-primary"))
                                        :onClick #(reset! selection :user)
