@@ -3,7 +3,8 @@
             [reagent.core :refer [atom]]
             [clojure.string :as str]
             [movement.util :refer [GET POST]]
-            [reagent.session :as session]))
+            [reagent.session :as session]
+            [secretary.core :include-macros true :refer [dispatch!]]))
 
 (defonce feed-data (atom nil))
 
@@ -36,12 +37,12 @@
   [:div.pure-g {:style {:margin 'auto}}
    [:div.pure-u
     [:div.pure-g
-     [:div.pure-u {:style {:color "#9999cc" :font-size "200%" :text-align 'right :padding-right 10}} data]
+     [:div.pure-u {:style {:font-size "200%" :text-align 'right :padding-right 10}} data]
      [:div.pure-u {:style {:padding-top 10}} name]]]])
 
 (defn movement-component []
   (let []
-    (fn [{:keys [name image rep set distance duration weight rest]}]
+    (fn [{:keys [name image rep performed-sets set distance duration weight rest]}]
       [:div.pure-g.movement
        [:div.pure-u-1
         [:div.pure-g
@@ -57,9 +58,9 @@
           (when (pos? rest) (r-component {:data rest :name "s"}))]
          [:div.pure-u-1-5
           [:div.pure-g {:style {:display 'flex}}
-           [:div.pure-u {:style {:margin 'auto :margin-top 30 :opacity 0.05 :font-size "300%"}} set]]
+           [:div.pure-u {:style {:margin 'auto :margin-top 30 :opacity 0.85 :font-size "300%"}} performed-sets]]
           [:div.pure-g
-           [:div.pure-u-1 [:div.center {:style {:margin-top 0 :opacity 0.25}} "set"]]]]]]])))
+           [:div.pure-u-1 [:div.center {:style {:margin-top 0 :opacity 0.85}} "set"]]]]]]])))
 
 (defn part-component []
   (let []
@@ -70,6 +71,29 @@
           (for [m movements]
             ^{:key (str (:movement-name m) (rand-int 100000))}
             [movement-component m]))]])))
+
+(defn add-comment [{:keys [adding-comment? comments session-url]}]
+  (let [text (atom "")]
+    (fn []
+      [:div
+       [:div.pure-g {:style {:margin-bottom 20}}
+        [:div.pure-u-1
+         [:textarea {:rows      5 :cols 120
+                     :style     {:resize 'vertical}
+                     :on-change #(reset! text (-> % .-target .-value))
+                     :value     @text}]]]
+       [:div.pure-g {:style {:margin-bottom 20}}
+        [:a.pure-u-1.pure-button.pure-button-primary.button-xlarge
+         {:onClick    (fn []
+                        (reset! adding-comment? false)
+                        (POST "comment" {:params        {:session-url session-url
+                                                         :comments    (conj comments {:user (:name (session/get :user)) :comment @text})}
+                                         :handler       (fn [r]
+                                                          ; wait for a few ticks and dispatch to /feed to refresh
+                                                          )
+                                         :error-handler (fn [r] nil)}))
+          :onTouchEnd (fn [] (reset! adding-comment? false) (POST "comment" {:params {:session-url session-url :comments (conj comments @text)} :handler (fn [r] (load-feed feed-data)) :error-handler (fn [r] nil)}))}
+         "Kommenter"]]])))
 
 (defn session-view []
   (let [show-session-data? (atom false)
@@ -86,8 +110,8 @@
                                        }]]
         [:div.pure-u-5-6
          [:div.pure-g [:h2 [:a.pure-u {
-                                          ; onClick/onTouchEnd -> show profile
-                                          } user-name]]]
+                                       ; onClick/onTouchEnd -> show profile
+                                       } user-name]]]
          [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} date-time]]]]
 
        [:div {:style {:margin "0 40px 0 40px"}}
@@ -123,9 +147,13 @@
 
         ; Username and session comment text if user typed a comment.
         (when comment
-          [:div.pure-g
-           [:p.pure-u-1 {:style {:padding-bottom 20 :border-bottom 'dotted}}
-            [:a.user user-name] (str " " comment)]])
+          [:div.pure-g {:style {:border-bottom "1px dotted"}}
+           [:p.pure-u-1
+            [:a.user {:onClick (fn [e]
+                                 (.preventDefault e)
+                                 (dispatch! "/user")) :onTouchEnd #()}
+             user-name]
+            (str " " comment)]])
 
         ; If session has any likes -> show
         (when-not (empty? likes)
@@ -137,51 +165,31 @@
           (for [{:keys [comment user]} comments]
             ^{:key (str user comment)}
             [:div.pure-g {:style {:margin-bottom 10}}
-             [:div.pure-u-1 [:a user] (str " " comment)]]))
+             [:div.pure-u-1 [:a.user user] (str " " comment)]]))
 
         ; Buttons for "liking" or "commenting"
-        [:div.pure-g {:style {:margin-bottom 20}}
+        [:div.pure-g {:style {:margin-top 30 :margin-bottom 30}}
          [:div.pure-u-1
-          [:i.fa.fa-heart.fa-2x {:onClick    (fn []
+          [:i.fa.fa-heart.fa-2x {:style      {:cursor (when-not ((set likes) user-id) 'pointer) :color  (if ((set likes) user-id) 'red 'lightgray)}
+                                 :onClick    (fn []
                                                ; "likes" lagres i databasen som en liste fordi 1.ddb kan ikke lagre tomme set init. 2.opplevde EDN-problemer med å sende set mellom server og klient.
                                                ; Listen gjøres om til sett her for enklere logikk og tilbake til vektor for lagring.
                                                (when-not ((set likes) user-id)
                                                  (POST "like" {:params        {:session-url url
                                                                                :likers      (vec (conj (set likes) user-id))}
-                                                               :handler       (fn [r] (load-feed feed-data))
-                                                               :error-handler (fn [r] nil)})
+                                                               :handler       (fn [r]
+                                                                                ; wait for a few ticks and dispatch to /feed to refresh
+                                                                                )
+                                                               :error-handler (fn [r] nil)})))
+                                 :onTouchEnd (fn [] (when-not ((set likes) user-id) (POST "like" {:params {:session-url url :likers (vec (conj (set likes) user-id))}
+                                                                                                  :handler (fn [r] (load-feed feed-data)) :error-handler (fn [r] nil)})))}]
 
-                                                 ; post to server adding user to list of likers. Server should return updated session that will replace the old one.
-
-                                                 ))
-                                 :onTouchEnd #()
-                                 :style      {:cursor (when-not ((set likes) user-id) 'pointer)
-                                              :color  (if ((set likes) user-id) 'red 'lightgray)}}]
-
-          [:i.fa.fa-comment.fa-2x {:onClick #(
-                                              reset! adding-comment? true
-                                                     ; update local state
-                                                     ; post to endpoint
-                                                     )
+          [:i.fa.fa-comment.fa-2x {:onClick #(reset! adding-comment? true) :onTouchEnd #(reset! adding-comment? true)
                                    :style   {:margin-left 40
                                              :cursor      'pointer
                                              :color       'lightgray}}]]]
         (when @adding-comment?
-          (let [text (atom "")]
-            [:div
-             [:div.pure-g {:style {:margin-bottom 20}}
-              [:div.pure-u-1
-               [:textarea {:rows      5 :cols 120
-                           :style     {:resize 'vertical} :placeholder ""
-                           :on-change #(reset! text (-> % .-target .-value))
-                           :value     @text}]]]
-             [:div.pure-g {:style {:margin-bottom 20}}
-              [:a.pure-u-1.pure-button.pure-button-primary.button-xlarge
-               {:onClick (fn []
-                           (reset! adding-comment? false)
-                           ; post kommentar til server. Server returnerer oppdatert session som erstatter nåværende.
-                           )
-                :onTouchEnd #()} "Kommenter"]]]))]
+          [add-comment {:adding-comment? adding-comment? :comments comments :session-url url}])]
        ])))
 
 (defn feed-page []

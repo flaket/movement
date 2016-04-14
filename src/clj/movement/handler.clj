@@ -97,6 +97,12 @@
     (catch Exception e
       (response (str "Exception: " e)))))
 
+(defn like [params]
+  (try
+    (db/like! params)
+    (catch Exception e
+      (response (str "Exception: " e)))))
+
 (defn activate-user! [id]
   #_(let [user (old-db/entity-by-lookup-ref :user/activation-id id)]
     (if-not (nil? (:db/id user))
@@ -205,6 +211,7 @@
                                   (let [name (:name (:params req))]
                                     (response (db/movement name))) (throw-unauthorized)))
            (POST "/like" req (if (authenticated? req) (db/like! (:params req)) (throw-unauthorized)))
+           (POST "/comment" req (if (authenticated? req) (db/comment! (:params req)) (throw-unauthorized)))
            ;; --------------------------------------------------------
 
            #_(GET "/sessions" req (if-not (authenticated? req)

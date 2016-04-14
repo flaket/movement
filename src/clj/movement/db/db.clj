@@ -76,7 +76,7 @@
         ]
     (map #(h/put-item! creds :movements %) balancing))
 
-#_(h/delete-item! creds :sessions {:url "f9665d7a-5981-4f0c-9915-ebd4cbbc542e"})
+#_(h/delete-item! creds :sessions {:url "121ee6f5-618b-4f45-b64d-08298b2b8a2f"})
 
 ;; ----------------------------------------------------
 
@@ -298,4 +298,8 @@
 
 (defn like! [{:keys [session-url likers]}]
   (h/update-item! creds :sessions {:url session-url} {:likes [:set likers]})
-  :ok)
+  "ok")
+
+(defn comment! [{:keys [session-url comments]}]
+  (h/update-item! creds :sessions {:url session-url} {:comments [:set comments]})
+  "ok")
