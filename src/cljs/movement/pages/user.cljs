@@ -49,67 +49,6 @@
                                                     (reset! pass {:error (:response response) :info ""}))})}
                 "Change password"]]))])])))
 
-(defn set-username-component []
-  (let [username (atom {:info "" :error ""})]
-    (fn []
-      [:div
-       [:p.pure-g
-        [:input.pure-u.pure-u-md-2-5 {:type        "text"
-                                      :placeholder "Select a new nickname"
-                                      :value       (:new-username @username)
-                                      :on-change   #(swap! username assoc :new-username (-> % .-target .-value))}]]
-       (when-let [info (:info @username)]
-         [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
-       (when-let [error (:error @username)]
-         [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])
-       (when (not-empty (:new-username @username))
-         [:div.pure-g
-          [:button.pure-u.pure-u-md-2-5.button.button-primary
-           {:on-click #(POST "/change-username"
-                             {:params        {:email    (:email (session/get :user))
-                                              :username (:new-username @username)}
-                              :handler       (fn [response]
-                                               (let []
-                                                 (swap! username assoc
-                                                        :error ""
-                                                        :info (:message response))
-                                                 (session/put! :username (:username response))))
-                              :error-handler (fn [response]
-                                               (swap! username assoc
-                                                      :error (:response response)
-                                                      :info ""))})}
-           "Set nickname"]])])))
-
-(defn logged-sessions-component []
-  (let [show-sessions? (atom false)
-        sessions (session/get :stored-sessions)
-        sorted-sessions (sort-by :session/timestamp sessions)]
-    (fn []
-      [:div
-       [:div.pure-g
-        [:div.button.pure-u.pure-u-md-2-5 {:on-click #(reset! show-sessions? true)} "Show logged sessions"]]
-       (when @show-sessions?
-         (doall
-           (for [s sorted-sessions]
-             ^{:key s}
-             [:div.pure-g
-              [:div.pure-u
-               (str (:session/timestamp s) " - " (:session/title s) " - " (:session/comment s) "\t")
-               [:a {:href (str "/session/" (:session/url s)) :target "_blank"} "View"]]])))])))
-
-(defn logged-in-as []
-  (let [set-new-username? (atom false)
-        {:keys [email name]} (session/get :user)]
-    (fn []
-      [:div
-       [:div.pure-g
-        [:h4.pure-u "Logged in as " [:span {:style    {:text-decoration 'underline
-                                                       :cursor 'pointer}
-                                            :on-click #(reset! set-new-username? true)}
-                                     (if name name email)]]]
-       (when @set-new-username?
-         [set-username-component])])))
-
 (defn log-out [event]
   (.preventDefault event)
   (session/clear!)
@@ -123,11 +62,14 @@
 (defn user-page []
   (let [selection (atom nil)
         changing-settings? (atom false)
-        viewing-user (session/get :viewing-user)]
+        changing-password? (atom false)
+        new-user-settings (atom {})
+        viewing-user (session/get :viewing-user)
+        user (session/get :user)]
     (fn []
       [:div
        [menu-component]
-       (if (and viewing-user (not= (:user-id (session/get :user)) (:user-id viewing-user)))
+       (if (and viewing-user (not= (:user-id user) (:user-id viewing-user)))
          ; Brukeren har trykket på en lenke til en annens brukerprofil
          [:div.content
 
@@ -160,50 +102,91 @@
 
          ; Brukerens profil
          [:div.content
-          [:div.pure-g {:style {:border-bottom "1px solid lightgray"}}
-           [:div.pure-u-1-4
-            [:img {:width "100%" :src "images/movements/arch-up.png"}]]
+          [:div {:style {:border-bottom "1px solid lightgray"}}
 
-           (if @changing-settings?
+           [:div.pure-g
+            [:div.pure-u-1-4
+             [:img {:width "100%" :src "images/movements/arch-up.png"}]]
 
-             ; View for å endre profil/innstillinger.
-             [:div.pure-u-3-4
+            (if @changing-settings?
 
-              [:div.pure-g [:div.pure-u-1 [:input {:size 60 :type "text" :placeholder "Brukernavn"}]]]
-              [:div.pure-g [:div.pure-u-1 [:input {:size 60 :type "text" :placeholder "Profiltekst"}]]]
-              [:div.pure-g [:div.pure-u-1 [:input {:size 60 :type "text" :placeholder "Profiltekst"}]]]
-              [:div.pure-g [:div.pure-u-1 [:input {:size 60 :type "text" :placeholder "Profiltekst"}]]]
-              [:div.pure-g [:a.pure-u-1.pure-button "Velg profilbilde"]]
-              [:div.pure-g
-               [:a.pure-u-1.pure-button.pure-button-primary
-                {:onClick    #(reset! changing-settings? false)
-                 :onTouchEnd #(reset! changing-settings? false)} "Lagre"]]]
+              ; View for å endre profil/innstillinger.
+              [:div.pure-u-3-4
 
-             ; View for å se sin egen profil med knapper for å gjøre endringer og å logge ut.
-             [:div.pure-u-3-4
-              [:div.pure-g [:div.pure-u-1 {:on-click #(pr (session/get :user))} "Brukernavn"]]
-              [:div.pure-g [:div.pure-u-1 "Profiltekst"]]
-              [:div.pure-g
-               [:a.pure-u-1-3.pure-button {:onClick    #(reset! changing-settings? true)
-                                           :onTouchEnd #(reset! changing-settings? true)} "Endre innstillinger"]
-               [:div.pure-u-1-3]
-               [:a.pure-u-1-3.pure-button {:onClick #(log-out %) :onTouchEnd #(log-out %)} "Logg ut"]]])]
+               [:div {:style {:margin-bottom 10}}
+                [:div.pure-g [:div.pure-u-1 "Navn"]]
+                [:div.pure-g [:div.pure-u-1 [:input {:size 100 :type "text" :defaultValue (:name user)}]]]]
+
+               [:div {:style {:margin-bottom 10}}
+                [:div.pure-g [:div.pure-u-1 "Epost"]]
+                [:div.pure-g [:div.pure-u-1 [:input {:size 100 :type "text" :defaultValue (:email user)}]]]]
+
+               #_[change-password-component]
+
+               #_[:div
+                  [:div.pure-g [:div.pure-u-1 "Prioriteringer"]]
+                  [:div.pure-g [:div.pure-u-1 [:input {:size 100 :type "text" :defaultValue (:priorities user)}]]]
+                  [:div.pure-g [:div.pure-u-1 "Mål"]]
+                  [:div.pure-g [:div.pure-u-1 [:input {:size 100 :type "text" :defaultValue (:goals user)}]]]]
+
+
+               [:div.pure-g [:a.pure-u-1.pure-button "Velg profilbilde"]]
+
+               [:div.pure-g
+                [:a.pure-u-1.pure-button.pure-button-primary
+                 {:onClick    #(reset! changing-settings? false)
+                  :onTouchEnd #(reset! changing-settings? false)} "Lagre"]]]
+
+              ; View for å se sin egen profil med knapper for å gjøre endringer og å logge ut.
+              [:div.pure-u-3-4 {:style {:position 'relative}}
+               [:div.pure-g [:p.pure-u-1 {:on-click #(pr user)} (:name user)]]
+               [:div.pure-g [:p.pure-u-1 (:profile-text user)]]
+               [:div.pure-g {:style {:margin-top 10}}
+                (doall
+                  (for [b (conj (:badges user) "Newbie" "Møssleup!" "Armhevingskongen")]
+                    ^{:key b}
+                    [:div.pure-u b]))]
+
+
+               ])]
+
+
+           [:div.pure-g
+            [:div.pure-u-1-4 (str "Medlem siden " (:sign-up-timestamp user))]
+            [:div.pure-u-3-4
+             [:div.pure-g
+              [:a.pure-u-1-4.pure-button {;:style      {:margin-top 40 :margin-right 5}
+                                          :onClick    #(reset! changing-settings? true)
+                                          :onTouchEnd #(reset! changing-settings? true)} "Innstillinger"]
+              [:a.pure-u-1-4.pure-button {;:style      {:margin-top 40 :margin-right 5}
+                                          :onClick    #(reset! changing-password? true)
+                                          :onTouchEnd #(reset! changing-password? true)} "Passord"]
+              [:div.pure-u-1-4]
+              [:a.pure-u-1-4.pure-button {;:style      {:margin-top 40 :margin-right 5}
+                                          :onClick    #(log-out %)
+                                          :onTouchEnd #(log-out %)} "Logg ut"]]
+             ]]
+
+
+           ]
 
           [:div
            [:div.pure-g [:div.pure-u-1 [:h2 "Min treningsdagbok"]]]
            [:div.pure-g
-            [:a {:onClick   #(reset! selection :feed) :onTouchEnd #(reset! selection :feed)
-                 :className (str "pure-u-1-4 pure-button" (when (= @selection :feed) " pure-button-primary"))} "Feed"]
-            [:a {:onClick   #(reset! selection :calendar) :onTouchEnd #(reset! selection :calendar)
-                 :className (str "pure-u-1-4 pure-button" (when (= @selection :calendar) " pure-button-primary"))} "Kalender"]
-            [:a {:onClick   #(reset! selection :stat) :onTouchEnd #(reset! selection :stat)
-                 :className (str "pure-u-1-4 pure-button" (when (= @selection :stat) " pure-button-primary"))} "Statistikk"]
-            [:a {:onClick   #(reset! selection :tag) :onTouchEnd #(reset! selection :tag)
-                 :className (str "pure-u-1-4 pure-button" (when (= @selection :tag) " pure-button-primary"))} "Mine hashtagger"]]]
+            [:a.pure-u.pure-u-md-1-4 {
+                                         :onClick   #(reset! selection :feed) :onTouchEnd #(reset! selection :feed)
+                                         :className (str " pure-button" (when (= @selection :feed) " pure-button-primary"))} "Feed"]
+            [:a.pure-u.pure-u-md-1-4 {
+                                         :onClick   #(reset! selection :calendar) :onTouchEnd #(reset! selection :calendar)
+                                         :className (str " pure-button" (when (= @selection :calendar) " pure-button-primary"))} "Kalender"]
+            [:a.pure-u.pure-u-md-1-4 {
+                                         :onClick   #(reset! selection :stat) :onTouchEnd #(reset! selection :stat)
+                                         :className (str " pure-button" (when (= @selection :stat) " pure-button-primary"))} "Statistikk"]
+            [:a.pure-u.pure-u-md-1-4 {
+                                         :onClick   #(reset! selection :tag) :onTouchEnd #(reset! selection :tag)
+                                         :className (str " pure-button" (when (= @selection :tag) " pure-button-primary"))} "Mine hashtagger"]]]
 
-          #_[logged-in-as]
-          #_[logged-sessions-component]
-          #_[change-password-component]
+
 
           ])])))
 
