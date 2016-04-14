@@ -2,12 +2,13 @@
   (:require [movement.menu :refer [menu-component]]
             [reagent.core :refer [atom]]
             [clojure.string :as str]
-            [movement.util :refer [GET POST]]))
+            [movement.util :refer [GET POST]]
+            [reagent.session :as session]))
 
 (defonce feed-data (atom nil))
 
 (defn load-feed [feed-data]
-  (POST "feed" {:params        {:email ""}
+  (POST "feed" {:params        {:user-id (:user-id (session/get :user))}
                 :handler       (fn [r] (reset! feed-data r))
                 :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
 
@@ -73,7 +74,7 @@
 (defn session-view []
   (let [show-session-data? (atom false)
         adding-comment? (atom false)]
-    (fn [{:keys [url activity user-image user-id user-name date time comment comments image parts likes]
+    (fn [{:keys [url activity user-image user-id user-name date-time time comment comments image parts likes]
           :or   {user-image "images/movements/static-air-baby.png"}}]
       [:div {:style {:border-bottom "1px solid lightgray"}}
 
@@ -84,11 +85,10 @@
                                        ; onClick/onTouchEnd -> show profile
                                        }]]
         [:div.pure-u-5-6
-         [:div.pure-g [:h2 [:span.pure-u {:style {:cursor     'pointer
-                                                  :margin-top 0}
+         [:div.pure-g [:h2 [:a.pure-u {
                                           ; onClick/onTouchEnd -> show profile
-                                          } user-id]]]
-         [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} date]]]]
+                                          } user-name]]]
+         [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} date-time]]]]
 
        [:div {:style {:margin "0 40px 0 40px"}}
 
@@ -122,15 +122,15 @@
                [part-component part]))])
 
         ; Username and session comment text if user typed a comment.
-        [:div.pure-g
-         [:p.pure-u-1 {:style {:padding-bottom 20 :border-bottom 'dotted}}
-          (when comment
-            [:a user-name] (str " " comment))]]
+        (when comment
+          [:div.pure-g
+           [:p.pure-u-1 {:style {:padding-bottom 20 :border-bottom 'dotted}}
+            [:a.user user-name] (str " " comment)]])
 
         ; If session has any likes -> show
         (when-not (empty? likes)
           [:div.pure-g
-           [:p.pure-u-1 (str (count likes) " tomler opp")]])
+           [:p.pure-u-1 (str (count likes) (if (= 1 (count likes)) " tommel" " tomler") " opp")]])
 
         ; Possible additional comments from user or other users
         (doall
@@ -143,12 +143,19 @@
         [:div.pure-g {:style {:margin-bottom 20}}
          [:div.pure-u-1
           [:i.fa.fa-heart.fa-2x {:onClick    (fn []
-                                               (if ((set likes) user-id)
-                                                 (pr "liked!") ; post to server adding user to list of likers. Server should return updated session that will replace the old one.
-                                                 (pr "unliked!") ; post to server removeing user from list of likers. Server should return updated session that will replace the old one.
+                                               ; "likes" lagres i databasen som en liste fordi 1.ddb kan ikke lagre tomme set init. 2.opplevde EDN-problemer med å sende set mellom server og klient.
+                                               ; Listen gjøres om til sett her for enklere logikk og tilbake til vektor for lagring.
+                                               (when-not ((set likes) user-id)
+                                                 (POST "like" {:params        {:session-url url
+                                                                               :likers      (vec (conj (set likes) user-id))}
+                                                               :handler       (fn [r] (load-feed feed-data))
+                                                               :error-handler (fn [r] nil)})
+
+                                                 ; post to server adding user to list of likers. Server should return updated session that will replace the old one.
+
                                                  ))
                                  :onTouchEnd #()
-                                 :style      {:cursor 'pointer
+                                 :style      {:cursor (when-not ((set likes) user-id) 'pointer)
                                               :color  (if ((set likes) user-id) 'red 'lightgray)}}]
 
           [:i.fa.fa-comment.fa-2x {:onClick #(

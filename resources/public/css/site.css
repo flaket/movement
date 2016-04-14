@@ -164,9 +164,7 @@ a:hover {
   cursor: pointer;
 }
 
-.feed a { color: #227aee; }
-
-
+.user { color: blue; }
 
 article .pure-g [class *= "pure-u"] {
 font-family:

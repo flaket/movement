@@ -140,7 +140,7 @@
               {:onClick #(reset! changing-settings? false)
                :onTouchEnd #(reset! changing-settings? false)} "Lagre"]]]
            [:div.pure-u-3-4
-            [:div.pure-g [:div.pure-u-1 "Brukernavn"]]
+            [:div.pure-g [:div.pure-u-1 {:on-click #(pr (session/get :user))} "Brukernavn"]]
             [:div.pure-g [:div.pure-u-1 "Profiltekst"]]
             [:div.pure-g
              [:a.pure-u-1-3.pure-button {:onClick #(reset! changing-settings? true)

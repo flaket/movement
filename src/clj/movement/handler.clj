@@ -197,13 +197,14 @@
 
            (POST "/feed" req (if (authenticated? req)
                                (let [user-id (:user-id (:params req))]
-                                 (response (vec (db/sessions-by-user-id "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")))) (throw-unauthorized)))
+                                 (response (vec (db/sessions-by-user-id user-id)))) (throw-unauthorized)))
 
            (GET "/movement-from-category" req (if (authenticated? req)
                                                 (response (db/movements-from-category 1 (:category (:params req)))) (throw-unauthorized)))
            (GET "/movement" req (if (authenticated? req)
                                   (let [name (:name (:params req))]
                                     (response (db/movement name))) (throw-unauthorized)))
+           (POST "/like" req (if (authenticated? req) (db/like! (:params req)) (throw-unauthorized)))
            ;; --------------------------------------------------------
 
            #_(GET "/sessions" req (if-not (authenticated? req)

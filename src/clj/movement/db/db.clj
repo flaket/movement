@@ -76,6 +76,8 @@
         ]
     (map #(h/put-item! creds :movements %) balancing))
 
+#_(h/delete-item! creds :sessions {:url "f9665d7a-5981-4f0c-9915-ebd4cbbc542e"})
+
 ;; ----------------------------------------------------
 
 (defn user [user-id]
@@ -102,10 +104,11 @@
 
 (defn sessions-by-user-id [user-id]
   (let [
-        ;sessions2 (<!! (h/scan! creds :sessions {:user-id user-id}))
-        sessions (->>
-                   (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id})
-                   <!!)]
+        sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
+        sessions (map #(assoc % :user-name (:name (user (:user-id %)))) sessions)
+        ;sessions (->> (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}) <!!)
+        ;sessions (map #(dissoc % :likes) sessions)
+        ]
     sessions))
 #_(sessions-by-user-id "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")
 
@@ -292,3 +295,7 @@
 (defn update-zone! [user-id movement zone]
   (h/put-item! creds :user-movements
                {:user-id user-id :movement-name movement :zone zone}))
+
+(defn like! [{:keys [session-url likers]}]
+  (h/update-item! creds :sessions {:url session-url} {:likes [:set likers]})
+  :ok)
