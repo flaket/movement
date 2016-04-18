@@ -1,36 +1,20 @@
 [
 
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Kast"
+  :image    "chest-throw.png"
+  :category #{:throw :natural} :measurement :repetitions}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Throw"}
- ;{:movement.db/id #movement.db/id[:movement.db.part/user -2] :category/name "Catching"}
+ {:name     "Kaste over hodet"
+  :image    "overhead-throw.png"
+  :category #{:throw :natural} :measurement :repetitions}
 
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Chest Throw"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Kaste med sving"
+  :image    "front-swing-throw.png"
+  :category #{:throw :natural} :measurement :repetitions}
 
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Overhead Throw"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Front Swing Throw"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id              #db/id[:db.part/user]
-  :movement/name      "Rotational Throw"
-  :movement/category  [#db/id[:db.part/user -1]
-                       #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- ;; spear throw
- ;; small rock throw
+ {:name     "Kaste med rotasjon"
+  :image    "rotational-throw.png"
+  :category #{:throw :natural} :measurement :repetitions}
 
  ]
 

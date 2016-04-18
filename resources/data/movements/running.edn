@@ -1,24 +1,11 @@
 [
 
- ;; category
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Jogge"
+  :image    "run.png"
+  :category #{:run :natural} :measurement :distance}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Run"}
- ;{:movement.db/id #movement.db/id[:movement.db.part/user -2] :category/name "Running Technique"}
- ;{:movement.db/id #movement.db/id[:movement.db.part/user -3] :category/name "Running Drills"}
-
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Run"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/harder      [#db/id[:db.part/user -101]]}
-
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Sprint"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -100]]}
+ {:name     "Sprinte"
+  :image    "spring.png"
+  :category #{:run :natural} :measurement :distance}
 
  ]

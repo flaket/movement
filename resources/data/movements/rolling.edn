@@ -1,30 +1,15 @@
 [
 
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Foroverrulle"
+  :image    "forward-roll.png"
+  :category #{:roll :natural} :measurement :repetitions}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Roll"}
+ {:name     "Bakoverrulle til liggende"
+  :image    "backward-roll-to-lying.png"
+  :category #{:roll :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Forward Roll"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- ;; easier forward rolls; ex starting from knees
-
- ;; backward roll
- ;; sideways roll?
-
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Backward Roll To Lying"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Lying To Forward Roll"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Liggende til foroverrulle"
+  :image    "lying-to-forward-roll.png"
+  :category #{:roll :natural} :measurement :repetitions}
 
  ]

@@ -1,67 +1,39 @@
 [
 
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Fot-kne-gange"
+  :image    "split-kneeling-walk.png"
+  :category #{:walk :hip-mobility :mobility :natural} :measurement :distance}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Walk"}
- {:db/id #db/id[:db.part/user -2] :category/name "Hip Mobility"}
- {:db/id #db/id[:db.part/user -3] :category/name "Mobility"}
+ {:name     "Ande-gange"
+  :image    "duck-walk.png"
+  :category #{:walk :hip-mobility :mobility :natural} :measurement :distance}
 
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Split Kneeling Walk"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
+ {:name     "Gående utfall"
+  :image    "walking-lunge.png"
+  :category #{:walk :natural} :measurement :distance}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Duck Walk"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
+ {:name     "Hengslet gange"
+  :image    "hinged-walk.png"
+  :category #{:walk :natural} :measurement :distance}
 
- {:db/id                #db/id[:db.part/user -102]
-  :movement/name "Walking Lunge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
+ {:name     "Hengslet gange"
+  :image    "hinged-walk.png"
+  :category #{:walk :natural} :measurement :distance}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Hinged Walk"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
+ {:name     "Sideveis shuffle"
+  :image    "side-shuffle.png"
+  :category #{:walk :natural} :measurement :distance}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Side Shuffle"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
+ {:name     "Gå over"
+  :image    "stepping-over.png"
+  :category #{:walk :mobility :hip-mobility :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Stepping Over"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Gå under"
+  :image    "stepping-under.png"
+  :category #{:walk :mobility :hip-mobility :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Stepping Under"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Extended Stepping Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Gå opp på"
+  :image    "extended-stepping-up.png"
+  :category #{:walk :mobility :hip-mobility :leg-strength :natural} :measurement :repetitions}
 
  ]
