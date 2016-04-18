@@ -1,145 +1,71 @@
 [
 
- ;; category
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Frontbøy"
+  :image    "front-squat.png"
+  :category #{:lift :weight :leg-strength :squat :natural} :measurement :repetitions}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Lift"}
- {:db/id #db/id[:db.part/user -2] :category/name "Carry"}
- {:db/id #db/id[:db.part/user -3] :category/name "Weight"}
- {:db/id #db/id[:db.part/user -4] :category/name "Leg Strength"}
- {:db/id #db/id[:db.part/user -5] :category/name "Squat"}
- {:db/id #db/id[:db.part/user -6] :category/name "Lunge"}
- {:db/id #db/id[:db.part/user -7] :category/name "Push"}
+ {:name     "Frontutfall"
+  :image    "front-lunge.png"
+  :category #{:lift :weight :leg-strength :lunge :natural} :measurement :repetitions}
 
- ;; Lifting
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Front Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Markløft"
+  :image    "deadlift.png"
+  :category #{:lift :weight :leg-strength :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Front Lunge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Fang"
+  :image    "lapping.png"
+  :category #{:lift :weight :leg-strength :natural} :measurement :repetitions
+  :previous ["Markløft"]}
 
- {:db/id                #db/id[:db.part/user -102]
-  :movement/name "Deadlift"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Power clean fra hofta"
+  :image    "hanging-power-clean.png"
+  :category #{:lift :weight :leg-strength :natural} :measurement :repetitions
+  :previous ["Markløft"] :next ["Power clean"]}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Lapping"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]]}
+ {:name     "Power clean"
+  :image    "power-clean.png"
+  :category #{:lift :weight :leg-strength :natural} :measurement :repetitions
+  :previous ["Power clean fra hofta"] :next ["Clean"]}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Hang Power Clean"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]]
-  :movement/harder      [#db/id[:db.part/user -105]]}
+ {:name     "Clean fra hofta"
+  :image    "hang-clean.png"
+  :category #{:lift :weight :leg-strength :natural} :measurement :repetitions
+  :previous ["Frontbøy" "Power clean fra hofta"] :next ["Clean"]}
 
- {:db/id                #db/id[:db.part/user -105]
-  :movement/name "Power Clean"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -104]]
-  :movement/harder      [#db/id[:db.part/user -107]]}
+ {:name     "Clean"
+  :image    "clean.png"
+  :category #{:lift :weight :leg-strength :natural} :measurement :repetitions
+  :previous ["Clean fra hofta"]}
 
- {:db/id                #db/id[:db.part/user -106]
-  :movement/name "Hang Clean"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -100]
-                         #db/id[:db.part/user -104]]
-  :movement/harder      [#db/id[:db.part/user -107]]}
+ {:name     "Skulderpress"
+  :image    "shoulder-press.png"
+  :category #{:lift :weight :push :natural} :measurement :repetitions
+  :next ["Push press"]}
 
- {:db/id                #db/id[:db.part/user -107]
-  :movement/name "Clean"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -106]]}
+ {:name     "Push-press"
+  :image    "push-press.png"
+  :category #{:lift :weight :push :natural} :measurement :repetitions
+  :previous ["Skulderpress"] :next ["Rykk"]}
 
- {:db/id                #db/id[:db.part/user -108]
-  :movement/name "Shoulder Press"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -109]]}
+ {:name     "Rykk"
+  :image    "jerk.png"
+  :category #{:lift :weight :push :natural} :measurement :repetitions
+  :previous ["Push-press"]}
 
- {:db/id                #db/id[:db.part/user -109]
-  :movement/name "Push Press"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -108]]
-  :movement/harder      [#db/id[:db.part/user -110]]}
+ {:name     "Bære ved hofta"
+  :image    "waist-carry.png"
+  :category #{:carry :weight :natural} :measurement :distance}
 
- {:db/id                #db/id[:db.part/user -110]
-  :movement/name "Jerk"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -7]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -109]]}
+ {:name     "Bære ved brystet"
+  :image    "chest-carry.png"
+  :category #{:carry :weight :natural} :measurement :distance}
 
- ;; Carrying
- {:db/id                #db/id[:db.part/user -111]
-  :movement/name "Waist Carry"
-  :movement/category    [#db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
+ {:name     "Bære i hendene"
+  :image    "hand-carry.png"
+  :category #{:carry :weight :natural} :measurement :distance}
 
- {:db/id                #db/id[:db.part/user -112]
-  :movement/name "Chest Carry"
-  :movement/category    [#db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
-
- {:db/id                #db/id[:db.part/user -113]
-  :movement/name "Hand Carry"
-  :movement/category    [#db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
-
- {:db/id                #db/id[:db.part/user -114]
-  :movement/name "Shoulder Carry"
-  :movement/category    [#db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
-
- ;; Dragging
+ {:name     "Bære på skulderen"
+  :image    "shoulder-carry.png"
+  :category #{:carry :weight :natural} :measurement :distance}
 
  ]

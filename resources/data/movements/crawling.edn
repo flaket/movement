@@ -1,182 +1,102 @@
 [
 
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Kravle på hender og knær"
+  :image    "baby-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :next ["Bjørnekravle"]}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Crawl"}
- {:db/id #db/id[:db.part/user -2] :category/name "Bridge"}
- {:db/id #db/id[:db.part/user -3] :category/name "Shoulder Mobility"}
- {:db/id #db/id[:db.part/user -4] :category/name "Spine Mobility"}
- {:db/id #db/id[:db.part/user -5] :category/name "Bridge"}
- {:db/id #db/id[:db.part/user -6] :category/name "Wrist Mobility"}
+ {:name     "Kravle på albuer og knær"
+  :image    "elbow-knee-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :next ["Kravle på fot-albue"]}
 
- ;; crawling
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Baby Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/harder      [#db/id[:db.part/user -106]]}
+ {:name     "Kravle på albuer og føtter"
+  :image    "elbow-foot-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :next ["Kravle på fot-albue"]}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Elbow Knee Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/harder      [#db/id[:db.part/user -102]]}
+ {:name     "Militærkravle"
+  :image    "army-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :next ["Spiderman Crawl"]}
 
- {:db/id                #db/id[:db.part/user -102]
-  :movement/name "Elbow Foot Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -101]]}
+ {:name     "Skulderkravle"
+  :image    "shoulder-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :next ["Rekekravle"]}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Army Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/harder      [#db/id[:db.part/user -109]]}
+ {:name     "Rekekravle"
+  :image    "hip-thrust-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :previous ["Skulderkravle"]}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Shoulder Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/harder      [#db/id[:db.part/user -105]]}
+ {:name     "Bjørnekravle"
+  :image    "bear-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :next ["Bjørnekravle baklengs"] :previous ["Kravle på albuer og føtter"]}
 
- {:db/id                #db/id[:db.part/user -105]
-  :movement/name "Hip Thrust Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -104]]}
+ {:name     "Bjørnekravle baklengs"
+  :image    "backward-bear-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :next ["Bjørnekravle sideveis"] :previous ["Bjørnekravle"]}
 
- {:db/id                #db/id[:db.part/user -106]
-  :movement/name "Bear Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -100]]
-  :movement/harder      [#db/id[:db.part/user -107]]}
+ {:name     "Bjørnekravle sideveis"
+  :image    "lateral-bear-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :previous ["Bjørnekravle baklengs"]}
 
- {:db/id                #db/id[:db.part/user -107]
-  :movement/name "Backward Bear Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -106]]
-  :movement/harder      [#db/id[:db.part/user -108]]}
+ {:name     "Spiderman-kravle"
+  :image    "spiderman-crawl.png"
+  :category #{:crawl} :measurement :distance
+  :previous ["Bjørnekravle"] :next ["Øglekravle"]}
 
- {:db/id                #db/id[:db.part/user -108]
-  :movement/name "Lateral Bear Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -107]]}
+ {:name     "Øglekravle"
+  :image    "lizard-crawl.png"
+  :category #{:crawl} :measurement :distance
+  :previous ["Spiderman-kravle"] :next ["Øglekravle"]}
 
- {:db/id                #db/id[:db.part/user -109]
-  :movement/name "Spiderman Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -106]]
-  :movement/harder      [#db/id[:db.part/user -110]]}
+ {:name     "Kravle som måler"
+  :image    "inchworm.png"
+  :category #{:crawl} :measurement :distance}
 
- {:db/id                #db/id[:db.part/user -110]
-  :movement/name "Lizard Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -103]
-                         #db/id[:db.part/user -109]]}
+ {:name     "Krabbekravle"
+  :image    "inverted-crawl.png"
+  :category #{:crawl} :measurement :distance
+  :next ["Krabbekravle baklengs"]}
 
- {:db/id                #db/id[:db.part/user -111]
-  :movement/name "Inchworm"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/distance}
+ {:name     "Krabbekravle"
+  :image    "inverted-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :next ["Krabbekravle baklengs"]}
 
- {:db/id                #db/id[:db.part/user -112]
-  :movement/name "Inverted Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/harder      [#db/id[:db.part/user -113]]}
+ {:name     "Krabbekravle baklengs"
+  :image    "backward-inverted-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :previous ["Krabbekravle"] :next ["Krabbekravle baklengs"]}
 
- {:db/id                #db/id[:db.part/user -113]
-  :movement/name "Backward Inverted Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -112]]
-  :movement/harder      [#db/id[:db.part/user -114]]}
+ {:name     "Krabbekravle sideveis"
+  :image    "lateral-inverted-crawl.png"
+  :category #{:crawl :natural} :measurement :distance
+  :previous ["Krabbekravle baklengs"]}
 
- {:db/id                #db/id[:db.part/user -114]
-  :movement/name "Lateral Inverted Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -113]]}
+ {:name     "Galopperende kravle"
+  :image    "gallop-crawl.png"
+  :category #{:crawl} :measurement :distance
+  :next ["Hover"] :previous ["Bjørnekravle"]}
 
- {:db/id                #db/id[:db.part/user -115]
-  :movement/name "Gallop Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -108]]
-  :movement/harder      [#db/id[:db.part/user -116]]}
+ {:name     "Svevende kravle"
+  :image    "hover-crawl.png"
+  :category #{:crawl} :measurement :distance
+  :next ["Gå på hendene"] :previous ["Galopperende kravle"]}
 
- {:db/id                #db/id[:db.part/user -116]
-  :movement/name "Hover Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -115]]
-  :movement/harder      [#db/id[:db.part/user -301]]}
+ {:name     "Reise i knebøy"
+  :image    "traveling-squat.png"
+  :category #{:crawl} :measurement :distance
+  :previous ["Galopperende kravle"]}
 
- {:db/id                #db/id[:db.part/user -117]
-  :movement/name "Traveling Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -106]]}
-
- {:db/id                #db/id[:db.part/user -118]
-  :movement/name "Bridge Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -112]
-                         #db/id[:db.part/user -300]]}
-
- {:db/id #db/id[:db.part/user -300] :movement/name "High Bridge"}
- {:db/id #db/id[:db.part/user -301] :movement/name "Handstand Walk"}
+ {:name     "Gå i bro"
+  :image    "bridge-crawl.png"
+  :category #{:crawl :bridge :spine-mobility} :measurement :distance
+  :previous ["Høy bro"]}
 
  ]

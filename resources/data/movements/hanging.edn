@@ -1,187 +1,87 @@
 [
 
- ;; categories
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Henge passivt"
+  :image    "passive-hang.png"
+  :category #{:hang :bar} :measurement :duration
+  :next ["Henge aktivt"]}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Hang"}
- {:db/id #db/id[:db.part/user -2] :category/name "Brachiate"}
- {:db/id #db/id[:db.part/user -3] :category/name "Bar"}
- {:db/id #db/id[:db.part/user -4] :category/name "Straight Arm Strength"}
- {:db/id #db/id[:db.part/user -5] :category/name "Bent Arm Strength"}
+ {:name     "Henge aktivt"
+  :image    "active-hang.png"
+  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :previous ["Henge passivt"] :next ["Henge passivt til aktivt"]}
 
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Pull Up"}
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Elbow Pull Up"}
+ {:name     "Henge passivt til aktivt"
+  :image    "hanging-pull.png"
+  :category #{:hang :bar :straight-arm-strength} :measurement :repetitions
+  :previous ["Henge aktivt"] :next ["Henge i bue" "Pull-up fra albuene"]}
 
- ;; hanging
+ {:name     "Henge i bue"
+  :image    "arching-hang.png"
+  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :previous ["Henge passivt til aktivt"]}
 
- {:db/id                #db/id[:db.part/user -200]
-  :movement/name "Passive Hang"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/harder      [#db/id[:db.part/user -201]]}
+ {:name     "Henge med falskt grep"
+  :image    "false-grip-hang.png"
+  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :previous ["Henge passivt"]}
 
- {:db/id                #db/id[:db.part/user -201]
-  :movement/name "Active Hang"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -200]]
-  :movement/harder      [#db/id[:db.part/user -202]]}
+ {:name     "Henge passivt med en arm"
+  :image    "one-arm-passive-hang.png"
+  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :previous ["Henge passivt"] :next ["Henge aktivt med en arm"]}
 
- {:db/id                #db/id[:db.part/user -202]
-  :movement/name "Hanging Pull"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -201]]
-  :movement/harder      [#db/id[:db.part/user -203]
-                         #db/id[:db.part/user -101]]}
+ {:name     "Henge aktivt med en arm"
+  :image    "one-arm-passive-hang.png"
+  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :previous ["Henge passivt med en arm"] :next ["Henge aktivt med en arm"]}
 
- {:db/id                #db/id[:db.part/user -203]
-  :movement/name "Arching Hang"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -202]]}
+ {:name     "Henge passivt til aktivt med en arm"
+  :image    "one-arm-pull.png"
+  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :previous ["Henge aktivt med en arm"]}
 
- {:db/id                #db/id[:db.part/user -204]
-  :movement/name "False Grip Hang"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -200]]}
+ {:name     "Svinge sideveis"
+  :image    "lateral-swing.png"
+  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :duration
+  :previous ["Henge aktivt med en arm"]}
 
- {:db/id                #db/id[:db.part/user -205]
-  :movement/name "One Arm Passive Hang"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -200]]
-  :movement/harder      [#db/id[:db.part/user -206]]}
+ {:name     "Svinge sideveis slipp"
+  :image    "release-hand-lateral-swing.png"
+  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :duration
+  :previous ["Svinge sideveis"]}
 
- {:db/id                #db/id[:db.part/user -206]
-  :movement/name "One Arm Active Hang"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -205]]
-  :movement/harder      [#db/id[:db.part/user -207]]}
+ {:name     "Svinge sideveis hold"
+  :image    "lateral-swing-holds.png"
+  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :duration
+  :previous ["Svinge sideveis slipp"]}
 
- {:db/id                #db/id[:db.part/user -207]
-  :movement/name "One Arm Pull"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -206]]}
+ {:name     "Svinge"
+  :image    "linear-swing.png"
+  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :duration}
 
- ;; Brachiating
- {:db/id                #db/id[:db.part/user -208]
-  :movement/name "Lateral Swing"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/harder      [#db/id[:db.part/user -209]]}
+ {:name     "Svinge i figur 8"
+  :image    "figure-8-swing.png"
+  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :duration
+  :previous ["Henge aktivt med en arm" "Svinge sideveis hold"]}
 
- {:db/id                #db/id[:db.part/user -209]
-  :movement/name "Release Hand Lateral Swing"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -208]]}
+ {:name     "Traversere sideveis"
+  :image    "bent-arm-lateral-traverse.png"
+  :category #{:hang :brachiate :bar :bent-arm-strength} :measurement :distance
+  :previous ["Pull-up" "Svinge sideveis hold"]}
 
- {:db/id                #db/id[:db.part/user -210]
-  :movement/name "Lateral Swing Holds"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -201]
-                         #db/id[:db.part/user -208]]}
+ {:name     "Traversere svingende sideveis"
+  :image    "bent-arm-lateral-traverse.png"
+  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :distance
+  :previous ["Svinge sideveis hold"]}
 
- {:db/id                #db/id[:db.part/user -211]
-  :movement/name "Linear Swing"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration}
+ {:name     "Traversere"
+  :image    "bent-arm-lateral-traverse.png"
+  :category #{:hang :brachiate :bar :bent-arm-strength} :measurement :distance
+  :previous ["Pull-up" "Svinge sideveis hold"]}
 
- {:db/id                #db/id[:db.part/user -300]
-  :movement/name "Figure 8 Swing"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/easier      [#db/id[:db.part/user -205]
-                         #db/id[:db.part/user -206]]}
-
- ;; suspension swing - "archer drill": two rings far apart, large swings
-
- {:db/id                #db/id[:db.part/user -212]
-  :movement/name "Bent Arm Lateral Traverse"
-  :movement/category    [#db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -100]
-                         #db/id[:db.part/user -209]]}
-
- {:db/id                #db/id[:db.part/user -213]
-  :movement/name "Swinging Lateral Traverse"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -209]]}
-
- {:db/id                #db/id[:db.part/user -214]
-  :movement/name "Bent Arm Linear Traverse"
-  :movement/category    [#db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -100]
-                         #db/id[:db.part/user -209]]}
-
- {:db/id                #db/id[:db.part/user -215]
-  :movement/name "Swinging Linear Traverse"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance
-  :movement/easier      [#db/id[:db.part/user -209]
-                         #db/id[:db.part/user -211]]}
-
- ;; suspension traverse - swinging: rings far apart
+ {:name     "Traversere svingende"
+  :image    "bent-arm-lateral-traverse.png"
+  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :distance
+  :previous ["Pull-up" "Svinge sideveis hold"]}
 
  ]

@@ -1,64 +1,78 @@
 [
 
  {:name     "Balansegang"
-  :image    "balancing.png"
+  :image    "balancing-walk.png"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
   :next     ["Balansere sideveis" "Balansere baklengs" "Lav balansegang"
              "Balanserende bjørnekravle" "Balanserende krabbekravle"]}
 
  {:name     "Balansere sideveis"
+  :image    "balancing-lateral-walk.png"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Balansegang"] next ["Lav balansegang"]}
+  :previous ["Balansegang"] :next ["Lav balansegang"]}
 
  {:name     "Balansere baklengs"
+  :image    "balancing-backward-walk.png"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
-  :previous ["Balansegang"] next ["Lav balansegang"]}
+  :previous ["Balansegang"] :next ["Lav balansegang"]}
 
  {:name     "Lav balansegang"
+  :image    "balancing-low-walk.png"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
   :previous ["Balansegang" "Balansere baklengs" "Balansere sideveis"] :next ["Balansere lavt sideveis"]}
 
  {:name     "Balansere lavt sideveis"
+  :image    "balancing-lateral-low-walk.png"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
   :previous ["Lav balansegang"]}
 
  {:name     "Balansere lavt baklengs"
+  :image    "balancing-backward-low-walk.png"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
   :previous ["Lav balansegang"]}
 
  {:name     "Balanserende sniking"
+  :image    "stealth-walk.png"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
   :previous ["Lav balansegang"] :next ["Balanserende sideveis sniking"]}
 
  {:name     "Balanserende sideveis sniking"
+  :image    "lateral-stealth-walk.png"
   :category #{:balance :walk :beam :balancing-locomotion :natural} :measurement :distance
   :previous ["Balanserende sniking"]}
 
  {:name     "Balanserende overgang"
+  :image    "balancing-tripod-transition.png"
   :category #{:balance :beam :natural} :measurement :repetitions
   :previous ["Overgang"]}
 
  {:name     "Balanserende bjørnekravle"
+  :image    "balancing-bear-crawl.png"
   :category #{:balance :crawl :beam :balancing-locomotion :natural} :measurement :distance
   :previous ["Bjørnekravle"]}
 
  {:name     "Balanserende krabbekravle"
+  :image    "balancing-inverted-crawl.png"
   :category #{:balance :crawl :beam :balancing-locomotion :natural} :measurement :distance
   :previous ["Krabbekravle"]}
 
  {:name     "Balanserende vending"
+  :image    "balancing-turn.png"
   :category #{:balance :beam :natural} :measurement :repetitions
   :next     ["Balanserende vending i splittknebøy"]}
 
  {:name     "Balanserende kryssvending"
+  :image    "balancing-cross-turn.png"
   :category #{:balance :beam :natural} :measurement :repetitions
   :next     ["Balanserende vending i splittknebøy"]}
 
  {:name     "Balanserende splittknebøy"
+  :image    "balancing-split-squat.png"
   :category #{:balance :beam :natural} :measurement :repetitions
   :next     ["Balanserende vending i splittknebøy"]}
 
  {:name     "Balanserende vending i splittknebøy"
+  :image    "balancing-split-squat-turn.png"
   :category #{:balance :beam :natural} :measurement :repetitions
   :previous ["Balanserende vending" "Balanserende splittknebøy"]}
 

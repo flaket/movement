@@ -1,101 +1,126 @@
 [
+
  ;;-------------- Dip --------------
- {:name     "Jumping Dip"
+ {:name     "Dip med hopp"
+  :image    "jumping-dip.png"
   :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
   :next     ["Dip"]}
 
- {:name     "Negative Dip"
+ {:name     "Negativ dip"
+  :image    "negative-dip.png"
   :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
   :next     ["Dip"]}
 
  {:name     "Dip"
+  :image    "dip.png"
   :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
-  :previous ["Jumping Dip" "Negative Dip"] :next ["Russian Dip" "Single Bar Dip"]}
+  :previous ["Dip med hopp" "Negativ dip"] :next ["Russisk dip" "Dip på enkel stang"]}
 
- {:name     "Russian Dip"
+ {:name     "Russisk dip"
+  :image    "russian-dip.png"
   :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
   :previous ["Dip"]}
 
- {:name     "Single Bar Dip"
+ {:name     "Dip på enkel stang"
+  :image    "single-bar-dip.png"
   :category #{:climb :bar :dip :push :bent-arm-strength :natural} :measurement :repetitions
   :previous ["Dip"]}
 
  ;;-------------- Pull up --------------
- {:name     "Jumping Pull Up"
+ {:name     "Pull-up med hopp"
+  :image    "jumping-pull-up.png"
   :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetitions
-  :next     ["Pull Up"]}
+  :next     ["Pull-up"]}
 
- {:name     "Negative Pull Up"
+ {:name     "Negativ pull-up"
+  :image    "negative-pull-up.png"
   :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetitions
-  :next     ["Pull Up"]}
+  :next     ["Pull-up"]}
 
- {:name     "Pull Up"
+ {:name     "Pull-up"
+  :image    "pull-up.png"
   :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetition
-  :previous ["Negative Pull Up" "Jumping Pull Up"] :next ["Pull Up Reach"]}
+  :previous ["Negativ pull-up" "Pull-up med hopp"] :next ["Pull-up og strekke seg"]}
 
- {:name     "Pull Up Reach"
+ {:name     "Pull-up og strekke seg"
+  :image    "pull-up-reach.png"
   :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetition
-  :previous ["Pull Up"] :next ["Explosive Pull Up"]}
+  :previous ["Pull-up"] :next ["Eksplosiv pull-up"]}
 
- {:name     "Explosive Pull Up"
+ {:name     "Eksplosiv pull-up"
+  :image    "explosive-pull-up.png"
   :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetition
-  :previous ["Pull Up Reach"]}
+  :previous ["Pull-up og strekke seg"]}
 
  ;;-------------- Lifting legs --------------
- {:name     "Hanging Knee Tuck"
+ {:name     "Hengende kneløft"
+  :image    "hanging-knee-tuck.png"
   :category #{:climb :bar :natural :leg-lift} :measurement :repetitions
-  :next     ["Toes To Bar"]}
+  :next     ["Tærne til stanga"]}
 
- {:name     "Toes To Bar"
+ {:name     "Tærne til stanga"
+  :image    "toes-to-bar.png"
   :category #{:climb :bar :natural :leg-lift} :measurement :repetitions
-  :previous ["Hanging Knee Tuck"] :next ["Hanging Side Foot Lift"]}
+  :previous ["Hengende kneløft"] :next ["Hengende sideløft"]}
 
- {:name     "Hanging Side Foot Lift"
+ {:name     "Hengende sideløft"
+  :image    "hanging-side-foot-lift.png"
   :category #{:climb :bar :natural :leg-lift} :measurement :repetitions
-  :previous ["Toes To Bar"] :next ["Hanging Leg Hook"]}
+  :previous ["Tærne til stanga"] :next ["Hengende fotkrok"]}
 
- {:name     "Hanging Leg Hook"
+ {:name     "Hengende fotkrok"
+  :image    "hanging-leg-hook.png"
   :category #{:climb :bar :natural :leg-lift} :measurement :repetitions
-  :previous ["Hanging Side Foot Lift" "Side Swing"]}
+  :previous ["Hengende sideløft" "Svinge sideveis"]}
 
  ;;-------------- Climbing --------------
- {:name     "Sliding Swing Up"
+ {:name     "Svinge seg opp"
+  :image    "sliding-swing-up.png"
   :category #{:climb :bar :natural} :measurement :repetitions
-  :previous ["Hanging Leg Hook"] :next ["Elbow Swing Up"]}
+  :previous ["Hengende fotkrok"] :next ["Svinge seg opp med albuene"]}
 
- {:name     "Elbow Swing Up"
+ {:name     "Svinge seg opp med albuene"
+  :image    "elbow-swing-up.png"
   :category #{:climb :bar :natural} :measurement :repetitions
-  :previous ["Sliding Swing Up"] :next ["Hand Swing Up"]}
+  :previous ["Svinge seg opp"] :next ["Svinge seg opp med hendene"]}
 
- {:name     "Hand Swing Up"
+ {:name     "Svinge seg opp med hendene"
+  :image    "hand-swing-up.png"
   :category #{:climb :bar :natural} :measurement :repetitions
-  :previous ["Elbow Swing Up"] :next ["Elbow Pull Up"]}
+  :previous ["Svinge seg opp med albuene"] :next ["Pull-up fra albuene"]}
 
- {:name     "Elbow Pull Up"
+ {:name     "Pull-up fra albuene"
+  :image    "elbow-pull-up.png"
   :category #{:climb :bar :natural} :measurement :repetitions
-  :previous ["Hanging Pull"]}
+  :previous ["Passiv til aktiv henging"]}
 
- {:name     "Swing Pop Up"
+ {:name     "Svingende pop-up"
+  :image    "swing-pop-up.png"
   :category #{:climb :bar :natural} :measurement :repetitions
-  :previous ["Elbow Pull Up"] :next ["Tuck Pop Up"]}
+  :previous ["Pull-up fra albuene"] :next ["Eksplosiv pop-up"]}
 
- {:name     "Tuck Pop Up"
+ {:name     "Eksplosiv pop-up"
+  :image    "tuck-pop-up.png"
   :category #{:climb :bar :natural} :measurement :repetitions
-  :previous ["Swing Pop Up"] :next ["Muscle Up"]}
+  :previous ["Svingende pop-up"] :next ["Muscle-up"]}
 
- {:name     "Negative Muscle Up"
+ {:name     "Negativ muscle-up"
+  :image    "negative-muscle-up.png"
   :category #{:climb :bar :natural :muscle-up} :measurement :repetitions
-  :next     ["Muscle Up"]}
+  :next     ["Muscle-up"]}
 
- {:name     "Muscle Up"
+ {:name     "Muscle-up"
+  :image    "muscle-up.png"
   :category #{:climb :bar :muscle-up :natural :bent-arm-strength} :measurement :repetitions
-  :previous ["Single Bar Dip" "Explosive Pull Up" "Negative Muscle Up"]}
+  :previous ["Dip på enkel stang" "Eksplosiv pull-up" "Negativ muscle-up"]}
 
- {:name     "Pull Over"
+ {:name     "Pull-over"
+  :image    "pull-over.png"
   :category #{:climb :bar :natural} :measurement :repetitions
-  :previous ["Pull Up" "Toes To Bar"]}
+  :previous ["Pull-up" "Tærne til stanga"]}
 
- {:name     "Rope Climb"
+ {:name     "Tauklatring"
+  :image    "rope-climb.png"
   :category #{:climb :rope :natural} :measurement :distance}
 
  ]

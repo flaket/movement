@@ -1,55 +1,33 @@
 [
 
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Hopp med en fot"
+  :image    "single-leg-jump.png"
+  :category #{:jump} :measurement :repetitions
+  :next ["Hopp med to føtter"]}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Jump"}
- ;{:movement.db/id #movement.db/id[:movement.db.part/user -2] :category/name "Vault"}
- ;{:movement.db/id #movement.db/id[:movement.db.part/user -3] :category/name "Land"}
- ;{:movement.db/id #movement.db/id[:movement.db.part/user -4] :category/name "Fall"}
+ {:name     "Hopp med to føtter"
+  :image    "broad-jump.png"
+  :category #{:jump} :measurement :repetitions
+  :previous ["Hopp med en fot"] :next ["Hopp med tilløp"]}
 
- ;; jumping
- {:db/id             #db/id[:db.part/user -100]
-  :movement/name     "Single Leg Jump"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -101]]}
+ {:name     "Hopp med tilløp"
+  :image    "running-jump.png"
+  :category #{:jump} :measurement :repetitions
+  :previous ["Hopp med en fot"] :next ["Sideveis hopp med tilløp"]}
 
- {:db/id             #db/id[:db.part/user -101]
-  :movement/name     "Broad Jump"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -100]]
-  :movement/harder      [#db/id[:db.part/user -102]]}
+ {:name     "Sideveis hopp med tilløp"
+  :image    "running-lateral-jump.png"
+  :category #{:jump} :measurement :repetitions
+  :previous ["Hopp med tilløp"]}
 
- {:db/id             #db/id[:db.part/user -102]
-  :movement/name     "Running Jump"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -100]]
-  :movement/harder      [#db/id[:db.part/user -105]]}
+ {:name     "Hopp opp"
+  :image    "box-jump.png"
+  :category #{:jump} :measurement :repetitions
+  :previous ["Hopp med to føtter"]}
 
- {:db/id             #db/id[:db.part/user -103]
-  :movement/name     "Box Jump"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -101]]}
-
- {:db/id             #db/id[:db.part/user -104]
-  :movement/name     "Depth Jump"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -101]]}
-
- {:db/id             #db/id[:db.part/user -105]
-  :movement/name     "Running Lateral Jump"
-  :movement/category [#db/id[:db.part/user -1]
-                      #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]]}
+ {:name     "Hopp ned"
+  :image    "depth-jump.png"
+  :category #{:jump} :measurement :repetitions
+  :previous ["Hopp med to føtter"]}
 
  ]
