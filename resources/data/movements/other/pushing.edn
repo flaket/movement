@@ -126,11 +126,6 @@
   :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
   :previous ["Vegg håndstående push-up"] :next ["Håndstående push-up"]}
 
- {:name     "Håndstående push-up med spark"
-  :image    "handstand-kip-push-up.png"
-  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
-  :previous ["Vegg håndstående push-up"] :next ["Håndstående push-up"]}
-
  {:name     "Håndstående push-up"
   :image    "handstand-push-up.png"
   :category #{:bent-arm-strength :push :push-up} :measurement :repetitions

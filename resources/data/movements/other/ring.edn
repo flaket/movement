@@ -33,12 +33,12 @@
   :previous ["Vid dip i ringer"]}
 
  {:name     "Chin-up i ringer"
-  :image    "ring-chin-dip.png"
+  :image    "ring-chin-up.png"
   :category #{:ring :bent-arm-strength :pull :pull-up} :measurement :repetitions
   :next    ["Vid chin-up i ringer" "Falskt grep chin-up" "Assistert pull-up i en arm"]}
 
  {:name     "Vid chin-up i ringer"
-  :image    "wide-ring-chin-dip.png"
+  :image    "wide-ring-chin-up.png"
   :category #{:ring :bent-arm-strength :pull :pull-up} :measurement :repetitions
   :previous ["Chin-up i ringer"]}
 

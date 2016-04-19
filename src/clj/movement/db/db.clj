@@ -315,6 +315,58 @@
 ;; ------- LAB -------
 
 ; teste data:
-; - hver øvelse har et bilde
+; + hver øvelse har et bilde
 ; - hver øvelse med previous/next peker til et øvelsesnavn som finnes
 ; - hver øvelse har measurement, og measurement er en av [:repetitions :duration :distance]
+
+#_(defn image-url [name]
+    (str "public/images/movements/" (str/replace (str/lower-case name) " " "-") ".png"))
+
+
+
+#_(defn url->name [url]
+    (let [name (-> url
+                   (str/split (re-pattern ".png"))
+                   (first)
+                   (str/replace "-" " ")
+                   (str/split (re-pattern " ")))
+          name (map #(str/capitalize %) name)
+          name (-> name
+                   (interleave (cycle " "))
+                   (drop-last)
+                   (str/join))]
+      name))
+
+
+#_(defn find-no-data-images []
+    (let [f (io/file "resources/public/images/movements")
+          images (for [file (file-seq f)] (.getName file))
+          images (drop 2 images)                            ; remove leading junk files
+          no-data-images (filter #(has-no-data? %) images)]
+      {:#images         (count images)
+       :#no-data-images (count no-data-images)
+       :no-data-images  (vec no-data-images)}))
+
+#_(find-no-image-movements)
+#_(find-no-data-images)
+
+
+(def movement-urls ["balancing.edn" "climbing.edn" "crawling.edn" "hanging.edn" "jumping.edn" "lifting.edn" "rolling.edn" "running.edn" "throwing-catching.edn"
+                    "walking.edn" "mobility/mobility.edn" "other/core.edn" "other/footwork.edn" "other/hand-balance.edn" "other/leg-strength.edn"
+                    "other/planche-lever.edn" "other/pulling.edn" "other/pushing.edn" "other/ring.edn"])
+
+(defn load-edn-file
+  "Returns a vector of movement maps, drawn from the edn file."
+  [file]
+  (first (Util/readAll (io/reader (io/resource (str "data/movements/" file))))))
+
+(defn load-and-concat [files]
+  (reduce into [] (map #(load-edn-file %) files)))
+
+(defn has-image? [m]
+  (if (io/resource (str "public/images/movements/" (:image m))) true false))
+
+(defn movements-without-image []
+  (let [no-image-movements (remove #(has-image? %) (load-and-concat movement-urls))]
+    {:#                  (count no-image-movements)
+     :no-image-movements no-image-movements}))

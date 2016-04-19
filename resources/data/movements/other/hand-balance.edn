@@ -24,8 +24,9 @@
 
  {:name     "Håndstående push-up med spark"
   :image    "handstand-push-up-kip.png"
-  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :repetitions
-  :previous ["Spark til håndstående"]}
+  :category #{:handstand :wrist-mobility :shoulder-mobility
+              :bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Vegg håndstående push-up" "Spark til håndstående"] :next ["Håndstående push-up"]}
 
  {:name     "Rulle baklengs til håndstående"
   :image    "backward-roll-to-handstand.png"

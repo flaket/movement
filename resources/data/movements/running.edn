@@ -5,7 +5,7 @@
   :category #{:run :natural} :measurement :distance}
 
  {:name     "Sprinte"
-  :image    "spring.png"
+  :image    "sprint.png"
   :category #{:run :natural} :measurement :distance}
 
  ]

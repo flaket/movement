@@ -38,7 +38,7 @@
   :previous ["Liggende benløft"] :next ["Hengende benløft"]}
 
  {:name     "Hengende benløft"
-  :image    "hanging-bench-leg-lift.png"
+  :image    "hanging-leg-lift.png"
   :category #{:core} :measurement :repetitions
   :previous ["Liggende benløft" "Tærne til stanga"] :next ["Hengende 90 benløft"]}
 

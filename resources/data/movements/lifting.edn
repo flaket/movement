@@ -18,7 +18,7 @@
   :previous ["Markløft"]}
 
  {:name     "Power clean fra hofta"
-  :image    "hanging-power-clean.png"
+  :image    "hang-power-clean.png"
   :category #{:lift :weight :leg-strength :natural} :measurement :repetitions
   :previous ["Markløft"] :next ["Power clean"]}
 
