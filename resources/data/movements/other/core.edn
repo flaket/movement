@@ -1,189 +1,136 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Core Strength"}
+ {:name     "Sit-up"
+  :image    "sit-up.png"
+  :category #{:core} :measurement :repetitions
+  :next     ["Sit-up brodd"]}
 
- ;; abdominal
- {:db/id                #db/id[:db.part/user -98]
-  :movement/name "Sit Up"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/harder      [#db/id[:db.part/user -99]]}
+ {:name     "Sit-up til tærne"
+  :image    "sit-up-pike.png"
+  :category #{:core} :measurement :repetitions
+  :previous ["Sit-up"]}
 
- {:db/id                #db/id[:db.part/user -99]
-  :movement/name "Sit Up Pike"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/easier      [#db/id[:db.part/user -98]]}
+ {:name     "Tuck v-up"
+  :image    "tuck-v-up.png"
+  :category #{:core} :measurement :repetitions
+  :next     ["V-up"]}
 
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Tuck V Up"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -101]]}
+ {:name     "V-up"
+  :image    "v-up.png"
+  :category #{:core} :measurement :repetitions
+  :previous ["V-up"]}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "V Up"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -100]]}
+ {:name     "Sittende benløft"
+  :image    "sitting-leg-lift.png"
+  :category #{:core} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -102]
-  :movement/name "Sitting Leg Lift"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Liggende benløft"
+  :image    "lying-leg-lift.png"
+  :category #{:core} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Lying Leg Lift"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Liggende bensirkler"
+  :image    "lying-leg-circle.png"
+  :category #{:core} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -200]
-  :movement/name "Lying Leg Circle"
-  :movement/category    [#db/id[:db.part/user -1]]}
+ {:name     "Skråbenk benløft"
+  :image    "incline-bench-leg-lift.png"
+  :category #{:core} :measurement :repetitions
+  :previous ["Liggende benløft"] :next ["Hengende benløft"]}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Incline Bench Leg Lift"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -103]]
-  :movement/harder      [#db/id[:db.part/user -105]]}
+ {:name     "Hengende benløft"
+  :image    "hanging-bench-leg-lift.png"
+  :category #{:core} :measurement :repetitions
+  :previous ["Liggende benløft" "Tærne til stanga"] :next ["Hengende 90 benløft"]}
 
- {:db/id                #db/id[:db.part/user -105]
-  :movement/name "Hanging Leg Lift"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -104]]}
+ {:name     "Hollow body"
+  :image    "hollow-body.png"
+  :category #{:core} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user -106]
-  :movement/name "Hollow Body"
-  :movement/measurement :measurement/duration
-  :movement/category    [#db/id[:db.part/user -1]]}
+ {:name     "Hollow body gynge"
+  :image    "hollow-body-rock.png"
+  :category #{:core} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -107]
-  :movement/name "Hollow Body Rock"
-  :movement/measurement :measurement/repetitions
-  :movement/category    [#db/id[:db.part/user -1]]}
+ {:name     "Gynge og rotere"
+  :image    "rotational-rocking.png"
+  :category #{:core} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -108]
-  :movement/name "Parallell Bar Tuck L Sit"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/harder      [#db/id[:db.part/user -109]]
-  :movement/measurement :measurement/duration}
+ {:name     "Tuck l-sit på stang"
+  :image    "parallell-bar-tuck-l-sit.png"
+  :category #{:core} :measurement :duration
+  :next     ["L-sit på stang"]}
 
- {:db/id                #db/id[:db.part/user -109]
-  :movement/name "Parallell Bar L Sit"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -108]]
-  :movement/harder      [#db/id[:db.part/user -110]]}
+ {:name     "L-sit på stang"
+  :image    "parallell-bar-l-sit.png"
+  :category #{:core} :measurement :duration
+  :previous ["Tuck l-sit på stang"] :next     ["L-sit"]}
 
- {:db/id                #db/id[:db.part/user -110]
-  :movement/name "L Sit"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -109]]
-  :movement/harder      [#db/id[:db.part/user -111]]}
+ {:name     "L-sit"
+  :image    "l-sit.png"
+  :category #{:core} :measurement :duration
+  :previous ["L-sit på stang"]  :next     ["L-straddle"]}
 
- {:db/id                #db/id[:db.part/user -111]
-  :movement/name "L Straddle"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/easier      [#db/id[:db.part/user -110]]
-  :movement/harder      [#db/id[:db.part/user -112]]
-  :movement/measurement :measurement/duration}
+ {:name     "L-straddle"
+  :image    "l-straddle.png"
+  :category #{:core} :measurement :duration
+  :previous ["L-sit"]  :next ["L-sit i ringer"]}
 
- {:db/id                #db/id[:db.part/user -112]
-  :movement/name "Ring L Sit"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -109]]}
+ {:name     "L-sit i ringer"
+  :image    "ring-l-sit.png"
+  :category #{:core} :measurement :duration
+  :previous ["L-sit"]}
 
- {:db/id                #db/id[:db.part/user -113]
-  :movement/name "Rotational Rocking"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Hodestående benløft"
+  :image    "headstand-leg-lift.png"
+  :category #{:core} :measurement :repetitions
+  :next ["Hodestående rett benløft"]}
 
-; back
- {:db/id                #db/id[:db.part/user -114]
-  :movement/name "Headstand Leg Lift"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -115]]}
+ {:name     "Hodestående rett benløft"
+  :image    "headstand-straight-leg-lift.png"
+  :category #{:core} :measurement :repetitions
+  :previous     ["Hodestående benløft"]}
 
- {:db/id                #db/id[:db.part/user -115]
-  :movement/name "Headstand Straight Leg Lift"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -114]]}
+ {:name     "Rygghev"
+  :image    "arch-up.png"
+  :category #{:core} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -116]
-  :movement/name "Arch Up"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Supermann"
+  :image    "superman.png"
+  :category #{:core} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user -117]
-  :movement/name "Superman"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/duration}
+ {:name     "Supermann gynge"
+  :image    "superman-rocking.png"
+  :category #{:core} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -118]
-  :movement/name "Superman Rocking"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Planke"
+  :image    "plank.png"
+  :category #{:core} :measurement :duration}
 
-; plank
- {:db/id                #db/id[:db.part/user -119]
-  :movement/name "Plank"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/duration
-  :movement/harder      [#db/id[:db.part/user -122]]}
+ {:name     "Sideplanke"
+  :image    "side-plank.png"
+  :category #{:core} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user -120]
-  :movement/name "Side Plank"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/duration}
+ {:name     "Invertert planke"
+  :image    "inverted-plank.png"
+  :category #{:core} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user -121]
-  :movement/name "Inverted Plank"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/duration}
+ {:name     "Planke på en arm"
+  :image    "one-arm-plank.png"
+  :category #{:core} :measurement :duration
+  :previous ["Planke" "Sideplanke"]}
 
- {:db/id                #db/id[:db.part/user -122]
-  :movement/name "One Arm Plank"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -119]
-                         #db/id[:db.part/user -120]]}
+ {:name     "Hengende 90 benløft"
+  :image    "hanging-90-leg-lift.png"
+  :category #{:core} :measurement :repetitions
+  :previous ["Hengende benløft"] :next ["Hengende 90 90 holde"]}
 
- ; hanging lifting legs
- {:db/id                #db/id[:db.part/user -123]
-  :movement/name "Hanging Knee Tuck"}
+ {:name     "Hengende 90 90 holde"
+  :image    "hanging-90-90-hold.png"
+  :category #{:core} :measurement :duration
+  :previous ["Hengende 90 benløft"]}
 
- {:db/id                #db/id[:db.part/user -124]
-  :movement/name "Toes To Bar"}
-
- {:db/id                #db/id[:db.part/user -125]
-  :movement/name "Hanging Leg Lift"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -123]
-                         #db/id[:db.part/user -124]]
-  :movement/harder      [#db/id[:db.part/user -126]]}
-
- {:db/id                #db/id[:db.part/user -126]
-  :movement/name "Hanging 90 Leg Lift"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -125]]
-  :movement/harder      [#db/id[:db.part/user -128]]}
-
- {:db/id                #db/id[:db.part/user -127]
-  :movement/name "Hanging 90 90 Hold"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -126]]}
-
- {:db/id                #db/id[:db.part/user -128]
-  :movement/name "Hanging One Arm Leg Lift"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -126]]}
+ {:name     "Hengende benløft i en arm"
+  :image    "hanging-90-leg-lift.png"
+  :category #{:core} :measurement :repetitions
+  :previous ["Hengende 90 benløft"]}
 
  ]

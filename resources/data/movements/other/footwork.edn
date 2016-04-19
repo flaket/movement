@@ -1,18 +1,13 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Jump Rope"}
- {:db/id #db/id[:db.part/user -2] :category/name "Footwork"}
+ {:name     "Enkle hopp"
+  :image    "single-under.png"
+  :category #{:jump-rope :footwork} :measurement :repetitions
+  :next     ["Doble hopp"]}
 
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Single Under"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/harder      [#db/id[:db.part/user -101]]}
-
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Double Under"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/easier      [#db/id[:db.part/user -100]]}
+ {:name     "Doble hopp"
+  :image    "double-under.png"
+  :category #{:jump-rope :footwork} :measurement :repetitions
+  :next     ["Enkle hopp"]}
 
  ]

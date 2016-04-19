@@ -310,3 +310,11 @@
 (defn comment! [{:keys [session-url comments]}]
   (h/update-item! creds :sessions {:url session-url} {:comments [:set comments]})
   "ok")
+
+
+;; ------- LAB -------
+
+; teste data:
+; - hver øvelse har et bilde
+; - hver øvelse med previous/next peker til et øvelsesnavn som finnes
+; - hver øvelse har measurement, og measurement er en av [:repetitions :duration :distance]

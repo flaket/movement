@@ -1,199 +1,100 @@
 [
 
- ;; categories
- {:db/id #db/id[:db.part/user -1] :category/name "Handstand"}
- {:db/id #db/id[:db.part/user -2] :category/name "Headstand"}
- {:db/id #db/id[:db.part/user -3] :category/name "Air Baby"}
- {:db/id #db/id[:db.part/user -4] :category/name "Wrist Mobility"}
- {:db/id #db/id[:db.part/user -5] :category/name "Shoulder Mobility"}
- {:db/id #db/id[:db.part/user -6] :category/name "Acrobatic"}
+ {:name     "Gå på veggen"
+  :image    "wall-walk.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :repetitions}
 
- ;; Handstand
- {:db/id                #db/id[:db.part/user -200]
-  :movement/name "Wall Walk"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Rett deg ut"
+  :image    "straighten-into-line.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -201]
-  :movement/name "Straighten Into Line"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Spark til håndstående"
+  :image    "kick-to-handstand.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :repetitions
+  :previous ["Gå på veggen" "Rett deg ut"]}
 
- {:db/id                #db/id[:db.part/user -202]
-  :movement/name "Kick To Handstand"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -200]
-                         #db/id[:db.part/user -201]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Slå hjul"
+  :image    "cartwheel.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility :acrobatic} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Cartwheel"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Gå på hendene"
+  :image    "handstand-walk.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility :acrobatic} :measurement :repetitions
+  :previous ["Spark til håndstående"]}
 
- {:db/id                #db/id[:db.part/user -203]
-  :movement/name "Handstand Walk"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -6]]
-  :movement/easier      [#db/id[:db.part/user -202]]
-  :movement/measurement :measurement/distance}
+ {:name     "Håndstående push-up med spark"
+  :image    "handstand-push-up-kip.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :repetitions
+  :previous ["Spark til håndstående"]}
 
- {:db/id                #db/id[:db.part/user -204]
-  :movement/name "Handstand Push Up Kip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -200]
-                         #db/id[:db.part/user -201]
-                         #db/id[:db.part/user -202]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Rulle baklengs til håndstående"
+  :image    "backward-roll-to-handstand.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :repetitions
+  :previous ["Spark til håndstående"]}
 
- {:db/id                #db/id[:db.part/user -205]
-  :movement/name "Backward Roll To Handstand"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -200]
-                         #db/id[:db.part/user -201]
-                         #db/id[:db.part/user -202]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "L-håndstående"
+  :image    "l-handstand.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :duration
+  :previous ["Spark til håndstående"]}
 
- {:db/id                #db/id[:db.part/user -206]
-  :movement/name "L Handstand"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -200]
-                         #db/id[:db.part/user -201]
-                         #db/id[:db.part/user -202]]
-  :movement/measurement :measurement/duration}
+ {:name     "Håndstående mot vegg på en arm"
+  :image    "one-arm-wall-handstand.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :duration
+  :previous ["Spark til håndstående"]}
 
- {:db/id                #db/id[:db.part/user -207]
-  :movement/name "One Arm Wall Handstand"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -200]
-                         #db/id[:db.part/user -201]
-                         #db/id[:db.part/user -202]]
-  :movement/measurement :measurement/duration}
+ {:name     "Håndstående"
+  :image    "handstand.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :duration
+  :previous ["Spark til håndstående"]}
 
- {:db/id                #db/id[:db.part/user -208]
-  :movement/name "Handstand"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -200]
-                         #db/id[:db.part/user -201]
-                         #db/id[:db.part/user -202]]
-  :movement/measurement :measurement/duration}
+ {:name     "Håndstående push-up"
+  :image    "handstand-push-up-kip.png"
+  :category #{:handstand :wrist-mobility :shoulder-mobility} :measurement :repetitions
+  :previous ["Håndstående push-up med spark" "Håndstående"]}
 
- {:db/id                #db/id[:db.part/user -209]
-  :movement/name "Handstand Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -204]
-                         #db/id[:db.part/user -208]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Benløft til håndstående"
+  :image    "back-extend-to-handstand.png"
+  :category #{:handstand :headstand :wrist-mobility :shoulder-mobility} :measurement :repetitions
+  :previous ["Håndstående push-up" "Hodestående rett benløft"]}
 
- {:db/id                #db/id[:db.part/user -210]
-  :movement/name "Back Extend To Handstand"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -204]
-                         #db/id[:db.part/user -208]
-                         #db/id[:db.part/user -403]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Frosk"
+  :image    "frog-stance.png"
+  :category #{:air-baby :wrist-mobility} :measurement :duration
+  :next     ["Air baby strekk"]}
 
- ;; Air Baby
- {:db/id                #db/id[:db.part/user -300]
-  :movement/name "Frog Stance"
-  :movement/category    [#db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/harder      [#db/id[:db.part/user -301]]
-  :movement/measurement :measurement/duration}
+ {:name     "Air baby strekk"
+  :image    "air-baby-extend-leg.png"
+  :category #{:air-baby :wrist-mobility} :measurement :repetitions
+  :previous ["Frosk"] :next ["Air baby rotasjon"]}
 
- {:db/id                #db/id[:db.part/user -301]
-  :movement/name "Air Baby Extend Leg"
-  :movement/category    [#db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -300]]
-  :movement/harder      [#db/id[:db.part/user -302]]}
+ {:name     "Air baby rotasjon"
+  :image    "air-baby-extend-leg.png"
+  :category #{:air-baby :wrist-mobility} :measurement :repetitions
+  :previous ["Air baby strekk"] :next ["Air baby begge hender"]}
 
- {:db/id                #db/id[:db.part/user -302]
-  :movement/name "Air Baby Extend Rotate"
-  :movement/category    [#db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -301]]
-  :movement/harder      [#db/id[:db.part/user -303]]}
+ {:name     "Air baby begge hender"
+  :image    "static-air-baby-two-arms.png"
+  :category #{:air-baby :wrist-mobility} :measurement :duration
+  :previous ["Air baby rotasjon"] :next ["Air baby fingertupper"]}
 
- {:db/id                #db/id[:db.part/user -303]
-  :movement/name "Static Air Baby Two Arms"
-  :movement/category    [#db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -302]]
-  :movement/harder      [#db/id[:db.part/user -304]]}
+ {:name     "Air baby fingertupper"
+  :image    "static-air-baby-fingertips.png"
+  :category #{:air-baby :wrist-mobility} :measurement :duration
+  :previous ["Air baby begge hender"] :next ["Air baby"]}
 
- {:db/id                #db/id[:db.part/user -304]
-  :movement/name "Static Air Baby Fingertips"
-  :movement/category    [#db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -303]]
-  :movement/harder      [#db/id[:db.part/user -305]]}
+ {:name     "Air baby"
+  :image    "static-air-baby.png"
+  :category #{:air-baby :wrist-mobility} :measurement :duration
+  :previous ["Air baby begge hender"] :next ["Air baby"]}
 
- {:db/id                #db/id[:db.part/user -305]
-  :movement/name "Static Air Baby"
-  :movement/category    [#db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -304]]}
+ {:name     "Frosk til hodestående"
+  :image    "frog-stance-to-headstand.png"
+  :category #{:headstand :wrist-mobility} :measurement :repetitions
+  :previous ["Frosk"] :next ["Hodestående"]}
 
- ;; Headstand
- {:db/id                #db/id[:db.part/user -400]
-  :movement/name "Frog Stance To Headstand"
-  :movement/category    [#db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -300]]
-  :movement/harder      [#db/id[:db.part/user -401]]}
-
- {:db/id                #db/id[:db.part/user -401]
-  :movement/name "Headstand"
-  :movement/category    [#db/id[:db.part/user -2]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -400]]
-  :movement/harder      [#db/id[:db.part/user -402]]}
-
- {:db/id                #db/id[:db.part/user -402]
-  :movement/name "Headstand Leg Lift"
-  :movement/category    [#db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -401]]
-  :movement/harder      [#db/id[:db.part/user -403]]}
-
- {:db/id                #db/id[:db.part/user -403]
-  :movement/name "Headstand Straight Leg Lift"
-  :movement/category    [#db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -402]]
-  :movement/harder      [#db/id[:db.part/user -210]]}
+ {:name     "Hodestående"
+  :image    "headstand.png"
+  :category #{:headstand} :measurement :repetitions
+  :previous ["Frosk til hodestående"] :next ["Hodestående benløft"]}
 
  ]

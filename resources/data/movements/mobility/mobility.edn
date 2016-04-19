@@ -1,422 +1,224 @@
 [
 
- ;; category
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Beinsving forover"
+  :image    "front-leg-swing.png"
+  :category #{:mobility :hip-mobility} :measurement :repetitions}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Mobility"}
- {:db/id #db/id[:db.part/user -2] :category/name "Hip Mobility"}
- {:db/id #db/id[:db.part/user -3] :category/name "Shoulder Mobility"}
- {:db/id #db/id[:db.part/user -4] :category/name "Wrist Mobility"}
- {:db/id #db/id[:db.part/user -5] :category/name "Ankle Mobility"}
- {:db/id #db/id[:db.part/user -6] :category/name "Spine Mobility"}
- {:db/id #db/id[:db.part/user -7] :category/name "Bridge"}
- {:db/id #db/id[:db.part/user -8] :category/name "Balance"}
- {:db/id #db/id[:db.part/user -9] :category/name "Elastic Band"}
- {:db/id #db/id[:db.part/user -10] :category/name "Weight"}
- {:db/id #db/id[:db.part/user -11] :category/name "Sit/Stand Transition"}
- {:db/id #db/id[:db.part/user -12] :category/name "Acrobatic"}
+ {:name     "Beinsving sideveis"
+  :image    "side-leg-swing.png"
+  :category #{:mobility :hip-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Tripod Transition"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Beinsving bakover"
+  :image    "back-leg-swing.png"
+  :category #{:mobility :hip-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Ostrich Walk"
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/measurement :measurement/distance}
+ {:name     "Tripod-overgang"
+  :image    "tripod-transition.png"
+  :category #{:mobility :sit-stand-transition :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Horse Stance Walk"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/distance}
+ {:name     "Strutsegange"
+  :image    "ostrich-walk.png"
+  :category #{:mobility} :measurement :distance}
 
- ;; Hip
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Squat Hip Rotation"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Hestegange"
+  :image    "horse-stance-walk.png"
+  :category #{:mobility :hip-mobility} :measurement :distance}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Knebøy hofterotasjon"
+  :image    "squat-hip-rotation.png"
+  :category #{:mobility :hip-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Resting Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration}
+ {:name     "Knebøy"
+  :image    "squat.png"
+  :category #{:mobility :hip-mobility :sit-stand-transition :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Split Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Knebøy hvile"
+  :image    "resting-squat.png"
+  :category #{:mobility :hip-mobility :ankle-mobility :sit-stand-transition :natural} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Lunge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Knebøy splitt"
+  :image    "split-squat.png"
+  :category #{:mobility :hip-mobility :sit-stand-transition :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Squat To Kneeling"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Utfall"
+  :image    "lunge.png"
+  :category #{:mobility :hip-mobility :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Split Kneeling To Sitting"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Knebøy til knele"
+  :image    "squat-to-kneeling.png"
+  :category #{:mobility :hip-mobility :ankle-mobility :sit-stand-transition :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Split Kneeling Walk"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/distance}
+ {:name     "Splitt knele til sitte"
+  :image    "split-kneeling-to-sitting.png"
+  :category #{:mobility :hip-mobility :sit-stand-transition :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Squat To Tall Kneeling"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Splitt knele til sitte"
+  :image    "split-kneeling-to-sitting.png"
+  :category #{:mobility :hip-mobility :sit-stand-transition :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Deep Knee Bend"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/duration}
+ {:name     "Knebøy til høy knele"
+  :image    "squat-to-tall-kneeling.png"
+  :category #{:mobility :hip-mobility :ankle-mobility :sit-stand-transition :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Split Sit"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Sitte på huk"
+  :image    "deep-knee-bend.png"
+  :category #{:mobility :hip-mobility :sit-stand-transition :natural} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Knee Push Away"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Splitt sitt ned"
+  :image    "split-sit.png"
+  :category #{:mobility :hip-mobility :sit-stand-transition :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Dynamic Soleus Stretch"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Dytt kneet vekk"
+  :image    "knee-push-away.png"
+  :category #{:mobility :hip-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Floor Hip Rotation"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Dynamisk soleus-strekk"
+  :image    "dynamic-soleus-stretch.png"
+  :category #{:mobility :hip-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Toes Stretch"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/duration}
+ {:name     "Tåstrekk"
+  :image    "toes-stretch.png"
+  :category #{:mobility :hip-mobility} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Dynamic Toes Stretch"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Dynamisk tåstrekk"
+  :image    "dynamic-toes-stretch.png"
+  :category #{:mobility :hip-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Squat Sky Reach"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Hofterotasjoner på gulvet"
+  :image    "floor-hip-rotation.png"
+  :category #{:mobility :hip-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Sky Reach Hold"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/duration}
+ {:name     "Knebøy strekk mot taket"
+  :image    "squat-sky-reach.png"
+  :category #{:mobility :hip-mobility :spine-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Prayer Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Knebøy hold mot taket"
+  :image    "sky-reach-hold.png"
+  :category #{:mobility :hip-mobility :spine-mobility} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Squat Bow"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Knebøy bønn"
+  :image    "prayer-squat.png"
+  :category #{:mobility :hip-mobility :spine-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Front Leg Swing"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Knebøy bukk"
+  :image    "squat-bow.png"
+  :category #{:mobility :hip-mobility :spine-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Side Leg Swing"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Knele til halv knele"
+  :image    "kneeling-to-tall-half-kneeling.png"
+  :category #{:mobility :hip-mobility :sit-stand-transition} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Back Leg Swing"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Knele til høy knele"
+  :image    "kneeling-to-tall-kneeling.png"
+  :category #{:mobility :hip-mobility :sit-stand-transition} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Kneeling To Tall Half Kneeling"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Sideveis halv knele"
+  :image    "lateral-half-kneeling.png"
+  :category #{:mobility :hip-mobility :ankle-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Kneeling To Tall Kneeling"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Sitte til halv knele"
+  :image    "sit-to-tall-half-kneeling.png"
+  :category #{:mobility :hip-mobility :sit-stand-transition} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Lateral Half Kneeling"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -5]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Skuldervridning med strikk"
+  :image    "band-shoulder-dislocation.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Sit To Tall Half Kneeling"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Utvendig rotasjon med strikk"
+  :image    "band-external-rotation.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
+ {:name     "Heve sideveis med strikk"
+  :image    "band-lateral-raise.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
- ;; Shoulder
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band Shoulder Dislocation"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Rotasjon med strikk over hodet"
+  :image    "band-overhead-rotation.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band External Rotation"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Rotasjon med strikk"
+  :image    "band-side-rotation.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band Lateral Raise"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Lav rotasjon med strikk"
+  :image    "band-low-rotation.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band Overhead Rotation"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Flies med strikk over hodet"
+  :image    "band-overhead-fly.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band Side Rotation"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Flies med strikk"
+  :image    "band-side-fly.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band Low Rotation"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Lave flies med strikk"
+  :image    "band-low-fly.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band Overhead Fly"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Scapula push-up"
+  :image    "scapula-push-up.png"
+  :category #{:mobility :shoulder-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band Side Fly"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Trekk ned med strikk"
+  :image    "band-overhead-pull-down.png"
+  :category #{:mobility :shoulder-mobility :elastic-band} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band Low Fly"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Kubansk rotasjon"
+  :image    "cuban-rotation.png"
+  :category #{:mobility :shoulder-mobility :weight} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Scapula Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Tøye håndledd"
+  :image    "wrist-stretches.png"
+  :category #{:mobility :wrist-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Band Overhead Pull Down"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Dynamisk ankelfleksjon"
+  :image    "dynamic-reach.png"
+  :category #{:mobility :ankle-mobility} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Cuban Rotation"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -10]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "4-veis ryggradstøying"
+  :image    "four-way-spine-stretch.png"
+  :category #{:mobility :spine-mobility} :measurement :repetitions}
 
- ;; Wrist
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Wrist Stretches"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Jefferson curl"
+  :image    "jefferson-curl.png"
+  :category #{:mobility :spine-mobility :weight} :measurement :repetitions}
 
- ; more wrist exercises: wrist pushup variations, wrist rolls
+ {:name     "Rotasjon mot veggen"
+  :image    "wall-rotation.png"
+  :category #{:mobility :shoulder-mobility :spine-mobility} :measurement :repetitions
+  :next     ["Rotasjon inn i lav bro"]}
 
- ;; Ankle
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Dynamic Reach"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -5]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Skli inn i lav bro"
+  :image    "slide-into-low-bridge.png"
+  :category #{:mobility :shoulder-mobility :wrist-mobility :spine-mobility :bridge} :measurement :repetitions
+  :next     ["Rotasjon inn i lav bro"]}
 
- ; more ankle exercises: toe-lifts in several directions
+ {:name     "Rotasjon inn i lav bro"
+  :image    "rotate-into-low-bridge.png"
+  :category #{:mobility :shoulder-mobility :wrist-mobility :spine-mobility :bridge} :measurement :repetitions
+  :previous ["Rotasjon mot veggen" "Skli inn i lav bro"]}
 
- ;; Spine
+ {:name     "Høy bro"
+  :image    "high-bridge.png"
+  :category #{:mobility :shoulder-mobility :wrist-mobility :spine-mobility :bridge} :measurement :repetitions
+  :next     ["Rotasjon inn i høy bro"]}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Four Way Spine Stretch"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Bro push-up"
+  :image    "bridge-push-up.png"
+  :category #{:mobility :shoulder-mobility :wrist-mobility :spine-mobility :bridge} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Jefferson Curl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -10]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Rotasjon inn i høy bro"
+  :image    "rotate-into-high-bridge.png"
+  :category #{:mobility :shoulder-mobility :wrist-mobility :spine-mobility :bridge} :measurement :repetitions
+  :previous ["Rotasjon inn i lav bro" "Høy bro"]}
 
- {:db/id                #db/id[:db.part/user -200]
-  :movement/name "Wall Rotation"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]]
-  :movement/harder      [#db/id[:db.part/user -202]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Bre seg bakover"
+  :image    "backward-sprawl.png"
+  :category #{:sit-stand-transition :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -201]
-  :movement/name "Slide Into Low Bridge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/harder      [#db/id[:db.part/user -202]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user -202]
-  :movement/name "Rotate Into Low Bridge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/easier      [#db/id[:db.part/user -200]
-                         #db/id[:db.part/user -201]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user -203]
-  :movement/name "High Bridge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/harder      [#db/id[:db.part/user -205]]
-  :movement/measurement :measurement/duration}
-
- {:db/id                #db/id[:db.part/user -204]
-  :movement/name "Bridge Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/repetitions}
-
- ; bridge push up one leg, bridge push up one arm
-
- {:db/id                #db/id[:db.part/user -205]
-  :movement/name "Rotate Into High Bridge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/easier      [#db/id[:db.part/user -200]
-                         #db/id[:db.part/user -203]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user -206]
-  :movement/name "Backward Sprawl"
-  :movement/category    [#db/id[:db.part/user -11]
-                         #db/id[:db.part/user -33]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user -207]
-  :movement/name "Gymnastic Backward Roll"
-  :movement/category    [#db/id[:db.part/user -12]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Baklengs turnrulle"
+  :image    "gymnastic-backward-roll.png"
+  :category #{:acrobatic} :measurement :repetitions}
 
  ]
