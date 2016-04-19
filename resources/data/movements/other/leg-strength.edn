@@ -1,162 +1,77 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Leg Strength"}
- {:db/id #db/id[:db.part/user -2] :category/name "Lift"}
- {:db/id #db/id[:db.part/user -3] :category/name "Weight"}
- {:db/id #db/id[:db.part/user -4] :category/name "Squat"}
- {:db/id #db/id[:db.part/user -5] :category/name "Lunge"}
- {:db/id #db/id[:db.part/user -6] :category/name "Single Leg"}
- {:db/id #db/id[:db.part/user -7] :category/name "Balance"}
- {:db/id #db/id[:db.part/user -8] :category/name "Push"}
- {:db/id #db/id[:db.part/user -9] :category/name "Carry"}
- {:db/id #db/id[:db.part/user -10] :category/name "Jump"}
- {:db/id #db/id[:db.part/user -11] :category/name "Acrobatic"}
+ {:name     "Salto"
+  :image    "front-flip.png"
+  :category #{:jump :acrobatic} :measurement :repetitions
+  :previous ["Sideveis hopp med tilløp" "Hopp opp"]}
 
- {:db/id             #db/id[:db.part/user -300]
-  :movement/name     "Running Lateral Jump"}
- {:db/id             #db/id[:db.part/user -301]
-  :movement/name     "Box Jump"}
+ {:name     "Baklengs salto"
+  :image    "back-flip.png"
+  :category #{:jump :acrobatic} :measurement :repetitions
+  :previous ["Sideveis hopp med tilløp" "Hopp opp"]}
 
- ;; more leg strength in lifting.edn
+ {:name     "Vektet knebøy"
+  :image    "back-squat.png"
+  :category #{:leg-strength :lift :weight :squat} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Front Flip"
-  :movement/category    [#db/id[:db.part/user -10]
-                         #db/id[:db.part/user -11]]
-  :movement/easier      [#db/id[:db.part/user -300]
-                         #db/id[:db.part/user -301]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Over hodet knebøy"
+  :image    "overhead-squat.png"
+  :category #{:leg-strength :lift :weight :squat} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Back Flip"
-  :movement/category    [#db/id[:db.part/user -10]
-                         #db/id[:db.part/user -300]
-                         #db/id[:db.part/user -301]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Vektet utfall"
+  :image    "back-lunge.png"
+  :category #{:leg-strength :lift :weight :lunge} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -102]
-  :movement/name "Back Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Over hodet utfall"
+  :image    "overhead-lunge.png"
+  :category #{:leg-strength :lift :weight :lunge} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Overhead Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Rykk"
+  :image    "snatch.png"
+  :category #{:leg-strength :lift :weight :squat} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Back Lunge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -5]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Thruster"
+  :image    "thruster.png"
+  :category #{:leg-strength :lift :weight :squat :push} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -105]
-  :movement/name "Overhead Lunge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -5]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Hevet knebøy splitt"
+  :image    "elevated-split-squat.png"
+  :category #{:leg-strength :single-leg} :measurement :repetitions
+  :next     ["Pistol med stol"]}
 
- {:db/id                #db/id[:db.part/user -106]
-  :movement/name "Snatch"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Pistol med stol"
+  :image    "chair-pistol-squat.png"
+  :category #{:leg-strength :single-leg} :measurement :repetitions
+  :previous ["Hevet knebøy splitt"] :next ["Pistol"]}
 
- {:db/id                #db/id[:db.part/user -107]
-  :movement/name "Thruster"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -8]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Pistol"
+  :image    "pistol-squat.png"
+  :category #{:leg-strength :single-leg :balance} :measurement :repetitions
+  :previous ["Pistol med stol"]}
 
- {:db/id                #db/id[:db.part/user -108]
-  :movement/name "Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Reke med leggen"
+  :image    "shin-shrimp-squat.png"
+  :category #{:leg-strength :single-leg :balance} :measurement :repetitions
+  :next     ["Reke med kneet"]}
 
- {:db/id                #db/id[:db.part/user -109]
-  :movement/name "Lunge"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -5]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -109]]}
+ {:name     "Reke med kneet"
+  :image    "knee-shrimp-squat.png"
+  :category #{:leg-strength :single-leg :balance} :measurement :repetitions
+  :previous ["Reke med leggen"] :next ["Reke"]}
 
- {:db/id                #db/id[:db.part/user -110]
-  :movement/name "Elevated Split Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -111]]}
+ {:name     "Reke"
+  :image    "shrimp-squat.png"
+  :category #{:leg-strength :single-leg :balance} :measurement :repetitions
+  :previous ["Reke med kneet"]}
 
- {:db/id                #db/id[:db.part/user -111]
-  :movement/name "Chair Pistol Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -112]]}
+ {:name     "Hevet kryssende pistol"
+  :image    "elevated-crossing-pistol-squat.png"
+  :category #{:leg-strength :single-leg :balance} :measurement :repetitions
+  :previous ["Pistol med stol"] :next ["Kryssende pistol"]}
 
- {:db/id                #db/id[:db.part/user -112]
-  :movement/name "Pistol Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user -113]
-  :movement/name "Shin Shrimp Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -114]]}
-
- {:db/id                #db/id[:db.part/user -114]
-  :movement/name "Knee Shrimp Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -113]]
-  :movement/harder      [#db/id[:db.part/user -115]]}
-
- {:db/id                #db/id[:db.part/user -115]
-  :movement/name "Shrimp Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -114]]}
-
- {:db/id                #db/id[:db.part/user -116]
-  :movement/name "Elevated Crossing Pistol Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -110]]
-  :movement/harder      [#db/id[:db.part/user -117]]}
-
- {:db/id                #db/id[:db.part/user -117]
-  :movement/name "Crossing Pistol Squat"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -116]]}
+ {:name     "Kryssende pistol"
+  :image    "crossing-pistol-squat.png"
+  :category #{:leg-strength :single-leg :balance} :measurement :repetitions
+  :previous ["Hevet kryssende pistol"]}
 
  ]

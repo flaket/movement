@@ -30,7 +30,7 @@
 
  {:name     "Knebøy"
   :image    "squat.png"
-  :category #{:mobility :hip-mobility :sit-stand-transition :natural} :measurement :repetitions}
+  :category #{:mobility :hip-mobility :sit-stand-transition :leg-strength :natural} :measurement :repetitions}
 
  {:name     "Knebøy hvile"
   :image    "resting-squat.png"
@@ -42,7 +42,7 @@
 
  {:name     "Utfall"
   :image    "lunge.png"
-  :category #{:mobility :hip-mobility :natural} :measurement :repetitions}
+  :category #{:mobility :hip-mobility :leg-strength :natural} :measurement :repetitions}
 
  {:name     "Knebøy til knele"
   :image    "squat-to-kneeling.png"
@@ -158,7 +158,7 @@
 
  {:name     "Scapula push-up"
   :image    "scapula-push-up.png"
-  :category #{:mobility :shoulder-mobility} :measurement :repetitions}
+  :category #{:straight-arm-strength :mobility :shoulder-mobility} :measurement :repetitions}
 
  {:name     "Trekk ned med strikk"
   :image    "band-overhead-pull-down.png"

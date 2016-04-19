@@ -1,276 +1,148 @@
 [
 
- {:db/id #db/id[:db.part/user -33] :category/name "Practical Movements"}
+ {:name     "Push-up på knærne"
+  :image    "knee-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :next     ["Push-up"]}
 
- {:db/id #db/id[:db.part/user -1] :category/name "Bent Arm Strength"}
- {:db/id #db/id[:db.part/user -2] :category/name "Push"}
- {:db/id #db/id[:db.part/user -3] :category/name "Push Up"}
- {:db/id #db/id[:db.part/user -4] :category/name "Dip"}
- {:db/id #db/id[:db.part/user -5] :category/name "Headstand"}
- {:db/id #db/id[:db.part/user -6] :category/name "Bar"}
- {:db/id #db/id[:db.part/user -7] :category/name "Bridge"}
- {:db/id #db/id[:db.part/user -8] :category/name "Wrist Mobility"}
- {:db/id #db/id[:db.part/user -9] :category/name "Ring"}
+ {:name     "Push-up"
+  :image    "push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up på knærne"] :next ["Vid push-up" "Push-up diamant" "Pseudo-planche push-up"
+                                         "Hindu push-up" "Russisk push-up" "Push-up på fingertuppene"
+                                         "Sideveis push-up" "Push-up i ringer"]}
 
- ; push up
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Knee Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -101]]}
+ {:name     "Push-up diamant"
+  :image    "diamond-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up"]}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -100]]
-  :movement/harder      [#db/id[:db.part/user -104]
-                         #db/id[:db.part/user -105]
-                         #db/id[:db.part/user -106]
-                         #db/id[:db.part/user -108]
-                         #db/id[:db.part/user -111]
-                         #db/id[:db.part/user -112]
-                         #db/id[:db.part/user -113]
-                         #db/id[:db.part/user -114]]}
+ {:name     "Vid push-up"
+  :image    "wide-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up"]}
 
- {:db/id                #db/id[:db.part/user -102]
-  :movement/name "Burpee"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -101]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Pseudo-planche push-up"
+  :image    "pseudo-planche-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up"]}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Forward Sprawl To Push Up"
-  :movement/category    [#db/id[:db.part/user -33]
-                         #db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Hindu push-up"
+  :image    "hindu-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up"] :next ["Push-up i vinkel"]}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Wide Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -101]]}
+ {:name     "Russisk push-up"
+  :image    "russian-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up"]}
 
- {:db/id                #db/id[:db.part/user -105]
-  :movement/name "Diamond Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -101]]}
+ {:name     "Push-up på fingertuppene"
+  :image    "fingertip-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up"]}
 
- {:db/id                #db/id[:db.part/user -106]
-  :movement/name "Pseudo Planche Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -101]]}
+ {:name     "Sideveis push-up"
+  :image    "lateral-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up"]}
 
- {:db/id                #db/id[:db.part/user -107]
-  :movement/name "Headstand Push Out"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -101]]}
+ {:name     "Push-up i ringer"
+  :image    "ring-push-up.png"
+  :category #{:bent-arm-strength :push :push-up :ring} :measurement :repetitions
+  :previous ["Push-up"]}
 
- {:db/id                #db/id[:db.part/user -108]
-  :movement/name "Hindu Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -101]]}
+ {:name     "Burpee"
+  :image    "burpee.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up"]}
 
- {:db/id                #db/id[:db.part/user -109]
-  :movement/name "Pike Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -108]]
-  :movement/harder      [#db/id[:db.part/user -110]]}
+ {:name     "Bre seg forover til push-up"
+  :image    "forward-sprawl-to-push-up.png"
+  :category #{:bent-arm-strength :push :push-up :natural} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -110]
-  :movement/name "Elevated Pike Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -109]]
-  :movement/harder      [#db/id[:db.part/user -121]]}
+ {:name     "Dytt ut fra hodestående"
+  :image    "headstand-push-out.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up"]}
 
- {:db/id                #db/id[:db.part/user -111]
-  :movement/name "Russian Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -101]]}
+ {:name     "Dytt ut fra hodestående"
+  :image    "headstand-push-out.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Hindu push-up"] :next ["Hevet pike push-up"]}
 
- {:db/id                #db/id[:db.part/user -112]
-  :movement/name "Fingertip Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -8]]
-  :movement/easier      [#db/id[:db.part/user -101]]}
+ {:name     "Push-up i vinkel"
+  :image    "pike-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Hindu push-up"] :next ["Hevet push-up i vinkel"]}
 
- {:db/id                #db/id[:db.part/user -113]
-  :movement/name "Lateral Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -101]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Hevet push-up i vinkel"
+  :image    "elevated-pike-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up i vinkel"] :next ["Vegg håndstående push-up med spark"]}
 
- {:db/id                #db/id[:db.part/user -114]
-  :movement/name "Ring Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/easier      [#db/id[:db.part/user -101]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Push-up bro"
+  :image    "bridge-push-up.png"
+  :category #{:bent-arm-strength :push :push-up :bridge} :measurement :repetitions
+  :previous ["Push-up"] :next ["Push-up bro ett ben"]}
 
- {:db/id                #db/id[:db.part/user -500]
-  :movement/name "Spiderman Crawl"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]}
+ {:name     "Push-up bro ett ben"
+  :image    "one-leg-bridge-push-up.png"
+  :category #{:bent-arm-strength :push :push-up :bridge} :measurement :repetitions
+  :previous ["Push-up bro"] :next ["Push-up bro en arm"]}
 
- ; ring wide push up
- ; ring archer push up
- ; ring pseudo planche push up
+ {:name     "Push-up bro en arm"
+  :image    "one-arm-bridge-push-up.png"
+  :category #{:bent-arm-strength :push :push-up :bridge} :measurement :repetitions
+  :previous ["Push-up bro ett ben"]}
 
- ; bridge push up
- {:db/id                #db/id[:db.part/user -115]
-  :movement/name "Bridge Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -101]]
-  :movement/harder      [#db/id[:db.part/user -116]]}
+ {:name     "Bueskytter push-up"
+  :image    "archer-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Vid push-up" "Push-up diamant"] :next ["Push-up en arm"]}
 
- {:db/id                #db/id[:db.part/user -116]
-  :movement/name "One Leg Bridge Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -7]]
-  :movement/easier      [#db/id[:db.part/user -115]]
-  :movement/harder      [#db/id[:db.part/user -117]]}
+ {:name     "Push-up en arm"
+  :image    "one-arm-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Bueskytter push-up"] :next ["Push-up en arm ett ben"]}
 
- {:db/id                #db/id[:db.part/user -117]
-  :movement/name "One Arm Bridge Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -7]]
-  :movement/easier      [#db/id[:db.part/user -116]]}
+ {:name     "Push-up en arm ett ben"
+  :image    "one-leg-one-arm-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Push-up en arm"]}
 
- ; one arm push up
- {:db/id                #db/id[:db.part/user -118]
-  :movement/name "Archer Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -104]
-                         #db/id[:db.part/user -105]]
-  :movement/harder      [#db/id[:db.part/user -119]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Vegg håndstående push-up med spark"
+  :image    "wall-kip-handstand-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Hevet push-up i vinkel"] :next ["Vegg håndstående push-up"]}
 
- {:db/id                #db/id[:db.part/user -119]
-  :movement/name "One Arm Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -118]]
-  :movement/harder      [#db/id[:db.part/user -120]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Vegg håndstående push-up"
+  :image    "wall-handstand-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Vegg håndstående push-up med spark"] :next ["Håndstående push-up i ringer"]}
 
- {:db/id                #db/id[:db.part/user -120]
-  :movement/name "One Leg One Arm Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -119]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Håndstående push-up i ringer"
+  :image    "ring-handstand-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Vegg håndstående push-up"] :next ["Håndstående push-up"]}
 
- ; handstand push up
- {:db/id                #db/id[:db.part/user -121]
-  :movement/name "Wall Kip Handstand Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -107]
-                         #db/id[:db.part/user -110]]
-  :movement/harder      [#db/id[:db.part/user -122]]}
+ {:name     "Håndstående push-up med spark"
+  :image    "handstand-kip-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Vegg håndstående push-up"] :next ["Håndstående push-up"]}
 
- {:db/id                #db/id[:db.part/user -122]
-  :movement/name "Wall Handstand Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -121]]
-  :movement/harder      [#db/id[:db.part/user -123]]}
+ {:name     "Håndstående push-up"
+  :image    "handstand-push-up.png"
+  :category #{:bent-arm-strength :push :push-up} :measurement :repetitions
+  :previous ["Håndstående push-up med spark"]}
 
- {:db/id                #db/id[:db.part/user -123]
-  :movement/name "Ring Handstand Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/easier      [#db/id[:db.part/user -122]]
-  :movement/harder      [#db/id[:db.part/user -125]]}
+ {:name     "Koreansk dip"
+  :image    "korean-dip.png"
+  :category #{:bent-arm-strength :push :dip :bar} :measurement :repetitions
+  :previous ["Dip på enkel stang"]}
 
- {:db/id                #db/id[:db.part/user -124]
-  :movement/name "Handstand Push Up Kip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -122]]
-  :movement/harder      [#db/id[:db.part/user -125]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user -125]
-  :movement/name "Handstand Push Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/easier      [#db/id[:db.part/user -124]]
-  :movement/measurement :measurement/repetitions}
-
- ; Dip
- ; most dips in climbing.edn
-
- {:db/id                #db/id[:db.part/user -126]
-  :movement/name "Single Bar Dip"
-  :movement/harder      [#db/id[:db.part/user -127]]}
-
- {:db/id                #db/id[:db.part/user -127]
-  :movement/name "Korean Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -126]]}
-
- {:db/id                #db/id[:db.part/user -128]
-  :movement/name "Tricep Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Tricep dip"
+  :image    "tricep-dip.png"
+  :category #{:bent-arm-strength :push :dip} :measurement :repetitions}
 
  ]

@@ -45,9 +45,9 @@
  {:name     "Push-press"
   :image    "push-press.png"
   :category #{:lift :weight :push :natural} :measurement :repetitions
-  :previous ["Skulderpress"] :next ["Rykk"]}
+  :previous ["Skulderpress"] :next ["Støt"]}
 
- {:name     "Rykk"
+ {:name     "Støt"
   :image    "jerk.png"
   :category #{:lift :weight :push :natural} :measurement :repetitions
   :previous ["Push-press"]}

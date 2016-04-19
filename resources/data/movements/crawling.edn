@@ -47,12 +47,12 @@
 
  {:name     "Spiderman-kravle"
   :image    "spiderman-crawl.png"
-  :category #{:crawl} :measurement :distance
+  :category #{:crawl :bent-arm-strength :push-up :push} :measurement :distance
   :previous ["Bjørnekravle"] :next ["Øglekravle"]}
 
  {:name     "Øglekravle"
   :image    "lizard-crawl.png"
-  :category #{:crawl} :measurement :distance
+  :category #{:crawl :bent-arm-strength} :measurement :distance
   :previous ["Spiderman-kravle"] :next ["Øglekravle"]}
 
  {:name     "Kravle som måler"

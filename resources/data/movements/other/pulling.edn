@@ -1,88 +1,43 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Bent Arm Strength"}
- {:db/id #db/id[:db.part/user -2] :category/name "Pulling"}
- {:db/id #db/id[:db.part/user -3] :category/name "Pull Up"}
- {:db/id #db/id[:db.part/user -4] :category/name "Bar"}
+ {:name     "Ro"
+  :image    "row.png"
+  :category #{:bent-arm-strength :pull :pull-up :bar} :measurement :repetitions
+  :next     ["Chin-up" "Pull-up"]}
 
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Row"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/harder      [#db/id[:db.part/user -101]
-                         #db/id[:db.part/user -102]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Chin-up"
+  :image    "chin-up.png"
+  :category #{:bent-arm-strength :pull :pull-up :bar} :measurement :repetitions
+  :previous ["Ro"] :next ["Vid pull-up"]}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Chin Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/easier      [#db/id[:db.part/user -100]]
-  :movement/harder      [#db/id[:db.part/user -103]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Vid pull-up"
+  :image    "wide-pull-up.png"
+  :category #{:bent-arm-strength :pull :pull-up :bar} :measurement :repetitions
+  :previous ["Chin-up"] :next ["Pull-up til bryst"]}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Wide Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/easier      [#db/id[:db.part/user -101]]
-  :movement/harder      [#db/id[:db.part/user -104]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Pull-up til bryst"
+  :image    "chest-pull-up.png"
+  :category #{:bent-arm-strength :pull :pull-up :bar} :measurement :repetitions
+  :previous ["Pull-up"] :next ["Eksplosiv pull-up" "Bueskytter pull-up"]}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Chest Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/easier      [#db/id[:db.part/user -101]
-                         #db/id[:db.part/user -104]]
-  :movement/harder      [#db/id[:db.part/user -105]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Bueskytter pull-up"
+  :image    "archer-pull-up.png"
+  :category #{:bent-arm-strength :pull :pull-up :bar} :measurement :repetitions
+  :previous ["Pull-up til bryst"] :next ["Assistert en arm pull-up"]}
 
- {:db/id                #db/id[:db.part/user -105]
-  :movement/name "Archer Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/easier      [#db/id[:db.part/user -104]]
-  :movement/harder      [#db/id[:db.part/user -106]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Assistert en arm pull-up"
+  :image    "assisted-one-arm-pull-up.png"
+  :category #{:bent-arm-strength :pull :pull-up :bar} :measurement :repetitions
+  :previous ["Bueskytter pull-up"] :next ["Negativ en arm pull-up"]}
 
- {:db/id                #db/id[:db.part/user -106]
-  :movement/name "Assisted One Arm Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/easier      [#db/id[:db.part/user -105]]
-  :movement/harder      [#db/id[:db.part/user -107]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Negativ en arm pull-up"
+  :image    "negative-one-arm-pull-up.png"
+  :category #{:bent-arm-strength :pull :pull-up :bar} :measurement :repetitions
+  :previous ["Assistert en arm pull-up"] :next ["En arm pull-up"]}
 
- {:db/id                #db/id[:db.part/user -107]
-  :movement/name "Negative One Arm Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/easier      [#db/id[:db.part/user -106]]
-  :movement/harder      [#db/id[:db.part/user -108]]
-  :movement/measurement :measurement/repetitions}
-
- {:db/id                #db/id[:db.part/user -108]
-  :movement/name "One Arm Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -4]]
-  :movement/easier      [#db/id[:db.part/user -107]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "En arm pull-up"
+  :image    "one-arm-pull-up.png"
+  :category #{:bent-arm-strength :pull :pull-up :bar} :measurement :repetitions
+  :previous ["Negativ en arm pull-up"]}
 
  ]

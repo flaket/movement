@@ -1,222 +1,116 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Straight Arm Strength"}
- {:db/id #db/id[:db.part/user -2] :category/name "Back Lever"}
- {:db/id #db/id[:db.part/user -3] :category/name "Front Lever"}
- {:db/id #db/id[:db.part/user -4] :category/name "Side Lever"}
- {:db/id #db/id[:db.part/user -5] :category/name "Planche"}
- {:db/id #db/id[:db.part/user -6] :category/name "Ring"}
- {:db/id #db/id[:db.part/user -7] :category/name "Bar"}
+ {:name     "Tuck back-lever"
+  :image    "tuck-back-lever.png"
+  :category #{:straight-arm-strength :back-lever :ring :bar} :measurement :duration
+  :next     ["Flat back-lever"]}
 
- ;; Back Lever
+ {:name     "Flat back-lever"
+  :image    "flat-back-lever.png"
+  :category #{:straight-arm-strength :back-lever :ring :bar} :measurement :duration
+  :previous ["Flat back-lever"] :next     ["Strekk ben back-lever"]}
 
- ;; {:movement/unique-name "Assisted Tuck Back Lever"}
+ {:name     "Strekk ben back-lever"
+  :image    "one-leg-extended-back-lever.png"
+  :category #{:straight-arm-strength :back-lever :ring :bar} :measurement :duration
+  :previous ["Flat back-lever"] :next     ["Straddle back-lever"]}
 
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Tuck Back Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/harder      [#db/id[:db.part/user -101]]}
+ {:name     "Straddle back-lever"
+  :image    "straddle-back-lever.png"
+  :category #{:straight-arm-strength :back-lever :ring :bar} :measurement :duration
+  :previous ["Strekk ben back-lever"] :next     ["Back-lever"]}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "Flat Back Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -100]]
-  :movement/harder      [#db/id[:db.part/user -102]]}
+ {:name     "Back-lever"
+  :image    "straddle-back-lever.png"
+  :category #{:straight-arm-strength :back-lever :ring :bar} :measurement :duration
+  :previous ["Straddle back-lever"]}
 
- {:db/id                #db/id[:db.part/user -102]
-  :movement/name "One Leg Extended Back Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -101]]
-  :movement/harder      [#db/id[:db.part/user -103]]}
+ {:name     "Tuck front-lever"
+  :image    "tuck-front-lever.png"
+  :category #{:straight-arm-strength :front-lever :ring :bar} :measurement :duration
+  :next     ["Flat front-lever"]}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Straddle Back Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -102]]
-  :movement/harder      [#db/id[:db.part/user -104]]}
+ {:name     "Flat front-lever"
+  :image    "flat-front-lever.png"
+  :category #{:straight-arm-strength :front-lever :ring :bar} :measurement :duration
+  :previous ["Tuck front-lever"] :next     ["Strekk ben front-lever"]}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Back Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -103]]}
+ {:name     "Strekk ben front-lever"
+  :image    "one-leg-extended-front-lever.png"
+  :category #{:straight-arm-strength :front-lever :ring :bar} :measurement :duration
+  :previous ["Flat front-lever"] :next     ["Straddle front-lever"]}
 
- ;; Front lever
+ {:name     "Straddle front-lever"
+  :image    "straddle-front-lever.png"
+  :category #{:straight-arm-strength :front-lever :ring :bar} :measurement :duration
+  :previous ["Strekk ben front-lever"] :next     ["Front-lever"]}
 
- ;; {:movement/unique-name "Assisted Tuck Front Lever"}
+ {:name     "Front-lever"
+  :image    "straddle-front-lever.png"
+  :category #{:straight-arm-strength :front-lever :ring :bar} :measurement :duration
+  :previous ["Straddle front-lever"]}
 
- {:db/id                #db/id[:db.part/user -105]
-  :movement/name "Tuck Front Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/harder      [#db/id[:db.part/user -106]]}
+ {:name     "Tuck side-lever"
+  :image    "tuck-side-lever.png"
+  :category #{:straight-arm-strength :side-lever :ring :bar} :measurement :duration
+  :next     ["Flat side-lever"]}
 
- {:db/id                #db/id[:db.part/user -106]
-  :movement/name "Flat Front Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -105]]
-  :movement/harder      [#db/id[:db.part/user -107]]}
+ {:name     "Flat side-lever"
+  :image    "flat-side-lever.png"
+  :category #{:straight-arm-strength :side-lever :ring :bar} :measurement :duration
+  :previous ["Tuck side-lever"] :next     ["Straddle side-lever"]}
 
- {:db/id                #db/id[:db.part/user -107]
-  :movement/name "One Leg Extended Front Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -106]]
-  :movement/harder      [#db/id[:db.part/user -108]]}
+ {:name     "Straddle side-lever"
+  :image    "straddle-side-lever.png"
+  :category #{:straight-arm-strength :side-lever :ring :bar} :measurement :duration
+  :previous ["Flat side-lever"] :next     ["Side-lever"]}
 
- {:db/id                #db/id[:db.part/user -108]
-  :movement/name "Straddle Front Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -107]]
-  :movement/harder      [#db/id[:db.part/user -109]]}
+ {:name     "Side-lever"
+  :image    "straddle-side-lever.png"
+  :category #{:straight-arm-strength :side-lever :ring :bar} :measurement :duration
+  :previous ["Straddle side-lever"]}
 
- {:db/id                #db/id[:db.part/user -109]
-  :movement/name "Front Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -108]]}
+ {:name     "Planche len"
+  :image    "planche-lean.png"
+  :category #{:straight-arm-strength} :measurement :duration
+  :previous ["Håndstående len"]}
 
- ;; Side lever
- {:db/id                #db/id[:db.part/user -110]
-  :movement/name "Tuck Side Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/harder      [#db/id[:db.part/user -111]]}
+ {:name     "Håndstående len"
+  :image    "planche-lean.png"
+  :category #{:straight-arm-strength} :measurement :duration
+  :next     ["Planche len"]}
 
- {:db/id                #db/id[:db.part/user -111]
-  :movement/name "Flat Side Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -110]]
-  :movement/harder      [#db/id[:db.part/user -112]]}
+ {:name     "Tuck planche"
+  :image    "tuck-planche.png"
+  :category #{:straight-arm-strength :planche} :measurement :duration
+  :next     ["Flat planche"]}
 
- {:db/id                #db/id[:db.part/user -112]
-  :movement/name "Straddle Side Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -111]]
-  :movement/harder      [#db/id[:db.part/user -113]]}
+ {:name     "Flat planche"
+  :image    "flat-planche.png"
+  :category #{:straight-arm-strength :planche} :measurement :duration
+  :previous ["Tuck planche"] :next ["Strekk ben planche"]}
 
- {:db/id                #db/id[:db.part/user -113]
-  :movement/name "Side Lever"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -7]]
-  :movement/measurement :measurement/duration
-  :movement/easier      [#db/id[:db.part/user -112]]}
+ {:name     "Strekk ben planche"
+  :image    "one-leg-extended-planche.png"
+  :category #{:straight-arm-strength :planche} :measurement :duration
+  :previous ["Flat planche"] :next ["Straddle planche"]}
 
- ;; Planche
- {:db/id                #db/id[:db.part/user]
-  :movement/name "Scapula Push Up"
-  :movement/category    [#db/id[:db.part/user -1]]}
+ {:name     "Straddle planche"
+  :image    "straddle-planche.png"
+  :category #{:straight-arm-strength :planche} :measurement :duration
+  :previous ["Strekk ben planche"] :next ["Planche"]}
 
- {:db/id                #db/id[:db.part/user -114]
-  :movement/name "Planche Lean"
-  :movement/measurement :measurement/duration
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/harder      [#db/id[:db.part/user -115]]}
+ {:name     "Planche"
+  :image    "planche.png"
+  :category #{:straight-arm-strength :planche} :measurement :duration
+  :previous ["Straddle planche"]}
 
- {:db/id                #db/id[:db.part/user -115]
-  :movement/name "Handstand Lean"
-  :movement/measurement :measurement/duration
-  :movement/category    [#db/id[:db.part/user -1]]
-  :movement/easier      [#db/id[:db.part/user -114]]}
+ {:name     "Henge til flådd katte"
+  :image    "hanging-to-german-hang.png"
+  :category #{:straight-arm-strength :ring :bar} :measurement :repetitions}
 
- ;; {:movement/unique-name "Assisted Tuck Planche"}
-
- {:db/id                #db/id[:db.part/user -117]
-  :movement/name "Tuck Planche"
-  :movement/measurement :measurement/duration
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -5]]
-  :movement/harder      [#db/id[:db.part/user -118]]}
-
- {:db/id                #db/id[:db.part/user -118]
-  :movement/name "Flat Planche"
-  :movement/measurement :measurement/duration
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -117]]
-  :movement/harder      [#db/id[:db.part/user -119]]}
-
- {:db/id                #db/id[:db.part/user -119]
-  :movement/name "One Leg Extended Planche"
-  :movement/measurement :measurement/duration
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -118]]
-  :movement/harder      [#db/id[:db.part/user -120]]}
-
- {:db/id                #db/id[:db.part/user -120]
-  :movement/name "Straddle Planche"
-  :movement/measurement :measurement/duration
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -119]]
-  :movement/harder      [#db/id[:db.part/user -121]]}
-
- {:db/id                #db/id[:db.part/user -121]
-  :movement/name "Planche"
-  :movement/measurement :measurement/duration
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -5]]
-  :movement/easier      [#db/id[:db.part/user -120]]}
-
- ;; other
- {:db/id                #db/id[:db.part/user -122]
-  :movement/name "Hanging To German Hang"
-  :movement/measurement :measurement/repetitions
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]}
-
- {:db/id                #db/id[:db.part/user -123]
-  :movement/name "Pull From German Hang"
-  :movement/measurement :measurement/repetitions
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -6]
-                         #db/id[:db.part/user -7]]}
+ {:name     "Dra fra flådd katte"
+  :image    "pull-from-german-hang.png"
+  :category #{:straight-arm-strength :ring :bar} :measurement :repetitions}
 
  ]

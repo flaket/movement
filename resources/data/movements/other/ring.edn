@@ -1,165 +1,80 @@
 [
 
- {:db/id #db/id[:db.part/user -1] :category/name "Ring"}
- {:db/id #db/id[:db.part/user -2] :category/name "Bent Arm Strength"}
- {:db/id #db/id[:db.part/user -3] :category/name "Pull"}
- {:db/id #db/id[:db.part/user -4] :category/name "Push"}
- {:db/id #db/id[:db.part/user -5] :category/name "Muscle Up"}
- {:db/id #db/id[:db.part/user -6] :category/name "Dip"}
- {:db/id #db/id[:db.part/user -7] :category/name "Wrist Mobility"}
- {:db/id #db/id[:db.part/user -8] :category/name "Shoulder Mobility"}
- {:db/id #db/id[:db.part/user -9] :category/name "Pull Up"}
- {:db/id #db/id[:db.part/user -10] :category/name "Straight Arm Strength"}
+ {:name     "Henge i falskt grep"
+  :image    "false-grip-hang.png"
+  :category #{:wrist-mobility} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user -300]
-  :movement/name "False Grip Hang"
-  :movement/category    [#db/id[:db.part/user -7]]}
+ {:name     "Støtteposisjon i ringer"
+  :image    "ring-support-hold.png"
+  :category #{:ring :straight-arm-strength} :measurement :duration}
 
- {:db/id                #db/id[:db.part/user -301]
-  :movement/name "Dip"}
+ {:name     "Ro i ringer"
+  :image    "ring-row.png"
+  :category #{:ring :bent-arm-strength :pull} :measurement :repetitions}
 
- {:db/id                #db/id[:db.part/user -302]
-  :movement/name "Ring Support Hold"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -10]]
-  :movement/measurement :measurement/duration
-  :movement/harder      [#db/id[:db.part/user -102]]}
+ {:name     "Ro med falskt grep"
+  :image    "false-grip-row.png"
+  :category #{:ring :bent-arm-strength :pull} :measurement :repetitions
+  :previous ["Henge i falskt grep" "Ro"]}
 
- ; row
- {:db/id                #db/id[:db.part/user -100]
-  :movement/name "Ring Row"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Dip i ringer"
+  :image    "ring-dip.png"
+  :category #{:ring :bent-arm-strength :push :dip} :measurement :repetitions
+  :previous ["Dip" "Støtteposisjon i ringer"] :next ["Vid dip i ringer"]}
 
- {:db/id                #db/id[:db.part/user -101]
-  :movement/name "False Grip Row"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -100]]}
+ {:name     "Vid dip i ringer"
+  :image    "wide-ring-dip.png"
+  :category #{:ring :bent-arm-strength :push :dip} :measurement :repetitions
+  :previous ["Dip i ringer"] :next ["Bueskytter dip i ringer"]}
 
- ; dip
- {:db/id                #db/id[:db.part/user -102]
-  :movement/name "Ring Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -301]
-                         #db/id[:db.part/user -302]]
-  :movement/harder      [#db/id[:db.part/user -103]]}
+ {:name     "Bueskytter dip i ringer"
+  :image    "archer-ring-dip.png"
+  :category #{:ring :bent-arm-strength :push :dip} :measurement :repetitions
+  :previous ["Vid dip i ringer"]}
 
- {:db/id                #db/id[:db.part/user -103]
-  :movement/name "Wide Ring Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]]
-  :movement/harder      [#db/id[:db.part/user -104]]}
+ {:name     "Chin-up i ringer"
+  :image    "ring-chin-dip.png"
+  :category #{:ring :bent-arm-strength :pull :pull-up} :measurement :repetitions
+  :next    ["Vid chin-up i ringer" "Falskt grep chin-up" "Assistert pull-up i en arm"]}
 
- {:db/id                #db/id[:db.part/user -104]
-  :movement/name "Archer Ring Dip"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -4]
-                         #db/id[:db.part/user -6]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -103]]}
+ {:name     "Vid chin-up i ringer"
+  :image    "wide-ring-chin-dip.png"
+  :category #{:ring :bent-arm-strength :pull :pull-up} :measurement :repetitions
+  :previous ["Chin-up i ringer"]}
 
- ; chin
- {:db/id                #db/id[:db.part/user -105]
-  :movement/name "Ring Chin Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -106]
-                         #db/id[:db.part/user -107]
-                         #db/id[:db.part/user -108]]}
+ {:name     "Falskt grep chin-up"
+  :image    "false-grip-chin-up.png"
+  :category #{:ring :bent-arm-strength :pull :pull-up} :measurement :repetitions
+  :previous ["Henge i falskt grep" "Chin-up i ringer"]}
 
- {:db/id                #db/id[:db.part/user -106]
-  :movement/name "Wide Ring Chin Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/easier      [#db/id[:db.part/user -105]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Assistert pull-up i en arm"
+  :image    "assisted-one-arm-pull-up.png"
+  :category #{:ring :bent-arm-strength :pull :pull-up} :measurement :repetitions
+  :previous ["Chin-up i ringer"] :next ["Negativ en arm pull-up"]}
 
- {:db/id                #db/id[:db.part/user -107]
-  :movement/name "False Grip Chin Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -105]
-                         #db/id[:db.part/user -300]]}
+ {:name     "Negativ en arm pull-up"
+  :image    "negative-one-arm-pull-up.png"
+  :category #{:ring :bent-arm-strength :pull :pull-up} :measurement :repetitions
+  :previous ["Assistert pull-up i en arm"] :next ["En arm pull-up"]}
 
- {:db/id                #db/id[:db.part/user -108]
-  :movement/name "Assisted One Arm Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/easier      [#db/id[:db.part/user -105]]
-  :movement/harder      [#db/id[:db.part/user -109]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "En arm pull-up"
+  :image    "one-arm-pull-up.png"
+  :category #{:ring :bent-arm-strength :pull :pull-up} :measurement :repetitions
+  :previous ["Negativ en arm pull-up"]}
 
- {:db/id                #db/id[:db.part/user -109]
-  :movement/name "Negative One Arm Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/easier      [#db/id[:db.part/user -108]]
-  :movement/harder      [#db/id[:db.part/user -110]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Muscle-up overgang"
+  :image    "ring-muscle-up-transition.png"
+  :category #{:ring :bent-arm-strength :muscle-up} :measurement :repetitions
+  :next    ["Negativ muscle-up i ringer"]}
 
- {:db/id                #db/id[:db.part/user -110]
-  :movement/name "One Arm Pull Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -3]
-                         #db/id[:db.part/user -9]]
-  :movement/easier      [#db/id[:db.part/user -109]]
-  :movement/measurement :measurement/repetitions}
+ {:name     "Negativ muscle-up i ringer"
+  :image    "negative-ring-muscle-up.png"
+  :category #{:ring :bent-arm-strength :muscle-up} :measurement :repetitions
+  :previous ["Muscle-up overgang" "Falskt grep chin-up" "Dip i ringer"] :next ["Muscle-up i ringer"]}
 
- ; muscle up
- {:db/id                #db/id[:db.part/user -200]
-  :movement/name "Ring Muscle Up Transition"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -5]]
-  :movement/measurement :measurement/repetitions
-  :movement/harder      [#db/id[:db.part/user -201]]}
-
- {:db/id                #db/id[:db.part/user -201]
-  :movement/name "Negative Ring Muscle Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -5]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]
-                         #db/id[:db.part/user -107]]
-  :movement/harder      [#db/id[:db.part/user -202]]}
-
- {:db/id                #db/id[:db.part/user -202]
-  :movement/name "Ring Muscle Up"
-  :movement/category    [#db/id[:db.part/user -1]
-                         #db/id[:db.part/user -2]
-                         #db/id[:db.part/user -5]]
-  :movement/measurement :measurement/repetitions
-  :movement/easier      [#db/id[:db.part/user -102]
-                         #db/id[:db.part/user -107]
-                         #db/id[:db.part/user -200]
-                         #db/id[:db.part/user -201]]}
+ {:name     "Muscle-up i ringer"
+  :image    "ring-muscle-up.png"
+  :category #{:ring :bent-arm-strength :muscle-up} :measurement :repetitions
+  :previous ["Negativ muscle-up i ringer"]}
 
  ]
