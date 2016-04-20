@@ -7,16 +7,16 @@
             [secretary.core :include-macros true :refer [dispatch!]]))
 
 (defn load-feed []
-  (POST "feed" {:params        {:user-id (:user-id (session/get :user))}
+  (GET "feed" {:params        {:user-id (:user-id (session/get :user))}
                 :handler       (fn [r] (session/put! :feed r))
                 :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
 
 (defn load-user-only-feed []
-  (POST "feed" {:params        {:user-id (:user-id (session/get :user))}
-                :handler       (fn [r] (session/put! :user-only-feed r))
-                :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
+  (GET "user-only-feed" {:params        {:user-id (:user-id (session/get :user))}
+                         :handler       (fn [r] (session/put! :user-only-feed r))
+                         :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
 
-(defn load-more [event feed-data]
+(defn load-more [event]
   (.preventDefault event)
   (session/put! :feed (conj (session/get :feed) {:user-name    "Kårinator"
                                                  :user-image   "images/movements/pull-up.png"
@@ -31,10 +31,6 @@
                                                                 {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
                                                  :likes        10
                                                  :image        "images/field.jpg"})))
-
-(defn image-url [movement-name]
-  (when-not (nil? movement-name)
-    (str "images/movements/" (str/replace (str/lower-case movement-name) " " "-") ".png")))
 
 (defn r-component [{:keys [data name]}]
   [:div.pure-g {:style {:margin 'auto}}
@@ -228,5 +224,5 @@
            [:div.pure-u-1.center
             [:i.fa.fa-spinner.fa-pulse.fa-4x]]])
         (when (session/get :feed)
-          [:div.pure-g [:div.pure-u-1.pure-button.x-large {:onClick    #(load-more % nil)
-                                                           :onTouchEnd #(load-more % nil)} "Last flere"]])]])))
+          [:div.pure-g [:div.pure-u-1.pure-button.x-large {:onClick    #(load-more %)
+                                                           :onTouchEnd #(load-more %)} "Last flere"]])]])))

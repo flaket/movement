@@ -24,9 +24,7 @@
             [datomic.api :as d]
             [hiccup.core :refer [html]]
             [taoensso.timbre :refer [info error]]
-
             [movement.db.db :as db]
-
             [movement.pages.landing :refer [landing-page]]
             [movement.pages.signup :refer [signup-page payment-page activation-page]]
             [movement.pages.contact :refer [contact-page]]
@@ -187,8 +185,10 @@
                                   user-name (response (dissoc (db/user-by-name user-name) :password :activation-id :activated? :valid-subscription?))
                                   :else "missing email, user-id or user-name"))
                               (throw-unauthorized)))
+
            (POST "/change-password" req (if (authenticated? req) (change-password! (:params req)) (throw-unauthorized)))
            (POST "/change-username" req (if (authenticated? req) (change-username! (:params req)) (throw-unauthorized)))
+
            (POST "/store-session" req (if (authenticated? req) (store-session! (:params req)) (throw-unauthorized)))
            (POST "/set-zone" req (if-not (authenticated? req)
                                    (throw-unauthorized)
@@ -202,9 +202,13 @@
                                               email (:email (:params req))]
                                           (response (db/create-session email type))) (throw-unauthorized)))
 
-           (POST "/feed" req (if (authenticated? req)
+           (GET "/feed" req (if (authenticated? req)
                                (let [user-id (:user-id (:params req))]
                                  (response (vec (db/create-feed user-id)))) (throw-unauthorized)))
+
+           (GET "/user-only-feed" req (if (authenticated? req)
+                                        (let [user-id (:user-id (:params req))]
+                                          (response (vec (db/create-feed user-id)))) (throw-unauthorized)))
 
            (GET "/movement-from-category" req (if (authenticated? req)
                                                 (response (db/movements-from-category 1 (:category (:params req)))) (throw-unauthorized)))
@@ -213,57 +217,12 @@
                                     (response (db/movement name))) (throw-unauthorized)))
            (POST "/like" req (if (authenticated? req) (db/like! (:params req)) (throw-unauthorized)))
            (POST "/comment" req (if (authenticated? req) (db/comment! (:params req)) (throw-unauthorized)))
+
+
            ;; --------------------------------------------------------
 
-           #_(GET "/sessions" req (if-not (authenticated? req)
-                                  (throw-unauthorized)
-                                  (response (old-db/retrieve-sessions req))))
            #_(GET "/session/:url" [url] (view-session-page (old-db/get-session url)))
-           #_(GET "/template" req (if-not (authenticated? req)
-                                  (throw-unauthorized)
-                                  (let [id (:template-id (:params req))
-                                        template (old-db/entity-by-id (if (string? id) (read-string id) id))
-                                        email (:email (:params req))]
-                                    (response (old-db/create-session email template)))))
 
-           #_(GET "/templates" req (if-not (authenticated? req)
-                                   (throw-unauthorized)
-                                   (response (old-db/all-templates (str (:user (:params req)))))))
-
-           #_(GET "/movement" req (if-not (authenticated? req)
-                                  (throw-unauthorized)
-                                  (response (old-db/movement
-                                              (:email (:params req))
-                                              :name
-                                              (:name (:params req))
-                                              (:part (:params req))))))
-           #_(GET "/explore-movement" req (if-not (authenticated? req)
-                                          (throw-unauthorized)
-                                          (let [unique-name (:unique-name (:params req))
-                                                email (:email (:params req))]
-                                            (response (old-db/explore-movement email unique-name)))))
-           #_(GET "/user-movements" req (if-not (authenticated? req)
-                                          (throw-unauthorized)
-                                          (let [email (:email (:params req))]
-                                            (response (old-db/user-movements email)))))
-           #_(GET "/singlemovement" req (if-not (authenticated? req)
-                                        (throw-unauthorized)
-                                        (let [email (:email (:params req))
-                                              part (:part (:params req))]
-                                          (response (old-db/single-movement email part)))))
-           #_(GET "/movement-by-id" req (if-not (authenticated? req)
-                                        (throw-unauthorized)
-                                        (response (old-db/movement
-                                                    (:email (:params req))
-                                                    :id
-                                                    (read-string (:id (:params req)))
-                                                    (:part (:params req))))))
-           #_(GET "/movements-by-category" req (if-not (authenticated? req)
-                                               (throw-unauthorized)
-                                               (response
-                                                 (old-db/get-movements-from-category
-                                                   (read-string (:n (:params req)))
-                                                   (:category (:params req))))))
            (resources "/")
            (not-found "Not Found"))
 

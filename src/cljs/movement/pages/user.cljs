@@ -126,7 +126,7 @@
                    (when (and (not-empty (:old-pass @pass)) (not-empty (:new-pass @pass)))
                      [:div.pure-g
                       [:a.pure-u.pure-u-md-1-2.pure-button.pure-button-primary
-                       {:on-click #(POST "/change-password"
+                       {:on-click #(POST "change-password"
                                          {:params        {:username     (session/get :user)
                                                           :password     (:old-pass @pass)
                                                           :new-password (:new-pass @pass)}
