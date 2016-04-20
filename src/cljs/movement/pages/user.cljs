@@ -50,103 +50,129 @@
 
           ; Brukerens profil
           [:div
-           [:div {:style {:border-bottom "1px solid lightgray"}}
+           [:div.pure-g
+            [:div.pure-u-1-3
+             [:div.pure-g
+              [:div.pure-u-1
+               [:img {:width "100%" :src "images/movements/arch-up.png"}]]]]
+            [:div.pure-u-1-3
+             [:div.pure-g {:style {:margin-top 10}}
+              [:h2.pure-u-1 {:on-click #(pr user)} (:name user)]]
+             [:div.pure-g {:style {:margin-top 10}}
+              [:div.pure-u-1 (:profile-text user)]]
+             [:div.pure-g {:style {:margin-top 10}}
+              [:div.pure-u-1 (:location user)]]
+             [:div.pure-g {:style {:margin-top 10}}
+              [:div.pure-u-1 {:style {:font-size "80%" :opacity 0.5}} "Medlem siden " (:sign-up-timestamp user)]]
+             [:div.pure-g {:style {:margin-top 10}}
+              (doall
+                (for [b (:badges user)]
+                  ^{:key b}
+                  [:div.pure-u {:style {:margin-right 5}} [:b b]]))]]
+            [:div.pure-u-1-3
+             [:div.pure-g {:style {:margin-top 10}}
+              [:a.pure-u-1.pure-button {:onClick    #(reset! local-state :change-profile)
+                                        :onTouchEnd #(reset! local-state :change-profile)} "Endre profil"]]
+             [:div.pure-g {:style {:margin-top 10}}
+              [:a.pure-u-1.pure-button {:onClick    #(reset! local-state :change-profile)
+                                        :onTouchEnd #(reset! local-state :change-profile)} "Endre innstillinger"]]
+             [:div.pure-g {:style {:margin-top 10}}
+              [:a.pure-u-1.pure-button {:onClick    #(reset! local-state :change-password)
+                                        :onTouchEnd #(reset! local-state :change-password)} "Endre passord"]]
+             [:div.pure-g {:style {:margin-top 10}}
+              [:a.pure-u-1.pure-button {:onClick    #(log-out %)
+                                        :onTouchEnd #(log-out %)} "Logg ut"]]]]]
 
-            [:div.pure-g
-             [:div.pure-u-1-4 {:onClick #(reset! local-state :profile) :onTouchEnd #(reset! local-state :profile)}
-              [:img {:width "100%" :src "images/movements/arch-up.png"}]]
+          #_[:div {:style {:border-bottom "1px solid lightgray"}}
 
-             (case @local-state
+           [:div.pure-g
+            [:div.pure-u-1-4 {:onClick #(reset! local-state :profile) :onTouchEnd #(reset! local-state :profile)}
+             [:img {:width "100%" :src "images/movements/arch-up.png"}]]
 
-               ; View for å endre profil/innstillinger.
-               :change-profile
-               [:div.pure-u-3-4
+            (case @local-state
 
-                [:div {:style {:margin-bottom 10}}
-                 [:div.pure-g [:div.pure-u-1 "Epost"]]
-                 [:div.pure-g [:div.pure-u-1 [:input {:id "change-email" :size 100 :type "text" :defaultValue (:email user)}]]]]
+              ; View for å endre profil/innstillinger.
+              :change-profile
+              [:div.pure-u-3-4
 
-                [:div {:style {:margin-bottom 10}}
-                 [:div.pure-g [:div.pure-u-1 "Navn"]]
-                 [:div.pure-g [:div.pure-u-1 [:input {:id "change-name" :size 100 :type "text" :defaultValue (:name user)}]]]]
+               [:div {:style {:margin-bottom 10}}
+                [:div.pure-g [:div.pure-u-1 "Epost"]]
+                [:div.pure-g [:div.pure-u-1 [:input {:id "change-email" :size 100 :type "text" :defaultValue (:email user)}]]]]
 
-                [:div {:style {:margin-bottom 10}}
-                 [:div.pure-g [:div.pure-u-1 "Profiltekst"]]
-                 [:div.pure-g [:div.pure-u-1
-                               [:textarea {:id           "change-text"
-                                           :rows         2 :cols 100
-                                           :style        {:resize 'vertical}
-                                           ;:on-change #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
-                                           :defaultValue (:profile-text user)}]]]]
+               [:div {:style {:margin-bottom 10}}
+                [:div.pure-g [:div.pure-u-1 "Navn"]]
+                [:div.pure-g [:div.pure-u-1 [:input {:id "change-name" :size 100 :type "text" :defaultValue (:name user)}]]]]
 
-                [:div.pure-g [:a.pure-u-1.pure-button "Velg profilbilde"]]
+               [:div {:style {:margin-bottom 10}}
+                [:div.pure-g [:div.pure-u-1 "Profiltekst"]]
+                [:div.pure-g [:div.pure-u-1
+                              [:textarea {:id           "change-text"
+                                          :rows         2 :cols 100
+                                          :style        {:resize 'vertical}
+                                          ;:on-change #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
+                                          :defaultValue (:profile-text user)}]]]]
+
+               [:div.pure-g [:a.pure-u-1.pure-button "Velg profilbilde"]]
+
+               [:div.pure-g
+                [:a.pure-u-1.pure-button.pure-button-primary
+                 {:onClick    #(reset! local-state :profile)
+                  :onTouchEnd #(reset! local-state :profile)} "Lagre"]]]
+
+              ; View for å se sin egen profil med knapper for å gjøre endringer og å logge ut.
+              :profile
+              [:div.pure-u-3-4 {:style {:position 'relative}}]
+
+              :change-password
+              [:div.pure-u-3-4 {:style {:position 'relative}}
+               [:div.pure-g [:p.pure-u-1 "Endre passord"]]
+               [:div
+                [:div.pure-g
+                 [:input.pure-u.pure-u-md-1-2 {:type        "password"
+                                               :placeholder "forrige passord"
+                                               :value       (:old-pass @pass)
+                                               :on-change   #(swap! pass assoc :old-pass (-> % .-target .-value))}]]
+                [:div.pure-g
+                 [:input.pure-u.pure-u-md-1-2 {:type        "password"
+                                               :placeholder "nytt passord"
+                                               :value       (:new-pass @pass)
+                                               :on-change   #(swap! pass assoc :new-pass (-> % .-target .-value))}]]
 
                 [:div.pure-g
-                 [:a.pure-u-1.pure-button.pure-button-primary
-                  {:onClick    #(reset! local-state :profile)
-                   :onTouchEnd #(reset! local-state :profile)} "Lagre"]]]
+                 [:input.pure-u.pure-u-md-1-2 {:type        "password"
+                                               :placeholder "nytt passord igjen"
+                                               :value       (:repeat-pass @pass)
+                                               :on-change   #(swap! pass assoc :repeat-pass (-> % .-target .-value))}]]
+                (when-let [info (:info @pass)]
+                  [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
+                (when-let [error (:error @pass)]
+                  [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])
+                (if (not= (:new-pass @pass) (:repeat-pass @pass))
+                  [:div.pure-g [:div.pure-u "passordene stemmer ikke"]]
+                  (when (and (not-empty (:old-pass @pass)) (not-empty (:new-pass @pass)))
+                    [:div.pure-g
+                     [:a.pure-u.pure-u-md-1-2.pure-button.pure-button-primary
+                      {:on-click #(POST "change-password"
+                                        {:params        {:username     (session/get :user)
+                                                         :password     (:old-pass @pass)
+                                                         :new-password (:new-pass @pass)}
+                                         :handler       (fn [response]
+                                                          (reset! pass {:error "" :info response}))
+                                         :error-handler (fn [response]
+                                                          (reset! pass {:error (:response response) :info ""}))})}
+                      "Endre passordet"]]))]])]
 
-               ; View for å se sin egen profil med knapper for å gjøre endringer og å logge ut.
-               :profile
-               [:div.pure-u-3-4 {:style {:position 'relative}}
-                [:div.pure-g [:h2.pure-u-1 {:on-click #(pr user)} (:name user)]]
-                [:div.pure-g [:p.pure-u-1 (:profile-text user)]]
-                [:div.pure-g {:style {:margin-top 10}}
-                 (doall
-                   (for [b (:badges user)]
-                     ^{:key b}
-                     [:div.pure-u {:style {:margin-right 5}} [:b b]]))]]
-
-               :change-password
-               [:div.pure-u-3-4 {:style {:position 'relative}}
-                [:div.pure-g [:p.pure-u-1 "Endre passord"]]
-                [:div
-                 [:div.pure-g
-                  [:input.pure-u.pure-u-md-1-2 {:type        "password"
-                                                :placeholder "forrige passord"
-                                                :value       (:old-pass @pass)
-                                                :on-change   #(swap! pass assoc :old-pass (-> % .-target .-value))}]]
-                 [:div.pure-g
-                  [:input.pure-u.pure-u-md-1-2 {:type        "password"
-                                                :placeholder "nytt passord"
-                                                :value       (:new-pass @pass)
-                                                :on-change   #(swap! pass assoc :new-pass (-> % .-target .-value))}]]
-
-                 [:div.pure-g
-                  [:input.pure-u.pure-u-md-1-2 {:type        "password"
-                                                :placeholder "nytt passord igjen"
-                                                :value       (:repeat-pass @pass)
-                                                :on-change   #(swap! pass assoc :repeat-pass (-> % .-target .-value))}]]
-                 (when-let [info (:info @pass)]
-                   [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
-                 (when-let [error (:error @pass)]
-                   [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])
-                 (if (not= (:new-pass @pass) (:repeat-pass @pass))
-                   [:div.pure-g [:div.pure-u "passordene stemmer ikke"]]
-                   (when (and (not-empty (:old-pass @pass)) (not-empty (:new-pass @pass)))
-                     [:div.pure-g
-                      [:a.pure-u.pure-u-md-1-2.pure-button.pure-button-primary
-                       {:on-click #(POST "change-password"
-                                         {:params        {:username     (session/get :user)
-                                                          :password     (:old-pass @pass)
-                                                          :new-password (:new-pass @pass)}
-                                          :handler       (fn [response]
-                                                           (reset! pass {:error "" :info response}))
-                                          :error-handler (fn [response]
-                                                           (reset! pass {:error (:response response) :info ""}))})}
-                       "Endre passordet"]]))]])]
-
-            [:div.pure-g
-             [:div.pure-u-1-4.center {:style {:font-size "80%" :opacity 0.5}} "Medlem siden " (:sign-up-timestamp user)]
-             [:div.pure-u-3-4
-              [:div.pure-g {:style {:margin-top 40}}
-               [:a.pure-u-1-4.pure-button {:onClick    #(reset! local-state :change-profile)
-                                           :onTouchEnd #(reset! local-state :change-profile)} "Innstillinger"]
-               [:a.pure-u-1-4.pure-button {:onClick    #(reset! local-state :change-password)
-                                           :onTouchEnd #(reset! local-state :change-password)} "Passord"]
-               [:div.pure-u-1-4]
-               [:a.pure-u-1-4.pure-button {:onClick    #(log-out %)
-                                           :onTouchEnd #(log-out %)} "Logg ut"]]]]]])
+           [:div.pure-g
+            [:div.pure-u-1-4.center {:style {:font-size "80%" :opacity 0.5}} "Medlem siden " (:sign-up-timestamp user)]
+            [:div.pure-u-3-4
+             [:div.pure-g {:style {:margin-top 40}}
+              [:a.pure-u-1-4.pure-button {:onClick    #(reset! local-state :change-profile)
+                                          :onTouchEnd #(reset! local-state :change-profile)} "Innstillinger"]
+              [:a.pure-u-1-4.pure-button {:onClick    #(reset! local-state :change-password)
+                                          :onTouchEnd #(reset! local-state :change-password)} "Passord"]
+              [:div.pure-u-1-4]
+              [:a.pure-u-1-4.pure-button {:onClick    #(log-out %)
+                                          :onTouchEnd #(log-out %)} "Logg ut"]]]]])
 
         [:div
          [:div.pure-g [:div.pure-u-1 [:h2 "Min treningsdagbok"]]]

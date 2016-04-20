@@ -93,6 +93,7 @@
     first))
 #_(user-by-email "andflak@gmail.com")
 #_(user-by-email "andreas.flakstad@gmail.com")
+#_(user-by-email "a@a")
 
 (defn user-by-activation-id [id]
   (->>
@@ -119,6 +120,9 @@
         sessions (flatten (for [u users] (sessions-by-user-id u)))
         sessions (reverse (sort-by :date-time sessions))]
     sessions))
+
+(defn create-user-only-feed [user-id]
+  (reverse (sort-by :date-time (sessions-by-user-id user-id))))
 
 (defn movements
   "Gives a lazy sequence over all movement names as strings in the :movements table."
@@ -236,6 +240,7 @@
     (h/put-item! creds :users user)))
 #_(add-user! "andflak@gmail.com" "andreas" "pw" (str (UUID/randomUUID)))
 #_(add-user! "andreas.flakstad@gmail.com" "bob" "pw" (str (UUID/randomUUID)))
+#_(add-user! "a@a" "Andreas" "pw" (str (UUID/randomUUID)))
 
 (defn follow-user! [user-id follow-id]
   (h/update-item! creds :users {:user-id user-id}
@@ -272,7 +277,7 @@
     (h/update-item! creds :users {:user-id user}
                     {:activated?    [:set true]
                      :activation-id [:remove]})))
-#_(activate-user! "bbb538d1-8d6b-4890-9e76-651384f64d2c")
+#_(activate-user! "97741783-9bb7-442f-9a73-e573acb9c3db")
 
 (defn add-movement! [user-id movement]
   ; todo: filter; don't add if exists

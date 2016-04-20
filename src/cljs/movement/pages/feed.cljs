@@ -2,6 +2,7 @@
   (:require [movement.menu :refer [menu-component]]
             [reagent.core :refer [atom]]
             [clojure.string :as str]
+            [cljs.reader :refer [read-string]]
             [movement.util :refer [GET POST]]
             [reagent.session :as session]
             [secretary.core :include-macros true :refer [dispatch!]]))
@@ -121,7 +122,23 @@
         [:div.pure-g
 
          ; Activity and time
-         [:h2.pure-u-5-6 (str activity (when time (str " i " time)))]
+         [:h2.pure-u-5-6 (str activity (when time
+                                         (let [time-string (str/split time #":")
+                                               [h m s] (map #(read-string %) time-string)]
+                                           (str " i "
+                                                (cond
+                                                  (= h 0) ""
+                                                  (= h 1) (str h " time ")
+                                                  :else (str h " timer "))
+                                                (cond
+                                                  (= m 0) ""
+                                                  (= m 1) (str m " minutt ")
+                                                  :else (str m " minutter "))
+                                                (cond
+                                                  (= s nil) ""
+                                                  (= s 0) ""
+                                                  (= s 1) (str s " sekund ")
+                                                  :else (str s " sekunder "))))))]
 
          (when-not (empty? (flatten parts))
            (if @show-session-data?

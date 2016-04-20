@@ -208,7 +208,7 @@
 
            (GET "/user-only-feed" req (if (authenticated? req)
                                         (let [user-id (:user-id (:params req))]
-                                          (response (vec (db/create-feed user-id)))) (throw-unauthorized)))
+                                          (response (vec (db/create-user-only-feed user-id)))) (throw-unauthorized)))
 
            (GET "/movement-from-category" req (if (authenticated? req)
                                                 (response (db/movements-from-category 1 (:category (:params req)))) (throw-unauthorized)))
