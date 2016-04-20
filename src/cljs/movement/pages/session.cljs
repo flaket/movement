@@ -310,18 +310,6 @@
                                                 (reset! show-search-input? false)
                                                 (add-movement-from-search % part-number))}]))]]])))
 
-#_[
-   [
-    {:category #{:natural :balance}
-     :movement "Balancing Walk"
-     :distance 10
-     :set      4}
-
-    {:category #{:natural :climb}
-     :movement "Toes To Bar"
-     :rep      5
-     :set      4}]]
-
 (defn part-component []
   (let []
     (fn [movements i]
@@ -332,16 +320,15 @@
         [add-movement-component movements i]]])))
 
 (defn list-of-activities []
-  (let [activites [{:title "Naturlig bevegelse" :graphic 'lightblue}
-                   {:title "Styrke" :graphic 'lightgreen}
-                   {:title "Løping" :graphic 'cyan}
-                   {:title "Crossfit" :graphic 'brown}
-                   {:title "Gym" :graphic 'red}
-                   {:title "Yoga" :graphic 'purple}
-                   {:title "Gåtur" :graphic 'gray}
-                   {:title "Sport" :graphic 'orange}
+  (let [activites [{:title "Naturlig bevegelse" :graphic 'lightgreen}
+                   {:title "Løping" :graphic 'red}
+                   {:title "Styrketrening" :graphic 'darkgreen}
+                   {:title "Vandring" :graphic 'orange}
                    {:title "Sykling" :graphic 'darkgreen}
-                   {:title "Ski" :graphic 'lime}
+                   {:title "Yoga" :graphic 'purple}
+                   {:title "Pilates" :graphic 'red}
+                   {:title "Crossfit" :graphic 'brown}
+                   {:title "Ski" :graphic 'lightblue}
                    {:title "Svømming" :graphic 'blue}
                    {:title "Annen aktivitet" :graphic 'lightgray}]]
     (fn []

@@ -13,6 +13,7 @@
                  [com.datomic/datomic-pro "0.9.5201" :exclusions [joda-time]]
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [clj-time "0.11.0"]
+                 [com.andrewmcveigh/cljs-time "0.4.0"]
                  [org.clojure/data.codec "0.1.0"]
 
                  [ring "1.4.0" :exclusions [org.clojure/java.classpath]]

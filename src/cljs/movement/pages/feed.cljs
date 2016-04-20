@@ -6,28 +6,31 @@
             [reagent.session :as session]
             [secretary.core :include-macros true :refer [dispatch!]]))
 
-(defonce feed-data (atom nil))
-
-(defn load-feed [feed-data]
+(defn load-feed []
   (POST "feed" {:params        {:user-id (:user-id (session/get :user))}
-                :handler       (fn [r] (reset! feed-data r))
+                :handler       (fn [r] (session/put! :feed r))
+                :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
+
+(defn load-user-only-feed []
+  (POST "feed" {:params        {:user-id (:user-id (session/get :user))}
+                :handler       (fn [r] (session/put! :user-only-feed r))
                 :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
 
 (defn load-more [event feed-data]
   (.preventDefault event)
-  (swap! feed-data conj {:user-name    "Kårinator"
-                         :user-image   "images/movements/pull-up.png"
-                         :url          "17"
-                         :text         "en finasdasd økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
-                         :date         "3 timer siden"
-                         :time         "45:00"
-                         :activity     "Styrkeøkt"
-                         :session-data [[{:name "Push Up" :rep 10 :set 3 :image "push-up.png"}
-                                         {:name "Pull Up" :rep 5 :set 3 :image "pull-up.png"}]]
-                         :comments     [{:comment "Ser bra ut!" :user "Bobby"}
-                                        {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
-                         :likes        10
-                         :image        "images/field.jpg"}))
+  (session/put! :feed (conj (session/get :feed) {:user-name    "Kårinator"
+                                                 :user-image   "images/movements/pull-up.png"
+                                                 :url          "17"
+                                                 :text         "en finasdasd økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
+                                                 :date         "3 timer siden"
+                                                 :time         "45:00"
+                                                 :activity     "Styrkeøkt"
+                                                 :session-data [[{:name "Push Up" :rep 10 :set 3 :image "push-up.png"}
+                                                                 {:name "Pull Up" :rep 5 :set 3 :image "pull-up.png"}]]
+                                                 :comments     [{:comment "Ser bra ut!" :user "Bobby"}
+                                                                {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
+                                                 :likes        10
+                                                 :image        "images/field.jpg"})))
 
 (defn image-url [movement-name]
   (when-not (nil? movement-name)
@@ -92,7 +95,7 @@
                                                           ; wait for a few ticks and dispatch to /feed to refresh
                                                           )
                                          :error-handler (fn [r] nil)}))
-          :onTouchEnd (fn [] (reset! adding-comment? false) (POST "comment" {:params {:session-url session-url :comments (conj comments @text)} :handler (fn [r] (load-feed feed-data)) :error-handler (fn [r] nil)}))}
+          :onTouchEnd (fn [] (reset! adding-comment? false) (POST "comment" {:params {:session-url session-url :comments (conj comments @text)} :handler (fn [r] (load-feed)) :error-handler (fn [r] nil)}))}
          "Kommenter"]]])))
 
 (defn session-view []
@@ -198,7 +201,7 @@
                                                                                 )
                                                                :error-handler (fn [r] nil)})))
                                  :onTouchEnd (fn [] (when-not ((set likes) user-id) (POST "like" {:params {:session-url url :likers (vec (conj (set likes) user-id))}
-                                                                                                  :handler (fn [r] (load-feed feed-data)) :error-handler (fn [r] nil)})))}]
+                                                                                                  :handler (fn [r] (load-feed)) :error-handler (fn [r] nil)})))}]
 
           [:i.fa.fa-comment.fa-2x {:onClick #(reset! adding-comment? true) :onTouchEnd #(reset! adding-comment? true)
                                    :style   {:margin-left 40
@@ -210,13 +213,13 @@
 
 (defn feed-page []
   (let [
-        _ (load-feed feed-data)
+        _ (load-feed)
         ]
     (fn []
       [:div
        [menu-component]
        [:div#feed
-        (if-let [sessions @feed-data]
+        (if-let [sessions (session/get :feed)]
           (doall
             (for [session sessions]
               ^{:key (:url session)}
@@ -224,6 +227,6 @@
           [:div.pure-g {:style {:margin-top 200}}
            [:div.pure-u-1.center
             [:i.fa.fa-spinner.fa-pulse.fa-4x]]])
-        (when @feed-data
-          [:div.pure-g [:div.pure-u-1.pure-button.x-large {:onClick    #(load-more % feed-data)
-                                                           :onTouchEnd #(load-more % feed-data)} "Last flere"]])]])))
+        (when (session/get :feed)
+          [:div.pure-g [:div.pure-u-1.pure-button.x-large {:onClick    #(load-more % nil)
+                                                           :onTouchEnd #(load-more % nil)} "Last flere"]])]])))

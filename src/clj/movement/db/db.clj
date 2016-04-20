@@ -5,10 +5,12 @@
                 [buddy.hashers :as hashers]
                 [clojure.string :as str]
                 [clojure.java.io :as io]
-                [clojure.data.codec.base64 :as b64])
-  (:import (java.util UUID Date)
-           datomic.Util
-           (java.io File)))
+                [clojure.data.codec.base64 :as b64]
+                [clj-time.core :as t]
+                [clj-time.coerce :as c]
+                [clj-time.local :as l])
+  (:import (java.util UUID)
+           datomic.Util))
 
 (def creds {:access-key "..."
             :secret-key "..."
@@ -222,7 +224,7 @@
               :email                       email
               :name                        name
               :password                    (hashers/encrypt password)
-              :sign-up-timestamp           (.getTime (Date.))
+              :sign-up-timestamp           (c/to-string (l/local-now))
               :activation-id               activation-id
               :activated?                  false
               :valid-subscription?         false
@@ -356,11 +358,13 @@
                     "other/planche-lever.edn" "other/pulling.edn" "other/pushing.edn" "other/ring.edn"])
 
 (defn load-edn-file
-  "Returns a vector of movement maps, drawn from the edn file."
+  "Returns a vector of maps, read from a edn input file."
   [file]
   (first (Util/readAll (io/reader (io/resource (str "data/movements/" file))))))
 
-(defn load-and-concat [files]
+(defn load-and-concat
+  "Loads lists of movement maps and reduces to a single vector of movement maps."
+  [files]
   (reduce into [] (map #(load-edn-file %) files)))
 
 (defn has-image? [m]
