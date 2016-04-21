@@ -1,326 +1,280 @@
 [
 
- ;; template: title description background part
- ;; part: slot(s)
- ;; slot: category natural movement rep distance duration set weight rest
+ {:title "Naturlige Bevegelser 1"
+  :parts [
+          [{:slot-category #{:mobility :balance :crawl :roll :sit-stand-transition}
+            :natural-only? true
+            :rep           10 :distance 15 :duration 30 :set 3}
+           {:slot-category #{:mobility :balance :crawl :roll :sit-stand-transition}
+            :natural-only? true
+            :rep           10 :distance 15 :duration 30 :set 3}
+           {:slot-category #{:mobility :balance :crawl :roll :sit-stand-transition}
+            :natural-only? true
+            :rep           10 :distance 15 :duration 30 :set 3}
+           {:slot-category #{:mobility :balance :crawl :roll :sit-stand-transition}
+            :natural-only? true
+            :rep           10 :distance 15 :duration 30 :set 3}]
 
- {:table      :templates
-  :throughput {:read 1 :write 1}
-  :attrs      {:title :string :creator :string}
-  :keys       [:title :creator]}
+          [{:slot-category #{:natural :mobility :balance :crawl :roll :run :sit-stand-transition}
+            :natural-only? true
+            :rep           50 :distance 50 :duration 240 :set 1}]
 
- {:title               "Naturlige Bevegelser 2"
-  :creator            "Andreas"
-  :description       ""
-  :background ""
-  :part [[{:category #{:natural :crawl :sit-stand-transition}
-           :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
-          {:category #{:natural :crawl :sit-stand-transition}
-           :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
-          {:category #{:natural :crawl :sit-stand-transition}
-           :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
-          {:category #{:natural :jump}
-           :repetition [2 4 6] :set 4}
-          {:category #{:natural :jump}
-           :repetition [2 4 6] :set 4}
-          {:category #{:natural :hang}
-           :repetition 1 :duration [15 30 45] :set 4}]]}
+          [{:slot-category #{:natural}
+            :natural-only? true
+            :rep           10 :distance 15 :duration 30 :set 4}
+           {:slot-category #{:natural}
+            :natural-only? true
+            :rep           10 :distance 15 :duration 30 :set 4}
+           {:slot-category #{:natural}
+            :natural-only? true
+            :rep           10 :distance 15 :duration 30 :set 4}
+           {:slot-category #{:natural}
+            :natural-only? true
+            :rep           10 :distance 15 :duration 30 :set 4}
+           {:slot-category #{:natural}
+            :natural-only? true
+            :rep           10 :distance 15 :duration 30 :set 4}]
+          ]}
 
- (h/put! creds :templates {})
+ {:title "Naturlige Bevegelser 2"
+  :parts [[{:slot-category #{:crawl :sit-stand-transition}
+            :natural-only? true
+            :rep           8 :distance 12 :duration 30 :set 4}
+           {:slot-category #{:crawl :sit-stand-transition}
+            :natural-only? true
+            :rep           8 :distance 12 :duration 30 :set 4}
+           {:slot-category #{:crawl :sit-stand-transition}
+            :natural-only? true
+            :rep           8 :distance 12 :duration 30 :set 4}
+           {:slot-category #{:jump}
+            :natural-only? true
+            :rep           4 :set 4}
+           {:slot-category #{:jump}
+            :natural-only? true
+            :rep           4 :set 4}
+           {:slot-category #{:hang}
+            :natural-only? true
+            :rep           1 :duration 30 :set 4}]]}
+
+ {:title "Naturlige Bevegelser 3"
+  :parts [[{:movement      "Hopp opp"
+            :slot-category #{:jump}
+            :natural-only? true
+            :rep           1 :set 5}
+           {:movement      "Hopp ned"
+            :slot-category #{:jump}
+            :natural-only? true
+            :rep           1 :set 5}
+           {:slot-category #{:balance}
+            :natural-only? true
+            :distance      10 :set 5}
+           {:slot-category #{:climb}
+            :natural-only? true
+            :rep           8 :set 5}
+           {:slot-category #{:crawl}
+            :natural-only? true
+            :distance      10 :set 5}]]}
+
+ {:title "Naturlige Bevegelser 4"
+  :parts [[{:slot-category #{:brachiate}
+            :natural-only? true
+            :distance      6 :set 5}
+           {:slot-category #{:balance}
+            :natural-only? true
+            :distance      10 :set 5}
+           {:slot-category #{:sit-stand-transition}
+            :natural-only? true
+            :rep           8 :set 5}
+           {:slot-category #{:jump}
+            :natural-only? true
+            :rep           8 :set 5}
+           {:slot-category #{:balance}
+            :natural-only? true
+            :distance      20 :set 5}]]}
+
+ {:title "Locomotion 1"
+  :parts [
+          [{:movement      "Tøye håndledd"
+            :slot-category #{:wrist-mobility}
+            :rep           10 :set 1}
+           {:movement      "Dynamisk ankelfleksjon"
+            :slot-category #{:ankle-mobility}
+            :rep           10 :set 1}
+           {:slot-category #{:mobility}
+            :rep           10 :set 1}
+           {:slot-category #{:mobility}
+            :rep           10 :set 1}
+           {:slot-category #{:mobility}
+            :rep           10 :set 1}
+           {:slot-category #{:mobility}
+            :rep           10 :set 1}]
+
+          [{:slot-category #{:crawl :walk}
+            :distance      15 :set 4}
+           {:slot-category #{:crawl :walk}
+            :distance      15 :set 4}
+           {:slot-category #{:crawl :walk}
+            :distance      15 :set 4}
+           {:slot-category #{:crawl :walk}
+            :distance      15 :set 4}
+           {:slot-category #{:crawl :walk}
+            :distance      15 :set 4}
+           {:slot-category #{:crawl :walk}
+            :distance      15 :set 4}]
+          ]}
+
+ {:title "Mobility 1"
+  :parts [
+          [{:movement      "Dynamisk ankelfleksjon"
+            :slot-category #{:ankle-mobility}
+            :rep           10 :set 1}
+           {:slot-category #{:hip-mobility :ankle-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:hip-mobility :ankle-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:hip-mobility :ankle-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:hip-mobility :ankle-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:hip-mobility :ankle-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:hip-mobility :ankle-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}]
+
+          [{:movement      "Tøye håndledd"
+            :slot-category #{:wrist-mobility}
+            :rep           10 :set 1}
+           {:slot-category #{:shoulder-mobility :spine-mobility :wrist-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:shoulder-mobility :spine-mobility :wrist-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:shoulder-mobility :spine-mobility :wrist-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:shoulder-mobility :spine-mobility :wrist-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:shoulder-mobility :spine-mobility :wrist-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}
+           {:slot-category #{:shoulder-mobility :spine-mobility :wrist-mobility}
+            :rep           10 :distance 15 :duration 30 :set 2}]
+          ]}
+
+ {:title "Gymnastic Strength 1"
+  :parts [
+          [{:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :set 3}
+           {:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :set 3}
+           {:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :set 3}]
+          [{:slot-category #{:bent-arm-strength} :rep 5 :set 3}
+           {:slot-category #{:bent-arm-strength} :rep 5 :set 3}
+           {:slot-category #{:bent-arm-strength} :rep 5 :set 3}]
+          [{:slot-category #{:jump :single-leg} :rep 10 :set 3}
+           {:slot-category #{:jump :single-leg} :rep 10 :set 3}
+           {:slot-category #{:jump :single-leg} :rep 10 :set 3}]
+          [{:slot-category #{:core} :rep 10 :set 2}
+           {:slot-category #{:core} :rep 10 :set 2}]
+          ]}
 
 
+ #_{:db/id               #db/id[:db.part/user -104]
+    :template/title      "Learning Handstand"
+    :template/public?    true
+    :template/created-by #db/id[:db.part/user -998]
+    :template/description
+                         "Warm up the wrists and shoulders, practice perfecting your body line and finish off playing around on your hands."
+    :template/part       [#db/id[:db.part/user -1041]
+                          #db/id[:db.part/user -1042]
+                          #db/id[:db.part/user -1043]
+                          #db/id[:db.part/user -1044]]}
+ #_{:db/id                    #db/id[:db.part/user -1041]
+    :part/title               "Wrist and Shoulder Mobility"
+    :part/category            [#db/id[:db.part/user -13]
+                               #db/id[:db.part/user -26]]
+    :part/specific-movement   [#db/id[:db.part/user -5002]]
+    :part/number-of-movements 3
+    :part/rep                 15
+    :part/set                 2}
+ #_{:db/id                    #db/id[:db.part/user -1042]
+    :part/title               "Wall Walk & Core (5 rounds)"
+    :part/category            [#db/id[:db.part/user -8]]
+    :part/specific-movement   [#db/id[:db.part/user -5004]]
+    :part/number-of-movements 1
+    :part/set                 5}
+ #_{:db/id                    #db/id[:db.part/user -1043]
+    :part/title               "Straighten Into Line & Shoulder (5 rounds)"
+    :part/category            [#db/id[:db.part/user -26]]
+    :part/specific-movement   [#db/id[:db.part/user -5005]]
+    :part/number-of-movements 1
+    :part/set                 5}
+ #_{:db/id                    #db/id[:db.part/user -1044]
+    :part/title               "Play"
+    :part/category            [#db/id[:db.part/user -30]
+                               #db/id[:db.part/user -17]]
+    :part/number-of-movements 2}
+
+ #_{:db/id               #db/id[:db.part/user -106]
+    :template/title      "Back Squat 5x5"
+    :template/public?    true
+    :template/created-by #db/id[:db.part/user -998]
+    :template/description
+                         "The back squat is an excellent exercise to increase overall strength.
+                         Make it a goal to increase the weights of the back squat by 2-3kg/4-5lbs with each new session,
+                         and you will quickly see improvements."
+    :template/part       [#db/id[:db.part/user -1061]
+                          #db/id[:db.part/user -1062]
+                          #db/id[:db.part/user -1063]
+                          #db/id[:db.part/user -1064]]}
+ #_{:db/id                    #db/id[:db.part/user -1061]
+    :part/title               "Hip Mobility Warmup"
+    :part/category            [#db/id[:db.part/user -44]]
+    :part/number-of-movements 5
+    :part/rep                 10
+    :part/set                 2}
+ #_{:db/id                    #db/id[:db.part/user -1062]
+    :part/title               "Technical Warmup"
+    :part/category            [#db/id[:db.part/user -14]]
+    :part/number-of-movements 2
+    :part/rep                 10
+    :part/set                 3}
+ #_{:db/id                  #db/id[:db.part/user -1063]
+    :part/title             "Back Squat"
+    :part/category          [#db/id[:db.part/user -14]]
+    :part/specific-movement [#db/id[:db.part/user -5001]]
+    :part/rep               5
+    :part/set               5}
+ #_{:db/id                    #db/id[:db.part/user -1064]
+    :part/title               "Practice Other Lifts"
+    :part/category            [#db/id[:db.part/user -14]]
+    :part/number-of-movements 2
+    :part/rep                 5
+    :part/set                 3}
 
 
-
-
-
-
- {:db/id #db/id[:db.part/user -1] :category/name "Mobility"}
- {:db/id #db/id[:db.part/user -2] :category/name "Balance"}
- {:db/id #db/id[:db.part/user -3] :category/name "Crawl"}
- {:db/id #db/id[:db.part/user -4] :category/name "Climb"}
- {:db/id #db/id[:db.part/user -5] :category/name "Hang"}
- {:db/id #db/id[:db.part/user -6] :category/name "Jump"}
- {:db/id #db/id[:db.part/user -7] :category/name "Lift"}
- {:db/id #db/id[:db.part/user -8] :category/name "Roll"}
- {:db/id #db/id[:db.part/user -9] :category/name "Run"}
- {:db/id #db/id[:db.part/user -10] :category/name "Throw"}
- {:db/id #db/id[:db.part/user -11] :category/name "Walk"}
- {:db/id #db/id[:db.part/user -12] :category/name "Sit/Stand Transition"}
- {:db/id #db/id[:db.part/user -13] :category/name "Practical Movements"}
- {:db/id #db/id[:db.part/user -14] :category/name "Beam"}
- {:db/id #db/id[:db.part/user -15] :category/name "Brachiate"}
- {:db/id #db/id[:db.part/user -16] :category/name "Balancing Locomotion"}
- {:db/id #db/id[:db.part/user -17] :category/name "Hip Mobility"}
- {:db/id #db/id[:db.part/user -18] :category/name "Ankle Mobility"}
- {:db/id #db/id[:db.part/user -19] :category/name "Shoulder Mobility"}
- {:db/id #db/id[:db.part/user -20] :category/name "Spine Mobility"}
- {:db/id #db/id[:db.part/user -21] :category/name "Wrist Mobility"}
-
- {:db/id     #db/id[:db.part/user -998]
-  :user/name "movementsession"}
-
- {:db/id     #db/id[:db.part/user -5040]
-  :movement/name "Box Jump"}
- {:db/id     #db/id[:db.part/user -5041]
-  :movement/name "Depth Jump"}
- {:db/id     #db/id[:db.part/user -5080]
-  :movement/name "Wrist Stretches"}
- {:db/id     #db/id[:db.part/user -5081]
-  :movement/name "Dynamic Reach"}
-
- ;; ----------------------------------------------------------------
-
- {:db/id               #db/id[:db.part/user -101]
-  :template/title      "Practical Movements 1"
-  :template/public?    true
-  :template/created-by #db/id[:db.part/user -998]
-  :template/description
-                       "Practice running, crawling, jumping, climbing and lifting.
-                       Complete rounds with minimal rest, focusing on quality over speed."
-  :template/part       [#db/id[:db.part/user -1010]
-                        #db/id[:db.part/user -1011]
-                        #db/id[:db.part/user -1012]]}
- {:db/id                    #db/id[:db.part/user -1010]
-  :part/title               "Warming up"
-  :part/category            [#db/id[:db.part/user -1]
-                             #db/id[:db.part/user -2]
-                             #db/id[:db.part/user -3]
-                             #db/id[:db.part/user -8]
-                             #db/id[:db.part/user -9]
-                             #db/id[:db.part/user -12]]
-  :part/practical           true
-  :part/number-of-movements 4
-  :part/rep                 10
-  :part/distance            15
-  :part/duration            30
-  :part/set                 3}
- {:db/id                    #db/id[:db.part/user -1011]
-  :part/title               "Practice a skill"
-  :part/category            [#db/id[:db.part/user -2]
-                             #db/id[:db.part/user -3]
-                             #db/id[:db.part/user -4]
-                             #db/id[:db.part/user -5]
-                             #db/id[:db.part/user -6]
-                             #db/id[:db.part/user -7]
-                             #db/id[:db.part/user -8]
-                             #db/id[:db.part/user -9]
-                             #db/id[:db.part/user -10]
-                             #db/id[:db.part/user -11]
-                             #db/id[:db.part/user -14]
-                             #db/id[:db.part/user -15]
-                             #db/id[:db.part/user -16]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/rep                 30
-  :part/distance            50
-  :part/duration            240
-  :part/set                 1}
- {:db/id                    #db/id[:db.part/user -1012]
-  :part/title               "Circuit for 4+ rounds"
-  :part/category            [#db/id[:db.part/user -13]]
-  :part/practical           true
-  :part/number-of-movements 5
-  :part/set                 4
-  :part/rep                 10
-  :part/distance            15
-  :part/duration             30}
-
- ;; ------------------------------------------------------------------------------
-
- {:db/id               #db/id[:db.part/user -102]
-  :template/title      "Practical Movements 2"
-  :template/public?    true
-  :template/created-by #db/id[:db.part/user -998]
-  :template/description
-                       "Complete 3-5 rounds of the whole circuit without resting"
-  :template/part       [#db/id[:db.part/user -1020]
-                        #db/id[:db.part/user -1021]
-                        #db/id[:db.part/user -1022]]}
- {:db/id                    #db/id[:db.part/user -1020]
-  :part/title               "Sit/Crawl"
-  :part/category            [#db/id[:db.part/user -3]
-                             #db/id[:db.part/user -12]]
-  :part/practical           true
-  :part/number-of-movements 3
-  :part/rep                 8
-  :part/distance            12
-  :part/duration            30
-  :part/set                 5}
- {:db/id                    #db/id[:db.part/user -1021]
-  :part/title               "Jump"
-  :part/category            [#db/id[:db.part/user -6]]
-  :part/practical           true
-  :part/number-of-movements 2
-  :part/rep                 4
-  :part/set                 5}
- {:db/id                    #db/id[:db.part/user -1022]
-  :part/title               "Hang"
-  :part/category            [#db/id[:db.part/user -5]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/rep                 10
-  :part/duration            30
-  :part/set                 5}
-
- ;; ---------------------------------------------------------------------------
-
- {:db/id               #db/id[:db.part/user -104]
-  :template/title      "Practical Movements 3"
-  :template/public?    true
-  :template/created-by #db/id[:db.part/user -998]
-  :template/description "Complete 4-5 rounds of the whole circuit without resting"
-  :template/part       [#db/id[:db.part/user -1040]
-                        #db/id[:db.part/user -1041]
-                        #db/id[:db.part/user -1042]
-                        #db/id[:db.part/user -1043]]}
- {:db/id                    #db/id[:db.part/user -1040]
-  :part/title               "Jump over obstacle"
-  :part/category            [#db/id[:db.part/user -6]]
-  :part/practical           true
-  :part/specific-movement   [#db/id[:db.part/user -5040]
-                             #db/id[:db.part/user -5041]]
-  :part/rep                 1
-  :part/set                 5}
- {:db/id                    #db/id[:db.part/user -1041]
-  :part/title               "Balance"
-  :part/category            [#db/id[:db.part/user -16]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/distance            10
-  :part/set                 5}
- {:db/id                    #db/id[:db.part/user -1042]
-  :part/title               "Climb the tree"
-  :part/category            [#db/id[:db.part/user -4]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/rep                 8
-  :part/set                 5}
- {:db/id                    #db/id[:db.part/user -1043]
-  :part/title               "Crawl back"
-  :part/category            [#db/id[:db.part/user -3]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/distance            10
-  :part/set                 5}
-
- ;; ----------------------------------------------------------------------
-
- {:db/id               #db/id[:db.part/user -105]
-  :template/title      "Practical Movements 4"
-  :template/public?    true
-  :template/created-by #db/id[:db.part/user -998]
-  :template/description "Complete 4-5 rounds of the whole circuit without resting"
-  :template/part       [#db/id[:db.part/user -1050]
-                        #db/id[:db.part/user -1051]
-                        #db/id[:db.part/user -1052]
-                        #db/id[:db.part/user -1053]
-                        #db/id[:db.part/user -1054]]}
- {:db/id                    #db/id[:db.part/user -1050]
-  :part/title               "Brachiate"
-  :part/category            [#db/id[:db.part/user -15]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/distance            6
-  :part/set                 5}
- {:db/id                    #db/id[:db.part/user -1051]
-  :part/title               "Balance"
-  :part/category            [#db/id[:db.part/user -16]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/distance            10
-  :part/set                 5}
- {:db/id                    #db/id[:db.part/user -1052]
-  :part/title               "Sit/Stand"
-  :part/category            [#db/id[:db.part/user -12]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/rep                 8
-  :part/set                 5}
- {:db/id                    #db/id[:db.part/user -1053]
-  :part/title               "Jump"
-  :part/category            [#db/id[:db.part/user -6]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/rep                 8
-  :part/set                 5}
- {:db/id                    #db/id[:db.part/user -1054]
-  :part/title               "Balance"
-  :part/category            [#db/id[:db.part/user -16]]
-  :part/practical           true
-  :part/number-of-movements 1
-  :part/distance            20
-  :part/set                 5}
-
- ;; --------------------------------------------------------------------------
- {:db/id               #db/id[:db.part/user -108]
-  :template/title      "Locomotion"
-  :template/public?    true
-  :template/created-by #db/id[:db.part/user -998]
-  :template/description "Practice different crawls, walks and rolls as ways of moving across the floor. Go through the locomotion movements for between 4 and 6 rounds, keeping a controlled, even tempo and using minimal rest between each movement."
-  :template/part       [#db/id[:db.part/user -1080]
-                        #db/id[:db.part/user -1081]]}
- {:db/id                    #db/id[:db.part/user -1080]
-  :part/title               "Mobility"
-  :part/category            [#db/id[:db.part/user -1]]
-  :part/specific-movement   [#db/id[:db.part/user -5080]
-                             #db/id[:db.part/user -5081]]
-  :part/practical           false
-  :part/number-of-movements 4
-  :part/rep                 10
-  :part/set                 1}
- {:db/id                    #db/id[:db.part/user -1081]
-  :part/title               "Locomotion"
-  :part/category            [#db/id[:db.part/user -3]
-                             #db/id[:db.part/user -11]]
-  :part/practical           false
-  :part/number-of-movements 6
-  :part/distance            15
-  :part/set                 4}
-
- ;; --------------------------------------------------------------------------
- {:db/id               #db/id[:db.part/user -109]
-  :template/title      "Mobility"
-  :template/public?    true
-  :template/created-by #db/id[:db.part/user -998]
-  :template/description ""
-  :template/part       [#db/id[:db.part/user -1090]
-                        #db/id[:db.part/user -1091]]}
- {:db/id                    #db/id[:db.part/user -1090]
-  :part/title               "Lower body joint mobility"
-  :part/category            [#db/id[:db.part/user -17]
-                             #db/id[:db.part/user -18]]
-  :part/specific-movement   [#db/id[:db.part/user -5081]]
-  :part/practical           false
-  :part/number-of-movements 6
-  :part/rep                 10
-  :part/distance            15
-  :part/duration            30
-  :part/set                 2}
- {:db/id                    #db/id[:db.part/user -1091]
-  :part/title               "Upper body joint mobility"
-  :part/category            [#db/id[:db.part/user -19]
-                             #db/id[:db.part/user -20]
-                             #db/id[:db.part/user -21]]
-  :part/specific-movement   [#db/id[:db.part/user -5080]]
-  :part/practical           false
-  :part/number-of-movements 6
-  :part/rep                 10
-  :part/distance            15
-  :part/duration            30
-  :part/set                 2}
+ {:db/id #db/id[:db.part/user -1] :slot-category/name "Mobility"}
+ {:db/id #db/id[:db.part/user -2] :slot-category/name "Balance"}
+ {:db/id #db/id[:db.part/user -3] :slot-category/name "Crawl"}
+ {:db/id #db/id[:db.part/user -4] :slot-category/name "Climb"}
+ {:db/id #db/id[:db.part/user -5] :slot-category/name "Hang"}
+ {:db/id #db/id[:db.part/user -6] :slot-category/name "Jump"}
+ {:db/id #db/id[:db.part/user -7] :slot-category/name "Lift"}
+ {:db/id #db/id[:db.part/user -8] :slot-category/name "Roll"}
+ {:db/id #db/id[:db.part/user -9] :slot-category/name "Run"}
+ {:db/id #db/id[:db.part/user -10] :slot-category/name "Throw"}
+ {:db/id #db/id[:db.part/user -11] :slot-category/name "Walk"}
+ {:db/id #db/id[:db.part/user -12] :slot-category/name "Sit/Stand Transition"}
+ {:db/id #db/id[:db.part/user -13] :slot-category/name "Practical Movements"}
+ {:db/id #db/id[:db.part/user -14] :slot-category/name "Beam"}
+ {:db/id #db/id[:db.part/user -15] :slot-category/name "Brachiate"}
+ {:db/id #db/id[:db.part/user -16] :slot-category/name "Balancing Locomotion"}
+ {:db/id #db/id[:db.part/user -17] :slot-category/name "Hip Mobility"}
+ {:db/id #db/id[:db.part/user -18] :slot-category/name "Ankle Mobility"}
+ {:db/id #db/id[:db.part/user -19] :slot-category/name "Shoulder Mobility"}
+ {:db/id #db/id[:db.part/user -20] :slot-category/name "Spine Mobility"}
+ {:db/id #db/id[:db.part/user -21] :slot-category/name "Wrist Mobility"}
 
  ;; --------------------------------------------------------------------------
  ; hip mobility fully spec (squat routine 1 & 2)
- ;DONE
+
  ;; --------------------------------------------------------------------------
  ; shoulder/scap- & spine-mobility (ido shoulder/scap + (jefferson curl + bridge rotation))
- ;DONE
- ;; --------------------------------------------------------------------------
- ; Handstand
- ; DONE
-
-
 
  ;; --------------------------------------------------------------------------
  ; locomotion fully spec (ido)
@@ -341,9 +295,6 @@
  ; 5x5
 
  ;; --------------------------------------------------------------------------
- ; Gymnastic Strength
-
- ;; --------------------------------------------------------------------------
  ; Calisthenics
 
  ;; --------------------------------------------------------------------------
@@ -362,10 +313,9 @@
  ; Ring play
 
  ;; --------------------------------------------------------------------------
- ; advanced (include lifting, throwing, running, rolling, more climbing)
+ ; advanced movnat (include lifting, throwing, running, rolling, more climbing)
 
  ;; --------------------------------------------------------------------------
- ; advanced (include lifting, throwing, running, rolling, more climbing)
-
+ ; advanced movnat (include lifting, throwing, running, rolling, more climbing)
 
  ]
