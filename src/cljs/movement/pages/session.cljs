@@ -116,15 +116,31 @@
   (.preventDefault event)
   (session/remove! :movement-session))
 
+(defn generate-placeholder-text [activity]
+  (let [day (.getDay (DateTime.))
+        nor-day ({1 "mandag" 2 "tirsdag" 3 "onsdag" 4 "torsdag" 5 "fredag" 6 "lørdag" 7 "søndag"} day)
+        texts ["#du #kan #tagge #øktene #dine"
+               (str "#" (str/lower-case activity))
+               (str "Jeg liker lukten av bevegelse på " nor-day "er.")
+               (str "Er det noe bedre enn litt " (str/lower-case activity) " på " nor-day "er?")
+               "Hva tenker du om økta?"
+               "Hvordan gikk økta?"
+               "Det er her du skryter.."
+               "Skryt av hva du gjorde i dag."
+               (str "Hvordan gikk økta? #" nor-day "søkt")]]
+    (first (shuffle texts))))
+
 (defn create-session-from-activity [event activity]
   (.preventDefault event)
-  (GET "create-session"
-       {:params        {:type  (:title activity)
-                        :email (:email (session/get :user))}
-        :handler       (fn [session]
-                         (session/put! :movement-session
-                                       (assoc session :activity activity)))
-        :error-handler (fn [r] (pr r))}))
+  (if (or (= (:title activity) "Styrketrening") (= (:title activity) "Naturlig bevegelse") (= (:title activity) "Mobilitet"))
+    (GET "create-session"
+         {:params        {:type    (:title activity)
+                          :user-id (:user-id (session/get :user))}
+          :handler       (fn [session]
+                           (session/put! :movement-session
+                                         (assoc session :activity activity)))
+          :error-handler (fn [r] (pr r))})
+    (session/put! :movement-session {:activity activity})))
 
 (defn preview-file []
   (let [file (.getElementById js/document "upload")
@@ -321,8 +337,9 @@
 
 (defn list-of-activities []
   (let [activites [{:title "Naturlig bevegelse" :graphic 'lightgreen}
-                   {:title "Løping" :graphic 'red}
                    {:title "Styrketrening" :graphic 'darkgreen}
+                   {:title "Mobilitet" :graphic 'brown}
+                   {:title "Løping" :graphic 'red}
                    {:title "Vandring" :graphic 'orange}
                    {:title "Sykling" :graphic 'darkgreen}
                    {:title "Yoga" :graphic 'purple}
@@ -373,11 +390,11 @@
              :value     (if date-value date-value (date-string))
              :on-change #(session/assoc-in! [:movement-session :date] (-> % .-target .-value))}]))
 
-(defn text-component []
+(defn text-component [activity]
   [:div.pure-g {:style {:margin-top '25}}
    [:div.pure-u-1
     [:textarea {:rows      10 :cols 120
-                :style     {:resize 'vertical} :placeholder "Hvordan gikk økta? #styrke #mandag"
+                :style     {:resize 'vertical} :placeholder (generate-placeholder-text (:title activity))
                 :on-change #(session/assoc-in! [:movement-session :comment] (-> % .-target .-value))
                 :value     (session/get-in [:movement-session :comment])}]]])
 
@@ -438,10 +455,10 @@
                    ^{:key i} [part-component (get parts i) i])))]
             [:div.pure-g
              [:div.pure-u-1 (date-component)]]
-            [:h2.pure-g
+            [:div.pure-g {:style {:font-size "200%"}}
              [:div.pure-u (str (:title (:activity session)) " i ")]
-             [:div.pure-u (time-component)]]
-            (text-component)
+             [:div.pure-u {:style {:margin-left 10 :padding-bottom 20}} (time-component)]]
+            (text-component (:activity session))
             (add-photo-component)
             [finish-session-component]]]]
          [:div.content

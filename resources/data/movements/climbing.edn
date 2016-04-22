@@ -40,7 +40,7 @@
  {:name     "Pull-up"
   :image    "pull-up.png"
   :category #{:climb :bar :pull-up :pull :bent-arm-strength :natural} :measurement :repetition
-  :previous ["Negativ pull-up" "Pull-up med hopp"] :next ["Pull-up og strekke seg"]}
+  :previous ["Negativ pull-up" "Pull-up med hopp"] :next ["Vid pull-up" "Pull-up og strekke seg"]}
 
  {:name     "Pull-up og strekke seg"
   :image    "pull-up-reach.png"
@@ -92,7 +92,7 @@
  {:name     "Pull-up fra albuene"
   :image    "elbow-pull-up.png"
   :category #{:climb :bar :natural} :measurement :repetitions
-  :previous ["Passiv til aktiv henging"]}
+  :previous ["Henge passivt til aktivt"]}
 
  {:name     "Svingende pop-up"
   :image    "swing-pop-up.png"

@@ -31,9 +31,9 @@
   :previous ["Henge passivt"] :next ["Henge aktivt med en arm"]}
 
  {:name     "Henge aktivt med en arm"
-  :image    "one-arm-passive-hang.png"
+  :image    "one-arm-active-hang.png"
   :category #{:hang :bar :straight-arm-strength} :measurement :duration
-  :previous ["Henge passivt med en arm"] :next ["Henge aktivt med en arm"]}
+  :previous ["Henge passivt med en arm"] :next ["Henge passivt til aktivt med en arm"]}
 
  {:name     "Henge passivt til aktivt med en arm"
   :image    "one-arm-pull.png"
@@ -70,18 +70,18 @@
   :previous ["Pull-up" "Svinge sideveis hold"]}
 
  {:name     "Traversere svingende sideveis"
-  :image    "bent-arm-lateral-traverse.png"
+  :image    "swinging-arm-lateral-traverse.png"
   :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :distance
   :previous ["Svinge sideveis hold"]}
 
  {:name     "Traversere"
-  :image    "bent-arm-lateral-traverse.png"
+  :image    "bent-arm-linear-traverse.png"
   :category #{:hang :brachiate :bar :bent-arm-strength} :measurement :distance
   :previous ["Pull-up" "Svinge sideveis hold"]}
 
  {:name     "Traversere svingende"
-  :image    "bent-arm-lateral-traverse.png"
+  :image    "swinging-linear-traverse.png"
   :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :distance
-  :previous ["Pull-up" "Svinge sideveis hold"]}
+  :previous ["Svinge sideveis hold"]}
 
  ]

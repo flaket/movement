@@ -23,7 +23,7 @@
  {:name     "Bueskytter pull-up"
   :image    "archer-pull-up.png"
   :category #{:bent-arm-strength :pull :pull-up :bar} :measurement :repetitions
-  :previous ["Pull-up til bryst"] :next ["Assistert en arm pull-up"]}
+  :previous ["Pull-up til bryst" "Pull-up og strekke seg"] :next ["Assistert en arm pull-up"]}
 
  {:name     "Assistert en arm pull-up"
   :image    "assisted-one-arm-pull-up.png"

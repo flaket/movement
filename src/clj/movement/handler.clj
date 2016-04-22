@@ -199,8 +199,8 @@
 
            (GET "/create-session" req (if (authenticated? req)
                                         (let [type (:type (:params req))
-                                              email (:email (:params req))]
-                                          (response (db/create-session email type))) (throw-unauthorized)))
+                                              user-id (:user-id (:params req))]
+                                          (response (db/create-session user-id type))) (throw-unauthorized)))
 
            (GET "/feed" req (if (authenticated? req)
                                (let [user-id (:user-id (:params req))]

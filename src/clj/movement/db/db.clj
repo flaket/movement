@@ -169,15 +169,22 @@
 
 (defn create-movement [m]
   ; todo: filter on {:natural-only? true}
-  ; todo: filter on user zone data
+  ; todo: movements-from-category skal ta flere categorier
+  ; todo: filter on user zone data (swap with previous if one or no stars)
+  ; todo: remove duplicates from a part (scan through keep hash-map and refresh if in hash-map)
   ; todo: filter on user preferences/goals
   (merge m
          (if-let [m-name (:movement m)]
            (movement m-name)
            (first (movements-from-category 1 (first (shuffle (:slot-category m))))))))
 
-(defn create-session [email session-type]
-  (let [templates (templates)
+(defn create-session [user-id session-type]
+  (let [
+        ; todo: select template based on user reporting on energy and sleep levels.
+        templates (case session-type "Naturlig bevegelse" ["Naturlige Bevegelser 1" "Naturlige Bevegelser 2" "Naturlige Bevegelser 3" "Naturlige Bevegelser 4"]
+                                     "Styrketrening" ["Gymnastic Strength 1" "Locomotion 1"]
+                                     "Mobilitet" ["Mobility 1"]
+                                     "default")
         template (template (first (shuffle templates)))
         session (assoc template :parts (mapv (fn [p] (mapv #(create-movement %) p)) (:parts template)))]
     session))
@@ -279,18 +286,12 @@
   (h/update-item! creds :sessions {:url session-url} {:comments [:set comments]})
   "ok")
 
-
-;; ------- LAB -------
+;; ------ LAB -------
 
 ; teste data:
 ; + hver øvelse har et bilde
 ; - hver øvelse med previous/next peker til et øvelsesnavn som finnes
 ; - hver øvelse har measurement, og measurement er en av [:repetitions :duration :distance]
-
-#_(defn image-url [name]
-    (str "public/images/movements/" (str/replace (str/lower-case name) " " "-") ".png"))
-
-
 
 #_(defn url->name [url]
     (let [name (-> url
@@ -317,7 +318,6 @@
 
 #_(find-no-image-movements)
 #_(find-no-data-images)
-
 
 (def movement-urls ["balancing.edn" "climbing.edn" "crawling.edn" "hanging.edn" "jumping.edn" "lifting.edn" "rolling.edn" "running.edn" "throwing-catching.edn"
                     "walking.edn" "mobility/mobility.edn" "other/core.edn" "other/footwork.edn" "other/hand-balance.edn" "other/leg-strength.edn"

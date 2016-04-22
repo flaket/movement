@@ -99,16 +99,17 @@
   (let [show-session-data? (atom false)
         adding-comment? (atom false)]
     (fn [{:keys [url activity user-image user-id user-name date-time time comment comments image parts likes]
-          :or   {user-image "images/movements/static-air-baby.png"}}]
+          :or   {user-image (first (shuffle ["images/field.jpg" "images/forest.jpg" "images/winter.jpg"]))}}]
       [:div {:style {:border-bottom "1px solid lightgray"}}
 
        ; user image, name and timestamp
        [:div.pure-g
-        [:div.pure-u-1-6.center [:img {:src   user-image :width "100px"
-                                       :style {:cursor 'pointer}
-                                       ; onClick/onTouchEnd -> show profile
+        [:div.pure-u [:img {:src   user-image :width 80 :height 80
+                                :style {:margin-top 15 :margin-left 40
+                                        :cursor 'pointer :border-radius "50% 50% 50% 50%"}
+                                ; onClick/onTouchEnd -> show profile
                                        }]]
-        [:div.pure-u-5-6
+        [:div.pure-u {:style {:margin-left 20}}
          [:div.pure-g [:h2 [:a.pure-u {
                                        ; onClick/onTouchEnd -> show profile
                                        } user-name]]]

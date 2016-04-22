@@ -21,7 +21,7 @@
   :previous ["Strekk ben back-lever"] :next     ["Back-lever"]}
 
  {:name     "Back-lever"
-  :image    "straddle-back-lever.png"
+  :image    "back-lever.png"
   :category #{:straight-arm-strength :back-lever :ring :bar} :measurement :duration
   :previous ["Straddle back-lever"]}
 
@@ -46,7 +46,7 @@
   :previous ["Strekk ben front-lever"] :next     ["Front-lever"]}
 
  {:name     "Front-lever"
-  :image    "straddle-front-lever.png"
+  :image    "front-lever.png"
   :category #{:straight-arm-strength :front-lever :ring :bar} :measurement :duration
   :previous ["Straddle front-lever"]}
 
@@ -66,19 +66,19 @@
   :previous ["Flat side-lever"] :next     ["Side-lever"]}
 
  {:name     "Side-lever"
-  :image    "straddle-side-lever.png"
+  :image    "side-lever.png"
   :category #{:straight-arm-strength :side-lever :ring :bar} :measurement :duration
   :previous ["Straddle side-lever"]}
 
  {:name     "Planche len"
   :image    "planche-lean.png"
   :category #{:straight-arm-strength} :measurement :duration
-  :previous ["Håndstående len"]}
+  :next     ["Håndstående len"]}
 
  {:name     "Håndstående len"
-  :image    "planche-lean.png"
+  :image    "handstand-lean.png"
   :category #{:straight-arm-strength} :measurement :duration
-  :next     ["Planche len"]}
+  :previous ["Planche len"]}
 
  {:name     "Tuck planche"
   :image    "tuck-planche.png"

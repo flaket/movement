@@ -54,7 +54,8 @@
             [:div.pure-u-1-3
              [:div.pure-g
               [:div.pure-u-1
-               [:img {:width "100%" :src "images/movements/arch-up.png"}]]]]
+               [:img {:style {:border-radius "50% 50% 50% 50%"}
+                      :width 300 :height 300 :src "images/field.jpg"}]]]]
             [:div.pure-u-1-3
              [:div.pure-g {:style {:margin-top 10}}
               [:h2.pure-u-1 {:on-click #(pr user)} (:name user)]]
