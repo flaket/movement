@@ -203,7 +203,7 @@ AmaticSC,
 .activity { border-bottom: 1px solid lightgray;
             cursor: pointer; }
 
-.activity:hover { background-color: lightgray; }
+.activity:hover { color: lightgray; }
 
 .title { padding: 0 0 0 15px;}
 

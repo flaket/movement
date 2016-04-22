@@ -351,13 +351,14 @@
     (fn []
       [:div.movements
        [:div.pure-g
-        [:div.pure-u-1 [:h1 "Logg en aktivitet"]]]
+        [:div.pure-u-1 {:style {:font-size "150%"}} "Logg en aktivitet"]]
        (doall
          (for [{:keys [title graphic] :as a} activites]
            ^{:key title}
-           [:div.pure-g.activity {:onClick #(create-session-from-activity % a) :onTouchEnd #(create-session-from-activity % a)}
-            [:div.pure-u {:style {:width 150 :background-color graphic}}]
-            [:div.pure-u [:h2 {:style {:padding "25px 25px 25px 25px"}} title]]]))])))
+           [:div.pure-g.activity {:style {:padding "25px 25px 25px 25px"}
+                                  :onClick #(create-session-from-activity % a) :onTouchEnd #(create-session-from-activity % a)}
+            [:div.pure-u {:style {:border-radius "50% 50% 50% 50%" :width 150 :height 150 :background-color graphic}}]
+            [:div.pure-u {:style {:font-size "175%" :margin-left 20 :margin-top 50}} title]]))])))
 
 (defn time-component []
   (let [time-value (session/get-in [:movement-session :time])]
