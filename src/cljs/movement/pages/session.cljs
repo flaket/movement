@@ -122,7 +122,7 @@
         texts ["#du #kan #tagge #øktene #dine"
                (str "#" (str/lower-case activity))
                (str "Jeg liker lukten av bevegelse på " nor-day "er.")
-               (str "Er det noe bedre enn litt " (str/lower-case activity) " på " nor-day "er?")
+               (str "Er det noe bedre enn litt " (str/lower-case activity) " på en " nor-day "?")
                "Hva tenker du om økta?"
                "Hvordan gikk økta?"
                "Det er her du skryter.."
