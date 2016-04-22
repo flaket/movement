@@ -316,6 +316,25 @@ AmaticSC,
   height: 150px;
 }
 
+/*
+Background image
+body.canvas {
+    position: relative;
+    color: #555;
+    background: #f2f2f2 url("../images/bkg-light-linen.png") left top repeat;
+    background-image: url("../images/bkg-light-linen.png");
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-size: initial;
+    background-repeat-x: repeat;
+    background-repeat-y: repeat;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: rgb(242, 242, 242);
+}
+*/
+
 .refresh:hover {
     text-shadow: 0 0 1px #669966,
     0 0 10px rgba(0, 255, 0, 0.6);
