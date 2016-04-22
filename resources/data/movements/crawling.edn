@@ -82,7 +82,7 @@
  {:name     "Galopperende kravle"
   :image    "gallop-crawl.png"
   :category #{:crawl} :measurement :distance
-  :next ["Hover"] :previous ["Bjørnekravle"]}
+  :next ["Svevende kravle"] :previous ["Bjørnekravle"]}
 
  {:name     "Svevende kravle"
   :image    "hover-crawl.png"

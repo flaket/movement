@@ -48,7 +48,7 @@
                                          :throughput {:read 1 :write 1}}]}})
 
 #_(let [c (h/list-tables! creds {})] (<!! c))
-#_(let [c (h/describe-table! creds :users)] (<!! c))
+#_(let [c (h/describe-table! creds :templates)] (<!! c))
 #_(h/create-table! creds sessions-table)
 #_(h/delete-table! creds :sessions)
 #_(let [tables (<!! (h/list-tables! creds {}))]
@@ -79,6 +79,10 @@
     (map #(h/put-item! creds :movements %) balancing))
 
 #_(h/delete-item! creds :sessions {:url "121ee6f5-618b-4f45-b64d-08298b2b8a2f"})
+
+#_(let [templates (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))
+      ]
+  (map #(h/put-item! creds :templates %) templates))
 
 ;; ----------------------------------------------------
 
@@ -160,66 +164,23 @@
   (<!! (h/get-item! creds :templates {:title title})))
 #_(template "Naturlige Bevegelser 2")
 
+(defn templates []
+  (map :title (<!! (h/scan! creds :templates {}))))
+
+(defn create-movement [m]
+  ; todo: filter on {:natural-only? true}
+  ; todo: filter on user zone data
+  ; todo: filter on user preferences/goals
+  (merge m
+         (if-let [m-name (:movement m)]
+           (movement m-name)
+           (first (movements-from-category 1 (first (shuffle (:slot-category m))))))))
+
 (defn create-session [email session-type]
-  (let [session {:description "hellu"
-                 :template    "template-title-1"
-                 :parts       [[
-                                {:id            (str (UUID/randomUUID))
-                                 :name          "Balansere"
-                                 :image         "balancing-walk.png"
-                                 :slot-category #{:balance  ;:walk :beam :balancing-locomotion :natural
-                                                  }
-                                 :measurement   :distance
-                                 :next          ["Balansere sideveis"]
-                                 :distance      10
-                                 :set           4}
-                                {:id            (str (UUID/randomUUID))
-                                 :name          "Tærne til stanga"
-                                 :image         "toes-to-bar.png"
-                                 :rep           5
-                                 :set           4
-                                 :slot-category #{
-                                                  ;:natural :climb
-                                                  }
-                                 :measurement   :repetitions
-                                 :previous      ["Hengende kneløft"] :next ["Hengende sideveis fotløft"]}
-
-                                ]
-                               [
-                                {:id            (str (UUID/randomUUID))
-                                 :name          "Balansere baklengs"
-                                 :image         "balancing-backward-walk.png"
-                                 :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
-                                 :measurement   :distance
-                                 :previous      ["Balansere sideveis"]
-                                 :distance      10
-                                 :set           4}
-                                {:id            (str (UUID/randomUUID))
-                                 :name          "Tærne til stanga"
-                                 :image         "toes-to-bar.png"
-                                 :rep           5
-                                 :set           4
-                                 :slot-category #{:natural :climb}
-                                 :measurement   :repetitions
-                                 :previous      ["Hengende kneløft"] :next ["Hengende sideveis fotløft"]}
-
-                                ]]}
-        session-2 {:template "template-title-2"
-                   :description "Her er hva du skal gjøre!"
-                   :parts [[{:id (str (UUID/randomUUID))
-                             :name          "Balansere baklengs"
-                             :image         "balancing-backward-walk.png"
-                             :slot-category #{:balance :walk :beam :balancing-locomotion :natural}
-                             :measurement   :distance
-                             :previous      ["Balancing Lateral Walk"]
-                             :distance      10
-                             :set           4}]]}
-        ]
-    (case session-type
-      "Naturlig bevegelse" session-2
-      "Styrke" session
-      {:parts [[]]})
-    #_(<!! (h/get-item! creds :templates {:title title :creator creator}))))
+  (let [templates (templates)
+        template (template (first (shuffle templates)))
+        session (assoc template :parts (mapv (fn [p] (mapv #(create-movement %) p)) (:parts template)))]
+    session))
 
 ;;---------- add/update data ----------
 
@@ -379,3 +340,5 @@
   (let [no-image-movements (remove #(has-image? %) (load-and-concat movement-urls))]
     {:#                  (count no-image-movements)
      :no-image-movements no-image-movements}))
+
+#_(map #(h/put-item! creds :movements %) (load-and-concat movement-urls))
