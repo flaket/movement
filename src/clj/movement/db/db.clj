@@ -48,41 +48,12 @@
                                          :throughput {:read 1 :write 1}}]}})
 
 #_(let [c (h/list-tables! creds {})] (<!! c))
-#_(let [c (h/describe-table! creds :templates)] (<!! c))
+#_(let [c (h/describe-table! creds :movements)] (<!! c))
 #_(h/create-table! creds sessions-table)
-#_(h/delete-table! creds :sessions)
+#_(h/delete-table! creds :movements)
 #_(let [tables (<!! (h/list-tables! creds {}))]
     (doseq [i (range (count tables))]
       (h/delete-table! creds (get tables i))))
-
-;; template: title description background part
-;; parts: slot(s)
-;; slot: category natural movement rep distance duration set weight rest
-#_(let [t {:title       "Test"
-           :creator     "Andreas"
-           :description "test"
-           :background  "test"
-           :parts       [[{:category   #{:natural :balance}
-                           :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
-                          {:category   #{:natural :climb}
-                           :repetition [2 4 6] :set 4}]]}]
-    (h/put-item! creds :templates t))
-
-;; stored-sessions:
-;; url user-id template date comment time(minutter/timer) image location tags(skrapes fra comment backend)
-;; parts [[{movement-name rep set duration distance weight rest}]]
-
-#_(let [balancing (first (Util/readAll (io/reader (io/resource "data/movements/balancing.edn"))))
-        ;climbing (first (Util/readAll (io/reader (io/resource "data/movements/climbing.edn"))))
-        ;all-movements (vec (concat balancing climbing))
-        ]
-    (map #(h/put-item! creds :movements %) balancing))
-
-#_(h/delete-item! creds :sessions {:url "121ee6f5-618b-4f45-b64d-08298b2b8a2f"})
-
-#_(let [templates (first (Util/readAll (io/reader (io/resource "data/templates.edn"))))
-      ]
-  (map #(h/put-item! creds :templates %) templates))
 
 ;; ----------------------------------------------------
 
@@ -115,7 +86,7 @@
   (let [sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
         sessions (map #(assoc % :user-name (:name (user (:user-id %)))) sessions)]
     sessions))
-#_(sessions-by-user-id "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")
+#_(sessions-by-user-id "ca1ee74a-7f45-4fe7-8b25-4176bf17aadf")
 
 ;;---------- get data ----------
 
@@ -192,31 +163,32 @@
 ;;---------- add/update data ----------
 
 (defn add-user! [email name password activation-id]
-  (let [user {:user-id                     (str (UUID/randomUUID))
-              :email                       email
-              :name                        name
-              :password                    (hashers/encrypt password)
-              :sign-up-timestamp           (c/to-string (l/local-now))
-              :activation-id               activation-id
-              :activated?                  false
-              :valid-subscription?         false
-              :receive-push-notifications? true
-              :follows                     []
-              :badges                      []
-              :goals                       []
-              :priorities                  []}]
+  (let [user {:user-id             (str (UUID/randomUUID))
+              :email               email
+              :name                name
+              :password            (hashers/encrypt password)
+              :sign-up-timestamp   (c/to-string (l/local-now))
+              :activation-id       activation-id
+              :activated?          true
+              :paid-subscription?  false
+              :settings            {:receive-push-notifications? true}
+              :statistics          {}
+              :follows             []
+              :badges              []
+              ;:goals                       []
+              ;:priorities                  []
+              }]
     (h/put-item! creds :users user)))
-#_(add-user! "andflak@gmail.com" "andreas" "pw" (str (UUID/randomUUID)))
-#_(add-user! "andreas.flakstad@gmail.com" "bob" "pw" (str (UUID/randomUUID)))
-#_(add-user! "a@a" "Andreas" "pw" (str (UUID/randomUUID)))
+#_(add-user! "a" "andreas" "pw" (str (UUID/randomUUID)))
+#_(add-user! "b" "bob" "pw" (str (UUID/randomUUID)))
+#_(add-user! "c" "kåre" "pw" (str (UUID/randomUUID)))
 
 (defn follow-user! [user-id follow-id]
   (h/update-item! creds :users {:user-id user-id}
                   {:follows [:concat [follow-id]]}))
-#_(follow-user! "4fbc0650-a82c-4385-8c41-7e179d5e3f24" "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")
+#_(follow-user! "7ccb2ebd-35d2-49b4-802b-a6fd7ef3706c" "198af054-61e9-48d7-b199-d03e3980fb40")
 
-#_(user-by-email "andflak@gmail.com")
-#_(user-by-email "andreas.flakstad@gmail.com")
+#_(user-by-email "b")
 
 (defn add-badge! [user-id badge]
   (h/update-item! creds :users {:user-id user-id}
@@ -341,4 +313,8 @@
     {:#                  (count no-image-movements)
      :no-image-movements no-image-movements}))
 
+; add movements to db
 #_(map #(h/put-item! creds :movements %) (load-and-concat movement-urls))
+
+; add templates to db
+#_(map #(h/put-item! creds :templates %) (first (Util/readAll (io/reader (io/resource "data/templates.edn")))))

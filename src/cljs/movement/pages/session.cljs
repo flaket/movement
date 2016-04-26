@@ -25,40 +25,26 @@
   (when-not (nil? movement-name)
     (str "images/movements/" (str/replace (str/lower-case movement-name) " " "-") ".png")))
 
-
-(defn swap-movement [event movement part-number]
-  (.preventDefault event)
-  (let [category (name (first (shuffle (:category movement))))]
-    (GET "movement-from-category" {:params        {:category category}
-                                   :handler       (fn [new-movement]
-                                                    (let [part (session/get-in [:movement-session :parts part-number])
-                                                          pos (first (positions #{movement} part))
-                                                          new-part (assoc part pos (first new-movement))]
-                                                      (session/assoc-in! [:movement-session :parts part-number] new-part)))
-                                   :error-handler (fn [r] nil)})))
-
 (defn replace-movement [event {:keys [kw movement part-number]}]
   (.preventDefault event)
   (cond
-    (= :swap kw) (let [slot-category (:slot-category movement)
-                       category (name (first (shuffle (:category movement))))]
+    (= :swap kw) (let [category (name (first (shuffle (:slot-category movement))))]
                    (GET "movement-from-category" {:params        {:category category}
                                                   :handler       (fn [new-movement]
-                                                                   (let [new-movement (assoc (first new-movement) :slot-category slot-category)
+                                                                   (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
                                                                          part (session/get-in [:movement-session :parts part-number])
                                                                          pos (first (positions #{movement} part))
-                                                                         new-part (assoc part pos new-movement)]
+                                                                         new-part (assoc part pos (merge old-movement (first new-movement)))]
                                                                      (session/assoc-in! [:movement-session :parts part-number] new-part)))
                                                   :error-handler (fn [r] nil)}))
     (or (= :next kw)
-        (= :previous kw)) (let [slot-category (:slot-category movement)
-                                new-movement (first (shuffle (kw movement)))]
+        (= :previous kw)) (let [new-movement (first (shuffle (kw movement)))]
                             (GET "movement" {:params        {:name new-movement}
                                              :handler       (fn [new-movement]
-                                                              (let [new-movement (assoc new-movement :slot-category slot-category)
+                                                              (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
                                                                     part (session/get-in [:movement-session :parts part-number])
                                                                     pos (first (positions #{movement} part))
-                                                                    new-part (assoc part pos new-movement)]
+                                                                    new-part (assoc part pos (merge old-movement new-movement))]
                                                                 (session/assoc-in! [:movement-session :parts part-number] new-part)))
                                              :error-handler (fn [r] nil)}))
     :else nil)
@@ -130,17 +116,22 @@
                (str "Hvordan gikk økta? #" nor-day "søkt")]]
     (first (shuffle texts))))
 
+(defn generate-movement-session [event activity]
+  (.preventDefault event)
+  (GET "create-session"
+       {:params        {:type    (:title activity)
+                        :user-id (:user-id (session/get :user))}
+        :handler       (fn [session]
+                         (let [old-session (session/get :movement-session)]
+                           (session/put! :movement-session
+                                         (merge
+                                           old-session
+                                           (assoc session :activity activity)))))
+        :error-handler (fn [r] (pr r))}))
+
 (defn create-session-from-activity [event activity]
   (.preventDefault event)
-  (if (or (= (:title activity) "Styrketrening") (= (:title activity) "Naturlig bevegelse") (= (:title activity) "Mobilitet"))
-    (GET "create-session"
-         {:params        {:type    (:title activity)
-                          :user-id (:user-id (session/get :user))}
-          :handler       (fn [session]
-                           (session/put! :movement-session
-                                         (assoc session :activity activity)))
-          :error-handler (fn [r] (pr r))})
-    (session/put! :movement-session {:activity activity})))
+  (session/put! :movement-session {:activity activity}))
 
 (defn preview-file []
   (let [file (.getElementById js/document "upload")
@@ -405,7 +396,7 @@
         session (if-not (:comment session) (assoc session :comment "") session)
         new-parts (mapv (fn [part]
                           (mapv (fn [m]
-                                  (dissoc m :category :slot-category :measurement :previous :next :image)) part))
+                                  (dissoc m :category :slot-category :measurement :previous :next)) part))
                         (:parts session))
         date (if-let [date (:date session)] date (date-string))
         time (time-string)
@@ -443,17 +434,29 @@
        (if-let [session (session/get :movement-session)]
          [:div {:style {:margin-top "100px"}}
           [:div.pure-g
-           [:a.pure-u {:style      {:margin-left 20 :margin-top 20 :color (:graphic (:activity session)) :opacity 1}
-                       :onClick    #(remove-session %)
-                       :onTouchEnd #(remove-session %)}
-            [:i.fa.fa-arrow-left.fa-4x]]]
-          [:div.content {:style {:margin-top "20px"}}
+           [:div.pure-u-1
+            [:a {:style      {:margin-left 20 :margin-top 20 :color (:graphic (:activity session)) :opacity 1}
+                 :onClick    #(remove-session %)
+                 :onTouchEnd #(remove-session %)}
+             [:i.fa.fa-arrow-left.fa-4x]]
+            (when (or (= "Naturlig bevegelse" (:title (:activity session)))
+                      (= "Styrketrening" (:title (:activity session)))
+                      (= "Mobilitet" (:title (:activity session))))
+              [:img
+               {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
+                :style      {:height     250
+                             :float      'right
+                             :margin-top 20
+                             :margin-right 20 :cursor 'pointer}
+                :onClick    #(generate-movement-session % (:activity session))
+                :onTouchEnd #(generate-movement-session % (:activity session))}])]]
+          [:div.content {:style {:margin-top 20}}
            [:div
-            [:article.session
-             (let [parts (:parts session)]
+            (when-let [parts (:parts session)]
+              [:article.session
                (doall
                  (for [i (range (count parts))]
-                   ^{:key i} [part-component (get parts i) i])))]
+                   ^{:key i} [part-component (get parts i) i]))])
             [:div.pure-g
              [:div.pure-u-1 (date-component)]]
             [:div.pure-g {:style {:font-size "200%"}}

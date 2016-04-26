@@ -78,7 +78,7 @@
  {:title "Naturlige Bevegelser 4"
   :parts [[{:slot-category #{:brachiate}
             :natural-only? true
-            :distance      6 :set 5}
+            :duration 15 :distance 6 :set 5}
            {:slot-category #{:balance}
             :natural-only? true
             :distance      10 :set 5}
@@ -174,6 +174,77 @@
           ]}
 
 
+
+
+
+ #_[
+  {:db/id #db/id[:db.part/user -1] :slot-category/name "Mobility"}
+  {:db/id #db/id[:db.part/user -2] :slot-category/name "Balance"}
+  {:db/id #db/id[:db.part/user -3] :slot-category/name "Crawl"}
+  {:db/id #db/id[:db.part/user -4] :slot-category/name "Climb"}
+  {:db/id #db/id[:db.part/user -5] :slot-category/name "Hang"}
+  {:db/id #db/id[:db.part/user -6] :slot-category/name "Jump"}
+  {:db/id #db/id[:db.part/user -7] :slot-category/name "Lift"}
+  {:db/id #db/id[:db.part/user -8] :slot-category/name "Roll"}
+  {:db/id #db/id[:db.part/user -9] :slot-category/name "Run"}
+  {:db/id #db/id[:db.part/user -10] :slot-category/name "Throw"}
+  {:db/id #db/id[:db.part/user -11] :slot-category/name "Walk"}
+  {:db/id #db/id[:db.part/user -12] :slot-category/name "Sit/Stand Transition"}
+  {:db/id #db/id[:db.part/user -13] :slot-category/name "Practical Movements"}
+  {:db/id #db/id[:db.part/user -14] :slot-category/name "Beam"}
+  {:db/id #db/id[:db.part/user -15] :slot-category/name "Brachiate"}
+  {:db/id #db/id[:db.part/user -16] :slot-category/name "Balancing Locomotion"}
+  {:db/id #db/id[:db.part/user -17] :slot-category/name "Hip Mobility"}
+  {:db/id #db/id[:db.part/user -18] :slot-category/name "Ankle Mobility"}
+  {:db/id #db/id[:db.part/user -19] :slot-category/name "Shoulder Mobility"}
+  {:db/id #db/id[:db.part/user -20] :slot-category/name "Spine Mobility"}
+  {:db/id #db/id[:db.part/user -21] :slot-category/name "Wrist Mobility"}]
+
+ ;; --------------------------------------------------------------------------
+ ; hip mobility fully spec (squat routine 1 & 2)
+
+ ;; --------------------------------------------------------------------------
+ ; shoulder/scap- & spine-mobility (ido shoulder/scap + (jefferson curl + bridge rotation))
+
+ ;; --------------------------------------------------------------------------
+ ; locomotion fully spec (ido)
+
+ ;; --------------------------------------------------------------------------
+ ; Sprint (PB)
+
+ ;; --------------------------------------------------------------------------
+ ; Lift heavy things (PB)
+
+ ;; --------------------------------------------------------------------------
+ ; Calisthenics
+
+ ;; --------------------------------------------------------------------------
+ ; Calisthenics 2
+
+ ;; --------------------------------------------------------------------------
+ ; Eksplosive bein (hopp / markløft / knebøy, maks innsats for svært få reps, lite pause (til føler eksplosiv), reduser reps, 20 min økt)
+
+ ;; --------------------------------------------------------------------------
+ ; 5x5
+
+ ;; --------------------------------------------------------------------------
+ ; Floreio
+
+ ;; --------------------------------------------------------------------------
+ ; Floreio 2
+
+ ;; --------------------------------------------------------------------------
+ ; Balance day (beamorama)
+
+ ;; --------------------------------------------------------------------------
+ ; Ring play
+
+ ;; --------------------------------------------------------------------------
+ ; advanced movnat (include lifting, throwing, running, rolling, more climbing)
+
+ ;; --------------------------------------------------------------------------
+ ; advanced movnat (include lifting, throwing, running, rolling, more climbing)
+
  #_{:db/id               #db/id[:db.part/user -104]
     :template/title      "Learning Handstand"
     :template/public?    true
@@ -210,112 +281,5 @@
                                #db/id[:db.part/user -17]]
     :part/number-of-movements 2}
 
- #_{:db/id               #db/id[:db.part/user -106]
-    :template/title      "Back Squat 5x5"
-    :template/public?    true
-    :template/created-by #db/id[:db.part/user -998]
-    :template/description
-                         "The back squat is an excellent exercise to increase overall strength.
-                         Make it a goal to increase the weights of the back squat by 2-3kg/4-5lbs with each new session,
-                         and you will quickly see improvements."
-    :template/part       [#db/id[:db.part/user -1061]
-                          #db/id[:db.part/user -1062]
-                          #db/id[:db.part/user -1063]
-                          #db/id[:db.part/user -1064]]}
- #_{:db/id                    #db/id[:db.part/user -1061]
-    :part/title               "Hip Mobility Warmup"
-    :part/category            [#db/id[:db.part/user -44]]
-    :part/number-of-movements 5
-    :part/rep                 10
-    :part/set                 2}
- #_{:db/id                    #db/id[:db.part/user -1062]
-    :part/title               "Technical Warmup"
-    :part/category            [#db/id[:db.part/user -14]]
-    :part/number-of-movements 2
-    :part/rep                 10
-    :part/set                 3}
- #_{:db/id                  #db/id[:db.part/user -1063]
-    :part/title             "Back Squat"
-    :part/category          [#db/id[:db.part/user -14]]
-    :part/specific-movement [#db/id[:db.part/user -5001]]
-    :part/rep               5
-    :part/set               5}
- #_{:db/id                    #db/id[:db.part/user -1064]
-    :part/title               "Practice Other Lifts"
-    :part/category            [#db/id[:db.part/user -14]]
-    :part/number-of-movements 2
-    :part/rep                 5
-    :part/set                 3}
-
-
- {:db/id #db/id[:db.part/user -1] :slot-category/name "Mobility"}
- {:db/id #db/id[:db.part/user -2] :slot-category/name "Balance"}
- {:db/id #db/id[:db.part/user -3] :slot-category/name "Crawl"}
- {:db/id #db/id[:db.part/user -4] :slot-category/name "Climb"}
- {:db/id #db/id[:db.part/user -5] :slot-category/name "Hang"}
- {:db/id #db/id[:db.part/user -6] :slot-category/name "Jump"}
- {:db/id #db/id[:db.part/user -7] :slot-category/name "Lift"}
- {:db/id #db/id[:db.part/user -8] :slot-category/name "Roll"}
- {:db/id #db/id[:db.part/user -9] :slot-category/name "Run"}
- {:db/id #db/id[:db.part/user -10] :slot-category/name "Throw"}
- {:db/id #db/id[:db.part/user -11] :slot-category/name "Walk"}
- {:db/id #db/id[:db.part/user -12] :slot-category/name "Sit/Stand Transition"}
- {:db/id #db/id[:db.part/user -13] :slot-category/name "Practical Movements"}
- {:db/id #db/id[:db.part/user -14] :slot-category/name "Beam"}
- {:db/id #db/id[:db.part/user -15] :slot-category/name "Brachiate"}
- {:db/id #db/id[:db.part/user -16] :slot-category/name "Balancing Locomotion"}
- {:db/id #db/id[:db.part/user -17] :slot-category/name "Hip Mobility"}
- {:db/id #db/id[:db.part/user -18] :slot-category/name "Ankle Mobility"}
- {:db/id #db/id[:db.part/user -19] :slot-category/name "Shoulder Mobility"}
- {:db/id #db/id[:db.part/user -20] :slot-category/name "Spine Mobility"}
- {:db/id #db/id[:db.part/user -21] :slot-category/name "Wrist Mobility"}
-
- ;; --------------------------------------------------------------------------
- ; hip mobility fully spec (squat routine 1 & 2)
-
- ;; --------------------------------------------------------------------------
- ; shoulder/scap- & spine-mobility (ido shoulder/scap + (jefferson curl + bridge rotation))
-
- ;; --------------------------------------------------------------------------
- ; locomotion fully spec (ido)
-
- ;; --------------------------------------------------------------------------
- ; Sprint (PB)
-
- ;; --------------------------------------------------------------------------
- ; Lift heavy things (PB)
-
- ;; --------------------------------------------------------------------------
- ; Handstand 2
-
- ;; --------------------------------------------------------------------------
- ; Leg day (single-leg squats + 80% deadlift/squat to failure)
-
- ;; --------------------------------------------------------------------------
- ; 5x5
-
- ;; --------------------------------------------------------------------------
- ; Calisthenics
-
- ;; --------------------------------------------------------------------------
- ; Calisthenics 2
-
- ;; --------------------------------------------------------------------------
- ; Floreio
-
- ;; --------------------------------------------------------------------------
- ; Floreio 2
-
- ;; --------------------------------------------------------------------------
- ; Balance day (beamorama)
-
- ;; --------------------------------------------------------------------------
- ; Ring play
-
- ;; --------------------------------------------------------------------------
- ; advanced movnat (include lifting, throwing, running, rolling, more climbing)
-
- ;; --------------------------------------------------------------------------
- ; advanced movnat (include lifting, throwing, running, rolling, more climbing)
 
  ]

@@ -184,43 +184,46 @@
            [:p.pure-u-1 (str (count likes) (if (= 1 (count likes)) " tommel" " tomler") " opp")]])
 
         ; Possible additional comments from user or other users
-        (doall
-          (for [{:keys [comment user]} comments]
-            ^{:key (str user comment)}
-            [:div.pure-g {:style {:margin-bottom 10}}
-             [:div.pure-u-1
-              [:a.user {:onClick (fn [e]
-                                   (.preventDefault e)
-                                   (GET "user" {:params        {:user-id user-id}
-                                                :handler       (fn [r]
-                                                                 (session/put! :viewing-user r)
-                                                                 (session/remove! :selected-menu-item)
-                                                                 (dispatch! "/user"))
-                                                :error-handler (fn [r] nil)}))
-                        :onTouchEnd #()} user]
-              (str " " comment)]]))
+        [:div {:style {:margin-top 10}}
+         (doall
+           (for [{:keys [comment user]} comments]
+             ^{:key (str user comment)}
+             [:div.pure-g {:style {:margin-bottom 10}}
+              [:div.pure-u-1
+               [:a.user {:onClick    (fn [e]
+                                       (.preventDefault e)
+                                       (GET "user" {:params        {:user-id user-id}
+                                                    :handler       (fn [r]
+                                                                     (session/put! :viewing-user r)
+                                                                     (session/remove! :selected-menu-item)
+                                                                     (dispatch! "/user"))
+                                                    :error-handler (fn [r] nil)}))
+                         :onTouchEnd #()} user]
+               (str " " comment)]]))]
 
         ; Buttons for "liking" or "commenting"
         [:div.pure-g {:style {:margin-top 30 :margin-bottom 30}}
-         [:div.pure-u-1
-          [:i.fa.fa-heart.fa-2x {:style      {:cursor (when-not ((set likes) user-id) 'pointer) :color  (if ((set likes) user-id) 'red 'lightgray)}
-                                 :onClick    (fn []
-                                               ; "likes" lagres i databasen som en liste fordi 1.ddb kan ikke lagre tomme set init. 2.opplevde EDN-problemer med å sende set mellom server og klient.
-                                               ; Listen gjøres om til sett her for enklere logikk og tilbake til vektor for lagring.
-                                               (when-not ((set likes) user-id)
-                                                 (POST "like" {:params        {:session-url url
-                                                                               :likers      (vec (conj (set likes) user-id))}
-                                                               :handler       (fn [r]
-                                                                                ; wait for a few ticks and dispatch to /feed to refresh
-                                                                                )
-                                                               :error-handler (fn [r] nil)})))
-                                 :onTouchEnd (fn [] (when-not ((set likes) user-id) (POST "like" {:params {:session-url url :likers (vec (conj (set likes) user-id))}
-                                                                                                  :handler (fn [r] (load-feed)) :error-handler (fn [r] nil)})))}]
+         (let [viewing-user-id (:user-id (session/get :user))]
+           [:div.pure-u-1
+            (when-not (= user-id viewing-user-id)
+              [:i.fa.fa-thumbs-up.fa-2x {:style      {:cursor (when-not ((set likes) user-id) 'pointer) :color (if ((set likes) user-id) "#009900" 'lightgray)}
+                                     :onClick    (fn []
+                                                   ; "likes" lagres i databasen som en liste fordi 1.ddb kan ikke lagre tomme set init. 2.opplevde EDN-problemer med å sende set mellom server og klient.
+                                                   ; Listen gjøres om til sett her for enklere logikk og tilbake til vektor for lagring.
+                                                   (when-not ((set likes) user-id)
+                                                     (POST "like" {:params        {:session-url url
+                                                                                   :likers      (vec (conj (set likes) user-id))}
+                                                                   :handler       (fn [r]
+                                                                                    ; wait for a few ticks and dispatch to /feed to refresh
+                                                                                    )
+                                                                   :error-handler (fn [r] nil)})))
+                                     :onTouchEnd (fn [] (when-not ((set likes) user-id) (POST "like" {:params  {:session-url url :likers (vec (conj (set likes) user-id))}
+                                                                                                      :handler (fn [r] (load-feed)) :error-handler (fn [r] nil)})))}])
 
-          [:i.fa.fa-comment.fa-2x {:onClick #(reset! adding-comment? true) :onTouchEnd #(reset! adding-comment? true)
-                                   :style   {:margin-left 40
-                                             :cursor      'pointer
-                                             :color       'lightgray}}]]]
+            [:i.fa.fa-comment.fa-2x {:onClick #(reset! adding-comment? true) :onTouchEnd #(reset! adding-comment? true)
+                                     :style   {:margin-left (when-not (= user-id viewing-user-id) 40)
+                                               :cursor      'pointer
+                                               :color       'lightgray}}]])]
         (when @adding-comment?
           [add-comment {:adding-comment? adding-comment? :comments comments :session-url url}])]
        ])))
@@ -241,6 +244,6 @@
           [:div.pure-g {:style {:margin-top 200}}
            [:div.pure-u-1.center
             [:i.fa.fa-spinner.fa-pulse.fa-4x]]])
-        (when (session/get :feed)
+        #_(when-not (empty? (session/get :feed))
           [:div.pure-g [:div.pure-u-1.pure-button.x-large {:onClick    #(load-more %)
                                                            :onTouchEnd #(load-more %)} "Last flere"]])]])))

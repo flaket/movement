@@ -48,7 +48,8 @@
 
  {:name     "Hollow body gynge"
   :image    "hollow-body-rock.png"
-  :category #{:core} :measurement :repetitions}
+  :category #{:core} :measurement :repetitions
+  :previous ["Hollow body"]}
 
  {:name     "Gynge og rotere"
   :image    "rotational-rocking.png"

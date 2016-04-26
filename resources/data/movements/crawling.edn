@@ -3,17 +3,17 @@
  {:name     "Kravle på hender og knær"
   :image    "baby-crawl.png"
   :category #{:crawl :natural} :measurement :distance
-  :next ["Bjørnekravle"]}
+  :next ["Kravle på albuer og knær"]}
 
  {:name     "Kravle på albuer og knær"
   :image    "elbow-knee-crawl.png"
   :category #{:crawl :natural} :measurement :distance
-  :next ["Kravle på fot-albue"]}
+  :previous ["Kravle på hender og knær"] :next ["Kravle på albuer og føtter"]}
 
  {:name     "Kravle på albuer og føtter"
   :image    "elbow-foot-crawl.png"
   :category #{:crawl :natural} :measurement :distance
-  :next ["Kravle på fot-albue"]}
+  :previous ["Kravle på albuer og knær"] :next ["Bjørnekravle"]}
 
  {:name     "Militærkravle"
   :image    "army-crawl.png"
@@ -89,7 +89,7 @@
   :category #{:crawl} :measurement :distance
   :next ["Gå på hendene"] :previous ["Galopperende kravle"]}
 
- {:name     "Reise i knebøy"
+ {:name     "Knebøyekspressen"
   :image    "traveling-squat.png"
   :category #{:crawl} :measurement :distance
   :previous ["Galopperende kravle"]}

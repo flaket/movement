@@ -178,18 +178,22 @@
         [:div
          [:div.pure-g [:div.pure-u-1 [:h2 "Min treningsdagbok"]]]
          [:div.pure-g
-          [:a.pure-u.pure-u-md-1-4 {
-                                    :onClick   (fn [] (load-user-only-feed) (reset! selection :feed)) :onTouchEnd (fn [] (load-user-only-feed) (reset! selection :feed))
-                                    :className (str " pure-button" (when (= @selection :feed) " pure-button-primary"))} "Feed"]
-          [:a.pure-u.pure-u-md-1-4 {
-                                    :onClick   #(reset! selection :calendar) :onTouchEnd #(reset! selection :calendar)
-                                    :className (str " pure-button" (when (= @selection :calendar) " pure-button-primary"))} "Kalender"]
-          [:a.pure-u.pure-u-md-1-4 {
-                                    :onClick   #(reset! selection :stat) :onTouchEnd #(reset! selection :stat)
-                                    :className (str " pure-button" (when (= @selection :stat) " pure-button-primary"))} "Statistikk"]
-          [:a.pure-u.pure-u-md-1-4 {
-                                    :onClick   #(reset! selection :tag) :onTouchEnd #(reset! selection :tag)
-                                    :className (str " pure-button" (when (= @selection :tag) " pure-button-primary"))} "Mine hashtagger"]]]
+          [:a.pure-u.pure-u-md-1-4
+           {:onClick   (fn [] (load-user-only-feed) (reset! selection :feed)) :onTouchEnd (fn [] (load-user-only-feed) (reset! selection :feed))
+            :className (str " pure-button" (when (= @selection :feed) " pure-button-primary"))} "Feed"]
+          [:a.pure-u.pure-u-md-1-4
+           {:style {:opacity 0.25 :pointer-events 'none :cursor 'default}
+            ;:onClick #(reset! selection :calendar) :onTouchEnd #(reset! selection :calendar)
+            :className (str " pure-button" (when (= @selection :calendar) " pure-button-primary"))} "Kalender"]
+          [:a.pure-u.pure-u-md-1-4
+           {:style {:opacity 0.25 :pointer-events 'none :cursor 'default}
+            ;:onClick #(reset! selection :stat) :onTouchEnd #(reset! selection :stat)
+            :className (str " pure-button" (when (= @selection :stat) " pure-button-primary"))} "Statistikk"]
+          [:a.pure-u.pure-u-md-1-4
+           {:style {:opacity 0.25 :pointer-events 'none :cursor 'default}
+            ;:onClick   #(reset! selection :tag) :onTouchEnd #(reset! selection :tag)
+            :className (str " pure-button" (when (= @selection :tag) " pure-button-primary"))} "Mine hashtagger"]
+          ]]
 
         (case @selection
           :feed
