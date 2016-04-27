@@ -150,7 +150,7 @@
      [:div.pure-u {:on-click #(session/update-in! [:movement-session] dissoc :photo)
                    :style    {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
     [:div.pure-g
-     [:div.pure-u-1-3.pure-button.fileUpload
+     [:div.pure-u.pure-button.fileUpload
       [:span "Legg ved bilde"]
       [:input {:id "upload" :className "upload" :type "file" :on-change #(preview-file)}]]]))
 
@@ -162,9 +162,7 @@
         rest-input (-> (.getElementById js/document (str "rest-input" id)) .-value double)
         new-movement (assoc m :rep rep-input :distance distance-input :duration duration-input
                                :weight weight-input :rest rest-input)
-        new-part (assoc (get parts part-number) (int (first pos)) new-movement)
-        ;; todo: strategi for å bestemme hvilke data som har presedens når flere verdier sammen ikke gir mening.
-        ]
+        new-part (assoc (get parts part-number) (int (first pos)) new-movement)]
     (session/assoc-in! [:movement-session :parts part-number] new-part)))
 
 ;;;;;; Components ;;;;;;
@@ -432,25 +430,26 @@
       [:div
        [menu-component]
        (if-let [session (session/get :movement-session)]
-         [:div {:style {:margin-top "100px"}}
+         [:div.content {:style {:margin-top 100}}
           [:div.pure-g
            [:div.pure-u-1
-            [:a {:style      {:margin-left 20 :margin-top 20 :color (:graphic (:activity session)) :opacity 1}
-                 :onClick    #(remove-session %)
-                 :onTouchEnd #(remove-session %)}
-             [:i.fa.fa-arrow-left.fa-4x]]
             (when (or (= "Naturlig bevegelse" (:title (:activity session)))
                       (= "Styrketrening" (:title (:activity session)))
                       (= "Mobilitet" (:title (:activity session))))
               [:img
                {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
                 :style      {:height     250
-                             :float      'right
-                             :margin-top 20
+                             ;:float      'right
+                             :margin-left 20
                              :margin-right 20 :cursor 'pointer}
                 :onClick    #(generate-movement-session % (:activity session))
-                :onTouchEnd #(generate-movement-session % (:activity session))}])]]
-          [:div.content {:style {:margin-top 20}}
+                :onTouchEnd #(generate-movement-session % (:activity session))}])
+            [:a {:style      {:float 'right :margin-right 20 :margin-top 0 :color (:graphic (:activity session)) :opacity 1}
+                 :onClick    #(remove-session %)
+                 :onTouchEnd #(remove-session %)}
+             [:i.fa.fa-times.fa-4x]]
+            ]]
+          [:div {:style {:margin-top 0}}
            [:div
             (when-let [parts (:parts session)]
               [:article.session
@@ -458,12 +457,15 @@
                  (for [i (range (count parts))]
                    ^{:key i} [part-component (get parts i) i]))])
             [:div.pure-g
-             [:div.pure-u-1 (date-component)]]
-            [:div.pure-g {:style {:font-size "200%"}}
-             [:div.pure-u (str (:title (:activity session)) " i ")]
-             [:div.pure-u {:style {:margin-left 10 :padding-bottom 20}} (time-component)]]
+             [:div.pure-u {:style {:font-size "200%"}} (str (:title (:activity session)) " i ")]
+             [:div.pure-u {:style {:font-size "200%" :margin-left 10 :margin-right 10 :margin-bottom 10}} (time-component)]]
+
             (text-component (:activity session))
-            (add-photo-component)
+            [:div.pure-g
+             [:div.pure-u-1-2
+              (add-photo-component)]
+             [:div.pure-u-1-2
+              (date-component)]]
             [finish-session-component]]]]
          [:div.content
           [list-of-activities]])])))

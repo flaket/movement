@@ -48,7 +48,7 @@
                                          :throughput {:read 1 :write 1}}]}})
 
 #_(let [c (h/list-tables! creds {})] (<!! c))
-#_(let [c (h/describe-table! creds :movements)] (<!! c))
+#_(let [c (h/describe-table! creds :user-movements)] (<!! c))
 #_(h/create-table! creds sessions-table)
 #_(h/delete-table! creds :movements)
 #_(let [tables (<!! (h/list-tables! creds {}))]
@@ -68,7 +68,7 @@
     first))
 #_(user-by-email "andflak@gmail.com")
 #_(user-by-email "andreas.flakstad@gmail.com")
-#_(user-by-email "a@a")
+#_(user-by-email "a")
 
 (defn user-by-activation-id [id]
   (->>
@@ -86,7 +86,7 @@
   (let [sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
         sessions (map #(assoc % :user-name (:name (user (:user-id %)))) sessions)]
     sessions))
-#_(sessions-by-user-id "ca1ee74a-7f45-4fe7-8b25-4176bf17aadf")
+#_(sessions-by-user-id "7ccb2ebd-35d2-49b4-802b-a6fd7ef3706c")
 
 ;;---------- get data ----------
 
@@ -131,6 +131,9 @@
     movements))
 #_(movements-from-category 1 :balance)
 
+(defn user-movement [user-id movement-name]
+  (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name movement-name})))
+
 (defn template [title]
   (<!! (h/get-item! creds :templates {:title title})))
 #_(template "Naturlige Bevegelser 2")
@@ -138,16 +141,41 @@
 (defn templates []
   (map :title (<!! (h/scan! creds :templates {}))))
 
-(defn create-movement [m]
+(defn fix-measurement [m]
+  (case (:measurement m)
+    "repetitions" (dissoc m :duration :distance)
+    "distance" (dissoc m :rep :duration)
+    "duration" (dissoc m :rep :distance)
+    m))
+
+(defn create-movement [user-id template-movement]
   ; todo: filter on {:natural-only? true}
   ; todo: movements-from-category skal ta flere categorier
-  ; todo: filter on user zone data (swap with previous if one or no stars)
   ; todo: remove duplicates from a part (scan through keep hash-map and refresh if in hash-map)
   ; todo: filter on user preferences/goals
-  (merge m
-         (if-let [m-name (:movement m)]
-           (movement m-name)
-           (first (movements-from-category 1 (first (shuffle (:slot-category m))))))))
+  (-> (merge template-movement
+             (if-let [m-name (:movement template-movement)]
+               (movement m-name)
+               (let [; draw a random movement from the slot-categories
+                     random-movement (first (movements-from-category 1 (first (shuffle (:slot-category template-movement)))))]
+                 ; check in table user-movements if the user has done this movement before
+                 (if-let [user-movement (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name (:name random-movement)}))]
+                   ; yes-> assoc :zone data and return movement
+                   (merge random-movement user-movement)
+                   ; no-> movement has not been performed, swap recursively with 'previous' variations
+                   (loop [m random-movement]
+                     (if (nil? (:previous m))
+                       m                                    ; if movement has no 'previous': return movement
+                       (let [new (movement (first (shuffle (:previous m))))] ; pick random 'previous'
+                         ; check if user has done this movement before
+                         (if-let [user-movement (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name (:name new)}))]
+                           (let [zone (:zone user-movement)]
+                             ; if user is effective or have mastered the easier movement, return the original, else return the easier
+                             (if (or (= 2N zone) (= 3N zone))
+                               m
+                               (merge new user-movement)))
+                           (recur new)))))))))
+      (fix-measurement)))
 
 (defn create-session [user-id session-type]
   (let [
@@ -155,9 +183,9 @@
         templates (case session-type "Naturlig bevegelse" ["Naturlige Bevegelser 1" "Naturlige Bevegelser 2" "Naturlige Bevegelser 3" "Naturlige Bevegelser 4"]
                                      "Styrketrening" ["Gymnastic Strength 1" "Locomotion 1"]
                                      "Mobilitet" ["Mobility 1"]
-                                     "default")
+                                     ["Naturlige Bevegelser 2"])
         template (template (first (shuffle templates)))
-        session (assoc template :parts (mapv (fn [p] (mapv #(create-movement %) p)) (:parts template)))]
+        session (assoc template :parts (mapv (fn [p] (mapv #(create-movement user-id %) p)) (:parts template)))]
     session))
 
 ;;---------- add/update data ----------
@@ -171,7 +199,7 @@
               :activation-id       activation-id
               :activated?          true
               :paid-subscription?  false
-              :settings            {:receive-push-notifications? true}
+              :settings            {}
               :statistics          {}
               :follows             []
               :badges              []
@@ -193,23 +221,28 @@
 (defn add-badge! [user-id badge]
   (h/update-item! creds :users {:user-id user-id}
                   {:badges [:concat [badge]]}))
-#_(add-badge! "andreas@roebuck.com" {:name "Newbie" :achieved-at (.getTime (Date.))})
+#_(add-badge! "andreas@roebuck.com" {:name "Newbie" :achieved-at (c/to-string (l/local-now))})
 
 (defn add-session! [params]
   (let [{:keys [user-id session]} params
-        file (:photo session)
-        [_ file-type _ photo] (if file (str/split file #"[:;,]") [])
+        image-file (:photo session)
+        [_ file-type _ photo] (if image-file (str/split image-file #"[:;,]") [])
         session (dissoc session :photo)
         url (str (UUID/randomUUID))
         session (assoc session :url url :user-id user-id :comments [] :likes [])]
-    (.println System/out session)
+    (.println System/out (str "Saving session: " session))
     ; Store image to disk if png or jpeg.
-    #_(when (or (= file-type "image/png")
+    (when (or (= file-type "image/png")
             (= file-type "image/jpeg"))
-      (let [decoded-photo (b64/decode (.getBytes photo))]
-        (with-open [w (io/output-stream (str "/uploads/" url ".jpg"))]
-          (.write w decoded-photo))))
+      (let [decoded-photo (b64/decode (.getBytes photo))
+            output-url (str "/uploads/" url ".jpg")]
+        (with-open [w (io/output-stream output-url)]
+          (.write w decoded-photo))
+        (.println System/out (str "Wrote photo to: " output-url))))
+    ; Store session in :sessions table
     (h/put-item! creds :sessions session)
+    ; Store movements in :user-movements table
+    (map #(add-movement! user-id (:name %) (:zone %)) (flatten (:parts session)))
     :ok))
 
 (defn activate-user! [uuid]
@@ -219,10 +252,8 @@
                      :activation-id [:remove]})))
 #_(activate-user! "97741783-9bb7-442f-9a73-e573acb9c3db")
 
-(defn add-movement! [user-id movement]
-  ; todo: filter; don't add if exists
-  (h/put-item! creds :user-movements
-               {:user-id user-id :movement-name movement :zone 1}))
+(defn add-movement! [user-id movement-name zone]
+  (h/put-item! creds :user-movements {:user-id user-id :movement-name movement-name :zone zone}))
 
 (defn update-subscription! [user-id value]
   (h/update-item! creds :users {:user-id user-id}

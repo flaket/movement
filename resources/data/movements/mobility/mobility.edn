@@ -201,7 +201,7 @@
 
  {:name     "Høy bro"
   :image    "high-bridge.png"
-  :category #{:mobility :shoulder-mobility :wrist-mobility :spine-mobility :bridge} :measurement :repetitions
+  :category #{:mobility :shoulder-mobility :wrist-mobility :spine-mobility :bridge} :measurement :duration
   :next     ["Rotasjon inn i høy bro"]}
 
  {:name     "Bro push-up"

@@ -67,9 +67,11 @@
             :rep           1 :set 5}
            {:slot-category #{:balance}
             :natural-only? true
+            :rep           6
             :distance      10 :set 5}
            {:slot-category #{:climb}
             :natural-only? true
+            :duration      20
             :rep           8 :set 5}
            {:slot-category #{:crawl}
             :natural-only? true
@@ -160,17 +162,17 @@
 
  {:title "Gymnastic Strength 1"
   :parts [
-          [{:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :set 3}
-           {:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :set 3}
-           {:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :set 3}]
-          [{:slot-category #{:bent-arm-strength} :rep 5 :set 3}
-           {:slot-category #{:bent-arm-strength} :rep 5 :set 3}
-           {:slot-category #{:bent-arm-strength} :rep 5 :set 3}]
-          [{:slot-category #{:jump :single-leg} :rep 10 :set 3}
-           {:slot-category #{:jump :single-leg} :rep 10 :set 3}
-           {:slot-category #{:jump :single-leg} :rep 10 :set 3}]
-          [{:slot-category #{:core} :rep 10 :set 2}
-           {:slot-category #{:core} :rep 10 :set 2}]
+          [{:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :rest 60 :set 3}
+           {:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :rest 60 :set 3}
+           {:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :rest 60 :set 3}]
+          [{:slot-category #{:bent-arm-strength} :rep 5 :rest 60 :set 3}
+           {:slot-category #{:bent-arm-strength} :rep 5 :rest 60 :set 3}
+           {:slot-category #{:bent-arm-strength} :rep 5 :rest 60 :set 3}]
+          [{:slot-category #{:jump :single-leg} :rep 10 :rest 60 :set 3}
+           {:slot-category #{:jump :single-leg} :rep 10 :rest 60 :set 3}
+           {:slot-category #{:jump :single-leg} :rep 10 :rest 60 :set 3}]
+          [{:slot-category #{:core} :rep 10 :duration 60 :rest 30 :set 2}
+           {:slot-category #{:core} :rep 10 :duration 60 :rest 30 :set 2}]
           ]}
 
 

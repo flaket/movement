@@ -1,19 +1,19 @@
 [
 
- {:name     "Hopp med en fot"
+ {:name     "Svinghopp"
   :image    "single-leg-jump.png"
   :category #{:jump} :measurement :repetitions
-  :next ["Hopp med to føtter"]}
+  :next ["Presisjonshopp"]}
 
- {:name     "Hopp med to føtter"
+ {:name     "Presisjonshopp"
   :image    "broad-jump.png"
   :category #{:jump} :measurement :repetitions
-  :previous ["Hopp med en fot"] :next ["Hopp med tilløp"]}
+  :previous ["Svinghopp"] :next ["Hopp opp" "Hopp ned" "Hopp med tilløp"]}
 
  {:name     "Hopp med tilløp"
   :image    "running-jump.png"
   :category #{:jump} :measurement :repetitions
-  :previous ["Hopp med en fot"] :next ["Sideveis hopp med tilløp"]}
+  :previous ["Presisjonshopp"] :next ["Sideveis hopp med tilløp"]}
 
  {:name     "Sideveis hopp med tilløp"
   :image    "running-lateral-jump.png"
@@ -23,11 +23,11 @@
  {:name     "Hopp opp"
   :image    "box-jump.png"
   :category #{:jump} :measurement :repetitions
-  :previous ["Hopp med to føtter"]}
+  :previous ["Presisjonshopp"]}
 
  {:name     "Hopp ned"
   :image    "depth-jump.png"
   :category #{:jump} :measurement :repetitions
-  :previous ["Hopp med to føtter"]}
+  :previous ["Presisjonshopp"]}
 
  ]

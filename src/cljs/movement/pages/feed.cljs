@@ -236,14 +236,15 @@
       [:div
        [menu-component]
        [:div#feed
-        (if-let [sessions (session/get :feed)]
-          (doall
-            (for [session sessions]
-              ^{:key (:url session)}
-              [session-view session]))
-          [:div.pure-g {:style {:margin-top 200}}
-           [:div.pure-u-1.center
-            [:i.fa.fa-spinner.fa-pulse.fa-4x]]])
+        [:div.content
+         (if-let [sessions (session/get :feed)]
+           (doall
+             (for [session sessions]
+               ^{:key (:url session)}
+               [session-view session]))
+           [:div.pure-g {:style {:margin-top 200}}
+            [:div.pure-u-1.center
+             [:i.fa.fa-spinner.fa-pulse.fa-4x]]])]
         #_(when-not (empty? (session/get :feed))
           [:div.pure-g [:div.pure-u-1.pure-button.x-large {:onClick    #(load-more %)
                                                            :onTouchEnd #(load-more %)} "Last flere"]])]])))

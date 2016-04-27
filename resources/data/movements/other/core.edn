@@ -83,7 +83,7 @@
  {:name     "Hodestående benløft"
   :image    "headstand-leg-lift.png"
   :category #{:core} :measurement :repetitions
-  :next ["Hodestående rett benløft"]}
+  :previous ["Hodestående"] :next ["Hodestående rett benløft"]}
 
  {:name     "Hodestående rett benløft"
   :image    "headstand-straight-leg-lift.png"
