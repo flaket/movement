@@ -2,17 +2,17 @@
 
  {:name     "Henge passivt"
   :image    "passive-hang.png"
-  :category #{:hang :bar} :measurement :duration
+  :category #{:hang :bar :natural} :measurement :duration
   :next ["Henge aktivt"]}
 
  {:name     "Henge aktivt"
   :image    "active-hang.png"
-  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :category #{:hang :bar :straight-arm-strength :natural} :measurement :duration
   :previous ["Henge passivt"] :next ["Henge passivt til aktivt"]}
 
  {:name     "Henge passivt til aktivt"
   :image    "hanging-pull.png"
-  :category #{:hang :bar :straight-arm-strength} :measurement :repetitions
+  :category #{:hang :bar :straight-arm-strength :natural} :measurement :repetitions
   :previous ["Henge aktivt"] :next ["Henge i bue" "Pull-up fra albuene"]}
 
  {:name     "Henge i bue"
@@ -22,42 +22,42 @@
 
  {:name     "Henge med falskt grep"
   :image    "false-grip-hang.png"
-  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :category #{:hang :bar :straight-arm-strength :natural} :measurement :duration
   :previous ["Henge passivt"]}
 
  {:name     "Henge passivt med en arm"
   :image    "one-arm-passive-hang.png"
-  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :category #{:hang :bar :straight-arm-strength :natural} :measurement :duration
   :previous ["Henge passivt"] :next ["Henge aktivt med en arm"]}
 
  {:name     "Henge aktivt med en arm"
   :image    "one-arm-active-hang.png"
-  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :category #{:hang :bar :straight-arm-strength :natural} :measurement :duration
   :previous ["Henge passivt med en arm"] :next ["Henge passivt til aktivt med en arm"]}
 
  {:name     "Henge passivt til aktivt med en arm"
   :image    "one-arm-pull.png"
-  :category #{:hang :bar :straight-arm-strength} :measurement :duration
+  :category #{:hang :bar :straight-arm-strength :natural} :measurement :duration
   :previous ["Henge aktivt med en arm"]}
 
  {:name     "Svinge sideveis"
   :image    "lateral-swing.png"
-  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :duration
+  :category #{:hang :brachiate :bar :straight-arm-strength :natural} :measurement :duration
   :previous ["Henge aktivt med en arm"]}
 
  {:name     "Svinge sideveis slipp"
   :image    "release-hand-lateral-swing.png"
-  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :duration
+  :category #{:hang :brachiate :bar :straight-arm-strength :natural} :measurement :duration
   :previous ["Svinge sideveis"]}
 
  {:name     "Svinge sideveis hold"
   :image    "lateral-swing-holds.png"
-  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :duration
+  :category #{:hang :brachiate :bar :straight-arm-strength :natural} :measurement :duration
   :previous ["Svinge sideveis slipp"]}
 
  {:name     "Svinge"
   :image    "linear-swing.png"
-  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :duration}
+  :category #{:hang :brachiate :bar :straight-arm-strength :natural} :measurement :duration}
 
  {:name     "Svinge i figur 8"
   :image    "figure-8-swing.png"
@@ -66,22 +66,22 @@
 
  {:name     "Traversere sideveis"
   :image    "bent-arm-lateral-traverse.png"
-  :category #{:hang :brachiate :bar :bent-arm-strength} :measurement :distance
+  :category #{:hang :brachiate :bar :bent-arm-strength :natural} :measurement :distance
   :previous ["Pull-up" "Svinge sideveis hold"]}
 
  {:name     "Traversere svingende sideveis"
   :image    "swinging-arm-lateral-traverse.png"
-  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :distance
+  :category #{:hang :brachiate :bar :straight-arm-strength :natural} :measurement :distance
   :previous ["Svinge sideveis hold"]}
 
  {:name     "Traversere"
   :image    "bent-arm-linear-traverse.png"
-  :category #{:hang :brachiate :bar :bent-arm-strength} :measurement :distance
+  :category #{:hang :brachiate :bar :bent-arm-strength :natural} :measurement :distance
   :previous ["Pull-up" "Svinge sideveis hold"]}
 
  {:name     "Traversere svingende"
   :image    "swinging-linear-traverse.png"
-  :category #{:hang :brachiate :bar :straight-arm-strength} :measurement :distance
+  :category #{:hang :brachiate :bar :straight-arm-strength :natural} :measurement :distance
   :previous ["Svinge sideveis hold"]}
 
  ]

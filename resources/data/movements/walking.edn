@@ -6,14 +6,10 @@
 
  {:name     "Ande-gange"
   :image    "duck-walk.png"
-  :category #{:walk :hip-mobility :mobility :natural} :measurement :distance}
+  :category #{:walk :hip-mobility :mobility} :measurement :distance}
 
  {:name     "Gående utfall"
   :image    "walking-lunge.png"
-  :category #{:walk :natural} :measurement :distance}
-
- {:name     "Hengslet gange"
-  :image    "hinged-walk.png"
   :category #{:walk :natural} :measurement :distance}
 
  {:name     "Hengslet gange"

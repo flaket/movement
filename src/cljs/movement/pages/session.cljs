@@ -477,23 +477,14 @@
                                                        :natural-only? :performed-sets :next :previous)))
                                          set
                                          vec
-                                         atom)
-                    #_(-> (for [part parts] (for [m part]
-                                              (-> m
-                                                  (#(when (nil? (:zone %)) (assoc % :zone 1)))
-                                                  (dissoc :id :category :slot-category :measurement
-                                                          :set :distance :duration :rep :movement :rest :weight
-                                                          :natural-only? :performed-sets :next :previous))))
-                          flatten
-                          set
-                          vec)]
+                                         atom)]
                 (fn []
                   [:div
                    (let [ms @unique-movements]
                      [:div.pure-g
                       (doall
                         (for [m ms]
-                          ^{:key (rand-int 1000000)}
+                          ^{:key (rand-int 10000000)}
                           [:div.pure-u {:id    (str "unique-movement-" (:name m))
                                         :style {:border-bottom "1px solid"}}
                            [:img.graphic {:src (str "images/movements/" (:image m)) :title (:name m) :alt (:name m)}]

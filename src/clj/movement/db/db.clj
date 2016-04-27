@@ -179,6 +179,9 @@
     "duration" (dissoc m :rep :distance)
     m))
 
+#_(<!! (h/scan! creds :user-movements {}))
+#_(<!! (h/get-item! creds :user-movements {:user-id "577d84e2-0b7a-48b3-a3ac-317d78e7eab6" :movement-name "Beinsving bakover"}))
+
 (defn create-movement [user-id template-movement]
   ; todo: filter on {:natural-only? true}
   ; todo: movements-from-category skal ta flere categorier
@@ -186,27 +189,40 @@
   ; todo: filter on user preferences/goals
   (-> (merge template-movement
              (if-let [m-name (:movement template-movement)]
-               (movement m-name)
-               (let [; draw a random movement from the slot-categories
-                     random-movement (first (movements-from-category 1 (first (shuffle (:slot-category template-movement)))))]
-                 ; check in table user-movements if the user has done this movement before
-                 (if-let [user-movement (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name (:name random-movement)}))]
-                   ; yes-> assoc :zone data and return movement
-                   (merge random-movement user-movement)
-                   ; no-> movement has not been performed, swap recursively with 'previous' variations
-                   (loop [m random-movement]
-                     (if (nil? (:previous m))
-                       m                                    ; if movement has no 'previous': return movement
-                       (let [new (movement (first (shuffle (:previous m))))] ; pick random 'previous'
-                         ; check if user has done this movement before
-                         (if-let [user-movement (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name (:name new)}))]
-                           (let [zone (:zone user-movement)]
-                             ; if user is effective or have mastered the easier movement, return the original, else return the easier
-                             (if (or (= 2N zone) (= 3N zone))
-                               m
-                               (merge new user-movement)))
-                           (recur new)))))))))
+               (movement m-name) ; if template calls for a specific movement: fetch this
+               (loop [; pick a random movement that belongs to one of the categories
+                      m (first (movements-from-category 1 (first (shuffle (:slot-category template-movement)))))
+                      counter 0]
+                 ; Check if the user has done the movement before
+                 (let [user-movement (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name (:name m)}))
+                       zone (if (:zone user-movement) (:zone user-movement) 0)]
+
+                   ; if user is effective
+                   (if (< 1N zone)
+                     (assoc m :zone (:zone user-movement)) ; return movement with zone data added
+                     ; else (zone is 1 or 0)
+                     (if-let [previous-movement-names (:previous m)] ; check if movement has previous
+                       ; has previous: check zone data of every movement in previous
+                       (let [user-previous-movements (mapv (fn [m-name]
+                                                             (<!! (h/get-item! creds :user-movements
+                                                                               {:user-id user-id
+                                                                                :movement-name m-name}))) previous-movement-names)
+                             mastered-movements (remove #(or (nil? %) (> (:zone %) 1N)) user-previous-movements)
+                             mastered-movement-names (map :movement-name mastered-movements)
+                             diff (set/difference (set previous-movement-names) (set mastered-movement-names))]
+                         (if (empty? diff)
+                           ; if all previous has (< 1N zone): return m
+                           m
+                           ; else: pick on of the previous with zone 1 or 0 and recur
+                           (recur (movement (first (shuffle diff))) (inc counter))))
+                       ; has no previous: return m
+                       m))))))
       (fix-measurement)))
+
+(map (fn [m] (<!! (h/get-item! creds :user-movements {:user-id (:user-id m) :movement-name (:name m)})))
+     [{:user-id "577d84e2-0b7a-48b3-a3ac-317d78e7eab6" :name " bakover"}
+      {:user-id "577d84e2-0b7a-48b3-a3ac-317d78e7eab6" :name "Beinsving bakover"}])
+
 
 (defn create-session [user-id session-type]
   (let [
