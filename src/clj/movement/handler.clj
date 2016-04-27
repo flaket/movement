@@ -77,7 +77,6 @@
 (defn store-session! [params]
   (try
     (response (db/add-session! params))
-    #_(db/add-new-movements! user session)
     (catch Exception e (error e "error storing session"))))
 
 (defn add-user! [email password]

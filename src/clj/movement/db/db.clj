@@ -53,7 +53,7 @@
 #_(let [c (h/list-tables! creds {})] (<!! c))
 #_(far/list-tables creds)
 
-#_(let [c (h/describe-table! creds :users)] (<!! c))
+#_(let [c (h/describe-table! creds :user-movements)] (<!! c))
 #_(far/describe-table creds :users)
 
 #_(h/create-table! creds sessions-table)
@@ -68,8 +68,8 @@
 ;;-------------------- get data --------------------
 
 (defn user [user-id]
-  (far/get-item creds :users {:user-id user-id}))
-#_(user "7ccb2ebd-35d2-49b4-802b-a6fd7ef3706c")
+  (<!! (h/get-item! creds :users {:user-id user-id})))
+#_(user "577d84e2-0b7a-48b3-a3ac-317d78e7eab6")
 
 (defn user-by-email [email]
   (->>
@@ -107,7 +107,7 @@
   (let [sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
         sessions (map #(assoc % :user-name (:name (user (:user-id %)))) sessions)]
     sessions))
-#_(sessions-by-user-id "7ccb2ebd-35d2-49b4-802b-a6fd7ef3706c")
+#_(sessions-by-user-id "577d84e2-0b7a-48b3-a3ac-317d78e7eab6")
 
 (defn create-feed [user-id]
   (let [users (conj (:follows (user user-id)) user-id)
@@ -257,9 +257,10 @@
 
 (defn add-session! [params]
   (let [{:keys [user-id session]} params
+        unique-movements (:unique-movements session)
         image-file (:photo session)
         [_ file-type _ photo] (if image-file (str/split image-file #"[:;,]") [])
-        session (dissoc session :photo)
+        session (dissoc session :photo :unique-movements)
         url (str (UUID/randomUUID))
         session (assoc session :url url :user-id user-id :comments [] :likes [])]
     (.println System/out (str "Saving session: " session))
@@ -267,14 +268,17 @@
     (when (or (= file-type "image/png")
             (= file-type "image/jpeg"))
       (let [decoded-photo (b64/decode (.getBytes photo))
-            output-url (str "/uploads/" url ".jpg")]
+            output-url (str "uploads/" url ".jpg")]
         (with-open [w (io/output-stream output-url)]
           (.write w decoded-photo))
         (.println System/out (str "Wrote photo to: " output-url))))
     ; Store session in :sessions table
     (h/put-item! creds :sessions session)
-    ; Store movements in :user-movements table
-    (map #(add-movement! user-id (:name %) (:zone %)) (flatten (:parts session)))
+    ; Store each unique movement from the session with its updated zone data in :user-movements table
+    (when-let [u (vec unique-movements)]
+      (.println System/out (str "Saving user movements: " u))
+      (doseq [m u]
+        (add-movement! user-id (:name m) (:zone m))))
     :ok))
 
 (defn activate-user! [uuid]

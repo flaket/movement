@@ -390,8 +390,7 @@
 
 (defn store-session [event s & unique-movements]
   (.preventDefault event)
-  (pr unique-movements)
-  #_(let [session (session/get :movement-session)
+  (let [session (session/get :movement-session)
         session (if-not (:comment session) (assoc session :comment "") session)
         new-parts (mapv (fn [part]
                           (mapv (fn [m]
@@ -401,7 +400,11 @@
         time (time-string)
         date-time (str date "T" time)
         hash-tags (vec (re-seq #"#[\w]+" (:comment session)))
-        session (assoc session :activity (:title (:activity session)) :parts new-parts :date-time date-time :tags hash-tags)
+        session (assoc session :activity (:title (:activity session))
+                               :parts new-parts
+                               :date-time date-time
+                               :tags hash-tags
+                               :unique-movements (map #(dissoc % :image) (flatten unique-movements)))
         session (dissoc session :date)]
     (POST "store-session"
           {:params        {:session session

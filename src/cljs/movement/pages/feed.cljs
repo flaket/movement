@@ -18,60 +18,26 @@
                          :handler       (fn [r] (session/put! :user-only-feed r))
                          :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
 
-(defn load-more [event]
-  (.preventDefault event)
-  (session/put! :feed (conj (session/get :feed) {:user-name    "Kårinator"
-                                                 :user-image   "images/movements/pull-up.png"
-                                                 :url          "17"
-                                                 :text         "en finasdasd økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt en fin økt"
-                                                 :date         "3 timer siden"
-                                                 :time         "45:00"
-                                                 :activity     "Styrkeøkt"
-                                                 :session-data [[{:name "Push Up" :rep 10 :set 3 :image "push-up.png"}
-                                                                 {:name "Pull Up" :rep 5 :set 3 :image "pull-up.png"}]]
-                                                 :comments     [{:comment "Ser bra ut!" :user "Bobby"}
-                                                                {:comment "Oi, dette skal jeg prøve!" :user "Kari"}]
-                                                 :likes        10
-                                                 :image        "images/field.jpg"})))
-
-(defn r-component [{:keys [data name]}]
-  [:div.pure-g {:style {:margin 'auto}}
-   [:div.pure-u
-    [:div.pure-g
-     [:div.pure-u {:style {:font-size "200%" :text-align 'right :padding-right 10}} data]
-     [:div.pure-u {:style {:padding-top 10}} name]]]])
-
 (defn movement-component []
   (let []
     (fn [{:keys [name image rep performed-sets set distance duration weight rest]}]
-      [:div.pure-g.movement
-       [:div.pure-u-1
-        [:div.pure-g
-         [:div.pure-u-1-5
-          [:img.pure-img-responsive.graphic {:src (str "images/movements/" image) :title name :alt name}]]
-         [:div.pure-u-2-5 {:style {:display 'flex :text-align 'center}}
-          [:h3.title {:style {:margin 'auto}} name]]
-         [:div.pure-u-1-5 {:style {:display 'flex}}
-          (when (pos? rep) (r-component {:data rep :name "reps"}))
-          (when (pos? distance) (r-component {:data distance :name "m"}))
-          (when (pos? duration) (r-component {:data duration :name "s"}))
-          (when (pos? weight) (r-component {:data weight :name "kg"}))
-          (when (pos? rest) (r-component {:data rest :name "s"}))]
-         [:div.pure-u-1-5
-          [:div.pure-g {:style {:display 'flex}}
-           [:div.pure-u {:style {:margin 'auto :margin-top 30 :opacity 0.85 :font-size "300%"}} performed-sets]]
-          [:div.pure-g
-           [:div.pure-u-1 [:div.center {:style {:margin-top 0 :opacity 0.85}} "set"]]]]]]])))
+      [:div.pure-u
+       [:img.graphic {:src (str "images/movements/" image) :title name :alt name}]
+       (when (pos? weight) [:div.center {:style {:font-size "100%"}} (str weight " kg")])
+       (when (pos? rep) [:div.center {:style {:font-size "100%"}} (str rep " reps")])
+       (when (pos? distance) [:div.center {:style {:font-size "100%"}} (str distance " m")])
+       (when (pos? duration) [:div.center {:style {:font-size "100%"}} (str duration " s")])
+       (when (pos? rest) [:div.center {:style {:font-size "100%"}} (str rest " s")])
+       (when (pos? performed-sets) [:div.center (str performed-sets " sets")])])))
 
 (defn part-component []
   (let []
     (fn [movements]
-      [:div.pure-g.movements {:style {:margin-bottom "2rem"}}
-       [:div.pure-u-1
-        (doall
-          (for [m movements]
-            ^{:key (rand-int 10000000)}
-            [movement-component m]))]])))
+      [:div.pure-g {:style {:margin-bottom "2rem"}}
+       (doall
+         (for [m movements]
+           ^{:key (rand-int 10000000)}
+           [movement-component m]))])))
 
 (defn add-comment [{:keys [adding-comment? comments session-url]}]
   (let [text (atom "")]
