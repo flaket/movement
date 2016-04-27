@@ -1,6 +1,7 @@
 (ns movement.db.db
       (:require [clojure.core.async :as async :refer [<!! <! go]]
                 [hildebrand.core :as h]
+                [taoensso.faraday :as far]
                 [clojure.set :as set]
                 [buddy.hashers :as hashers]
                 [clojure.string :as str]
@@ -16,50 +17,59 @@
             :secret-key "..."
             :endpoint   "http://localhost:8080"})
 
-(def movements-table {:table :movements :throughput {:read 1 :write 1}
-                      :attrs {:name :string} :keys [:name]})
-(def user-movements-table {:table   :user-movements :throughput {:read 1 :write 1}
-                           :attrs   {:user-id :string :movement-name :string} :keys [:user-id :movement-name]
-                           :indexes {:global [{:name       :movements-by-user-id
-                                               :keys       [:user-id]
-                                               :throughput {:read 1 :write 1}
-                                               :project    [:all]}]}})
-(def templates-table {:table :templates :throughput {:read 1 :write 1}
-                      :attrs {:title :string} :keys [:title]})
-(def users-table {:table   :users :throughput {:read 1 :write 1}
-                  :attrs   {:user-id :string :activation-id :string :email :string :name :string} :keys [:user-id]
-                  :indexes {:global [{:name       :user-by-activation-id
-                                      :keys       [:activation-id]
-                                      :project    [:keys-only]
-                                      :throughput {:read 1 :write 1}}
-                                     {:name       :user-by-email
-                                      :keys       [:email]
-                                      :project    [:all]
-                                      :throughput {:read 1 :write 1}}
-                                     {:name       :user-by-name
-                                      :keys       [:name]
-                                      :project    [:all]
-                                      :throughput {:read 1 :write 1}}]}})
-(def sessions-table {:table   :sessions :throughput {:read 1 :write 1}
-                     :attrs   {:url :string :user-id :string} :keys [:url]
-                     :indexes {:global [{:name       :session-by-user-id
-                                         :keys       [:user-id]
+#_(let [movements-table {:table :movements :throughput {:read 1 :write 1}
+                       :attrs {:name :string} :keys [:name]}
+      user-movements-table {:table   :user-movements :throughput {:read 1 :write 1}
+                              :attrs   {:user-id :string :movement-name :string} :keys [:user-id :movement-name]
+                              :indexes {:global [{:name       :movements-by-user-id
+                                                  :keys       [:user-id]
+                                                  :throughput {:read 1 :write 1}
+                                                  :project    [:all]}]}}
+      templates-table {:table :templates :throughput {:read 1 :write 1}
+                         :attrs {:title :string} :keys [:title]}
+      users-table {:table   :users :throughput {:read 1 :write 1}
+                     :attrs   {:user-id :string :activation-id :string :email :string :name :string} :keys [:user-id]
+                     :indexes {:global [{:name       :user-by-activation-id
+                                         :keys       [:activation-id]
+                                         :project    [:keys-only]
+                                         :throughput {:read 1 :write 1}}
+                                        {:name       :user-by-email
+                                         :keys       [:email]
                                          :project    [:all]
-                                         :throughput {:read 1 :write 1}}]}})
+                                         :throughput {:read 1 :write 1}}
+                                        {:name       :user-by-name
+                                         :keys       [:name]
+                                         :project    [:all]
+                                         :throughput {:read 1 :write 1}}]}}
+      sessions-table {:table   :sessions :throughput {:read 1 :write 1}
+                      :attrs   {:url :string :user-id :string} :keys [:url]
+                      :indexes {:global [{:name       :session-by-user-id
+                                          :keys       [:user-id]
+                                            :project    [:all]
+                                            :throughput {:read 1 :write 1}}]}}
+      tables (vector movements-table user-movements-table templates-table users-table sessions-table)]
+    (map (fn [table] (h/create-table! creds table)) tables))
 
 #_(let [c (h/list-tables! creds {})] (<!! c))
-#_(let [c (h/describe-table! creds :user-movements)] (<!! c))
+#_(far/list-tables creds)
+
+#_(let [c (h/describe-table! creds :users)] (<!! c))
+#_(far/describe-table creds :users)
+
 #_(h/create-table! creds sessions-table)
+
 #_(h/delete-table! creds :movements)
+#_(far/delete-table creds :sessions)
+
 #_(let [tables (<!! (h/list-tables! creds {}))]
     (doseq [i (range (count tables))]
       (h/delete-table! creds (get tables i))))
 
-;; ----------------------------------------------------
+;;-------------------- get data --------------------
 
 (defn user [user-id]
-  (<!! (h/get-item! creds :users {:user-id user-id})))
-#_(user "30ed7fd8-3520-4b5c-a212-d4b2832ac02b")
+  (far/get-item creds :users {:user-id user-id}))
+#_(user "7ccb2ebd-35d2-49b4-802b-a6fd7ef3706c")
 
 (defn user-by-email [email]
   (->>
@@ -70,11 +80,18 @@
 #_(user-by-email "andreas.flakstad@gmail.com")
 #_(user-by-email "a")
 
+#_(defn user-by-email2 [email]
+  (far/get-item creds :users {:email email} {:index "user-by-email"}))
+#_(user-by-email2 "a")
+
 (defn user-by-activation-id [id]
   (->>
     (h/query! creds :users {:activation-id [:= id]} {:index :user-by-activation-id})
     <!!
     first))
+
+#_(defn user-by-activation-id2 [id]
+  (first (far/query creds :users {:activation-id [:eq id]} {:index "user-by-activation-id"})))
 
 (defn user-by-name [name]
   (->>
@@ -82,13 +99,15 @@
     <!!))
 #_(user-by-name "andreas")
 
+#_(defn user-by-name2 [name]
+  (first (far/query creds :users {:name [:eq name]} {:index "user-by-name"})))
+#_(user-by-name2 "kåre")
+
 (defn sessions-by-user-id [user-id]
   (let [sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
         sessions (map #(assoc % :user-name (:name (user (:user-id %)))) sessions)]
     sessions))
 #_(sessions-by-user-id "7ccb2ebd-35d2-49b4-802b-a6fd7ef3706c")
-
-;;---------- get data ----------
 
 (defn create-feed [user-id]
   (let [users (conj (:follows (user user-id)) user-id)
@@ -107,10 +126,15 @@
     x))
 #_(movements)
 
-(defn categories []
+#_(defn movements2 []
+  (far/scan creds :movements {:attrs [:name]}))
+#_(movements2)
+
+(defn categories
+  "Gives a lazy sequence over all unique category keywords."
+  []
   (let [c (h/scan! creds :movements {})
-        movements (<!! c)
-        x (apply set/union (map :category movements))]
+        x (apply set/union (map :category (<!! c)))]
     (seq x)))
 #_(categories)
 
@@ -121,6 +145,13 @@
         id (str (UUID/randomUUID))]
     (assoc (<!! c) :id id)))
 #_(movement "Balansegang")
+
+#_(defn movement2
+  "Returns a map representing a movement with a new unique id."
+  [name]
+  (let [m (far/get-item creds :movements {:name name})]
+    (assoc m :id (str (UUID/randomUUID)))))
+#_(movement2 "Balansegang")
 
 (defn movements-from-category [n category]
   "Returns a random lazy sequence over n movements that share a given category.
@@ -203,8 +234,6 @@
               :statistics          {}
               :follows             []
               :badges              []
-              ;:goals                       []
-              ;:priorities                  []
               }]
     (h/put-item! creds :users user)))
 #_(add-user! "a" "andreas" "pw" (str (UUID/randomUUID)))
@@ -222,6 +251,9 @@
   (h/update-item! creds :users {:user-id user-id}
                   {:badges [:concat [badge]]}))
 #_(add-badge! "andreas@roebuck.com" {:name "Newbie" :achieved-at (c/to-string (l/local-now))})
+
+(defn add-movement! [user-id movement-name zone]
+  (h/put-item! creds :user-movements {:user-id user-id :movement-name movement-name :zone zone}))
 
 (defn add-session! [params]
   (let [{:keys [user-id session]} params
@@ -251,9 +283,6 @@
                     {:activated?    [:set true]
                      :activation-id [:remove]})))
 #_(activate-user! "97741783-9bb7-442f-9a73-e573acb9c3db")
-
-(defn add-movement! [user-id movement-name zone]
-  (h/put-item! creds :user-movements {:user-id user-id :movement-name movement-name :zone zone}))
 
 (defn update-subscription! [user-id value]
   (h/update-item! creds :users {:user-id user-id}
@@ -308,7 +337,6 @@
                    (drop-last)
                    (str/join))]
       name))
-
 
 #_(defn find-no-data-images []
     (let [f (io/file "resources/public/images/movements")

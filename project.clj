@@ -28,7 +28,7 @@
                  [com.taoensso/timbre "4.3.1"]
 
                  [io.nervous/hildebrand "0.4.3"]
-
+                 [com.taoensso/faraday "1.9.0-alpha3"]
 
                  [hiccup "1.0.5"]
                  [reagent "0.6.0-alpha"]

@@ -9,8 +9,9 @@
 
 (defn load-feed []
   (GET "feed" {:params        {:user-id (:user-id (session/get :user))}
-                :handler       (fn [r] (session/put! :feed r))
-                :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
+               :handler       (fn [r] (if (empty? r) (session/put! :feed [])
+                                                     (session/put! :feed r)))
+               :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
 
 (defn load-user-only-feed []
   (GET "user-only-feed" {:params        {:user-id (:user-id (session/get :user))}
@@ -238,10 +239,14 @@
        [:div#feed
         [:div.content
          (if-let [sessions (session/get :feed)]
-           (doall
-             (for [session sessions]
-               ^{:key (:url session)}
-               [session-view session]))
+           (if (empty? sessions)
+             [:div.pure-g {:style {:margin-top 200}}
+              [:div.pure-u-1.center
+               "Ingen økter å vise. Logg en treningsøkt eller følg venner for å se økter her."]]
+             (doall
+               (for [session sessions]
+                 ^{:key (:url session)}
+                 [session-view session])))
            [:div.pure-g {:style {:margin-top 200}}
             [:div.pure-u-1.center
              [:i.fa.fa-spinner.fa-pulse.fa-4x]]])]

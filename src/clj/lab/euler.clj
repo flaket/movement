@@ -39,10 +39,11 @@
   [a b]
   (/ (* a b) (gcd a b)))
 
+; Tredje forsøk, finner løsning på 270ms.
 (defn smallest-multiple
   "Returns the smallest positive number that is evenly divisible by all the numbers from 1 to number"
   [number]
   (reduce #(lcm %2 %1) (range 1 number)))
 
-#_(time (smallest-multiple 24))
+#_(time (smallest-multiple 20))
 
