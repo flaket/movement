@@ -27,6 +27,7 @@
                  [prone "1.0.2"]
                  [com.taoensso/timbre "4.3.1"]
 
+                 [clj-aws-s3 "0.3.10" :exclusions [joda-time]]
                  [io.nervous/hildebrand "0.4.3"]
                  [com.taoensso/faraday "1.9.0-alpha3"]
 

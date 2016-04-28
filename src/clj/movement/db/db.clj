@@ -2,6 +2,7 @@
       (:require [clojure.core.async :as async :refer [<!! <! go]]
                 [hildebrand.core :as h]
                 [taoensso.faraday :as far]
+                [aws.sdk.s3 :as s3]
                 [clojure.set :as set]
                 [buddy.hashers :as hashers]
                 [clojure.string :as str]
@@ -13,53 +14,60 @@
   (:import (java.util UUID)
            datomic.Util))
 
-(def creds {:access-key "..."
-            :secret-key "..."
-            :endpoint   "http://localhost:8080"})
 
-#_(let [movements-table {:table :movements :throughput {:read 1 :write 1}
+(def creds {:access-key ""
+            :secret-key ""
+            :endpoint   "http://localhost:8080"
+            })
+
+(def iam-creds {:access-key "AKIAJG4MLZ7TON7BLNCQ"
+                :secret-key "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"})
+
+; buckets:
+; mumrik-user-profile-images
+; mumrik-session-images
+; mumrik-movement-images ; har lastet opp disse
+
+#_(let [movements-table {:table :movements :throughput {:read 10 :write 1}
                        :attrs {:name :string} :keys [:name]}
-      user-movements-table {:table   :user-movements :throughput {:read 1 :write 1}
+      user-movements-table {:table   :user-movements :throughput {:read 10 :write 5}
                               :attrs   {:user-id :string :movement-name :string} :keys [:user-id :movement-name]
                               :indexes {:global [{:name       :movements-by-user-id
                                                   :keys       [:user-id]
-                                                  :throughput {:read 1 :write 1}
+                                                  :throughput {:read 10 :write 1}
                                                   :project    [:all]}]}}
-      templates-table {:table :templates :throughput {:read 1 :write 1}
+      templates-table {:table :templates :throughput {:read 10 :write 1}
                          :attrs {:title :string} :keys [:title]}
-      users-table {:table   :users :throughput {:read 1 :write 1}
+      users-table {:table   :users :throughput {:read 10 :write 5}
                      :attrs   {:user-id :string :activation-id :string :email :string :name :string} :keys [:user-id]
                      :indexes {:global [{:name       :user-by-activation-id
                                          :keys       [:activation-id]
                                          :project    [:keys-only]
-                                         :throughput {:read 1 :write 1}}
+                                         :throughput {:read 5 :write 1}}
                                         {:name       :user-by-email
                                          :keys       [:email]
                                          :project    [:all]
-                                         :throughput {:read 1 :write 1}}
+                                         :throughput {:read 10 :write 1}}
                                         {:name       :user-by-name
                                          :keys       [:name]
                                          :project    [:all]
-                                         :throughput {:read 1 :write 1}}]}}
-      sessions-table {:table   :sessions :throughput {:read 1 :write 1}
+                                         :throughput {:read 10 :write 1}}]}}
+      sessions-table {:table   :sessions :throughput {:read 10 :write 5}
                       :attrs   {:url :string :user-id :string} :keys [:url]
                       :indexes {:global [{:name       :session-by-user-id
                                           :keys       [:user-id]
                                             :project    [:all]
-                                            :throughput {:read 1 :write 1}}]}}
+                                            :throughput {:read 10 :write 1}}]}}
       tables (vector movements-table user-movements-table templates-table users-table sessions-table)]
     (map (fn [table] (h/create-table! creds table)) tables))
 
-#_(let [c (h/list-tables! creds {})] (<!! c))
-#_(far/list-tables creds)
+#_(<!! (h/list-tables! creds {}))
 
-#_(let [c (h/describe-table! creds :user-movements)] (<!! c))
-#_(far/describe-table creds :users)
+#_(<!! (h/describe-table! creds :sessions))
 
 #_(h/create-table! creds sessions-table)
 
 #_(h/delete-table! creds :movements)
-#_(far/delete-table creds :sessions)
 
 #_(let [tables (<!! (h/list-tables! creds {}))]
     (doseq [i (range (count tables))]
@@ -72,17 +80,10 @@
 #_(user "577d84e2-0b7a-48b3-a3ac-317d78e7eab6")
 
 (defn user-by-email [email]
-  (->>
-    (h/query! creds :users {:email [:= email]} {:index :user-by-email})
-    <!!
-    first))
+  (first (<!! (h/query! creds :users {:email [:= email]} {:index :user-by-email}))))
 #_(user-by-email "andflak@gmail.com")
 #_(user-by-email "andreas.flakstad@gmail.com")
 #_(user-by-email "a")
-
-#_(defn user-by-email2 [email]
-  (far/get-item creds :users {:email email} {:index "user-by-email"}))
-#_(user-by-email2 "a")
 
 (defn user-by-activation-id [id]
   (->>
@@ -90,24 +91,15 @@
     <!!
     first))
 
-#_(defn user-by-activation-id2 [id]
-  (first (far/query creds :users {:activation-id [:eq id]} {:index "user-by-activation-id"})))
-
 (defn user-by-name [name]
-  (->>
-    (h/query! creds :users {:name [:= name]} {:index :user-by-name})
-    <!!))
+  (<!! (h/query! creds :users {:name [:= name]} {:index :user-by-name})))
 #_(user-by-name "andreas")
-
-#_(defn user-by-name2 [name]
-  (first (far/query creds :users {:name [:eq name]} {:index "user-by-name"})))
-#_(user-by-name2 "kåre")
 
 (defn sessions-by-user-id [user-id]
   (let [sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
         sessions (map #(assoc % :user-name (:name (user (:user-id %)))) sessions)]
     sessions))
-#_(sessions-by-user-id "577d84e2-0b7a-48b3-a3ac-317d78e7eab6")
+#_(sessions-by-user-id "9c0ca430-4da4-4b98-8614-e5ac5a19607e")
 
 (defn create-feed [user-id]
   (let [users (conj (:follows (user user-id)) user-id)
@@ -184,8 +176,8 @@
 
 (defn create-movement [user-id template-movement]
   ; todo: filter on {:natural-only? true}
-  ; todo: movements-from-category skal ta flere categorier
-  ; todo: remove duplicates from a part (scan through keep hash-map and refresh if in hash-map)
+  ; todo: movements-from-category skal ta flere categorier: slik det står nå vil øvelser fra kategorier med få øvelser dukke opp for ofte
+  ; todo: reduce consecutive duplicates on reps
   ; todo: filter on user preferences/goals
   (-> (merge template-movement
              (if-let [m-name (:movement template-movement)]
@@ -194,35 +186,33 @@
                       m (first (movements-from-category 1 (first (shuffle (:slot-category template-movement)))))
                       counter 0]
                  ; Check if the user has done the movement before
+
                  (let [user-movement (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name (:name m)}))
                        zone (if (:zone user-movement) (:zone user-movement) 0)]
-
-                   ; if user is effective
-                   (if (< 1N zone)
-                     (assoc m :zone (:zone user-movement)) ; return movement with zone data added
-                     ; else (zone is 1 or 0)
-                     (if-let [previous-movement-names (:previous m)] ; check if movement has previous
-                       ; has previous: check zone data of every movement in previous
-                       (let [user-previous-movements (mapv (fn [m-name]
-                                                             (<!! (h/get-item! creds :user-movements
-                                                                               {:user-id user-id
-                                                                                :movement-name m-name}))) previous-movement-names)
-                             mastered-movements (remove #(or (nil? %) (> (:zone %) 1N)) user-previous-movements)
-                             mastered-movement-names (map :movement-name mastered-movements)
-                             diff (set/difference (set previous-movement-names) (set mastered-movement-names))]
-                         (if (empty? diff)
-                           ; if all previous has (< 1N zone): return m
-                           m
-                           ; else: pick on of the previous with zone 1 or 0 and recur
-                           (recur (movement (first (shuffle diff))) (inc counter))))
-                       ; has no previous: return m
-                       m))))))
+                   (if (> counter 4)
+                     ; if looping too much: return m with zone data.
+                     (assoc m :zone (:zone user-movement))
+                     ; if user has mastered this movement (zone is 2 or 3)
+                     (if (< 1N zone)
+                       (assoc m :zone (:zone user-movement)) ; simply return movement with zone data added
+                       ; else (zone is 1 or 0)
+                       (if-let [previous-movement-names (:previous m)] ; check if movement has easier variations
+                         ; has previous: check if user has mastered all movements in previous
+                         (let [user-previous-movements (mapv (fn [m-name]
+                                                               (<!! (h/get-item! creds :user-movements
+                                                                                 {:user-id       user-id
+                                                                                  :movement-name m-name}))) previous-movement-names)
+                               mastered-movements (remove #(or (nil? %) (> (:zone %) 1N)) user-previous-movements)
+                               mastered-movement-names (map :movement-name mastered-movements)
+                               diff (set/difference (set previous-movement-names) (set mastered-movement-names))]
+                           (if (empty? diff)
+                             ; if all previous has (< 1N zone): return m
+                             m
+                             ; else: pick on of the previous with zone 1 or 0 and recur
+                             (recur (movement (first (shuffle diff))) (inc counter))))
+                         ; has no previous: return m
+                         m)))))))
       (fix-measurement)))
-
-(map (fn [m] (<!! (h/get-item! creds :user-movements {:user-id (:user-id m) :movement-name (:name m)})))
-     [{:user-id "577d84e2-0b7a-48b3-a3ac-317d78e7eab6" :name " bakover"}
-      {:user-id "577d84e2-0b7a-48b3-a3ac-317d78e7eab6" :name "Beinsving bakover"}])
-
 
 (defn create-session [user-id session-type]
   (let [
@@ -278,23 +268,30 @@
         [_ file-type _ photo] (if image-file (str/split image-file #"[:;,]") [])
         session (dissoc session :photo :unique-movements)
         url (str (UUID/randomUUID))
-        session (assoc session :url url :user-id user-id :comments [] :likes [])]
-    (.println System/out (str "Saving session: " session))
-    ; Store image to disk if png or jpeg.
+        session (assoc session :url url :user-id user-id :image (if photo true false)
+                               :comments [] :likes [])]
+    ; If upload file is png or jpeg: send to S3
     (when (or (= file-type "image/png")
             (= file-type "image/jpeg"))
       (let [decoded-photo (b64/decode (.getBytes photo))
-            output-url (str "uploads/" url ".jpg")]
-        (with-open [w (io/output-stream output-url)]
+            file (io/input-stream decoded-photo)]
+
+        ; Dette må gjøres async og kjøre videre med en gang
+        (s3/put-object iam-creds "mumrik-session-images" (str url ".jpg") file)
+
+        ; Store image to disk if png or jpeg.
+        #_(with-open [w (io/output-stream output-url)]
           (.write w decoded-photo))
-        (.println System/out (str "Wrote photo to: " output-url))))
+
+        (.println System/out "Sent photo to S3..")))
     ; Store session in :sessions table
     (h/put-item! creds :sessions session)
+    (.println System/out "Stored session..")
     ; Store each unique movement from the session with its updated zone data in :user-movements table
     (when-let [u (vec unique-movements)]
-      (.println System/out (str "Saving user movements: " u))
       (doseq [m u]
-        (add-movement! user-id (:name m) (:zone m))))
+        (add-movement! user-id (:name m) (:zone m)))
+      (.println System/out "Stored user movements.."))
     :ok))
 
 (defn activate-user! [uuid]

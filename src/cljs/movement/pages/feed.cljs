@@ -85,7 +85,8 @@
        [:div {:style {:margin "0 40px 0 40px"}}
 
         ; photo
-        [:div.center [:img {:src image :width "100%"}]]
+        (when image
+          [:div.center [:img {:src (str "http://s3.amazonaws.com/mumrik-session-images/" url ".jpg") :width "100%"}]])
 
         [:div.pure-g
 

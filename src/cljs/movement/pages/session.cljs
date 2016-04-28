@@ -394,7 +394,13 @@
         session (if-not (:comment session) (assoc session :comment "") session)
         new-parts (mapv (fn [part]
                           (mapv (fn [m]
-                                  (dissoc m :category :slot-category :measurement :previous :next)) part))
+                                  (-> m
+                                      ((fn [m] (if (nil? (:performed-sets m))
+                                                 (assoc m :performed-sets (:set m))
+                                                 m)))
+                                      (dissoc :category :slot-category :measurement :previous :next :set)
+                                      ))
+                                part))
                         (:parts session))
         date (if-let [date (:date session)] date (date-string))
         time (time-string)
@@ -406,7 +412,8 @@
                                :tags hash-tags
                                :unique-movements (map #(dissoc % :image) (flatten unique-movements)))
         session (dissoc session :date)]
-    (POST "store-session"
+    (pr session)
+    #_(POST "store-session"
           {:params        {:session session
                            :user-id (:user-id (session/get :user))}
            :handler       (fn [] (reset! s true))
@@ -443,7 +450,6 @@
               [:img
                {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
                 :style      {:height     250
-                             ;:float      'right
                              :margin-left 20
                              :margin-right 20 :cursor 'pointer}
                 :onClick    #(generate-movement-session % (:activity session))
