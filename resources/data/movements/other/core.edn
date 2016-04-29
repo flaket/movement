@@ -20,13 +20,15 @@
   :category #{:core} :measurement :repetitions
   :previous ["V-up"]}
 
- {:name     "Sittende benløft"
-  :image    "sitting-leg-lift.png"
-  :category #{:core} :measurement :repetitions}
-
  {:name     "Liggende benløft"
   :image    "lying-leg-lift.png"
-  :category #{:core} :measurement :repetitions}
+  :category #{:core :l-sit} :measurement :repetitions
+  :next     ["Skråbenk benløft" "Sittende benløft"]}
+
+ {:name     "Sittende benløft"
+  :image    "sitting-leg-lift.png"
+  :category #{:core :l-sit} :measurement :repetitions
+  :previous ["Liggende benløft"]}
 
  {:name     "Liggende bensirkler"
   :image    "lying-leg-circle.png"
@@ -34,12 +36,12 @@
 
  {:name     "Skråbenk benløft"
   :image    "incline-bench-leg-lift.png"
-  :category #{:core} :measurement :repetitions
+  :category #{:core :l-sit} :measurement :repetitions
   :previous ["Liggende benløft"] :next ["Hengende benløft"]}
 
  {:name     "Hengende benløft"
   :image    "hanging-leg-lift.png"
-  :category #{:core} :measurement :repetitions
+  :category #{:core :l-sit} :measurement :repetitions
   :previous ["Liggende benløft" "Tærne til stanga"] :next ["Hengende 90 benløft"]}
 
  {:name     "Hollow body"
@@ -57,27 +59,27 @@
 
  {:name     "Tuck l-sit på stang"
   :image    "parallell-bar-tuck-l-sit.png"
-  :category #{:core} :measurement :duration
+  :category #{:core :l-sit} :measurement :duration
   :next     ["L-sit på stang"]}
 
  {:name     "L-sit på stang"
   :image    "parallell-bar-l-sit.png"
-  :category #{:core} :measurement :duration
+  :category #{:core :l-sit} :measurement :duration
   :previous ["Tuck l-sit på stang"] :next     ["L-sit"]}
 
  {:name     "L-sit"
   :image    "l-sit.png"
-  :category #{:core} :measurement :duration
+  :category #{:core :l-sit} :measurement :duration
   :previous ["L-sit på stang"]  :next     ["L-straddle"]}
 
  {:name     "L-straddle"
   :image    "l-straddle.png"
-  :category #{:core} :measurement :duration
+  :category #{:core :l-sit} :measurement :duration
   :previous ["L-sit"]  :next ["L-sit i ringer"]}
 
  {:name     "L-sit i ringer"
   :image    "ring-l-sit.png"
-  :category #{:core} :measurement :duration
+  :category #{:core :l-sit} :measurement :duration
   :previous ["L-sit"]}
 
  {:name     "Hodestående benløft"
@@ -108,7 +110,8 @@
 
  {:name     "Sideplanke"
   :image    "side-plank.png"
-  :category #{:core} :measurement :duration}
+  :category #{:core :side-lever} :measurement :duration
+  :mext     ["Tuck side-lever"]}
 
  {:name     "Invertert planke"
   :image    "inverted-plank.png"
@@ -121,17 +124,17 @@
 
  {:name     "Hengende 90 benløft"
   :image    "hanging-90-leg-lift.png"
-  :category #{:core} :measurement :repetitions
+  :category #{:core :l-sit} :measurement :repetitions
   :previous ["Hengende benløft"] :next ["Hengende 90 90 holde"]}
 
  {:name     "Hengende 90 90 holde"
   :image    "hanging-90-90-hold.png"
-  :category #{:core} :measurement :duration
+  :category #{:core :l-sit} :measurement :duration
   :previous ["Hengende 90 benløft"]}
 
  {:name     "Hengende benløft i en arm"
   :image    "hanging-90-leg-lift.png"
-  :category #{:core} :measurement :repetitions
+  :category #{:core :l-sit} :measurement :repetitions
   :previous ["Hengende 90 benløft"]}
 
  ]

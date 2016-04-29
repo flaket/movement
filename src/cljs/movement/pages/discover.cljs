@@ -6,11 +6,11 @@
 
 (defn user-view []
   (let []
-    (fn [{:keys [profile-image profile-name profile-text]
-          :or   {profile-image "images/movements/static-air-baby.png"}}]
+    (fn [{:keys [user-image profile-name profile-text]
+          :or   {user-image "images/movements/static-air-baby.png"}}]
       [:div {:style {:border-bottom "1px solid lightgray"}}
        [:div.pure-g
-        [:div.pure-u-1-6.center [:img {:src   profile-image :width "100px"
+        [:div.pure-u-1-6.center [:img {:src   user-image :width "100px"
                                        :style {:cursor 'pointer}
                                        ; onClick/onTouchEnd -> show profile
                                        }]]
@@ -25,15 +25,15 @@
   (let [selection (atom :user)
         user-search-results (atom [{:result 1
                                :profile-name "Kårinator"
-                               :profile-image "images/movements/push-up.png"
+                               :user-image "images/movements/push-up.png"
                                :profile-text ""}
                                    {:result 2
                                     :profile-name "Bob"
-                                    :profile-image "images/movements/arch-up.png"
+                                    :user-image "images/movements/arch-up.png"
                                     :profile-text "Hei jeg er Bob"}
                                    {:result 3
                                     :profile-name "Kari"
-                                    :profile-image "images/movements/pull-up-reach.png"
+                                    :user-image "images/movements/pull-up-reach.png"
                                     :profile-text "Kari4tw!"}])
         session-search-results (atom [{:result 2
                                     :user-name    "Kårinator"

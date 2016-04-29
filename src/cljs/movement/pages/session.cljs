@@ -13,18 +13,6 @@
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]
     [movement.menu :refer [menu-component]]))
 
-(def test-template {:title "Test" :description "test" :background "test"
-                    :part  [[{:category   #{:natural :balance}
-                              :repetition [4 8 12] :distance [5 12 20] :duration 30 :set 4}
-                             {:category   #{:natural :climb}
-                              :repetition [2 4 6] :set 4}]]})
-
-(defonce m-counter (atom 0))
-
-(defn image-url [movement-name]
-  (when-not (nil? movement-name)
-    (str "images/movements/" (str/replace (str/lower-case movement-name) " " "-") ".png")))
-
 (defn replace-movement [event {:keys [kw movement part-number]}]
   (.preventDefault event)
   (cond
@@ -124,9 +112,7 @@
         :handler       (fn [session]
                          (let [old-session (session/get :movement-session)]
                            (session/put! :movement-session
-                                         (merge
-                                           old-session
-                                           (assoc session :activity activity)))))
+                                         (merge old-session session))))
         :error-handler (fn [r] (pr r))}))
 
 (defn create-session-from-activity [event activity]
@@ -184,7 +170,7 @@
        [:div.pure-u-1
         [:div.pure-g {:style {:cursor 'pointer}}
          [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))}
-          [:img.graphic {:src (str "images/movements/" image) :title name :alt name}]]
+          [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" image) :title name :alt name}]]
          [:div.pure-u-2-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))
                            :style   {:display 'flex :text-align 'center}}
           [:h3.title {:style {:margin 'auto}} name]]
@@ -412,8 +398,7 @@
                                :tags hash-tags
                                :unique-movements (map #(dissoc % :image) (flatten unique-movements)))
         session (dissoc session :date)]
-    (pr session)
-    #_(POST "store-session"
+    (POST "store-session"
           {:params        {:session session
                            :user-id (:user-id (session/get :user))}
            :handler       (fn [] (reset! s true))
@@ -475,9 +460,10 @@
              (date-component)]]
            (if-let [parts (:parts session)]
              [(let [movements (flatten parts)
+
                     unique-movements (-> (for [m movements]
                                            (-> m
-                                               (#(when (nil? (:zone %)) (assoc % :zone 1)))
+                                               (#(if (= 0 (:zone %)) (assoc % :zone 1) %))
                                                (dissoc :id :category :slot-category :measurement
                                                        :set :distance :duration :rep :movement :rest :weight
                                                        :natural-only? :performed-sets :next :previous)))
@@ -493,7 +479,7 @@
                           ^{:key (rand-int 10000000)}
                           [:div.pure-u {:id    (str "unique-movement-" (:name m))
                                         :style {:border-bottom "1px solid"}}
-                           [:img.graphic {:src (str "images/movements/" (:image m)) :title (:name m) :alt (:name m)}]
+                           [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" (:image m)) :title (:name m) :alt (:name m)}]
                            (let [m-pos (first (positions #{m} ms))]
                              (cond
                                (= 1 (:zone m))

@@ -8,7 +8,7 @@
  {:name     "Flat back-lever"
   :image    "flat-back-lever.png"
   :category #{:straight-arm-strength :back-lever :ring :bar} :measurement :duration
-  :previous ["Flat back-lever"] :next     ["Strekk ben back-lever"]}
+  :previous ["Tuck back-lever"] :next     ["Strekk ben back-lever"]}
 
  {:name     "Strekk ben back-lever"
   :image    "one-leg-extended-back-lever.png"
@@ -53,7 +53,7 @@
  {:name     "Tuck side-lever"
   :image    "tuck-side-lever.png"
   :category #{:straight-arm-strength :side-lever :ring :bar} :measurement :duration
-  :next     ["Flat side-lever"]}
+  :previous ["Sideplanke" "Henge passivt til aktivt"] :next     ["Flat side-lever"]}
 
  {:name     "Flat side-lever"
   :image    "flat-side-lever.png"
@@ -72,18 +72,18 @@
 
  {:name     "Planche len"
   :image    "planche-lean.png"
-  :category #{:straight-arm-strength} :measurement :duration
+  :category #{:straight-arm-strength :planche} :measurement :duration
   :next     ["Håndstående len"]}
 
  {:name     "Håndstående len"
   :image    "handstand-lean.png"
-  :category #{:straight-arm-strength} :measurement :duration
-  :previous ["Planche len"]}
+  :category #{:straight-arm-strength :planche} :measurement :duration
+  :previous ["Planche len"] :next ["Tuck planche"]}
 
  {:name     "Tuck planche"
   :image    "tuck-planche.png"
   :category #{:straight-arm-strength :planche} :measurement :duration
-  :next     ["Flat planche"]}
+  :previous ["Håndstående len"] :next     ["Flat planche"]}
 
  {:name     "Flat planche"
   :image    "flat-planche.png"

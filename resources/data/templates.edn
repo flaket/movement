@@ -112,16 +112,23 @@
             :rep           10 :set 1}]
 
           [{:slot-category #{:crawl :walk}
+            :distance      15
+            :rep 10
+            :set 4}
+           {:slot-category #{:crawl :walk}
+            :rep 10
             :distance      15 :set 4}
            {:slot-category #{:crawl :walk}
+            :rep 10
             :distance      15 :set 4}
            {:slot-category #{:crawl :walk}
+            :rep 10
             :distance      15 :set 4}
            {:slot-category #{:crawl :walk}
+            :rep 10
             :distance      15 :set 4}
            {:slot-category #{:crawl :walk}
-            :distance      15 :set 4}
-           {:slot-category #{:crawl :walk}
+            :rep 10
             :distance      15 :set 4}]
           ]}
 
@@ -162,9 +169,8 @@
 
  {:title "Gymnastic Strength 1"
   :parts [
-          [{:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :rest 60 :set 3}
-           {:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :rest 60 :set 3}
-           {:slot-category #{:straight-arm-strength} :duration 10 :rep 10 :rest 60 :set 3}]
+          [{:slot-category #{:straight-arm-strength} :duration 30 :rep 10 :rest 60 :set 4}
+           {:slot-category #{:straight-arm-strength} :duration 30 :rep 10 :rest 60 :set 4}]
           [{:slot-category #{:bent-arm-strength} :rep 5 :rest 60 :set 3}
            {:slot-category #{:bent-arm-strength} :rep 5 :rest 60 :set 3}
            {:slot-category #{:bent-arm-strength} :rep 5 :rest 60 :set 3}]
@@ -173,6 +179,16 @@
            {:slot-category #{:jump :single-leg} :rep 10 :rest 60 :set 3}]
           [{:slot-category #{:core} :rep 10 :duration 60 :rest 30 :set 2}
            {:slot-category #{:core} :rep 10 :duration 60 :rest 30 :set 2}]
+          ]}
+
+ {:title "Gymnastic Strength 2"
+  :parts [
+          [{:slot-category #{:back-lever :planche} :duration 10 :rest 10 :set 4}
+           {:slot-category #{:push} :rep 5 :rest 60 :set 4}]
+          [{:slot-category #{:front-lever :side-lever} :duration 10 :rest 10 :set 4}
+           {:slot-category #{:pull} :rep 5 :rest 60 :set 4}]
+          [{:slot-category #{:l-sit} :rep 10 :duration 10 :rest 10 :set 4}
+           {:slot-category #{:jump :single-leg} :rep 6 :rest 60 :set 4}]
           ]}
 
 
