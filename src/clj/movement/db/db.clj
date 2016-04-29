@@ -135,9 +135,9 @@
 (defn movement
   "Returns a map representing a movement with a new unique id."
   [name]
-  (let [c (h/get-item! creds :movements {:name name})
+  (let [m (<!! (h/get-item! creds :movements {:name name}))
         id (str (UUID/randomUUID))]
-    (assoc (<!! c) :id id)))
+    (assoc m :id id)))
 #_(movement "Balansegang")
 
 (defn movements-from-category [n category]
@@ -177,7 +177,7 @@
   (-> (merge template-movement
              (if-let [m-name (:movement template-movement)]
                (let [m (movement m-name)
-                     user-movement (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name m-name}))
+                     user-movement (user-movement user-id m-name)
                      zone (if (:zone user-movement) (:zone user-movement) 0)
                      m (assoc m :zone zone)]
                  m)  ; if template calls for a specific movement: fetch this
@@ -198,7 +198,7 @@
                        (= 2 zone) m ; user is effective, but not also efficient, return this movement
                        :default (if-let [previous-movement-names (:previous m)]
                                      (let [user-previous-movements (vec (for [pm previous-movement-names]
-                                                                          (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name pm}))))
+                                                                          (user-movement user-id pm)))
                                            mastered-movements (->> user-previous-movements
                                                                    (remove #(nil? %))
                                                                    (remove #(< (:zone %) 2))
@@ -225,7 +225,7 @@
         templates (case session-type "Naturlig bevegelse" ["Naturlige Bevegelser 1" "Naturlige Bevegelser 2"
                                                            "Naturlige Bevegelser 3" "Naturlige Bevegelser 4"
                                                            "Locomotion 1"]
-                                     "Styrketrening" ["Gymnastic Strength 2" "Gymnastic Strength 2"]
+                                     "Styrketrening" ["Gymnastic Strength 1" "Gymnastic Strength 2"]
                                      "Mobilitet" ["Mobility 1"]
                                      ["Naturlige Bevegelser 2"])
         template (template (first (shuffle templates)))

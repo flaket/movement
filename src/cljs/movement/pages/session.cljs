@@ -16,8 +16,12 @@
 (defn replace-movement [event {:keys [kw movement part-number]}]
   (.preventDefault event)
   (cond
-    (= :swap kw) (let [category (name (first (shuffle (:slot-category movement))))]
-                   (GET "movement-from-category" {:params        {:category category}
+    (= :swap kw) (let [slot-category (:slot-category movement)
+                       category (if slot-category
+                                  (name (first (shuffle slot-category)))
+                                  (name (first (shuffle (:category movement)))))]
+                   (GET "movement-from-category" {:params        {:user-id  (:user-id (session/get :user))
+                                                                  :category category}
                                                   :handler       (fn [new-movement]
                                                                    (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
                                                                          part (session/get-in [:movement-session :parts part-number])
@@ -27,7 +31,8 @@
                                                   :error-handler (fn [r] nil)}))
     (or (= :next kw)
         (= :previous kw)) (let [new-movement (first (shuffle (kw movement)))]
-                            (GET "movement" {:params        {:name new-movement}
+                            (GET "movement" {:params        {:user-id  (:user-id (session/get :user))
+                                                             :name new-movement}
                                              :handler       (fn [new-movement]
                                                               (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
                                                                     part (session/get-in [:movement-session :parts part-number])
@@ -35,11 +40,11 @@
                                                                     new-part (assoc part pos (merge old-movement new-movement))]
                                                                 (session/assoc-in! [:movement-session :parts part-number] new-part)))
                                              :error-handler (fn [r] nil)}))
-    :else nil)
-  )
+    :else nil))
 
 (defn add-movement [category part-number]
-  (GET "movement-from-category" {:params        {:category (name category)}
+  (GET "movement-from-category" {:params        {:user-id  (:user-id (session/get :user))
+                                                 :category (name category)}
                                  :handler       (fn [[new-movement]]
                                                   (let [part (session/get-in [:movement-session :parts part-number])
                                                         new-part (conj part new-movement)]
@@ -47,7 +52,8 @@
                                  :error-handler (fn [r] nil)}))
 
 (defn add-movement-from-search [name part-number]
-  (GET "movement" {:params        {:name name}
+  (GET "movement" {:params        {:user-id  (:user-id (session/get :user))
+                                   :name name}
                    :handler       (fn [new-movement]
                                     (let [part (session/get-in [:movement-session :parts part-number])
                                           new-part (conj part  new-movement)]
@@ -83,7 +89,9 @@
     (if (empty? new-part)
       (let [parts (session/get-in [:movement-session :parts])
             new-parts (vec-remove parts part-number)]
-        (session/assoc-in! [:movement-session :parts] new-parts))
+        (if (empty? new-parts)
+          (session/assoc-in! [:movement-session :parts] [[]])
+          (session/assoc-in! [:movement-session :parts] new-parts)))
       (session/assoc-in! [:movement-session :parts part-number] new-part))))
 
 (defn remove-session [event]
@@ -205,9 +213,10 @@
             [:div.pure-g
              [:div.pure-u-1 [:h1.center {:style {:color 'red :margin-top -70 :font-size "350%"}} performed-sets]
               ]])
-          [:div.pure-g
-           [:div.pure-u-1 [:div.center {:style {:margin-top (if performed-sets -24 -6)
-                                                :opacity    0.15}} "set"]]]]]
+          (when performed-sets
+            [:div.pure-g
+             [:div.pure-u-1 [:div.center {:style {:margin-top (if performed-sets -24 -6)
+                                                  :opacity    0.15}} "set"]]])]]
 
         (when @expand
           [:div
@@ -255,52 +264,50 @@
                                       :onClick    #(replace-movement % {:kw :next :movement m :part-number part-number})
                                       :onTouchEnd #(replace-movement % {:kw :next :movement m :part-number part-number}) :title "Bytt med vanskeligere"}
                [:i.fa.fa-arrow-up {:style {:color "#99cc99" :opacity 0.8}}]
-               "Bytt med vanskeligere"])]
-           ])]])))
+               "Bytt med vanskeligere"])]])]])))
+
+(defn all-movements [e show-search-input?]
+  (.preventDefault e)
+  (if (session/get :all-movements)
+    (reset! show-search-input? (not @show-search-input?))
+    (GET "movements" {:handler       (fn [movements] (session/put! :all-movements movements)
+                                       (reset! show-search-input? true))
+                      :error-handler (fn [] nil)})))
 
 (defn add-movement-component []
   (let [show-search-input? (atom false)]
     (fn [movements part-number title]
       [:div.pure-g.movement.search
-       [:div.pure-u-1
-        [:div.pure-g.add-movement
-         [:div.pure-u-2-5 {:on-click #(session/remove! :all-movements)}]
-         [:div.pure-u
-          (when-not (nil? title)
-            [:i.fa.fa-plus.fa-3x
-             {:onClick    #(let [part (session/get-in [:movement-session :parts part-number])
-                                 categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
-                            (add-movement (first categories) part-number))
-              :onTouchEnd #(let [part (session/get-in [:movement-session :parts part-number])
-                                 categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
-                            (add-movement (first categories) part-number))
-              :style      {:margin-right '50 :cursor 'pointer}}])
-          [:i.fa.fa-search-plus.fa-3x
-           {:onClick    (fn [] (if (session/get :all-movements)
-                                 (reset! show-search-input? (not @show-search-input?))
-                                 (GET "movements" {:handler (fn [movements] (session/put! :all-movements movements)
-                                                              (reset! show-search-input? true))
-                                                   :error-handler (fn [] nil)})))
-            :onTouchEnd (fn [] (if (session/get :all-movements)
-                                 (reset! show-search-input? (not @show-search-input?))
-                                 (GET "movements" {:handler (fn [movements] (session/put! :all-movements movements)
-                                                              (reset! show-search-input? true))
-                                                   :error-handler (fn [] nil)})))
-            :style      {:cursor 'pointer}}]]
-         (when @show-search-input?
-           (let [id (str "mtags" part-number)
-                 movements-ac-comp (with-meta text-input-component
-                                              {:component-did-mount #(auto-complete-did-mount
-                                                                      (str "#" id)
-                                                                      (vec (session/get :all-movements)))})]
-             [movements-ac-comp {:id          id
-                                 :class       "edit"
-                                 :placeholder "type to find and add movement.."
-                                 :size        32
-                                 :auto-focus  true
-                                 :on-save     #(when (some #{%} (session/get :all-movements))
-                                                (reset! show-search-input? false)
-                                                (add-movement-from-search % part-number))}]))]]])))
+       [:div.pure-u-1.add-movement.center
+        [:div
+         (when-not (nil? title)                             ; when the session has no title (no session has been created from template): dont show +
+           [:i.fa.fa-plus.fa-3x
+            {:onClick    #(let [part (session/get-in [:movement-session :parts part-number])
+                                categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
+                           (add-movement (first categories) part-number))
+             :onTouchEnd #(let [part (session/get-in [:movement-session :parts part-number])
+                                categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
+                           (add-movement (first categories) part-number))
+             :style      {:margin-right '50 :cursor 'pointer}}])
+         [:i.fa.fa-search-plus.fa-3x
+          {:onClick    (fn [e] (all-movements e show-search-input?))
+           :onTouchEnd (fn [e] (all-movements e show-search-input?))
+           :style      {:cursor 'pointer}}]]
+        (when @show-search-input?
+          (let [id (str "mtags" part-number)
+                movements-ac-comp (with-meta text-input-component
+                                             {:component-did-mount #(auto-complete-did-mount
+                                                                     (str "#" id)
+                                                                     (vec (session/get :all-movements)))})]
+            [movements-ac-comp {:style {:font-size "200%" :margin-top 20}
+                                :id          id
+                                :class       "edit"
+                                :placeholder "type to find and add movement.."
+                                :size        32
+                                :auto-focus  true
+                                :on-save     #(when (some #{%} (session/get :all-movements))
+                                               (reset! show-search-input? false)
+                                               (add-movement-from-search % part-number))}]))]])))
 
 (defn part-component []
   (let []
@@ -400,7 +407,8 @@
                                :tags hash-tags
                                :unique-movements (map #(dissoc % :image) (flatten unique-movements)))
         session (dissoc session :date)]
-    (POST "store-session"
+    (pr session)
+    #_(POST "store-session"
           {:params        {:session session
                            :user-id (:user-id (session/get :user))}
            :handler       (fn [] (reset! s true))

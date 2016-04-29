@@ -210,10 +210,23 @@
                                           (response (vec (db/create-user-only-feed user-id)))) (throw-unauthorized)))
 
            (GET "/movement-from-category" req (if (authenticated? req)
-                                                (response (db/movements-from-category 1 (:category (:params req)))) (throw-unauthorized)))
+                                                (let [{:keys [category user-id]} (:params req)
+                                                      user-id (:user-id (:params req))
+                                                      movement (first (db/movements-from-category 1 category))
+                                                      user-movement (db/user-movement user-id (:name movement))
+                                                      movement (if-let [zone (:zone user-movement)]
+                                                                 (assoc movement :zone zone)
+                                                                 (assoc movement :zone 0))]
+                                                  (response [movement])) (throw-unauthorized)))
            (GET "/movement" req (if (authenticated? req)
-                                  (let [name (:name (:params req))]
-                                    (response (db/movement name))) (throw-unauthorized)))
+                                  (let [name (:name (:params req))
+                                        user-id (:user-id (:params req))
+                                        movement (db/movement name)
+                                        user-movement (db/user-movement user-id name)
+                                        movement (if-let [zone (:zone user-movement)]
+                                                   (assoc movement :zone zone)
+                                                   (assoc movement :zone 0))]
+                                    (response movement)) (throw-unauthorized)))
            (POST "/like" req (if (authenticated? req) (db/like! (:params req)) (throw-unauthorized)))
            (POST "/comment" req (if (authenticated? req) (db/comment! (:params req)) (throw-unauthorized)))
 
