@@ -13,10 +13,19 @@
                                                      (session/put! :feed r)))
                :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
 
-(defn load-user-only-feed []
-  (GET "user-only-feed" {:params        {:user-id (:user-id (session/get :user))}
+(defn load-user-only-feed [user-id]
+  (GET "user-only-feed" {:params        {:user-id user-id}
                          :handler       (fn [r] (session/put! :user-only-feed r))
                          :error-handler (fn [r] (pr (str "error loading feed: " r)))}))
+
+(defn load-user [e user-id]
+  (.preventDefault e)
+  (GET "user" {:params        {:user-id user-id}
+               :handler       (fn [r]
+                                (session/put! :viewing-user r)
+                                (session/remove! :selected-menu-item)
+                                (dispatch! "/user"))
+               :error-handler (fn [r] nil)}))
 
 (defn movement-component []
   (let []
@@ -39,7 +48,23 @@
            ^{:key (rand-int 10000000)}
            [movement-component m]))])))
 
-(defn add-comment [{:keys [adding-comment? comments session-url]}]
+(defn like [e {:keys [likes user-id url]}]
+  (.preventDefault e)
+  ; "likes" lagres i databasen som en liste fordi 1.ddb kan ikke lagre tomme set init. 2.opplevde EDN-problemer med å sende set mellom server og klient.
+  ; Listen gjøres om til sett her for enklere logikk og tilbake til vektor for lagring.
+  (when-not ((set likes) user-id)
+    (POST "like" {:params        {:session-url url :user-id user-id}
+                  :handler       (fn [r] nil)
+                  :error-handler (fn [r] nil)})))
+
+(defn add-comment [e adding-comment? params]
+  (.preventDefault e)
+  (reset! adding-comment? false)
+  (POST "comment" {:params        params
+                   :handler       (fn [r] nil)
+                   :error-handler (fn [r] nil)}))
+
+(defn add-comment-component [{:keys [adding-comment? comments session-url]}]
   (let [text (atom "")]
     (fn []
       [:div
@@ -51,158 +76,129 @@
                      :value     @text}]]]
        [:div.pure-g {:style {:margin-bottom 20}}
         [:a.pure-u-1.pure-button.pure-button-primary.button-xlarge
-         {:onClick    (fn []
-                        (reset! adding-comment? false)
-                        (POST "comment" {:params        {:session-url session-url
-                                                         :comments    (conj comments {:user (:name (session/get :user)) :comment @text})}
-                                         :handler       (fn [r]
-                                                          ; wait for a few ticks and dispatch to /feed to refresh
-                                                          )
-                                         :error-handler (fn [r] nil)}))
-          :onTouchEnd (fn [] (reset! adding-comment? false) (POST "comment" {:params {:session-url session-url :comments (conj comments @text)} :handler (fn [r] (load-feed)) :error-handler (fn [r] nil)}))}
+         {:onClick    #(add-comment % adding-comment? {:session-url session-url :user-id (:user-id (session/get :user)) :user (:name (session/get :user)) :comment @text})
+          :onTouchEnd #(add-comment % adding-comment? {:session-url session-url :user-id (:user-id (session/get :user)) :user (:name (session/get :user)) :comment @text})}
          "Kommenter"]]])))
 
-(defn session-view []
+(defn session-view [{:keys [url user-id user-name user-image session]
+                     :or {user-image (first (shuffle ["images/field.jpg" "images/forest.jpg" "images/winter.jpg"]))}}]
   (let [show-session-data? (atom false)
-        adding-comment? (atom false)]
+        adding-comment? (atom false)
+        {:keys [activity date-time time comment comments image parts likes]} session]
     (fn [{:keys [url user-id user-name user-image session]
           :or {user-image (first (shuffle ["images/field.jpg" "images/forest.jpg" "images/winter.jpg"]))}}]
-      (let [{:keys [activity date-time time comment comments image parts likes]} session]
-        [:div {:style {:border-bottom "1px solid lightgray"}}
+      [:div {:style {:border-bottom "1px solid lightgray"}}
 
-         ; user image, name and timestamp
-         [:div.pure-g
-          [:div.pure-u [:img {:src   user-image :width 80 :height 80
-                              :style {:margin-top 15 :margin-left 40
-                                      :cursor     'pointer :border-radius "50% 50% 50% 50%"}
-                              ; onClick/onTouchEnd -> show profile
-                              }]]
-          [:div.pure-u {:style {:margin-left 20}}
-           [:div.pure-g [:h2 [:a.pure-u {
-                                         ; onClick/onTouchEnd -> show profile
-                                         } user-name]]]
-           [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} date-time]]]]
+       ; user image, name and timestamp
+       [:div.pure-g
+        [:div.pure-u [:img {:src   "images/field.jpg" :width 80 :height 80
+                            :style {:margin-top 15 :margin-left 40
+                                    :cursor     'pointer :border-radius "50% 50% 50% 50%"}
+                            :onClick #(load-user % user-id)
+                            :onTouchEnd #(load-user % user-id)
+                            }]]
+        [:div.pure-u {:style {:margin-left 20}}
+         [:div.pure-g [:h2 [:a.pure-u {:onClick #(load-user % user-id)
+                                       :onTouchEnd #(load-user % user-id)} user-name]]]
+         [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} date-time]]]]
 
-         [:div {:style {:margin "0 40px 0 40px"}}
+       [:div {:style {:margin "0 40px 0 40px"}}
 
-          ; photo
-          (when image
-            [:div.center [:img {:src (str "http://s3.amazonaws.com/mumrik-session-images/" url ".jpg") :width "100%"}]])
+        ; photo
+        (when image
+          [:div.center [:img {:src (str "http://s3.amazonaws.com/mumrik-session-images/" url ".jpg") :width "100%"}]])
 
-          [:div.pure-g
+        [:div.pure-g
 
-           ; Activity and time
-           [:h2.pure-u-5-6 (str activity (when time
-                                           (let [time-string (str/split time #":")
-                                                 [h m s] (map #(read-string %) time-string)]
-                                             (str " i "
-                                                  (cond
-                                                    (= h 0) ""
-                                                    (= h 1) (str h " time ")
-                                                    :else (str h " timer "))
-                                                  (cond
-                                                    (= m 0) ""
-                                                    (= m 1) (str m " minutt ")
-                                                    :else (str m " minutter "))
-                                                  (cond
-                                                    (= s nil) ""
-                                                    (= s 0) ""
-                                                    (= s 1) (str s " sekund ")
-                                                    :else (str s " sekunder "))))))]
+         ; Activity and time
+         [:h2.pure-u-5-6 (str activity (when time
+                                         (let [time-string (str/split time #":")
+                                               [h m s] (map #(read-string %) time-string)]
+                                           (str " i "
+                                                (cond
+                                                  (= h 0) ""
+                                                  (= h 1) (str h " time ")
+                                                  :else (str h " timer "))
+                                                (cond
+                                                  (= m 0) ""
+                                                  (= m 1) (str m " minutt ")
+                                                  :else (str m " minutter "))
+                                                (cond
+                                                  (= s nil) ""
+                                                  (= s 0) ""
+                                                  (= s 1) (str s " sekund ")
+                                                  :else (str s " sekunder "))))))]
 
-           (when-not (empty? (flatten parts))
-             (if @show-session-data?
-               [:div.pure-u-1-6 [:i.fa.fa-minus-square.fa-4x {:onClick    #(reset! show-session-data? false)
-                                                              :onTouchEnd #(reset! show-session-data? false)
-                                                              :style      {:cursor       'pointer
-                                                                           :float        'right
-                                                                           :margin-right 15
-                                                                           :color        'lightgray}}]]
-               [:div.pure-u-1-6 [:i.fa.fa-plus-square.fa-4x {:onClick    #(reset! show-session-data? true)
-                                                             :onTouchEnd #(reset! show-session-data? true)
-                                                             :style      {:cursor       'pointer
-                                                                          :float        'right
-                                                                          :margin-right 15
-                                                                          :color        'lightgray}}]]))]
-          (when @show-session-data?
-            [:article.session
-             (doall
-               (for [part parts]
-                 ^{:key (rand-int 1000000)}
-                 [part-component part]))])
-
-          ; Username and session comment text if user typed a comment.
-          (when comment
-            [:div.pure-g {:style {:border-bottom "1px dotted"}}
-             [:p.pure-u-1
-              [:a.user {:onClick    (fn [e]
-                                      (.preventDefault e)
-                                      (GET "user" {:params        {:user-id user-id}
-                                                   :handler       (fn [r]
-                                                                    (session/put! :viewing-user r)
-                                                                    (session/remove! :selected-menu-item)
-                                                                    (dispatch! "/user"))
-                                                   :error-handler (fn [r] nil)}))
-                        :onTouchEnd #()}
-               user-name]
-              (str " " comment)]])
-
-          ; If session has any likes -> show
-          (when-not (empty? likes)
-            [:div.pure-g
-             [:p.pure-u-1 (str (count likes) (if (= 1 (count likes)) " tommel" " tomler") " opp")]])
-
-          ; Possible additional comments from user or other users
-          [:div {:style {:margin-top 10}}
+         (when-not (empty? (flatten parts))
+           (if @show-session-data?
+             [:div.pure-u-1-6 [:i.fa.fa-minus-square.fa-4x {:onClick    #(reset! show-session-data? false)
+                                                            :onTouchEnd #(reset! show-session-data? false)
+                                                            :style      {:cursor       'pointer
+                                                                         :float        'right
+                                                                         :margin-right 15
+                                                                         :color        'lightgray}}]]
+             [:div.pure-u-1-6 [:i.fa.fa-plus-square.fa-4x {:onClick    #(reset! show-session-data? true)
+                                                           :onTouchEnd #(reset! show-session-data? true)
+                                                           :style      {:cursor       'pointer
+                                                                        :float        'right
+                                                                        :margin-right 15
+                                                                        :color        'lightgray}}]]))]
+        (when @show-session-data?
+          [:article.session
            (doall
-             (for [{:keys [comment user]} comments]
-               ^{:key (str user comment)}
-               [:div.pure-g {:style {:margin-bottom 10}}
-                [:div.pure-u-1
-                 [:a.user {:onClick    (fn [e]
-                                         (.preventDefault e)
-                                         (GET "user" {:params        {:user-id user-id}
-                                                      :handler       (fn [r]
-                                                                       (session/put! :viewing-user r)
-                                                                       (session/remove! :selected-menu-item)
-                                                                       (dispatch! "/user"))
-                                                      :error-handler (fn [r] nil)}))
-                           :onTouchEnd (fn [e]
-                                         (.preventDefault e)
-                                         (GET "user" {:params        {:user-id user-id}
-                                                      :handler       (fn [r]
-                                                                       (session/put! :viewing-user r)
-                                                                       (session/remove! :selected-menu-item)
-                                                                       (dispatch! "/user"))
-                                                      :error-handler (fn [r] nil)}))} user]
-                 (str " " comment)]]))]
+             (for [part parts]
+               ^{:key (rand-int 1000000)}
+               [part-component part]))])
 
-          ; Buttons for "liking" or "commenting"
-          [:div.pure-g {:style {:margin-top 30 :margin-bottom 30}}
-           (let [viewing-user-id (:user-id (session/get :user))]
-             [:div.pure-u-1
-              (when-not (= user-id viewing-user-id)
-                [:i.fa.fa-thumbs-up.fa-2x {:style      {:cursor (when-not ((set likes) user-id) 'pointer) :color (if ((set likes) user-id) "#009900" 'lightgray)}
-                                           :onClick    (fn []
-                                                         ; "likes" lagres i databasen som en liste fordi 1.ddb kan ikke lagre tomme set init. 2.opplevde EDN-problemer med å sende set mellom server og klient.
-                                                         ; Listen gjøres om til sett her for enklere logikk og tilbake til vektor for lagring.
-                                                         (when-not ((set likes) user-id)
-                                                           (POST "like" {:params        {:session-url url
-                                                                                         :likers      (vec (conj (set likes) user-id))}
-                                                                         :handler       (fn [r]
-                                                                                          ; wait for a few ticks and dispatch to /feed to refresh
-                                                                                          )
-                                                                         :error-handler (fn [r] nil)})))
-                                           :onTouchEnd (fn [] (when-not ((set likes) user-id) (POST "like" {:params  {:session-url url :likers (vec (conj (set likes) user-id))}
-                                                                                                            :handler (fn [r] (load-feed)) :error-handler (fn [r] nil)})))}])
+        ; Username and session comment text if user typed a comment.
+        (when comment
+          [:div.pure-g {:style {:border-bottom "1px dotted"}}
+           [:p.pure-u-1
+            [:a.user {:onClick    (fn [e]
+                                    (.preventDefault e)
+                                    (GET "user" {:params        {:user-id user-id}
+                                                 :handler       (fn [r]
+                                                                  (session/put! :viewing-user r)
+                                                                  (session/remove! :selected-menu-item)
+                                                                  (dispatch! "/user"))
+                                                 :error-handler (fn [r] nil)}))
+                      :onTouchEnd #()}
+             user-name]
+            (str " " comment)]])
 
-              [:i.fa.fa-comment.fa-2x {:onClick #(reset! adding-comment? true) :onTouchEnd #(reset! adding-comment? true)
-                                       :style   {:margin-left (when-not (= user-id viewing-user-id) 40)
-                                                 :cursor      'pointer
-                                                 :color       'lightgray}}]])]
-          (when @adding-comment?
-            [add-comment {:adding-comment? adding-comment? :comments comments :session-url url}])]
-         ]))))
+        ; If session has any likes -> show
+        (when-not (empty? likes)
+          [:div.pure-g
+           [:p.pure-u-1 (str (count likes) (if (= 1 (count likes)) " tommel" " tomler") " opp")]])
+
+        ; Possible additional comments from user or other users
+        [:div {:style {:margin-top 10}}
+         (doall
+           (for [{:keys [comment user user-id]} comments]
+             ^{:key (str user comment)}
+             [:div.pure-g {:style {:margin-bottom 10}}
+              [:div.pure-u-1
+               [:a.user {:onClick    #(load-user % user-id)
+                         :onTouchEnd #(load-user % user-id)}
+                user]
+               (str " " comment)]]))]
+
+        ; Buttons for "liking" or "commenting"
+        [:div.pure-g {:style {:margin-top 30 :margin-bottom 30}}
+         (let [viewing-user-id (:user-id (session/get :user))]
+           [:div.pure-u-1
+            (when-not (= user-id viewing-user-id)
+              [:i.fa.fa-thumbs-up.fa-2x {:style      {:cursor (when-not ((set likes) user-id) 'pointer) :color (if ((set likes) user-id) "#009900" 'lightgray)}
+                                         :onClick    #(like % {:likes likes :user-id user-id :url url})
+                                         :onTouchEnd #(like % {:likes likes :user-id user-id :url url})}])
+
+            [:i.fa.fa-comment.fa-2x {:onClick #(reset! adding-comment? true) :onTouchEnd #(reset! adding-comment? true)
+                                     :style   {:margin-left (when-not (= user-id viewing-user-id) 40)
+                                               :cursor      'pointer
+                                               :color       'lightgray}}]])]
+        (when @adding-comment?
+          [add-comment-component {:adding-comment? adding-comment? :comments comments :session-url url}])]
+       ])))
 
 (defn feed-page []
   (let [

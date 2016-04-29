@@ -191,13 +191,6 @@
            (POST "/change-username" req (if (authenticated? req) (change-username! (:params req)) (throw-unauthorized)))
 
            (POST "/store-session" req (if (authenticated? req) (store-session! (:params req)) (throw-unauthorized)))
-           (POST "/set-zone" req (if-not (authenticated? req)
-                                   (throw-unauthorized)
-                                   (let [email (:email (:params req))
-                                         name (:name (:params req))
-                                         zone (:zone (:params req))]
-                                     (set-zone! email name zone))))
-
            (GET "/create-session" req (if (authenticated? req)
                                         (let [type (:type (:params req))
                                               user-id (:user-id (:params req))]
@@ -229,9 +222,11 @@
                                                    (assoc movement :zone zone)
                                                    (assoc movement :zone 0))]
                                     (response movement)) (throw-unauthorized)))
-           (POST "/like" req (if (authenticated? req) (db/like! (:params req)) (throw-unauthorized)))
-           (POST "/comment" req (if (authenticated? req) (db/comment! (:params req)) (throw-unauthorized)))
+           (POST "/like" req (if (authenticated? req) (response (db/like! (:params req))) (throw-unauthorized)))
+           (POST "/comment" req (if (authenticated? req) (response (db/comment! (:params req))) (throw-unauthorized)))
 
+           (POST "/follow" req (if (authenticated? req) (response (db/follow-user! (:params req))) (throw-unauthorized)))
+           (POST "/unfollow" req (if (authenticated? req) (response (db/unfollow-user! (:params req))) (throw-unauthorized)))
 
            ;; --------------------------------------------------------
 

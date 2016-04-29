@@ -22,7 +22,7 @@
                :error-handler (fn [r] nil)}))
 
 (defn discover-page []
-  (let [_ (load-users)]
+  (let [_ (when (nil? (session/get :users)) (load-users))]
     (fn []
       [:div
        [menu-component]

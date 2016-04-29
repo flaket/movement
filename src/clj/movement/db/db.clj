@@ -13,6 +13,14 @@
   (:import (java.util UUID)
            datomic.Util))
 
+(defn vec-remove
+  [coll pos]
+  (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
+
+(defn positions
+  "Finds the integer positions of the elements in the collection, that matches the predicate."
+  [pred coll]
+  (keep-indexed (fn [idx x] (when (pred x) idx)) coll))
 
 (def creds {:access-key ""
             :secret-key ""
@@ -114,7 +122,7 @@
 (defn create-feed [user-id]
   (let [users (conj (:follows (user user-id)) user-id)
         sessions (flatten (for [u users] (sessions-by-user-id u)))
-        sessions (reverse (sort-by :date-time sessions))]
+        sessions (reverse (sort-by (comp :date-time :session) sessions))]
     sessions))
 
 (defn create-user-only-feed [user-id]
@@ -258,12 +266,20 @@
 #_(add-user! "b" "bob" "pw" (str (UUID/randomUUID)))
 #_(add-user! "c" "kåre" "pw" (str (UUID/randomUUID)))
 
-(defn follow-user! [user-id follow-id]
-  (h/update-item! creds :users {:user-id user-id}
-                  {:follows [:concat [follow-id]]}))
-#_(follow-user! "7ccb2ebd-35d2-49b4-802b-a6fd7ef3706c" "198af054-61e9-48d7-b199-d03e3980fb40")
+(defn follow-user! [{:keys [user-id follow-id]}]
+  (h/update-item! creds :users {:user-id user-id} {:follows [:concat [follow-id]]})
+  "ok")
+#_(follow-user! {:user-id "26737e9f-6b00-4f67-bdef-5a02e076a145" :follow-id "9c0ca430-4da4-4b98-8614-e5ac5a19607e"})
 
-#_(user-by-email "b")
+(defn unfollow-user! [{:keys [user-id follow-id]}]
+  (let [follows (:follows (user user-id))
+        pos (first (positions #{follow-id} follows))
+        new-follows (vec-remove follows pos)]
+    (h/update-item! creds :users {:user-id user-id} {:follows [:set new-follows]})
+    "ok"))
+#_(unfollow-user! {:user-id "26737e9f-6b00-4f67-bdef-5a02e076a145" :follow-id "9c0ca430-4da4-4b98-8614-e5ac5a19607e"})
+
+#_(user "26737e9f-6b00-4f67-bdef-5a02e076a145")
 
 (defn add-badge! [user-id badge]
   (h/update-item! creds :users {:user-id user-id}
@@ -280,7 +296,7 @@
         unique-movements (:unique-movements session)
         image-file (:photo session)
         [_ file-type _ photo] (if image-file (str/split image-file #"[:;,]") [])
-        session (dissoc session :photo :unique-movements :user-name)
+        session (dissoc session :photo :unique-movements :user-name :user-image)
         session (assoc session :parts (mapv (fn [part] (mapv (fn [m] (dissoc m :zone :id)) part)) (:parts session)))
         session (assoc session :image (if photo true false) :comments [] :likes [])]
     ; If upload file is png or jpeg: send to S3
@@ -334,12 +350,13 @@
   (h/put-item! creds :user-movements
                {:user-id user-id :movement-name movement :zone zone}))
 
-(defn like! [{:keys [session-url likers]}]
-  (h/update-item! creds :sessions {:url session-url} {:likes [:set likers]})
+(defn like! [{:keys [session-url user-id]}]
+  (h/update-item! creds :sessions {:url session-url} {:session {:likes [:concat [user-id]]}})
   "ok")
 
-(defn comment! [{:keys [session-url comments]}]
-  (h/update-item! creds :sessions {:url session-url} {:comments [:set comments]})
+(defn comment! [{:keys [session-url user-id user comment]}]
+  (let [new-comment {:user user :user-id user-id :comment comment}]
+    (h/update-item! creds :sessions {:url session-url} {:session {:comments [:concat [new-comment]]}}))
   "ok")
 
 ;; ------ LAB -------
