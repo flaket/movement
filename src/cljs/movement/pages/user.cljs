@@ -22,12 +22,13 @@
         local-state (atom :profile)
         pass (atom {:info "" :error ""})
         viewing-user (session/get :viewing-user)
-        user (session/get :user)]
+        {:keys [user-id name sign-up-timestamp badges user-image profile-text location]} (session/get :user)]
     (fn []
       [:div
        [menu-component]
        [:div.content
-        (if (and viewing-user (not= (:user-id user) (:user-id viewing-user)))
+        (if (and viewing-user (not= user-id (:user-id viewing-user)))
+
           ; Brukeren har trykket på en lenke til en annens brukerprofil
           [:div
 
@@ -38,15 +39,14 @@
 
            [:div.pure-g {:style {:border-bottom "1px solid lightgray"}}
             [:div.pure-u-1-4
-             [:img {:width "100%" :src "images/movements/arch-up.png"}]]
+             [:img {:width "100%" :src (:user-image viewing-user)}]]
             [:div.pure-u-3-4
-             [:div.pure-g [:div.pure-u-1 {:on-click #(pr (session/get :user))} "Brukernavn"]]
-             [:div.pure-g [:div.pure-u-1 "Profiltekst"]]
+             [:div.pure-g [:div.pure-u-1 (:name viewing-user)]]
+             [:div.pure-g [:div.pure-u-1 (:location viewing-user)]]
+             [:div.pure-g [:div.pure-u-1 (:profile-text viewing-user)]]
              [:div.pure-g
               [:a.pure-u-1-3.pure-button {:onClick #() :onTouchEnd #()} "Følg"]
-              ]]]
-
-           ]
+              ]]]]
 
           ; Brukerens profil
           [:div
@@ -55,19 +55,19 @@
              [:div.pure-g
               [:div.pure-u-1
                [:img {:style {:border-radius "50% 50% 50% 50%"}
-                      :width 300 :height 300 :src "images/field.jpg"}]]]]
+                      :width 300 :height 300 :src user-image}]]]]
             [:div.pure-u-1-3
              [:div.pure-g {:style {:margin-top 10}}
-              [:h2.pure-u-1 {:on-click #(pr user)} (:name user)]]
+              [:h2.pure-u-1 name]]
              [:div.pure-g {:style {:margin-top 10}}
-              [:div.pure-u-1 (:profile-text user)]]
+              [:div.pure-u-1 profile-text]]
              [:div.pure-g {:style {:margin-top 10}}
-              [:div.pure-u-1 (:location user)]]
+              [:div.pure-u-1 location]]
              [:div.pure-g {:style {:margin-top 10}}
-              [:div.pure-u-1 {:style {:font-size "80%" :opacity 0.5}} "Medlem siden " (:sign-up-timestamp user)]]
+              [:div.pure-u-1 {:style {:font-size "80%" :opacity 0.5}} "Medlem siden " sign-up-timestamp]]
              [:div.pure-g {:style {:margin-top 10}}
               (doall
-                (for [b (:badges user)]
+                (for [b badges]
                   ^{:key b}
                   [:div.pure-u {:style {:margin-right 5}} [:b b]]))]]
             [:div.pure-u-1-3
@@ -192,8 +192,7 @@
           [:a.pure-u.pure-u-md-1-4
            {:style {:opacity 0.25 :pointer-events 'none :cursor 'default}
             ;:onClick   #(reset! selection :tag) :onTouchEnd #(reset! selection :tag)
-            :className (str " pure-button" (when (= @selection :tag) " pure-button-primary"))} "Mine hashtagger"]
-          ]]
+            :className (str " pure-button" (when (= @selection :tag) " pure-button-primary"))} "Mine hashtagger"]]]
 
         (case @selection
           :feed
@@ -206,8 +205,7 @@
                   [session-view session]))]
              [:div.pure-g
                 [:div.pure-u-1.center
-                 [:i.fa.fa-spinner.fa-pulse.fa-4x]]])
-           ]
+                 [:i.fa.fa-spinner.fa-pulse.fa-4x]]])]
 
           :calendar
           [:div "cal"]

@@ -107,6 +107,10 @@
     sessions))
 #_(sessions-by-user-id "9c0ca430-4da4-4b98-8614-e5ac5a19607e")
 
+(defn users []
+  (<!! (h/scan! creds :users {:project [:name :profile-text :user-id :user-image]})))
+#_(users)
+
 (defn create-feed [user-id]
   (let [users (conj (:follows (user user-id)) user-id)
         sessions (flatten (for [u users] (sessions-by-user-id u)))

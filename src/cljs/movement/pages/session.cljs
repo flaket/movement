@@ -149,11 +149,11 @@
       [:input {:id "upload" :className "upload" :type "file" :on-change #(preview-file)}]]]))
 
 (defn update-movement [{:keys [id m parts part-number pos]}]
-  (let [rep-input (-> (.getElementById js/document (str "rep-input" id)) .-value double)
-        distance-input (-> (.getElementById js/document (str "distance-input" id)) .-value double)
-        duration-input (-> (.getElementById js/document (str "duration-input" id)) .-value double)
-        weight-input (-> (.getElementById js/document (str "weight-input" id)) .-value double)
-        rest-input (-> (.getElementById js/document (str "rest-input" id)) .-value double)
+  (let [rep-input (-> (.getElementById js/document (str "rep-input" id)) .-value int)
+        distance-input (-> (.getElementById js/document (str "distance-input" id)) .-value int)
+        duration-input (-> (.getElementById js/document (str "duration-input" id)) .-value int)
+        weight-input (-> (.getElementById js/document (str "weight-input" id)) .-value int)
+        rest-input (-> (.getElementById js/document (str "rest-input" id)) .-value int)
         new-movement (assoc m :rep rep-input :distance distance-input :duration duration-input
                                :weight weight-input :rest rest-input)
         new-part (assoc (get parts part-number) (int (first pos)) new-movement)]
@@ -407,8 +407,7 @@
                                :tags hash-tags
                                :unique-movements (map #(dissoc % :image) (flatten unique-movements)))
         session (dissoc session :date)]
-    (pr session)
-    #_(POST "store-session"
+    (POST "store-session"
           {:params        {:session session
                            :user-id (:user-id (session/get :user))}
            :handler       (fn [] (reset! s true))

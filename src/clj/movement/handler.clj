@@ -176,6 +176,8 @@
            (POST "/signup" [email password] (add-user! email password))
            (POST "/login" [email password] (jws-login email password))
 
+           (GET "/users" req (if (authenticated? req)
+                               (response (vec (db/users))) (throw-unauthorized)))
            (GET "/user" req (if (authenticated? req)
                               (let [{:keys [email user-id user-name]} (:params req)]
                                 (cond

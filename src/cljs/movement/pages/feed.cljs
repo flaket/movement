@@ -167,7 +167,14 @@
                                                                        (session/remove! :selected-menu-item)
                                                                        (dispatch! "/user"))
                                                       :error-handler (fn [r] nil)}))
-                           :onTouchEnd #()} user]
+                           :onTouchEnd (fn [e]
+                                         (.preventDefault e)
+                                         (GET "user" {:params        {:user-id user-id}
+                                                      :handler       (fn [r]
+                                                                       (session/put! :viewing-user r)
+                                                                       (session/remove! :selected-menu-item)
+                                                                       (dispatch! "/user"))
+                                                      :error-handler (fn [r] nil)}))} user]
                  (str " " comment)]]))]
 
           ; Buttons for "liking" or "commenting"
@@ -217,7 +224,4 @@
                  [session-view session])))
            [:div.pure-g {:style {:margin-top 200}}
             [:div.pure-u-1.center
-             [:i.fa.fa-spinner.fa-pulse.fa-4x]]])]
-        #_(when-not (empty? (session/get :feed))
-          [:div.pure-g [:div.pure-u-1.pure-button.x-large {:onClick    #(load-more %)
-                                                           :onTouchEnd #(load-more %)} "Last flere"]])]])))
+             [:i.fa.fa-spinner.fa-pulse.fa-4x]]])]]])))
