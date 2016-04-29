@@ -117,7 +117,7 @@
 
 (defn create-session-from-activity [event activity]
   (.preventDefault event)
-  (session/put! :movement-session {:activity activity}))
+  (session/put! :movement-session {:parts [[]] :activity activity}))
 
 (defn preview-file []
   (let [file (.getElementById js/document "upload")
@@ -260,20 +260,21 @@
 
 (defn add-movement-component []
   (let [show-search-input? (atom false)]
-    (fn [movements part-number]
+    (fn [movements part-number title]
       [:div.pure-g.movement.search
        [:div.pure-u-1
         [:div.pure-g.add-movement
          [:div.pure-u-2-5 {:on-click #(session/remove! :all-movements)}]
          [:div.pure-u
-          [:i.fa.fa-plus.fa-3x
-           {:onClick #(let [part (session/get-in [:movement-session :parts part-number])
-                            categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
-                       (add-movement (first categories) part-number))
-            :onTouchEnd #(let [part (session/get-in [:movement-session :parts part-number])
-                               categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
-                          (add-movement (first categories) part-number))
-            :style   {:margin-right '50 :cursor 'pointer}}]
+          (when-not (nil? title)
+            [:i.fa.fa-plus.fa-3x
+             {:onClick    #(let [part (session/get-in [:movement-session :parts part-number])
+                                 categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
+                            (add-movement (first categories) part-number))
+              :onTouchEnd #(let [part (session/get-in [:movement-session :parts part-number])
+                                 categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
+                            (add-movement (first categories) part-number))
+              :style      {:margin-right '50 :cursor 'pointer}}])
           [:i.fa.fa-search-plus.fa-3x
            {:onClick    (fn [] (if (session/get :all-movements)
                                  (reset! show-search-input? (not @show-search-input?))
@@ -303,12 +304,12 @@
 
 (defn part-component []
   (let []
-    (fn [movements i]
+    (fn [movements i title]
       [:div.pure-g.movements
        [:div.pure-u-1
         (for [m movements]
           ^{:key (str m (rand-int 100000))} [movement-component m i])
-        [add-movement-component movements i]]])))
+        [add-movement-component movements i title]]])))
 
 (defn list-of-activities []
   (let [activites [{:title "Naturlig bevegelse" :graphic 'lightgreen}
@@ -388,6 +389,7 @@
                                       ))
                                 part))
                         (:parts session))
+        new-parts (if (empty? (flatten new-parts)) [] new-parts) ; <--- worked fine when added this 29-04T13:33
         date (if-let [date (:date session)] date (date-string))
         time (time-string)
         date-time (str date "T" time)
@@ -448,7 +450,7 @@
              [:article.session
               (doall
                 (for [i (range (count parts))]
-                  ^{:key i} [part-component (get parts i) i]))])
+                  ^{:key i} [part-component (get parts i) i (:title session)]))])
            [:div.pure-g
             [:div.pure-u {:style {:font-size "200%"}} (str (:title (:activity session)) " i ")]
             [:div.pure-u {:style {:font-size "200%" :margin-left 10 :margin-right 10 :margin-bottom 10}} (time-component)]]
