@@ -270,13 +270,13 @@
             [:a.pure-u-1.pure-button.pure-button-primary
              {:onClick    (fn [e] (.preventDefault e)
                             (let [canvas (.getElementById js/document "image-canvas")
-                                  image (.toDataURL canvas "image/jpeg" 0.7)
-                                  _ (swap! profile assoc :photo image)]
+                                  image (.toDataURL canvas "image/jpeg" 0.7)]
+                              (when image (swap! profile assoc :photo image))
                               (change-profile profile local-state)))
               :onTouchEnd (fn [e] (.preventDefault e)
                             (let [canvas (.getElementById js/document "image-canvas")
-                                  image (.toDataURL canvas "image/jpeg" 0.7)
-                                  _ (swap! profile assoc :photo image)]
+                                  image (.toDataURL canvas "image/jpeg" 0.7)]
+                              (when image (swap! profile assoc :photo image))
                               (change-profile profile local-state)))}
              "Lagre"]]
            [:div.pure-g {:style {:margin-top 10}}
@@ -322,7 +322,7 @@
               [:div.pure-g [:div.pure-u "de nye passordene er ikke like"]]
               (when (and (not-empty (:old-pass @pass)) (not-empty (:new-pass @pass)))
                 [:div.pure-g {:style {:margin-top 10}}
-                 [:a.pure-u.pure-u-md-1-2.pure-button.pure-button-primary
+                 [:a.pure-u-1.pure-u-md-1-2.pure-button.pure-button-primary
                   {:onClick #(change-password % pass local-state) :onTouchEnd #(change-password % pass local-state)}
                   "Endre passordet"]]))]]]
          [:div.pure-g {:style {:margin-top 10}}

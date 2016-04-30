@@ -22,85 +22,29 @@
   [pred coll]
   (keep-indexed (fn [idx x] (when (pred x) idx)) coll))
 
-(def creds {:access-key ""
-            :secret-key ""
-            :endpoint   "http://localhost:8080"
-            })
+;;-------------------- aws credentials --------------------
 
-(def iam-creds {:access-key "AKIAJG4MLZ7TON7BLNCQ"
-                :secret-key "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"})
+(def local-creds {:access-key ""
+                  :secret-key ""
+                  :endpoint   "http://localhost:8080"})
 
-; buckets:
-; mumrik-user-profile-images
-; mumrik-session-images
-; mumrik-movement-images ; har lastet opp disse
-
-#_(let [movements-table {:table :movements :throughput {:read 10 :write 1}
-                       :attrs {:name :string} :keys [:name]}
-      user-movements-table {:table   :user-movements :throughput {:read 10 :write 5}
-                              :attrs   {:user-id :string :movement-name :string} :keys [:user-id :movement-name]
-                              :indexes {:global [{:name       :movements-by-user-id
-                                                  :keys       [:user-id]
-                                                  :throughput {:read 10 :write 1}
-                                                  :project    [:all]}]}}
-      templates-table {:table :templates :throughput {:read 10 :write 1}
-                         :attrs {:title :string} :keys [:title]}
-      users-table {:table   :users :throughput {:read 10 :write 5}
-                     :attrs   {:user-id :string :activation-id :string :email :string :name :string} :keys [:user-id]
-                     :indexes {:global [{:name       :user-by-activation-id
-                                         :keys       [:activation-id]
-                                         :project    [:keys-only]
-                                         :throughput {:read 5 :write 1}}
-                                        {:name       :user-by-email
-                                         :keys       [:email]
-                                         :project    [:all]
-                                         :throughput {:read 10 :write 1}}
-                                        {:name       :user-by-name
-                                         :keys       [:name]
-                                         :project    [:all]
-                                         :throughput {:read 10 :write 1}}]}}
-      sessions-table {:table   :sessions :throughput {:read 10 :write 5}
-                      :attrs   {:url :string :user-id :string} :keys [:url]
-                      :indexes {:global [{:name       :session-by-user-id
-                                          :keys       [:user-id]
-                                            :project    [:all]
-                                            :throughput {:read 10 :write 1}}]}}
-      tables (vector movements-table user-movements-table templates-table users-table sessions-table)]
-    (map (fn [table] (h/create-table! creds table)) tables))
-
-#_(<!! (h/list-tables! creds {}))
-
-#_(<!! (h/describe-table! creds :templates))
-
-#_(h/create-table! creds {})
-
-#_(h/delete-table! creds :sessions)
-
-#_(let [tables (<!! (h/list-tables! creds {}))]
-    (doseq [i (range (count tables))]
-      (h/delete-table! creds (get tables i))))
+(def creds {:access-key "AKIAJG4MLZ7TON7BLNCQ"
+            :secret-key "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"
+            :region :eu-central-1})
 
 ;;-------------------- get data --------------------
 
 (defn user [user-id]
   (<!! (h/get-item! creds :users {:user-id user-id})))
-#_(user "9c0ca430-4da4-4b98-8614-e5ac5a19607e")
 
 (defn user-by-email [email]
   (first (<!! (h/query! creds :users {:email [:= email]} {:index :user-by-email}))))
-#_(user-by-email "andflak@gmail.com")
-#_(user-by-email "andreas.flakstad@gmail.com")
-#_(user-by-email "b")
 
 (defn user-by-activation-id [id]
-  (->>
-    (h/query! creds :users {:activation-id [:= id]} {:index :user-by-activation-id})
-    <!!
-    first))
+  (first (<!! (h/query! creds :users {:activation-id [:= id]} {:index :user-by-activation-id}))))
 
 (defn user-by-name [name]
-  (<!! (h/query! creds :users {:name [:= name]} {:index :user-by-name})))
-#_(user-by-name "kåre")
+  (first (<!! (h/query! creds :users {:name [:= name]} {:index :user-by-name}))))
 
 (defn sessions-by-user-id [user-id]
   (let [sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
@@ -113,11 +57,9 @@
                             (assoc session :user-name (:name user)
                                            :user-image (:user-image user))))) sessions)]
     sessions))
-#_(sessions-by-user-id "9c0ca430-4da4-4b98-8614-e5ac5a19607e")
 
 (defn users []
   (<!! (h/scan! creds :users {:project [:name :profile-text :user-id :user-image]})))
-#_(users)
 
 (defn create-feed [user-id]
   (let [users (conj (:follows (user user-id)) user-id)
@@ -134,7 +76,6 @@
   (let [c (h/scan! creds :movements {})
         x (map :name (<!! c))]
     x))
-#_(movements)
 
 (defn categories
   "Gives a lazy sequence over all unique category keywords."
@@ -142,7 +83,6 @@
   (let [c (h/scan! creds :movements {})
         x (apply set/union (map :category (<!! c)))]
     (seq x)))
-#_(categories)
 
 (defn movement
   "Returns a map representing a movement with a new unique id."
@@ -150,7 +90,6 @@
   (let [m (<!! (h/get-item! creds :movements {:name name}))
         id (str (UUID/randomUUID))]
     (assoc m :id id)))
-#_(movement "Balansegang")
 
 (defn movements-from-category [n category]
   "Returns a random lazy sequence over n movements that share a given category.
@@ -159,14 +98,12 @@
         movements (take n (shuffle (<!! c)))
         movements (map #(assoc % :id (str (UUID/randomUUID))) movements)]
     movements))
-#_(movements-from-category 1 :balance)
 
 (defn user-movement [user-id movement-name]
   (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name movement-name})))
 
 (defn template [title]
   (<!! (h/get-item! creds :templates {:title title})))
-#_(template "Naturlige Bevegelser 2")
 
 (defn templates []
   (map :title (<!! (h/scan! creds :templates {}))))
@@ -177,9 +114,6 @@
     "distance" (dissoc m :rep :duration)
     "duration" (dissoc m :rep :distance)
     m))
-
-#_(<!! (h/scan! creds :user-movements {}))
-#_(<!! (h/get-item! creds :user-movements {:user-id "577d84e2-0b7a-48b3-a3ac-317d78e7eab6" :movement-name "Beinsving bakover"}))
 
 (defn create-movement [user-id template-movement]
   ; todo: filter on {:natural-only? true}
@@ -193,12 +127,12 @@
                      zone (if (:zone user-movement) (:zone user-movement) 0)
                      m (assoc m :zone zone)]
                  m)  ; if template calls for a specific movement: fetch this
-               (loop [; pick a random movement that belongs to one of the categories
-                      m (first (movements-from-category 1 (first (shuffle (:slot-category template-movement)))))
-                      counter 0]
+               (loop [m (first (movements-from-category 1 (first (shuffle (:slot-category template-movement))))) ; pick a random movement that belongs to one of the categories
+                        counter 0]
+
                  ; Check what the user has reported on this movement
-                 (let [user-movement (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name (:name m)}))
-                       zone (if (:zone user-movement) (:zone user-movement) 0)
+                 (let [um (<!! (h/get-item! creds :user-movements {:user-id user-id :movement-name (:name m)}))
+                       zone (if (:zone um) (:zone um) 0)
                        m (assoc m :zone zone)]
                    (if (> counter 4)
                      ; if looping too much: return m
@@ -209,24 +143,25 @@
                        (= 3 zone) m ; user has mastered movement todo: if (:next m), with some probability, add user zone data to that and return
                        (= 2 zone) m ; user is effective, but not also efficient, return this movement
                        :default (if-let [previous-movement-names (:previous m)]
-                                     (let [user-previous-movements (vec (for [pm previous-movement-names]
-                                                                          (user-movement user-id pm)))
-                                           mastered-movements (->> user-previous-movements
-                                                                   (remove #(nil? %))
-                                                                   (remove #(< (:zone %) 2))
-                                                                   (map :movement-name)
-                                                                   set)
-                                           _ (.println System/out (str "Movement: " (:name m)))
-                                           _ (.println System/out (str "Previous: " previous-movement-names))
-                                           _ (.println System/out (str "Mastered: " mastered-movements))
-                                           diff (set/difference (set previous-movement-names) mastered-movements)
-                                           _ (.println System/out (str "Diff: " diff))]
-                                       ; if all prerequisites mastered (previous has (< 1N zone)): return m
+                                  (let [user-previous-movements (map #(user-movement user-id %) previous-movement-names)
+                                        mastered-movements (->> user-previous-movements
+                                                                (remove #(nil? %))
+                                                                (remove #(< (:zone %) 2))
+                                                                (map :movement-name)
+                                                                set)
+                                        _ (.println System/out (str "Movement: " (:name m)))
+                                        _ (.println System/out (str "Previous: " previous-movement-names))
+                                         _ (.println System/out (str "Mastered: " mastered-movements))
+                                        diff (set/difference (set previous-movement-names) mastered-movements)
+                                        _ (.println System/out (str "Diff: " diff))
+                                        ]
+                                    ; if all prerequisites mastered (previous has (< 1N zone)): return m
                                        (if (empty? diff)
                                          m
                                          (let [new-m (movement (first (shuffle diff)))]
                                            (.println System/out (str "Recurring with: " (:name new-m) "\n"))
-                                           (recur new-m (inc counter))))); else: pick on of the previous with zone 1 or 0 and recur
+                                           (recur new-m (inc counter))))
+                                       ); else: pick on of the previous with zone 1 or 0 and recur
                                      ; has no previous: return m
                                      m)))))))
       (fix-measurement)))
@@ -238,11 +173,12 @@
                                                            "Naturlige Bevegelser 3" "Naturlige Bevegelser 4"
                                                            "Locomotion 1"]
                                      "Styrketrening" ["Gymnastic Strength 1" "Gymnastic Strength 2"]
-                                     "Mobilitet" ["Mobility 1"]
+                                     "Mobilitet" ["Mobility 1" "Mobility 2" "Mobility 3" "Mobility 4"]
                                      ["Naturlige Bevegelser 2"])
         template (template (first (shuffle templates)))
         ; todo: movement-selection-algorithm (create-movement) should depend on reported energy/sleep levels, preferences and zone data
-        session (assoc template :parts (mapv (fn [p] (mapv #(create-movement user-id %) p)) (:parts template)))]
+        new-parts (mapv (fn [p] (mapv #(create-movement user-id %) p)) (:parts template))
+        session (assoc template :parts new-parts)]
     session))
 
 ;;---------- add/update data ----------
@@ -254,7 +190,7 @@
               :password            (hashers/encrypt password)
               :sign-up-timestamp   (c/to-string (l/local-now))
               :activation-id       activation-id
-              :activated?          true
+              :activated?          false
               :paid-subscription?  false
               :settings            {}
               :statistics          {}
@@ -262,14 +198,10 @@
               :badges              []
               }]
     (h/put-item! creds :users user)))
-#_(add-user! "a" "andreas" "pw" (str (UUID/randomUUID)))
-#_(add-user! "b" "bob" "pw" (str (UUID/randomUUID)))
-#_(add-user! "c" "kåre" "pw" (str (UUID/randomUUID)))
 
 (defn follow-user! [{:keys [user-id follow-id]}]
   (h/update-item! creds :users {:user-id user-id} {:follows [:concat [follow-id]]})
   "ok")
-#_(follow-user! {:user-id "26737e9f-6b00-4f67-bdef-5a02e076a145" :follow-id "9c0ca430-4da4-4b98-8614-e5ac5a19607e"})
 
 (defn unfollow-user! [{:keys [user-id follow-id]}]
   (let [follows (:follows (user user-id))
@@ -277,14 +209,10 @@
         new-follows (vec-remove follows pos)]
     (h/update-item! creds :users {:user-id user-id} {:follows [:set new-follows]})
     "ok"))
-#_(unfollow-user! {:user-id "26737e9f-6b00-4f67-bdef-5a02e076a145" :follow-id "9c0ca430-4da4-4b98-8614-e5ac5a19607e"})
-
-#_(user "26737e9f-6b00-4f67-bdef-5a02e076a145")
 
 (defn add-badge! [user-id badge]
   (h/update-item! creds :users {:user-id user-id}
                   {:badges [:concat [badge]]}))
-#_(add-badge! "andreas@roebuck.com" {:name "Newbie" :achieved-at (c/to-string (l/local-now))})
 
 (defn add-movement! [user-id movement-name zone]
   (h/put-item! creds :user-movements {:user-id user-id :movement-name movement-name :zone zone}))
@@ -304,7 +232,7 @@
       (go
         (let [decoded-photo (b64/decode (.getBytes photo))
               file (io/input-stream decoded-photo)]
-          (s3/put-object iam-creds "mumrik-session-images" (str url ".jpg") file)))
+          (s3/put-object creds "mumrik-session-images" (str url ".jpg") file)))
       (.println System/out "Sent session photo to S3.."))
     ; Store session in :sessions table
     (h/put-item! creds :sessions {:user-id user-id :url url :session session})
@@ -319,14 +247,12 @@
 (defn activate-user! [uuid]
   (let [user (:user-id (user-by-activation-id uuid))]
     (h/update-item! creds :users {:user-id user}
-                    {:activated?    [:set true]
+                    {:activated? [:set true]
                      :activation-id [:remove]})))
-#_(activate-user! "97741783-9bb7-442f-9a73-e573acb9c3db")
 
 (defn update-subscription! [user-id value]
   (h/update-item! creds :users {:user-id user-id}
                   {:valid-subscription? [:set value]}))
-#_(update-subscription! "andflak@gmail.com" true)
 
 (defn update-profile! [user-id profile]
   (let [image-file (:photo profile)
@@ -334,20 +260,15 @@
         profile (dissoc profile :photo)
         update-map (into {} (for [[k v] profile] [k [:set v]]))
         update-map (if image-file (assoc update-map :user-image [:set true]) update-map)]
-
-    ; If upload file is png or jpeg: send to S3
+    ; If upload file is jpeg: send to S3
     (when (= file-type "image/jpeg")
       (go
         (let [decoded-photo (b64/decode (.getBytes photo))
               file (io/input-stream decoded-photo)]
-          (s3/put-object iam-creds "mumrik-user-profile-images" (str user-id ".jpg") file)))
+          (s3/put-object creds "mumrik-user-profile-images" (str user-id ".jpg") file)))
       (.println System/out "Sent profile photo to S3.."))
-
-    #_(h/update-item! creds :users {:user-id user-id} update-map)
-    (str "Profilen ble oppdatert!" (when image-file " Bildeopplastingen kan ta noen sekunder."))))
-
-#_(user "9c0ca430-4da4-4b98-8614-e5ac5a19607e")
-#_(update-profile "9c0ca430-4da4-4b98-8614-e5ac5a19607e" {:email "a" :name "andreas" :profile-text "Fakkuuu"})
+    (h/update-item! creds :users {:user-id user-id} update-map)
+    "Profilen ble oppdatert!"))
 
 (defn update-password!
   [user-id password]
@@ -366,35 +287,7 @@
 
 ;; ------ LAB -------
 
-; teste data:
-; + hver øvelse har et bilde
-; - hver øvelse med previous/next peker til et øvelsesnavn som finnes
-; - hver øvelse har measurement, og measurement er en av [:repetitions :duration :distance]
-
-#_(defn url->name [url]
-    (let [name (-> url
-                   (str/split (re-pattern ".png"))
-                   (first)
-                   (str/replace "-" " ")
-                   (str/split (re-pattern " ")))
-          name (map #(str/capitalize %) name)
-          name (-> name
-                   (interleave (cycle " "))
-                   (drop-last)
-                   (str/join))]
-      name))
-
-#_(defn find-no-data-images []
-    (let [f (io/file "resources/public/images/movements")
-          images (for [file (file-seq f)] (.getName file))
-          images (drop 2 images)                            ; remove leading junk files
-          no-data-images (filter #(has-no-data? %) images)]
-      {:#images         (count images)
-       :#no-data-images (count no-data-images)
-       :no-data-images  (vec no-data-images)}))
-
-#_(find-no-image-movements)
-#_(find-no-data-images)
+#_(add-user! "andflak@gmail.com" "Andreas" "mumrikM9n8b7v6" (str (UUID/randomUUID)))
 
 (def movement-urls ["balancing.edn" "climbing.edn" "crawling.edn" "hanging.edn" "jumping.edn" "lifting.edn" "rolling.edn" "running.edn" "throwing-catching.edn"
                     "walking.edn" "mobility/mobility.edn" "other/core.edn" "other/footwork.edn" "other/hand-balance.edn" "other/leg-strength.edn"
@@ -423,3 +316,53 @@
 
 ; add templates to db
 #_(map #(h/put-item! creds :templates %) (first (Util/readAll (io/reader (io/resource "data/templates.edn")))))
+
+; S3 buckets:
+; mumrik-user-profile-images
+; mumrik-session-images
+; mumrik-movement-images ; har lastet opp disse
+
+#_(let [movements-table {:table :movements :throughput {:read 10 :write 1}
+                         :attrs {:name :string} :keys [:name]}
+        user-movements-table {:table   :user-movements :throughput {:read 10 :write 5}
+                              :attrs   {:user-id :string :movement-name :string} :keys [:user-id :movement-name]
+                              :indexes {:global [{:name       :movements-by-user-id
+                                                  :keys       [:user-id]
+                                                  :throughput {:read 10 :write 1}
+                                                  :project    [:all]}]}}
+        templates-table {:table :templates :throughput {:read 10 :write 1}
+                         :attrs {:title :string} :keys [:title]}
+        users-table {:table   :users :throughput {:read 10 :write 5}
+                     :attrs   {:user-id :string :activation-id :string :email :string :name :string} :keys [:user-id]
+                     :indexes {:global [{:name       :user-by-activation-id
+                                         :keys       [:activation-id]
+                                         :project    [:keys-only]
+                                         :throughput {:read 5 :write 1}}
+                                        {:name       :user-by-email
+                                         :keys       [:email]
+                                         :project    [:all]
+                                         :throughput {:read 10 :write 1}}
+                                        {:name       :user-by-name
+                                         :keys       [:name]
+                                         :project    [:all]
+                                         :throughput {:read 10 :write 1}}]}}
+        sessions-table {:table   :sessions :throughput {:read 10 :write 5}
+                        :attrs   {:url :string :user-id :string} :keys [:url]
+                        :indexes {:global [{:name       :session-by-user-id
+                                            :keys       [:user-id]
+                                            :project    [:all]
+                                            :throughput {:read 10 :write 1}}]}}
+        tables (vector movements-table user-movements-table templates-table users-table sessions-table)]
+    (map (fn [table] (h/create-table! creds table)) tables))
+
+#_(<!! (h/list-tables! creds {}))
+
+#_(<!! (h/describe-table! creds :templates))
+
+#_(<!! (h/create-table! creds {}))
+
+#_(h/delete-table! creds :sessions)
+
+#_(let [tables (<!! (h/list-tables! creds {}))]
+    (doseq [i (range (count tables))]
+      (h/delete-table! creds (get tables i))))
