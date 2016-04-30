@@ -3,7 +3,7 @@
             [reagent.core :refer [atom]]
             [clojure.string :as str]
             [cljs.reader :refer [read-string]]
-            [movement.util :refer [GET POST]]
+            [movement.util :refer [GET POST positions]]
             [reagent.session :as session]
             [secretary.core :include-macros true :refer [dispatch!]]))
 
@@ -50,18 +50,19 @@
 
 (defn like [e {:keys [likes user-id url]}]
   (.preventDefault e)
-  ; "likes" lagres i databasen som en liste fordi 1.ddb kan ikke lagre tomme set init. 2.opplevde EDN-problemer med å sende set mellom server og klient.
-  ; Listen gjøres om til sett her for enklere logikk og tilbake til vektor for lagring.
   (when-not ((set likes) user-id)
     (POST "like" {:params        {:session-url url :user-id user-id}
-                  :handler       (fn [r] nil)
+                  :handler       (fn [r]
+                                   (let [pos (first (positions #{url} (map :url (session/get :feed))))]
+                                     (session/update-in! [:feed pos :session :likes] conj user-id)))
                   :error-handler (fn [r] nil)})))
 
 (defn add-comment [e adding-comment? params]
   (.preventDefault e)
   (reset! adding-comment? false)
   (POST "comment" {:params        params
-                   :handler       (fn [r] nil)
+                   :handler       (fn [r] (let [pos (first (positions #{(:session-url params)} (map :url (session/get :feed))))]
+                                            (session/update-in! [:feed pos :session :comments] conj (dissoc params :session-url))))
                    :error-handler (fn [r] nil)}))
 
 (defn add-comment-component [{:keys [adding-comment? comments session-url]}]
@@ -83,8 +84,7 @@
 (defn session-view [{:keys [url user-id user-name user-image session]
                      :or {user-image (first (shuffle ["images/field.jpg" "images/forest.jpg" "images/winter.jpg"]))}}]
   (let [show-session-data? (atom false)
-        adding-comment? (atom false)
-        {:keys [activity date-time time comment comments image parts likes]} session]
+        adding-comment? (atom false)]
     (fn [{:keys [url user-id user-name user-image session]
           :or {user-image (first (shuffle ["images/field.jpg" "images/forest.jpg" "images/winter.jpg"]))}}]
       [:div {:style {:border-bottom "1px solid lightgray"}}
@@ -100,19 +100,20 @@
         [:div.pure-u {:style {:margin-left 20}}
          [:div.pure-g [:h2 [:a.pure-u {:onClick #(load-user % user-id)
                                        :onTouchEnd #(load-user % user-id)} user-name]]]
-         [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} date-time]]]]
+         [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} (:date-time session)]]]]
 
        [:div {:style {:margin "0 40px 0 40px"}}
 
         ; photo
-        (when image
+        (when (:image session)
           [:div.center [:img {:src (str "http://s3.amazonaws.com/mumrik-session-images/" url ".jpg") :width "100%"}]])
 
         [:div.pure-g
 
          ; Activity and time
-         [:h2.pure-u-5-6 (str activity (when time
-                                         (let [time-string (str/split time #":")
+         [:h2.pure-u-5-6 (str (:activity session)
+                              (when-let [time (:time session)]
+                                (let [time-string (str/split time #":")
                                                [h m s] (map #(read-string %) time-string)]
                                            (str " i "
                                                 (cond
@@ -129,7 +130,7 @@
                                                   (= s 1) (str s " sekund ")
                                                   :else (str s " sekunder "))))))]
 
-         (when-not (empty? (flatten parts))
+         (when-not (empty? (flatten (:parts session)))
            (if @show-session-data?
              [:div.pure-u-1-6 [:i.fa.fa-minus-square.fa-4x {:onClick    #(reset! show-session-data? false)
                                                             :onTouchEnd #(reset! show-session-data? false)
@@ -146,12 +147,12 @@
         (when @show-session-data?
           [:article.session
            (doall
-             (for [part parts]
+             (for [part (:parts session)]
                ^{:key (rand-int 1000000)}
                [part-component part]))])
 
         ; Username and session comment text if user typed a comment.
-        (when comment
+        (when-let [comment (:comment session)]
           [:div.pure-g {:style {:border-bottom "1px dotted"}}
            [:p.pure-u-1
             [:a.user {:onClick    (fn [e]
@@ -167,15 +168,15 @@
             (str " " comment)]])
 
         ; If session has any likes -> show
-        (when-not (empty? likes)
+        (when-not (empty? (:likes session))
           [:div.pure-g
-           [:p.pure-u-1 (str (count likes) (if (= 1 (count likes)) " tommel" " tomler") " opp")]])
+           [:p.pure-u-1 (str (count (:likes session)) (if (= 1 (count (:likes session))) " tommel" " tomler") " opp")]])
 
         ; Possible additional comments from user or other users
         [:div {:style {:margin-top 10}}
          (doall
-           (for [{:keys [comment user user-id]} comments]
-             ^{:key (str user comment)}
+           (for [{:keys [comment user user-id]} (:comments session)]
+             ^{:key (str user comment (rand-int 1000))}
              [:div.pure-g {:style {:margin-bottom 10}}
               [:div.pure-u-1
                [:a.user {:onClick    #(load-user % user-id)
@@ -185,7 +186,8 @@
 
         ; Buttons for "liking" or "commenting"
         [:div.pure-g {:style {:margin-top 30 :margin-bottom 30}}
-         (let [viewing-user-id (:user-id (session/get :user))]
+         (let [viewing-user-id (:user-id (session/get :user))
+               likes (:likes session)]
            [:div.pure-u-1
             (when-not (= user-id viewing-user-id)
               [:i.fa.fa-thumbs-up.fa-2x {:style      {:cursor (when-not ((set likes) user-id) 'pointer) :color (if ((set likes) user-id) "#009900" 'lightgray)}
@@ -197,7 +199,7 @@
                                                :cursor      'pointer
                                                :color       'lightgray}}]])]
         (when @adding-comment?
-          [add-comment-component {:adding-comment? adding-comment? :comments comments :session-url url}])]
+          [add-comment-component {:adding-comment? adding-comment? :comments (:comments session) :session-url url}])]
        ])))
 
 (defn feed-page []
