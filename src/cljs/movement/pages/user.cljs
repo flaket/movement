@@ -52,12 +52,16 @@
       [:div.content
        [:div
         [:div.pure-g {:style {:border-bottom "1px solid lightgray"}}
-         [:div.pure-u-1-3
+         [:div.pure-u.pure-u-md-1-3
           [:div.pure-g
            [:div.pure-u-1
-            [:img {:style {:border-radius "50% 50% 50% 50%"}
-                   :width 300 :height 300 :src user-image}]]]]
-         [:div.pure-u-1-3
+            [:img
+             {:style {:padding "20px 20px 20px 20px"
+                      :border-radius "50% 50% 50% 50%"}
+              :width 275
+              :height 275
+              :src user-image}]]]]
+         [:div.pure-u.pure-u-md-1-3
           [:div.pure-g {:style {:margin-top 10}}
            [:h2.pure-u-1 name]]
           [:div.pure-g {:style {:margin-top 10}}
@@ -71,7 +75,7 @@
              (for [b badges]
                ^{:key b}
                [:div.pure-u {:style {:margin-right 5}} [:b b]]))]]
-         [:div.pure-u-1-3
+         [:div.pure-u.pure-u-md-1-3
           (if (get (set (:follows (session/get :user))) user-id)
             [:div.pure-g {:style {:margin-top 10}}
              [:a.pure-u-1.pure-button.button-success {:onClick    #(unfollow-user % (:user-id (session/get :user)) user-id)
@@ -122,12 +126,16 @@
       [:div.content
        [:div
         [:div.pure-g
-         [:div.pure-u-1-3
+         [:div.pure-u.pure-u-md-1-3
           [:div.pure-g
            [:div.pure-u-1
-            [:img {:style {:border-radius "50% 50% 50% 50%"}
-                   :width 300 :height 300 :src user-image}]]]]
-         [:div.pure-u-1-3
+            [:img
+             {:style {:padding "20px 20px 20px 20px"
+                      :border-radius "50% 50% 50% 50%"}
+              :width 275
+              :height 275
+              :src user-image}]]]]
+         [:div.pure-u.pure-u-md-1-3
           [:div.pure-g {:style {:margin-top 10}}
            [:h2.pure-u-1 name]]
           [:div.pure-g {:style {:margin-top 10}}
@@ -141,7 +149,7 @@
              (for [b badges]
                ^{:key b}
                [:div.pure-u {:style {:margin-right 5}} [:b b]]))]]
-         [:div.pure-u-1-3
+         [:div.pure-u.pure-u-md-1-3
           [:div.pure-g {:style {:margin-top 10}}
            [:a.pure-u-1.pure-button {:onClick    #(reset! local-state :change-profile)
                                      :onTouchEnd #(reset! local-state :change-profile)} "Endre profil"]]

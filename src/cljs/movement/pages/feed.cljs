@@ -170,10 +170,25 @@
         ; If session has any likes -> show
         (when-not (empty? (:likes session))
           [:div.pure-g
-           [:p.pure-u-1 (str (count (:likes session)) (if (= 1 (count (:likes session))) " tommel" " tomler") " opp")]])
+           [:div.pure-u-1 (str (count (:likes session)) (if (= 1 (count (:likes session))) " tommel" " tomler") " opp")]])
+
+        ; Buttons for "liking" or "commenting"
+        [:div.pure-g {:style {:margin-top 10 :margin-bottom 20}}
+         (let [viewing-user-id (:user-id (session/get :user))
+               likes (:likes session)]
+           [:div.pure-u-1
+            (when-not (= user-id viewing-user-id)
+              [:i.fa.fa-thumbs-up.fa-2x {:style      {:cursor (when-not ((set likes) user-id) 'pointer) :color (if ((set likes) user-id) "#009900" 'lightgray)}
+                                         :onClick    #(like % {:likes likes :user-id user-id :url url})
+                                         :onTouchEnd #(like % {:likes likes :user-id user-id :url url})}])
+
+            [:i.fa.fa-comment.fa-2x {:onClick #(reset! adding-comment? (not @adding-comment?)) :onTouchEnd #(reset! adding-comment? (not @adding-comment?))
+                                     :style   {:margin-left (when-not (= user-id viewing-user-id) 40)
+                                               :cursor      'pointer
+                                               :color       'lightgray}}]])]
 
         ; Possible additional comments from user or other users
-        [:div {:style {:margin-top 10}}
+        [:div
          (doall
            (for [{:keys [comment user user-id]} (:comments session)]
              ^{:key (str user comment (rand-int 1000))}
@@ -184,20 +199,6 @@
                 user]
                (str " " comment)]]))]
 
-        ; Buttons for "liking" or "commenting"
-        [:div.pure-g {:style {:margin-top 30 :margin-bottom 30}}
-         (let [viewing-user-id (:user-id (session/get :user))
-               likes (:likes session)]
-           [:div.pure-u-1
-            (when-not (= user-id viewing-user-id)
-              [:i.fa.fa-thumbs-up.fa-2x {:style      {:cursor (when-not ((set likes) user-id) 'pointer) :color (if ((set likes) user-id) "#009900" 'lightgray)}
-                                         :onClick    #(like % {:likes likes :user-id user-id :url url})
-                                         :onTouchEnd #(like % {:likes likes :user-id user-id :url url})}])
-
-            [:i.fa.fa-comment.fa-2x {:onClick #(reset! adding-comment? true) :onTouchEnd #(reset! adding-comment? true)
-                                     :style   {:margin-left (when-not (= user-id viewing-user-id) 40)
-                                               :cursor      'pointer
-                                               :color       'lightgray}}]])]
         (when @adding-comment?
           [add-comment-component {:adding-comment? adding-comment? :comments (:comments session) :session-url url}])]
        ])))

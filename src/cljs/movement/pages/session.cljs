@@ -441,13 +441,17 @@
             (when (or (= "Naturlig bevegelse" (:title (:activity session)))
                       (= "Styrketrening" (:title (:activity session)))
                       (= "Mobilitet" (:title (:activity session))))
-              [:img
-               {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
-                :style      {:height     250
-                             :margin-left 20
-                             :margin-right 20 :cursor 'pointer}
-                :onClick    #(generate-movement-session % (:activity session))
-                :onTouchEnd #(generate-movement-session % (:activity session))}])
+              [:div
+               [:img
+                {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
+                 :style      {:height       250
+                              :margin-left  20
+                              :margin-right 20 :cursor 'pointer}
+                 :onClick    #(generate-movement-session % (:activity session))
+                 :onTouchEnd #(generate-movement-session % (:activity session))}]
+               (let [descriptions ["Gjør 4+ runder i et jevnt tempo"
+                                   "Gå gjennom 4-6 runder av disse øvelsene. Finn et tempo så du ikke behøver pauser."] #_(:description session)]
+                 [:div (first (shuffle descriptions))])])
             [:a {:style      {:float 'right :margin-right 20 :margin-top 0 :color (:graphic (:activity session)) :opacity 1}
                  :onClick    #(remove-session %)
                  :onTouchEnd #(remove-session %)}
