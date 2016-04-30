@@ -251,7 +251,7 @@
             [:div.pure-g
              [:div.pure-u-1 [:h1.center {:style {:color 'red :margin-top -70 :font-size "350%"}} performed-sets]
               ]])
-          (when performed-sets
+          (when (or performed-sets (> set 0))
             [:div.pure-g
              [:div.pure-u-1 [:div.center {:style {:margin-top (if performed-sets -24 -6)
                                                   :opacity    0.15}} "set"]]])]]
@@ -483,26 +483,25 @@
        [menu-component]
        (if-let [session (session/get :movement-session)]
          [:div.content {:style {:margin-top 100}}
+          [:a {:style      {:float 'right :margin-right 20 :margin-top 20
+                            :color (:graphic (:activity session)) :opacity 1}
+               :onClick    #(remove-session %)
+               :onTouchEnd #(remove-session %)}
+           [:i.fa.fa-times.fa-4x]]
           [:div.pure-g
-           [:div.pure-u-1
-            (when (or (= "Naturlig bevegelse" (:title (:activity session)))
-                      (= "Styrketrening" (:title (:activity session)))
-                      (= "Mobilitet" (:title (:activity session))))
-              [:div
-               [:img
-                {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
-                 :style      {:height       250
-                              :margin-left  20
-                              :margin-right 20 :cursor 'pointer}
-                 :onClick    #(generate-movement-session % (:activity session))
-                 :onTouchEnd #(generate-movement-session % (:activity session))}]
-               (let [descriptions ["Gjør 4+ runder i et jevnt tempo"
-                                   "Gå gjennom 4-6 runder av disse øvelsene. Finn et tempo så du ikke behøver pauser."] #_(:description session)]
-                 [:div (first (shuffle descriptions))])])
-            [:a {:style      {:float 'right :margin-right 20 :margin-top 0 :color (:graphic (:activity session)) :opacity 1}
-                 :onClick    #(remove-session %)
-                 :onTouchEnd #(remove-session %)}
-             [:i.fa.fa-times.fa-4x]]]]
+           (when (or (= "Naturlig bevegelse" (:title (:activity session)))
+                     (= "Styrketrening" (:title (:activity session)))
+                     (= "Mobilitet" (:title (:activity session))))
+             [:img.pure-u
+              {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
+               :style      {:height       250
+                            :margin-left  20
+                            :margin-right 20 :cursor 'pointer}
+               :onClick    #(generate-movement-session % (:activity session))
+               :onTouchEnd #(generate-movement-session % (:activity session))}])
+           (when-let [description (:description session)]
+             [:div.pure-u (first (shuffle description))])]
+
           [:div
            (when-let [parts (:parts session)]
              [:article.session
