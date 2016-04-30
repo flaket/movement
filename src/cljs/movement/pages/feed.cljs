@@ -139,14 +139,14 @@
 
          (when-not (empty? (flatten (:parts session)))
            (if @show-session-data?
-             [:div.pure-u-1-6 [:i.fa.fa-minus-square.fa-4x {:onClick    #(reset! show-session-data? false)
-                                                            :onTouchEnd #(reset! show-session-data? false)
+             [:div.pure-u-1-6 [:i.fa.fa-minus-square.fa-4x {:onClick    (fn [e] (.preventDefault e) (reset! show-session-data? false))
+                                                            :onTouchEnd (fn [e] (.preventDefault e) (reset! show-session-data? false))
                                                             :style      {:cursor       'pointer
                                                                          :float        'right
                                                                          :margin-right 15
                                                                          :color        'lightgray}}]]
-             [:div.pure-u-1-6 [:i.fa.fa-plus-square.fa-4x {:onClick    #(reset! show-session-data? true)
-                                                           :onTouchEnd #(reset! show-session-data? true)
+             [:div.pure-u-1-6 [:i.fa.fa-plus-square.fa-4x {:onClick    (fn [e] (.preventDefault e) (reset! show-session-data? true))
+                                                           :onTouchEnd (fn [e] (.preventDefault e) (reset! show-session-data? true))
                                                            :style      {:cursor       'pointer
                                                                         :float        'right
                                                                         :margin-right 15
@@ -162,15 +162,18 @@
         (when-let [comment (:comment session)]
           [:div.pure-g {:style {:border-bottom "1px dotted"}}
            [:p.pure-u-1
-            [:a.user {:onClick    (fn [e]
-                                    (.preventDefault e)
-                                    (GET "user" {:params        {:user-id user-id}
-                                                 :handler       (fn [r]
-                                                                  (session/put! :viewing-user r)
-                                                                  (session/remove! :selected-menu-item)
-                                                                  (dispatch! "/user"))
-                                                 :error-handler (fn [r] nil)}))
-                      :onTouchEnd #()}
+            [:a.user {:onClick    (fn [e] (.preventDefault e) (GET "user" {:params        {:user-id user-id}
+                                                                           :handler       (fn [r]
+                                                                                            (session/put! :viewing-user r)
+                                                                                            (session/remove! :selected-menu-item)
+                                                                                            (dispatch! "/user"))
+                                                                           :error-handler (fn [r] nil)}))
+                      :onTouchEnd (fn [e] (.preventDefault e) (GET "user" {:params        {:user-id user-id}
+                                                                           :handler       (fn [r]
+                                                                                            (session/put! :viewing-user r)
+                                                                                            (session/remove! :selected-menu-item)
+                                                                                            (dispatch! "/user"))
+                                                                           :error-handler (fn [r] nil)}))}
              user-name]
             (str " " comment)]])
 
@@ -189,7 +192,8 @@
                                          :onClick    #(like % {:likes likes :user-id user-id :url url})
                                          :onTouchEnd #(like % {:likes likes :user-id user-id :url url})}])
 
-            [:i.fa.fa-comment.fa-2x {:onClick #(reset! adding-comment? (not @adding-comment?)) :onTouchEnd #(reset! adding-comment? (not @adding-comment?))
+            [:i.fa.fa-comment.fa-2x {:onClick (fn [e] (.preventDefault e) (reset! adding-comment? (not @adding-comment?)))
+                                     :onTouchEnd (fn [e] (.preventDefault e) (reset! adding-comment? (not @adding-comment?)))
                                      :style   {:margin-left (when-not (= user-id viewing-user-id) 40)
                                                :cursor      'pointer
                                                :color       'lightgray}}]])]

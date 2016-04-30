@@ -141,8 +141,9 @@
                                  :border " 1px solid #000"
                                  :margin "10px 5px 0 0"}
                          :src   photo}]]
-     [:div.pure-u {:on-click #(session/update-in! [:movement-session] dissoc :photo)
-                   :style    {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
+     [:div.pure-u {:onClick (fn [e] (.preventDefault e) (session/update-in! [:movement-session] dissoc :photo))
+                   :onTouchEnd (fn [e] (.preventDefault e) (session/update-in! [:movement-session] dissoc :photo))
+                   :style   {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
     [:div.pure-g
      [:div.pure-u.pure-button.fileUpload
       [:span "Legg ved bilde"]
@@ -177,12 +178,12 @@
       [:div.pure-g.movement {:id id}
        [:div.pure-u-1
         [:div.pure-g {:style {:cursor 'pointer}}
-         [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))}
+         [:div.pure-u-1-5 {:onClick (fn [e] (.preventDefault e) (reset! expand (not @expand))) :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
           [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" image) :title name :alt name}]]
-         [:div.pure-u-2-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))
+         [:div.pure-u-2-5 {:onClick (fn [e] (.preventDefault e) (reset! expand (not @expand))) :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))
                            :style   {:display 'flex :text-align 'center}}
           [:h3.title {:style {:margin 'auto}} name]]
-         [:div.pure-u-1-5 {:onClick #(reset! expand (not @expand)) :onTouchEnd #(reset! expand (not @expand))}
+         [:div.pure-u-1-5 {:onClick (fn [e] (.preventDefault e) (reset! expand (not @expand))) :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
 
           [:div.pure-g [:div.pure-u-1
                         (if (pos? weight) (r-component {:data weight :name "kg"})
@@ -243,8 +244,10 @@
              [:label "Hvile"]
              [:input {:style {:width 75}
                       :id    (str "rest-input" id) :type "number" :defaultValue rest :min 0}]]
-            [:a.pure-u-1-3.pure-button.pure-button-primary {:style    {:margin "5px 5px 5px 5px"}
-                                                            :on-click #(update-movement {:id id :m m :parts parts :part-number part-number :pos pos})} "Oppdater"]]
+            [:a.pure-u-1-3.pure-button.pure-button-primary {:style   {:margin "5px 5px 5px 5px"}
+                                                            :onClick (fn [e] (.preventDefault e) (update-movement {:id id :m m :parts parts :part-number part-number :pos pos}))
+                                                            :onTouchEnd (fn [e] (.preventDefault e) (update-movement {:id id :m m :parts parts :part-number part-number :pos pos}))}
+             "Oppdater"]]
            [:div.pure-g
             [:a.pure-u.pure-button {:style   {:margin "5px 5px 5px 5px"}
                                     :onClick #(remove-movement % m part-number) :onTouchEnd #(remove-movement % m part-number)
@@ -282,17 +285,21 @@
         [:div
          (when-not (nil? title)                             ; when the session has no title (no session has been created from template): dont show +
            [:i.fa.fa-plus.fa-3x
-            {:onClick    #(let [part (session/get-in [:movement-session :parts part-number])
-                                categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
-                           (add-movement (first categories) part-number))
-             :onTouchEnd #(let [part (session/get-in [:movement-session :parts part-number])
-                                categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
-                           (add-movement (first categories) part-number))
+            {:onClick    (fn [e]
+                           (.preventDefault e)
+                           (let [part (session/get-in [:movement-session :parts part-number])
+                                 categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
+                             (add-movement (first categories) part-number)))
+             :onTouchEnd (fn [e]
+                           (.preventDefault e)
+                           (let [part (session/get-in [:movement-session :parts part-number])
+                                 categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
+                             (add-movement (first categories) part-number)))
              :style      {:margin-right '50 :cursor 'pointer}}])
          [:i.fa.fa-search-plus.fa-3x
-          {:onClick    (fn [e] (all-movements e show-search-input?))
-           :onTouchEnd (fn [e] (all-movements e show-search-input?))
-           :style      {:cursor 'pointer}}]]
+          {:onClick #(all-movements % show-search-input?)
+                    :onTouchEnd #(all-movements % show-search-input?)
+                    :style {:cursor 'pointer}}]]
         (when @show-search-input?
           (let [id (str "mtags" part-number)
                 movements-ac-comp (with-meta text-input-component
