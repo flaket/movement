@@ -332,19 +332,19 @@
 (defn update-name!
   [user-id value]
   (h/update-item! creds :users {:user-id user-id} {:name [:set value]})
-  "Username changed successfully!")
+  "Brukernavnet ble oppdatert!")
 #_(update-name! "andflak@gmail.com" "Andreas")
 
 (defn update-email!
   [user-id value]
   (h/update-item! creds :users {:user-id user-id} {:email [:set value]})
-  "Email changed successfully!")
+  "Eposten ble oppdatert!")
 
 (defn update-password!
   [user-id password]
   (let [value (hashers/encrypt password)]
     (h/update-item! creds :users {:user-id user-id} {:password [:set value]})
-    "Password changed successfully!"))
+    "Passordet ble oppdatert!"))
 
 (defn update-zone! [user-id movement zone]
   (h/put-item! creds :user-movements

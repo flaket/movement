@@ -111,20 +111,20 @@
          :body    ""})
       "<h1>This activation-id is invalid.</h1>")))
 
-(defn change-password! [{:keys [email password new-password]}]
-  (if (valid-user? (db/user-by-email email) password)
+(defn change-password! [{:keys [user-id password new-password]}]
+  (if (valid-user? (db/user user-id) password)
     (try
-      (response (db/update-password! email new-password))
+      (response (db/update-password! user-id new-password))
       (catch Exception e
-        (response "Error changing password" 500)))
-    (response "Wrong old password" 400)))
+        (response "Noe gikk galt under passordbyttet" 500)))
+    (response "Det nåværende passordet var galt" 400)))
 
 (defn change-username! [{:keys [email username]}]
   (try
     (response {:message  (db/update-name! email username)
                :username username})
     (catch Exception e
-      (response {:message "Error changing username"} 500))))
+      (response {:message "Noe gikk galt under navnebyttet"} 500))))
 
 (defn md5 [s]
   (let [algorithm (MessageDigest/getInstance "MD5")
