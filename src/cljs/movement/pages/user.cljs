@@ -8,7 +8,8 @@
             [secretary.core :include-macros true :refer [dispatch!]]
             [movement.menu :refer [menu-component]]
             [movement.pages.feed :refer [load-feed load-user-only-feed session-view]]
-            [movement.util :refer [POST text-input get-user-info]]))
+            [movement.util :refer [POST text-input get-user-info]]
+            [clojure.string :as str]))
 
 (defn log-out [event]
   (.preventDefault event)
@@ -58,19 +59,28 @@
          [:div.pure-u.pure-u-md-1-3
           [:div.pure-g
            [:div.pure-u-1
-            [:img
-             {:style {:padding "20px 20px 20px 20px"
-                      :border-radius "50% 50% 50% 50%"}
-              :width 275
-              :height 275
-              :src user-image}]]]]
+            (if user-image
+              [:img
+               {:style  {:padding       "20px 20px 20px 20px"
+                         :border-radius "50% 50% 50% 50%"}
+                :width  275
+                :height 275
+                :src    (str "http://s3.amazonaws.com/mumrik-user-profile-images/" user-id ".jpg")}]
+              [:img
+               {:style  {:padding       "20px 20px 20px 20px"
+                         :border-radius "50% 50% 50% 50%"}
+                :width  275
+                :height 275
+                :src    "images/profile-no-photo.png"}])]]]
          [:div.pure-u.pure-u-md-1-3
           [:div.pure-g {:style {:margin-top 10}}
            [:h2.pure-u-1 name]]
-          [:div.pure-g {:style {:margin-top 10}}
-           [:div.pure-u-1 profile-text]]
-          [:div.pure-g {:style {:margin-top 10}}
-           [:div.pure-u-1 location]]
+          (when profile-text
+            [:div.pure-g {:style {:margin-top 10}}
+             [:div.pure-u-1 profile-text]])
+          (when location
+            [:div.pure-g {:style {:margin-top 10}}
+             [:div.pure-u-1 [:i.fa.fa-map-marker {:style {:margin-right 5}}] location]])
           [:div.pure-g {:style {:margin-top 10}}
            [:div.pure-u-1 {:style {:font-size "80%" :opacity 0.5}} "Medlem siden " sign-up-timestamp]]
           [:div.pure-g {:style {:margin-top 10}}
@@ -80,10 +90,10 @@
                [:div.pure-u {:style {:margin-right 5}} [:b b]]))]]
          [:div.pure-u.pure-u-md-1-3
           (if (get (set (:follows (session/get :user))) user-id)
-            [:div.pure-g {:style {:margin-top 10}}
+            [:div.pure-g {:style {:margin-top 10 :margin-bottom 10}}
              [:a.pure-u-1.pure-button.button-success {:onClick    #(unfollow-user % (:user-id (session/get :user)) user-id)
                                                       :onTouchEnd #(unfollow-user % (:user-id (session/get :user)) user-id)} "Følger"]]
-            [:div.pure-g {:style {:margin-top 10}}
+            [:div.pure-g {:style {:margin-top 10 :margin-bottom 10}}
              [:a.pure-u-1.pure-button.pure-button-primary {:onClick    #(follow-user % (:user-id (session/get :user)) user-id)
                                                            :onTouchEnd #(follow-user % (:user-id (session/get :user)) user-id)} "Følg"]])
           ]]]
@@ -136,17 +146,96 @@
          :error-handler (fn [r]
                           (reset! pass {:error (:response r) :info ""}))}))
 
-(defn my-user-page []
+(defn change-profile [e profile local-state]
+  (.preventDefault e)
+  (let [p (into {} (for [[k v] @profile] (when-not (str/blank? v) [k v])))] ; remove empty strings and nils
+    (POST "change-profile"
+          {:params        {:user-id (:user-id (session/get :user))
+                           :profile (dissoc p :info :error)}
+           :handler       (fn [r]
+                            (swap! profile assoc :error "" :info r)
+                            (session/update-in! [:user] assoc
+                                                :email (:email p)
+                                                :profile-text (:profile-text p)
+                                                :name (:name p)
+                                                :location (:location p))
+                            (go
+                              (<! (timeout 1500))
+                              (swap! profile dissoc :error :info)
+                              (reset! local-state nil)))
+           :error-handler (fn [r]
+                            (swap! profile assoc :error (:r r)))})))
+
+(defn preview-file [profile]
+  (let [file (.getElementById js/document "upload-profile-photo")
+        reader (js/FileReader.)]
+    (when-let [file (aget (.-files file) 0)]
+      (set! (.-onloadend reader) #(swap! profile assoc :photo (-> % .-target .-result)))
+      (.readAsDataURL reader file))))
+
+(defn my-user-page [{:keys [user-id email name sign-up-timestamp badges user-image profile-text location] :as user}]
   (let [local-state (atom nil)
         pass (atom {:info "" :error ""})
+        profile (atom {:email email :name name :photo nil :profile-text profile-text :location location})
         selection (atom nil)]
-    (fn [{:keys [user-id name sign-up-timestamp badges user-image profile-text location] :as user}]
+    (fn [{:keys [user-id name email sign-up-timestamp badges user-image profile-text location] :as user}]
       (case @local-state
         :change-profile
         [:div.content
+         [:div.pure-g
+          [:div.pure-u-1 {:style {:position 'relative}}
+           [:div
+            [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Epost (vises ikke i profilen din)"]]
+            [:div.pure-g
+             [:input.pure-u-1.pure-u-md-1-2 {:type        "text"
+                                             :placeholder email
+                                             :value       (:email @profile)
+                                             :on-change   #(swap! profile assoc :email (-> % .-target .-value))}]]
+
+            [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Navn"]]
+            [:div.pure-g
+             [:input.pure-u-1.pure-u-md-1-2 {:type        "text"
+                                             :placeholder name
+                                             :value       (:name @profile)
+                                             :on-change   #(swap! profile assoc :name (-> % .-target .-value))}]]
+            [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Profiltekst"]]
+            [:div.pure-g
+             [:input.pure-u-1.pure-u-md-1-2 {:type        "text"
+                                             :placeholder profile-text
+                                             :value       (:profile-text @profile)
+                                             :on-change   #(swap! profile assoc :profile-text (-> % .-target .-value))}]]
+
+            [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Sted"]]
+            [:div.pure-g
+             [:input.pure-u-1.pure-u-md-1-2 {:type        "text"
+                                             :placeholder location
+                                             :value       (:location @profile)
+                                             :on-change   #(swap! profile assoc :location (-> % .-target .-value))}]]
+
+            (if-let [photo (:photo @profile)]
+              [:div.pure-g
+               [:div.pure-u [:img {:style {:height 200
+                                           :border " 1px solid #000"
+                                           :margin "10px 5px 0 0"}
+                                   :src   photo}]]
+               [:div.pure-u {:on-click #(swap! profile dissoc :photo)
+                             :style    {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
+              [:div.pure-g
+               [:div.pure-u.pure-button.fileUpload
+                [:span "Last opp profilbilde"]
+                [:input {:id "upload-profile-photo" :className "upload" :type "file" :on-change #(preview-file profile)}]]])
+
+
+            (when-let [info (:info @profile)]
+              [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
+            (when-let [error (:error @profile)]
+              [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])]]]
          [:div.pure-g {:style {:margin-top 10}}
-          [:a.pure-u-1.pure-button {:onClick    (fn [e] (.preventDefault e) (reset! local-state nil))
-                                    :onTouchEnd (fn [e] (.preventDefault e) (reset! local-state nil))} "Ferdig med profil"]]]
+          [:a.pure-u-1.pure-u-md-1-2.pure-button.pure-button-primary {:onClick #(change-profile % profile local-state)
+                                                                      :onTouchEnd #(change-profile % profile local-state)} "Lagre"]]
+         [:div.pure-g {:style {:margin-top 10}}
+          [:a.pure-u-1.pure-u-md-1-2.pure-button {:onClick    (fn [e] (.preventDefault e) (reset! profile {}) (reset! local-state nil))
+                                      :onTouchEnd (fn [e] (.preventDefault e) (reset! profile {}) (reset! local-state nil))} "Avbryt"]]]
         :change-settings
         [:div.content
          [:div.pure-g {:style {:margin-top 10}}
@@ -195,19 +284,29 @@
            [:div.pure-u.pure-u-md-1-3
             [:div.pure-g
              [:div.pure-u-1
-              [:img
-               {:style  {:padding       "20px 20px 20px 20px"
-                         :border-radius "50% 50% 50% 50%"}
-                :width  275
-                :height 275
-                :src    user-image}]]]]
+              (if user-image
+                [:img
+                 {:style  {:padding       "20px 20px 20px 20px"
+                           :border-radius "50% 50% 50% 50%"}
+                  :width  275
+                  :height 275
+                  :src    (str "http://s3.amazonaws.com/mumrik-user-profile-images/" user-id ".jpg")}]
+                [:img
+                 {:style  {:padding       "20px 20px 20px 20px"
+                           :border-radius "50% 50% 50% 50%"}
+                  :width  275
+                  :height 275
+                  :src    "images/profile-no-photo.png"}])]]
+            ]
            [:div.pure-u.pure-u-md-1-3
             [:div.pure-g {:style {:margin-top 10}}
              [:h2.pure-u-1 name]]
-            [:div.pure-g {:style {:margin-top 10}}
-             [:div.pure-u-1 profile-text]]
-            [:div.pure-g {:style {:margin-top 10}}
-             [:div.pure-u-1 location]]
+            (when profile-text
+              [:div.pure-g {:style {:margin-top 10}}
+               [:div.pure-u-1 profile-text]])
+            (when location
+              [:div.pure-g {:style {:margin-top 10}}
+               [:div.pure-u-1 [:i.fa.fa-map-marker {:style {:margin-right 5}}] location]])
             [:div.pure-g {:style {:margin-top 10}}
              [:div.pure-u-1 {:style {:font-size "80%" :opacity 0.5}} "Medlem siden " sign-up-timestamp]]
             [:div.pure-g {:style {:margin-top 10}}

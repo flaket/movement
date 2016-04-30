@@ -88,12 +88,6 @@
       (activation-page "To verify your email address we have sent you an activation email."))
     (pricing-page (str email " is already registered as a user."))))
 
-(defn set-zone! [email movement zone]
-  (try
-    (db/update-zone! email movement zone)
-    (catch Exception e
-      (response (str "Exception: " e)))))
-
 (defn like [params]
   (try
     (db/like! params)
@@ -119,12 +113,11 @@
         (response "Noe gikk galt under passordbyttet" 500)))
     (response "Det nåværende passordet var galt" 400)))
 
-(defn change-username! [{:keys [email username]}]
+(defn change-profile! [{:keys [user-id profile]}]
   (try
-    (response {:message  (db/update-name! email username)
-               :username username})
+    (response (db/update-profile! user-id profile))
     (catch Exception e
-      (response {:message "Noe gikk galt under navnebyttet"} 500))))
+      (response {:message "Noe gikk galt under profiloppdateringen"} 500))))
 
 (defn md5 [s]
   (let [algorithm (MessageDigest/getInstance "MD5")
@@ -188,7 +181,7 @@
                               (throw-unauthorized)))
 
            (POST "/change-password" req (if (authenticated? req) (change-password! (:params req)) (throw-unauthorized)))
-           (POST "/change-username" req (if (authenticated? req) (change-username! (:params req)) (throw-unauthorized)))
+           (POST "/change-profile" req (if (authenticated? req) (change-profile! (:params req)) (throw-unauthorized)))
 
            (POST "/store-session" req (if (authenticated? req) (store-session! (:params req)) (throw-unauthorized)))
            (GET "/create-session" req (if (authenticated? req)

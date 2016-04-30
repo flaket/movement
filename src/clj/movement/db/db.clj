@@ -90,7 +90,7 @@
   (first (<!! (h/query! creds :users {:email [:= email]} {:index :user-by-email}))))
 #_(user-by-email "andflak@gmail.com")
 #_(user-by-email "andreas.flakstad@gmail.com")
-#_(user-by-email "a")
+#_(user-by-email "b")
 
 (defn user-by-activation-id [id]
   (->>
@@ -100,7 +100,7 @@
 
 (defn user-by-name [name]
   (<!! (h/query! creds :users {:name [:= name]} {:index :user-by-name})))
-#_(user-by-name "andreas")
+#_(user-by-name "kåre")
 
 (defn sessions-by-user-id [user-id]
   (let [sessions (<!! (h/query! creds :sessions {:user-id [:= user-id]} {:index :session-by-user-id}))
@@ -329,26 +329,33 @@
                   {:valid-subscription? [:set value]}))
 #_(update-subscription! "andflak@gmail.com" true)
 
-(defn update-name!
-  [user-id value]
-  (h/update-item! creds :users {:user-id user-id} {:name [:set value]})
-  "Brukernavnet ble oppdatert!")
-#_(update-name! "andflak@gmail.com" "Andreas")
+(defn update-profile! [user-id profile]
+  (let [image-file (:photo profile)
+        [_ file-type _ photo] (if image-file (str/split image-file #"[:;,]") [])
+        profile (dissoc profile :photo)
+        update-map (into {} (for [[k v] profile] [k [:set v]]))
+        update-map (if image-file (assoc update-map :user-image [:set true]) update-map)]
 
-(defn update-email!
-  [user-id value]
-  (h/update-item! creds :users {:user-id user-id} {:email [:set value]})
-  "Eposten ble oppdatert!")
+    ; If upload file is png or jpeg: send to S3
+    (when (or (= file-type "image/png")
+              (= file-type "image/jpeg"))
+      (let [decoded-photo (b64/decode (.getBytes photo))
+            file (io/input-stream decoded-photo)]
+        (go
+          (s3/put-object iam-creds "mumrik-user-profile-images" (str user-id ".jpg") file))
+        (.println System/out "Sent profile photo to S3..")))
+
+    (h/update-item! creds :users {:user-id user-id} update-map)
+    "Profilen ble oppdatert!"))
+
+#_(user "9c0ca430-4da4-4b98-8614-e5ac5a19607e")
+#_(update-profile "9c0ca430-4da4-4b98-8614-e5ac5a19607e" {:email "a" :name "andreas" :profile-text "Fakkuuu"})
 
 (defn update-password!
   [user-id password]
   (let [value (hashers/encrypt password)]
     (h/update-item! creds :users {:user-id user-id} {:password [:set value]})
     "Passordet ble oppdatert!"))
-
-(defn update-zone! [user-id movement zone]
-  (h/put-item! creds :user-movements
-               {:user-id user-id :movement-name movement :zone zone}))
 
 (defn like! [{:keys [session-url user-id]}]
   (h/update-item! creds :sessions {:url session-url} {:session {:likes [:concat [user-id]]}})

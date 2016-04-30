@@ -34,9 +34,15 @@
                ^{:key name}
                [:div.pure-g {:style   {:padding "25px 25px 25px 25px" :cursor 'pointer :border-bottom " 1px solid lightgray"}
                              :onClick #(load-user % user-id) :onTouchEnd #(load-user % user-id)}
-                [:div.pure-u [:img {:src user-image :width 80 :height 80
-                                    :style {:margin-top 15 :margin-left 40
-                                            :cursor     'pointer :border-radius "50% 50% 50% 50%"}}]]
+                [:div.pure-u
+                 (if user-image
+                   [:img {:src (str "http://s3.amazonaws.com/mumrik-user-profile-images/" user-id ".jpg")
+                          :width 80 :height 80
+                          :style {:margin-top 15 :margin-left 40
+                                  :cursor     'pointer :border-radius "50% 50% 50% 50%"}}]
+                   [:img {:src "images/profile-no-photo.png" :width 80 :height 80
+                          :style {:margin-top 15 :margin-left 40
+                                  :cursor     'pointer :border-radius "50% 50% 50% 50%"}}])]
                 [:div.pure-u {:style {:margin-left 20}}
                  [:div.pure-g [:h2 [:a.pure-u name]]]
                  [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} profile-text]]]]))])]])))

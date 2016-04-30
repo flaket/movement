@@ -81,22 +81,29 @@
           :onTouchEnd #(add-comment % adding-comment? {:session-url session-url :user-id (:user-id (session/get :user)) :user (:name (session/get :user)) :comment @text})}
          "Kommenter"]]])))
 
-(defn session-view [{:keys [url user-id user-name user-image session]
-                     :or {user-image (first (shuffle ["images/field.jpg" "images/forest.jpg" "images/winter.jpg"]))}}]
+(defn session-view [{:keys [url user-id user-name user-image session]}]
   (let [show-session-data? (atom false)
         adding-comment? (atom false)]
-    (fn [{:keys [url user-id user-name user-image session]
-          :or {user-image (first (shuffle ["images/field.jpg" "images/forest.jpg" "images/winter.jpg"]))}}]
+    (fn [{:keys [url user-id user-name user-image session]}]
       [:div {:style {:border-bottom "1px solid lightgray"}}
 
        ; user image, name and timestamp
        [:div.pure-g
-        [:div.pure-u [:img {:src   "images/field.jpg" :width 80 :height 80
-                            :style {:margin-top 15 :margin-left 40
-                                    :cursor     'pointer :border-radius "50% 50% 50% 50%"}
-                            :onClick #(load-user % user-id)
-                            :onTouchEnd #(load-user % user-id)
-                            }]]
+        [:div.pure-u
+         (if user-image
+           [:img {:src        (str "http://s3.amazonaws.com/mumrik-user-profile-images/" user-id ".jpg")
+                  :width 80 :height 80
+                  :style      {:margin-top 15 :margin-left 40
+                               :cursor     'pointer :border-radius "50% 50% 50% 50%"}
+                  :onClick    #(load-user % user-id)
+                  :onTouchEnd #(load-user % user-id)
+                  }]
+           [:img {:src        "images/profile-no-photo.png" :width 80 :height 80
+                  :style      {:margin-top 15 :margin-left 40
+                               :cursor     'pointer :border-radius "50% 50% 50% 50%"}
+                  :onClick    #(load-user % user-id)
+                  :onTouchEnd #(load-user % user-id)
+                  }])]
         [:div.pure-u {:style {:margin-left 20}}
          [:div.pure-g [:h2 [:a.pure-u {:onClick #(load-user % user-id)
                                        :onTouchEnd #(load-user % user-id)} user-name]]]
