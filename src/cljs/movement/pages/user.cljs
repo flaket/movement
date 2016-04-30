@@ -44,11 +44,11 @@
 
 (defn follow-user [e user-id follow-id]
   (.preventDefault e)
-  (POST "follow" {:params {:user-id user-id
-                           :follow-id follow-id}
-                 :handler (fn [r]
-                            (session/update-in! [:user :follows] conj follow-id))
-                 :error-handler #(pr "error following")}))
+  (POST "follow" {:params        {:user-id   user-id
+                                  :follow-id follow-id}
+                  :handler       (fn [r]
+                                   (session/update-in! [:user :follows] conj follow-id))
+                  :error-handler #(pr "error following")}))
 
 (defn another-users-page [{:keys [name profile-text location sign-up-timestamp user-image badges user-id] :as viewing-user}]
   (let [selection (atom nil)]
@@ -101,9 +101,9 @@
         [:div.pure-g [:div.pure-u-1 [:h2 (str name " sin treningsdagbok")]]]
         [:div.pure-g
          [:a.pure-u.pure-u-md-1-4
-          {:onClick   (fn [e] (.preventDefault e) (load-user-only-feed user-id) (reset! selection :feed))
+          {:onClick    (fn [e] (.preventDefault e) (load-user-only-feed user-id) (reset! selection :feed))
            :onTouchEnd (fn [e] (.preventDefault e) (load-user-only-feed user-id) (reset! selection :feed))
-           :className (str " pure-button" (when (= @selection :feed) " pure-button-primary"))} "Feed"]
+           :className  (str " pure-button" (when (= @selection :feed) " pure-button-primary"))} "Feed"]
          [:a.pure-u.pure-u-md-1-4
           {:style     {:opacity 0.25 :pointer-events 'none :cursor 'default}
            ;:onClick #(reset! selection :calendar) :onTouchEnd #(reset! selection :calendar)
@@ -135,7 +135,7 @@
 (defn change-password [e pass local-state]
   (.preventDefault e)
   (POST "change-password"
-        {:params        {:user-id     (:user-id (session/get :user))
+        {:params        {:user-id      (:user-id (session/get :user))
                          :password     (:old-pass @pass)
                          :new-password (:new-pass @pass)}
          :handler       (fn [r]
@@ -147,8 +147,7 @@
          :error-handler (fn [r]
                           (reset! pass {:error (:response r) :info ""}))}))
 
-(defn change-profile [e profile local-state]
-  (.preventDefault e)
+(defn change-profile [profile local-state]
   (let [p (into {} (for [[k v] @profile] (when-not (str/blank? v) [k v])))] ; remove empty strings and nils
     (POST "change-profile"
           {:params        {:user-id (:user-id (session/get :user))
@@ -167,12 +166,44 @@
            :error-handler (fn [r]
                             (swap! profile assoc :error (:r r)))})))
 
+; bruker ikke denne metoden lengre..
 (defn preview-file [profile]
   (let [file (.getElementById js/document "upload-profile-photo")
         reader (js/FileReader.)]
     (when-let [file (aget (.-files file) 0)]
       (set! (.-onloadend reader) #(swap! profile assoc :photo (-> % .-target .-result)))
       (.readAsDataURL reader file))))
+
+(defn process-file [file profile]
+  (let [reader (js/FileReader.)
+        canvas (.getElementById js/document "image-canvas")
+        ctx (.getContext canvas "2d")]
+    (when-let [file (aget (.-files file) 0)]
+      (set! (.-onload reader)
+            (fn [e]
+              (let [blob (js/Blob. (array (-> e .-target .-result)))
+                    blob-url (.createObjectURL (.-URL js/window) blob)
+                    image (js/Image.)]
+                (swap! profile assoc :photo true)
+                (set! (.-src image) blob-url)
+                (set! (.-onload image)
+                      (fn [e]
+                        (let [max-w 400
+                              max-h 400
+                              w (.-width image)
+                              h (.-height image)
+                              [w h] (if (>= w h)
+                                      (if (> w max-w)
+                                        [max-w (* h (/ max-w w))]
+                                        [w h])
+                                      (if (> h max-h)
+                                        [(* w (/ max-h h)) max-h]
+                                        [w h])
+                                      )]
+                          (set! (.-width canvas) w)
+                          (set! (.-height canvas) h)
+                          (.drawImage ctx image 0 0 w h)))))))
+      (.readAsArrayBuffer reader file))))
 
 (defn my-user-page [{:keys [user-id email name sign-up-timestamp badges user-image profile-text location] :as user}]
   (let [local-state (atom nil)
@@ -184,60 +215,78 @@
         :change-profile
         [:div.content
          [:div.pure-g
-          [:div.pure-u-1 {:style {:position 'relative}}
-           [:div
-            [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Epost (vises ikke i profilen din)"]]
-            [:div.pure-g
-             [:input.pure-u-1.pure-u-md-1-2 {:type        "text"
-                                             :placeholder email
-                                             :value       (:email @profile)
-                                             :on-change   #(swap! profile assoc :email (-> % .-target .-value))}]]
+          [:div.pure-u-1-2
+           [:div.pure-g
+            [:div.pure-u.pure-button.fileUpload
+             [:span "Last opp profilbilde"]
+             [:input {:id "upload-profile-photo" :className "upload" :type "file" :on-change
+                          #(process-file (.getElementById js/document "upload-profile-photo") profile)}]]]
+           (when (:photo @profile)
+             [:div {:onClick    (fn [e] (.preventDefault e)
+                                  (let [canvas (.getElementById js/document "image-canvas")
+                                        ctx (.getContext canvas "2d")]
+                                    (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
+                                    (swap! profile dissoc :photo)))
+                    :onTouchEnd (fn [e] (.preventDefault e)
+                                  (let [canvas (.getElementById js/document "image-canvas")
+                                        ctx (.getContext canvas "2d")]
+                                    (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
+                                    (swap! profile dissoc :photo)))
+                    :style      {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]])
+           [:canvas {:id "image-canvas"}]]
+          [:div.pure-u-1-2
+           [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Epost (vises ikke i profilen din)"]]
+           [:div.pure-g
+            [:input.pure-u-1 {:type        "text"
+                              :placeholder email
+                              :value       (:email @profile)
+                              :on-change   #(swap! profile assoc :email (-> % .-target .-value))}]]
 
-            [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Navn"]]
-            [:div.pure-g
-             [:input.pure-u-1.pure-u-md-1-2 {:type        "text"
-                                             :placeholder name
-                                             :value       (:name @profile)
-                                             :on-change   #(swap! profile assoc :name (-> % .-target .-value))}]]
-            [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Profiltekst"]]
-            [:div.pure-g
-             [:input.pure-u-1.pure-u-md-1-2 {:type        "text"
-                                             :placeholder profile-text
-                                             :value       (:profile-text @profile)
-                                             :on-change   #(swap! profile assoc :profile-text (-> % .-target .-value))}]]
+           [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Navn"]]
+           [:div.pure-g
+            [:input.pure-u-1 {:type        "text"
+                              :placeholder name
+                              :value       (:name @profile)
+                              :on-change   #(swap! profile assoc :name (-> % .-target .-value))}]]
+           [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Profiltekst"]]
+           [:div.pure-g
+            [:input.pure-u-1 {:type        "text"
+                              :placeholder profile-text
+                              :value       (:profile-text @profile)
+                              :on-change   #(swap! profile assoc :profile-text (-> % .-target .-value))}]]
 
-            [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Sted"]]
-            [:div.pure-g
-             [:input.pure-u-1.pure-u-md-1-2 {:type        "text"
-                                             :placeholder location
-                                             :value       (:location @profile)
-                                             :on-change   #(swap! profile assoc :location (-> % .-target .-value))}]]
+           [:div.pure-g {:style {:margin-top 5}} [:div.pure-u-1 "Sted"]]
+           [:div.pure-g
+            [:input.pure-u-1 {:type        "text"
+                              :placeholder location
+                              :value       (:location @profile)
+                              :on-change   #(swap! profile assoc :location (-> % .-target .-value))}]]
+           (when-let [info (:info @profile)]
+             [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
+           (when-let [error (:error @profile)]
+             [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])
 
-            (if-let [photo (:photo @profile)]
-              [:div.pure-g
-               [:div.pure-u [:img {:style {:height 200
-                                           :border " 1px solid #000"
-                                           :margin "10px 5px 0 0"}
-                                   :src   photo}]]
-               [:div.pure-u {:onClick (fn [e] (.preventDefault e) (swap! profile dissoc :photo))
-                             :onTouchEnd (fn [e] (.preventDefault e) (swap! profile dissoc :photo))
-                             :style   {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
-              [:div.pure-g
-               [:div.pure-u.pure-button.fileUpload
-                [:span "Last opp profilbilde"]
-                [:input {:id "upload-profile-photo" :className "upload" :type "file" :on-change #(preview-file profile)}]]])
+           [:div.pure-g {:style {:margin-top 10}}
+            [:a.pure-u-1.pure-button.pure-button-primary
+             {:onClick    (fn [e] (.preventDefault e)
+                            (let [canvas (.getElementById js/document "image-canvas")
+                                  image (.toDataURL canvas "image/jpeg" 0.7)
+                                  _ (swap! profile assoc :photo image)]
+                              (change-profile profile local-state)))
+              :onTouchEnd (fn [e] (.preventDefault e)
+                            (let [canvas (.getElementById js/document "image-canvas")
+                                  image (.toDataURL canvas "image/jpeg" 0.7)
+                                  _ (swap! profile assoc :photo image)]
+                              (change-profile profile local-state)))}
+             "Lagre"]]
+           [:div.pure-g {:style {:margin-top 10}}
+            [:a.pure-u-1.pure-button {:onClick    (fn [e] (.preventDefault e) (reset! profile {}) (reset! local-state nil))
+                                      :onTouchEnd (fn [e] (.preventDefault e) (reset! profile {}) (reset! local-state nil))} "Avbryt"]]
 
+           ]
+          ]
 
-            (when-let [info (:info @profile)]
-              [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
-            (when-let [error (:error @profile)]
-              [:div.pure-g [:div.pure-u {:style {:color 'red :font-size 24}} error]])]]]
-         [:div.pure-g {:style {:margin-top 10}}
-          [:a.pure-u-1.pure-u-md-1-2.pure-button.pure-button-primary {:onClick #(change-profile % profile local-state)
-                                                                      :onTouchEnd #(change-profile % profile local-state)} "Lagre"]]
-         [:div.pure-g {:style {:margin-top 10}}
-          [:a.pure-u-1.pure-u-md-1-2.pure-button {:onClick    (fn [e] (.preventDefault e) (reset! profile {}) (reset! local-state nil))
-                                      :onTouchEnd (fn [e] (.preventDefault e) (reset! profile {}) (reset! local-state nil))} "Avbryt"]]]
+         ]
         :change-settings
         [:div.content
          [:div.pure-g {:style {:margin-top 10}}
@@ -251,20 +300,20 @@
            [:div
             [:div.pure-g
              [:input.pure-u-1.pure-u-md-1-2 {:type        "password"
-                                           :placeholder "nåværende passord"
-                                           :value       (:old-pass @pass)
-                                           :on-change   #(swap! pass assoc :old-pass (-> % .-target .-value))}]]
+                                             :placeholder "nåværende passord"
+                                             :value       (:old-pass @pass)
+                                             :on-change   #(swap! pass assoc :old-pass (-> % .-target .-value))}]]
             [:div.pure-g
              [:input.pure-u-1.pure-u-md-1-2 {:type        "password"
-                                           :placeholder "nytt passord"
-                                           :value       (:new-pass @pass)
-                                           :on-change   #(swap! pass assoc :new-pass (-> % .-target .-value))}]]
+                                             :placeholder "nytt passord"
+                                             :value       (:new-pass @pass)
+                                             :on-change   #(swap! pass assoc :new-pass (-> % .-target .-value))}]]
 
             [:div.pure-g
              [:input.pure-u-1.pure-u-md-1-2 {:type        "password"
-                                           :placeholder "nytt passord igjen"
-                                           :value       (:repeat-pass @pass)
-                                           :on-change   #(swap! pass assoc :repeat-pass (-> % .-target .-value))}]]
+                                             :placeholder "nytt passord igjen"
+                                             :value       (:repeat-pass @pass)
+                                             :on-change   #(swap! pass assoc :repeat-pass (-> % .-target .-value))}]]
             (when-let [info (:info @pass)]
               [:div.pure-g [:div.pure-u {:style {:color 'green :font-size 24}} info]])
             (when-let [error (:error @pass)]
@@ -321,7 +370,7 @@
              [:a.pure-u-1.pure-button {:onClick    (fn [e] (.preventDefault e) (reset! local-state :change-profile))
                                        :onTouchEnd (fn [e] (.preventDefault e) (reset! local-state :change-profile))} "Endre profil"]]
             [:div.pure-g {:style {:margin-top 10}}
-             [:a.pure-u-1.pure-button {:style {:opacity 0.25 :pointer-events 'none :cursor 'default}
+             [:a.pure-u-1.pure-button {:style      {:opacity 0.25 :pointer-events 'none :cursor 'default}
                                        :onClick    (fn [e] (.preventDefault e) (reset! local-state :change-settings))
                                        :onTouchEnd (fn [e] (.preventDefault e) (reset! local-state :change-settings))} "Endre innstillinger"]]
             [:div.pure-g {:style {:margin-top 10}}
@@ -334,9 +383,9 @@
           [:div.pure-g [:div.pure-u-1 [:h2 "Min treningsdagbok"]]]
           [:div.pure-g
            [:a.pure-u.pure-u-md-1-4
-            {:onClick   (fn [e] (.preventDefault e) (load-user-only-feed user-id) (reset! selection :feed))
+            {:onClick    (fn [e] (.preventDefault e) (load-user-only-feed user-id) (reset! selection :feed))
              :onTouchEnd (fn [e] (.preventDefault e) (load-user-only-feed user-id) (reset! selection :feed))
-             :className (str " pure-button" (when (= @selection :feed) " pure-button-primary"))} "Feed"]
+             :className  (str " pure-button" (when (= @selection :feed) " pure-button-primary"))} "Feed"]
            [:a.pure-u.pure-u-md-1-4
             {:style     {:opacity 0.25 :pointer-events 'none :cursor 'default}
              ;:onClick #(reset! selection :calendar) :onTouchEnd #(reset! selection :calendar)

@@ -300,13 +300,12 @@
         session (assoc session :parts (mapv (fn [part] (mapv (fn [m] (dissoc m :zone :id)) part)) (:parts session)))
         session (assoc session :image (if photo true false) :comments [] :likes [])]
     ; If upload file is png or jpeg: send to S3
-    (when (or (= file-type "image/png")
-            (= file-type "image/jpeg"))
-      (let [decoded-photo (b64/decode (.getBytes photo))
-            file (io/input-stream decoded-photo)]
-        (go
-          (s3/put-object iam-creds "mumrik-session-images" (str url ".jpg") file))
-        (.println System/out "Sent photo to S3..")))
+    (when (= file-type "image/jpeg")
+      (go
+        (let [decoded-photo (b64/decode (.getBytes photo))
+              file (io/input-stream decoded-photo)]
+          (s3/put-object iam-creds "mumrik-session-images" (str url ".jpg") file)))
+      (.println System/out "Sent session photo to S3.."))
     ; Store session in :sessions table
     (h/put-item! creds :sessions {:user-id user-id :url url :session session})
     (.println System/out "Sent session to db..")
@@ -337,16 +336,15 @@
         update-map (if image-file (assoc update-map :user-image [:set true]) update-map)]
 
     ; If upload file is png or jpeg: send to S3
-    (when (or (= file-type "image/png")
-              (= file-type "image/jpeg"))
-      (let [decoded-photo (b64/decode (.getBytes photo))
-            file (io/input-stream decoded-photo)]
-        (go
-          (s3/put-object iam-creds "mumrik-user-profile-images" (str user-id ".jpg") file))
-        (.println System/out "Sent profile photo to S3..")))
+    (when (= file-type "image/jpeg")
+      (go
+        (let [decoded-photo (b64/decode (.getBytes photo))
+              file (io/input-stream decoded-photo)]
+          (s3/put-object iam-creds "mumrik-user-profile-images" (str user-id ".jpg") file)))
+      (.println System/out "Sent profile photo to S3.."))
 
-    (h/update-item! creds :users {:user-id user-id} update-map)
-    "Profilen ble oppdatert!"))
+    #_(h/update-item! creds :users {:user-id user-id} update-map)
+    (str "Profilen ble oppdatert!" (when image-file " Bildeopplastingen kan ta noen sekunder."))))
 
 #_(user "9c0ca430-4da4-4b98-8614-e5ac5a19607e")
 #_(update-profile "9c0ca430-4da4-4b98-8614-e5ac5a19607e" {:email "a" :name "andreas" :profile-text "Fakkuuu"})

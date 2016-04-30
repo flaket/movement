@@ -127,6 +127,7 @@
   (.preventDefault event)
   (session/put! :movement-session {:parts [[]] :activity activity}))
 
+; brukes ikke lengre..
 (defn preview-file []
   (let [file (.getElementById js/document "upload")
         reader (js/FileReader.)]
@@ -134,20 +135,56 @@
       (set! (.-onloadend reader) #(session/update-in! [:movement-session] assoc :photo (-> % .-target .-result)))
       (.readAsDataURL reader file))))
 
+(defn process-file [file]
+  (let [reader (js/FileReader.)
+        canvas (.getElementById js/document "session-image-canvas")
+        ctx (.getContext canvas "2d")]
+    (when-let [file (aget (.-files file) 0)]
+      (set! (.-onload reader)
+            (fn [e]
+              (let [blob (js/Blob. (array (-> e .-target .-result)))
+                    blob-url (.createObjectURL (.-URL js/window) blob)
+                    image (js/Image.)]
+                (session/update-in! [:movement-session] assoc :photo true)
+                (set! (.-src image) blob-url)
+                (set! (.-onload image)
+                      (fn [e]
+                        (let [max-w 1200
+                              max-h 1200
+                              w (.-width image)
+                              h (.-height image)
+                              [w h] (if (>= w h)
+                                      (if (> w max-w)
+                                        [max-w (* h (/ max-w w))]
+                                        [w h])
+                                      (if (> h max-h)
+                                        [(* w (/ max-h h)) max-h]
+                                        [w h])
+                                      )]
+                          (set! (.-width canvas) w)
+                          (set! (.-height canvas) h)
+                          (.drawImage ctx image 0 0 w h)))))))
+      (.readAsArrayBuffer reader file))))
+
 (defn add-photo-component []
   (if-let [photo (session/get-in [:movement-session :photo])]
     [:div.pure-g
-     [:div.pure-u [:img {:style {:height 200
-                                 :border " 1px solid #000"
-                                 :margin "10px 5px 0 0"}
-                         :src   photo}]]
-     [:div.pure-u {:onClick (fn [e] (.preventDefault e) (session/update-in! [:movement-session] dissoc :photo))
-                   :onTouchEnd (fn [e] (.preventDefault e) (session/update-in! [:movement-session] dissoc :photo))
-                   :style   {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
+     [:div.pure-u {:onClick    (fn [e] (.preventDefault e)
+                                 (let [canvas (.getElementById js/document "session-image-canvas")
+                                       ctx (.getContext canvas "2d")]
+                                   (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
+                                   (session/update-in! [:movement-session] dissoc :photo)))
+                   :onTouchEnd (fn [e] (.preventDefault e)
+                                 (let [canvas (.getElementById js/document "session-image-canvas")
+                                       ctx (.getContext canvas "2d")]
+                                   (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
+                                   (session/update-in! [:movement-session] dissoc :photo)))
+                   :style      {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
     [:div.pure-g
      [:div.pure-u.pure-button.fileUpload
       [:span "Legg ved bilde"]
-      [:input {:id "upload" :className "upload" :type "file" :on-change #(preview-file)}]]]))
+      [:input {:id "upload" :className "upload" :type "file"
+               :on-change #(process-file (.getElementById js/document "upload"))}]]]))
 
 (defn update-movement [{:keys [id m parts part-number pos]}]
   (let [rep-input (-> (.getElementById js/document (str "rep-input" id)) .-value int)
@@ -391,7 +428,9 @@
 
 (defn store-session [event s & unique-movements]
   (.preventDefault event)
-  (let [session (session/get :movement-session)
+  (let [canvas (.getElementById js/document "session-image-canvas")
+        image (.toDataURL canvas "image/jpeg" 0.9)
+        session (session/get :movement-session)
         session (if-not (:comment session) (assoc session :comment "") session)
         new-parts (mapv (fn [part]
                           (mapv (fn [m]
@@ -409,6 +448,7 @@
         date-time (str date "T" time)
         hash-tags (vec (re-seq #"#[\w]+" (:comment session)))
         session (assoc session :activity (:title (:activity session))
+                               :photo image
                                :parts new-parts
                                :date-time date-time
                                :tags hash-tags
@@ -478,6 +518,7 @@
              (add-photo-component)]
             [:div.pure-u-1-2
              (date-component)]]
+           [:canvas {:id "session-image-canvas"}]
            (if-let [parts (:parts session)]
              [(let [movements (flatten parts)
 
