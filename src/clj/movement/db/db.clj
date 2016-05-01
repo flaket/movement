@@ -288,8 +288,6 @@
 
 ;; ------ LAB -------
 
-#_(add-user! "andflak@gmail.com" "Andreas" "mumrikM9n8b7v6" (str (UUID/randomUUID)))
-
 (def movement-urls ["balancing.edn" "climbing.edn" "crawling.edn" "hanging.edn" "jumping.edn" "lifting.edn" "rolling.edn" "running.edn" "throwing-catching.edn"
                     "walking.edn" "mobility/mobility.edn" "other/core.edn" "other/footwork.edn" "other/hand-balance.edn" "other/leg-strength.edn"
                     "other/planche-lever.edn" "other/pulling.edn" "other/pushing.edn" "other/ring.edn"])
@@ -367,3 +365,5 @@
 #_(let [tables (<!! (h/list-tables! creds {}))]
     (doseq [i (range (count tables))]
       (h/delete-table! creds (get tables i))))
+
+#_()
