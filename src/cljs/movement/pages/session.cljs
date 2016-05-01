@@ -429,7 +429,7 @@
 (defn store-session [event s & unique-movements]
   (.preventDefault event)
   (let [canvas (.getElementById js/document "session-image-canvas")
-        image (.toDataURL canvas "image/jpeg" 0.9)
+        image (.toDataURL canvas "image/jpeg" 0.6)
         session (session/get :movement-session)
         session (if-not (:comment session) (assoc session :comment "") session)
         new-parts (mapv (fn [part]
@@ -442,7 +442,7 @@
                                       ))
                                 part))
                         (:parts session))
-        new-parts (if (empty? (flatten new-parts)) [] new-parts) ; <--- worked fine when added this 29-04T13:33
+        new-parts (if (empty? (flatten new-parts)) [] new-parts)
         date (if-let [date (:date session)] date (date-string))
         time (time-string)
         date-time (str date "T" time)

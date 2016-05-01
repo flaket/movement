@@ -270,12 +270,12 @@
             [:a.pure-u-1.pure-button.pure-button-primary
              {:onClick    (fn [e] (.preventDefault e)
                             (let [canvas (.getElementById js/document "image-canvas")
-                                  image (.toDataURL canvas "image/jpeg" 0.7)]
+                                  image (.toDataURL canvas "image/jpeg" 0.9)]
                               (when image (swap! profile assoc :photo image))
                               (change-profile profile local-state)))
               :onTouchEnd (fn [e] (.preventDefault e)
                             (let [canvas (.getElementById js/document "image-canvas")
-                                  image (.toDataURL canvas "image/jpeg" 0.7)]
+                                  image (.toDataURL canvas "image/jpeg" 0.9)]
                               (when image (swap! profile assoc :photo image))
                               (change-profile profile local-state)))}
              "Lagre"]]

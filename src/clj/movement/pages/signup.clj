@@ -106,10 +106,10 @@
        [:div.pure-u.pure-u-md-1-5]
        [:div.pure-u.pure-u-md-3-5
         [:div.l-box
-         [:h3.information-head "Thanks!"]
+         [:h3.information-head "Flott!"]
          [:p message]]]
        [:div.pure-u.pure-u-md-1-5]]]
-     (footer-always-bottom)
+     #_(footer-always-bottom)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]

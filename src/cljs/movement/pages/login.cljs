@@ -9,7 +9,7 @@
   (.preventDefault event)
   (let [{:keys [user password]} @login-state]
     (if-not (and (seq user) (seq password))
-      (swap! login-state assoc :error "Both fields are required.")
+      (swap! login-state assoc :error "Begge feltene må fylles ut")
       (do
         (swap! login-state assoc :loading? true)
         (POST "login" {:params        {:email    user
@@ -58,7 +58,7 @@
          {:disabled   (when (:loading? @login-state) "disabled")
           :onClick    #(login-handler % login-state)
           :onTouchEnd #(login-handler % login-state)}
-         (if (:loading? @login-state) "Logging in..." "Log In")]]])))
+         (if (:loading? @login-state) "Logger inn..." "Logg inn")]]])))
 
 (defn login-page []
   [:div

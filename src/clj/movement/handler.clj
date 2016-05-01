@@ -61,8 +61,8 @@
   [email password]
   (let [user (db/user-by-email email)]
     (cond
-      (nil? user) (response {:message "Unknown user"} 400)
-      (false? (:activated? user)) (response {:message "Email has not been activated. Check your inbox for an activation code."} 400)
+      (nil? user) (response {:message "Ukjent epost"} 400)
+      (false? (:activated? user)) (response {:message "Du er registrert, men eposten har ikke blitt bekreftet. Sjekk om du har fått en bekreftelseslenke i på epost."} 400)
       ;(false? (:valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
       (valid-user? user password) (let [claims {:user (keyword (:user-id user))
                                                 :exp  (-> 72 hours from-now)}
@@ -70,7 +70,7 @@
                                     (response (-> user
                                                   (assoc :token token)
                                                   (dissoc :password :activated?))))
-      :else (response {:message "Incorrect password"} 401))))
+      :else (response {:message "Passordet stemte ikke"} 401))))
 
 ;;;;;; end login ;;;;;;
 
@@ -79,14 +79,14 @@
     (response (db/add-session! params))
     (catch Exception e (error e "error storing session"))))
 
-(defn add-user! [email password]
-  #_(if (nil? (db/user-by-email email))
+(defn add-user! [email username password]
+  (if (nil? (db/user-by-email email))
     (let [activation-id (str (UUID/randomUUID))]
-      (db/add-user! email password activation-id)
-      (send-activation-email email activation-id)
-      (send-email "admin@movementsession.com" "A new user registered!" "")
-      (activation-page "To verify your email address we have sent you an activation email."))
-    (pricing-page (str email " is already registered as a user."))))
+      (db/add-user! email username password activation-id)
+      (send-activation-email email username activation-id)
+      (send-email "andreas@mumrik.no" "En ny bruker registrerte" (str "Epost: " email "\nNavn: " username))
+      (landing-page :account-created {:email email}))
+    (landing-page :account-exists {:email email})))
 
 (defn like [params]
   (try
@@ -148,27 +148,27 @@
 
 (defroutes routes
            (HEAD "/" [] "")
-           (GET "/" [] (landing-page))
-           (GET "/blog" [] (redirect "/blog/index.html"))
-           (GET "/contact" [] (contact-page))
-           (GET "/terms" [] (render-file "privacypolicy.htm" {}))
-           (GET "/about" [] (about-page))
-           (GET "/tour" [] (tour-page))
-           (GET "/pricing" [] (pricing-page))
-           (GET "/signup" [] (pricing-page))
-           (GET "/activated/:user" [user] (payment-page user "Account successfully activated!"))
+           (GET "/" [] (landing-page :landing))
+           #_(GET "/blog" [] (redirect "/blog/index.html"))
+           #_(GET "/contact" [] (contact-page))
+           #_(GET "/terms" [] (render-file "privacypolicy.htm" {}))
+           #_(GET "/about" [] (about-page))
+           #_(GET "/tour" [] (tour-page))
+           #_(GET "/pricing" [] (pricing-page))
+           (GET "/signup" [] (landing-page :landing))
+           #_(GET "/subscription-activated" req (update-subscription-status! (:params req) true))
+           #_(GET "/subscription-deactivated" req (update-subscription-status! (:params req) false))
+
+           (POST "/signup" [email username password] (add-user! email username password))
+           (GET "/activated/:user" [user] (landing-page :account-activated))
+           (GET "/activate/:id" [id] (do (db/activate-user! id)
+                                         (landing-page :account-activated)))
+
            (GET "/app" [] (render-file "app.html" {:dev (env :dev?) :csrf-token *anti-forgery-token*}))
+           (POST "/login" [email password] (jws-login email password))
 
            (GET "/movements" req (if (authenticated? req) (response (db/movements)) (throw-unauthorized)))
            (GET "/categories" req (if (authenticated? req) (response (db/categories)) (throw-unauthorized)))
-
-           (GET "/activate/:id" [id] (db/activate-user! id))
-           (GET "/subscription-activated" req (update-subscription-status! (:params req) true))
-           (GET "/subscription-deactivated" req (update-subscription-status! (:params req) false))
-
-           (POST "/signup" [email password] (add-user! email password))
-           (POST "/login" [email password] (jws-login email password))
-
            (GET "/users" req (if (authenticated? req)
                                (response (vec (db/users))) (throw-unauthorized)))
            (GET "/user" req (if (authenticated? req)

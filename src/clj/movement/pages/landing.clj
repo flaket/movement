@@ -11,24 +11,24 @@
    [:div.home-menu.pure-menu.pure-menu-horizontal
     [:a.pure-menu-heading {:title  "Home"
                            :href   "/"
-                           :target "_self"} "Movement Session"]
+                           :target "_self"} "Mumrik"]
     [:ul.pure-menu-list
-     [:li.pure-menu-item
+     #_[:li.pure-menu-item
       [:a.pure-menu-link {:title  "Home"
                           :href   "/"
-                          :target "_self"} "Home"]]
-     [:li.pure-menu-item
+                          :target "_self"} "Hjem"]]
+     #_[:li.pure-menu-item
       [:a.pure-menu-link {:title  "Tour"
                           :href   "/tour"
                           :target "_self"} "Tour"]]
      [:li.pure-menu-item
       [:a.pure-menu-link {:title  "Sign up"
                           :href   "/signup"
-                          :target "_self"} "Sign up"]]
+                          :target "_self"} "Bli med"]]
      [:li.pure-menu-item
       [:a.pure-menu-link {:title  "Log in"
                           :href   "/app"
-                          :target "_blank"} "Log In"]]]]])
+                          :target "_self"} "Logg inn"]]]]])
 
 (defn splash []
   [:div#splash
@@ -139,18 +139,67 @@
         [:input {:type "text" :name "b_82d2cd810b5590723731dc9a0_e4ecd35054" :tab-index "-1" :value ""}]]
        [:div.clear [:input {:type "submit" :value "Subscribe" :name "subscribe" :id "mc-embedded-subscribe" :class "button"}]]]]]]])
 
-(defn landing-page []
+
+
+(defn landing-page [state & opts]
   (html5
-    (html-head "Movement Session :: Log and generate workouts for your functional, natural and practical movement training")
+    (html-head "Mumrik :: Din treningsdagbok og personlige trener")
     [:body
      (landing-header)
      [:div.content
-      (splash)
+
+      (case state
+        :account-exists
+        [:div.l-box
+         [:div.pure-g
+          [:p.pure-u-1
+           (str (:email (first opts)) " er allerede registrert.")]]]
+
+        :account-created
+        [:div.l-box
+         [:div.pure-g
+          [:p.pure-u-1
+           (str "For å bekrefte at eposten er din har vi sendt en epost til "
+                (:email (first opts)) " med en bekreftelseslenke.")]]]
+
+        :account-activated
+        [:div.l-box
+         [:div.pure-g [:h3.pure-u-1.information-head "Kontoen er aktivert!"]]
+         [:div.pure-g
+          [:p.pure-u-1 "Du kan nå logge inn."]]]
+
+        ; default
+        [:form.pure-form.pure-form-stacked
+         {:method "POST"
+          :action "/signup"}
+         [:fieldset
+          [:input#email.pure-input-1
+           {:type        "email"
+            :name        "email"
+            :required    "required"
+            :placeholder "Epost"}]
+          [:input#username.pure-input-1
+           {:type        "text"
+            :name        "username"
+            :required    "required"
+            :placeholder "Brukernavn (kan bytte senere)"}]
+          [:input#password.pure-input-1
+           {:type        "password"
+            :name        "password"
+            :placeholder "Passord"
+            :required    "required"}]
+          [:input.button.pure-input-1
+           {:type  "submit"
+            :value "Bli med"}]
+          (anti-forgery-field)]])
+
+
+      #_(splash)
       #_(carousel)
-      (sell)
-      (epilog)
+      #_(sell)
+      #_(epilog)
       #_(email-list)]
-     (footer-after-content)
+     #_(footer-after-content)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]

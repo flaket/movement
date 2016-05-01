@@ -31,11 +31,11 @@
                                  :href   "/"
                                  :target "_self"} "Movement Session"]
    [:ul.pure-menu-list
-    [:li.pure-menu-item
+    #_[:li.pure-menu-item
      [:a.pure-menu-link {:title  "Home"
                          :href   "/"
                          :target "_self"} "Home"]]
-    [:li.pure-menu-item
+    #_[:li.pure-menu-item
      [:a.pure-menu-link {:title  "Tour"
                          :href   "/tour"
                          :target "_self"} "Tour"]]
@@ -46,7 +46,7 @@
     [:li.pure-menu-item
      [:a.pure-menu-link {:title  "Log in"
                          :href   "/app"
-                         :target "_blank"} "Log In"]]]])
+                         :target "_self"} "Log In"]]]])
 
 (defn footer-after-content []
   [:div.footer.l-box.center

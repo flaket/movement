@@ -248,7 +248,8 @@
   (let [user (:user-id (user-by-activation-id uuid))]
     (h/update-item! creds :users {:user-id user}
                     {:activated? [:set true]
-                     :activation-id [:remove]})))
+                     :activation-id [:remove]})
+    "ok"))
 
 (defn update-subscription! [user-id value]
   (h/update-item! creds :users {:user-id user-id}
