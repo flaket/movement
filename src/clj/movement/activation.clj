@@ -9,7 +9,7 @@
   (str (UUID/randomUUID)))
 
 (def url (if (env :dev?) "http://localhost:8000/activate/"
-                          "http://movement-session.herokuapp.com/activate"))
+                          "http://movement-session.herokuapp.com/activate/"))
 
 (defn send-email [to-email subject body]
   (try

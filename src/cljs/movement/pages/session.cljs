@@ -100,7 +100,7 @@
 
 (defn generate-placeholder-text [activity]
   (let [day (.getDay (DateTime.))
-        nor-day ({1 "mandag" 2 "tirsdag" 3 "onsdag" 4 "torsdag" 5 "fredag" 6 "lørdag" 7 "søndag"} day)
+        nor-day ({0 "søndag" 1 "mandag" 2 "tirsdag" 3 "onsdag" 4 "torsdag" 5 "fredag" 6 "lørdag"} day)
         texts ["#du #kan #tagge #øktene #dine"
                (str "#" (str/lower-case activity))
                (str "Jeg liker lukten av bevegelse på " nor-day "er.")
@@ -145,7 +145,7 @@
               (let [blob (js/Blob. (array (-> e .-target .-result)))
                     blob-url (.createObjectURL (.-URL js/window) blob)
                     image (js/Image.)]
-                (session/update-in! [:movement-session] assoc :photo true)
+                (session/update-in! [:movement-session] assoc :photo? true)
                 (set! (.-src image) blob-url)
                 (set! (.-onload image)
                       (fn [e]
@@ -167,18 +167,18 @@
       (.readAsArrayBuffer reader file))))
 
 (defn add-photo-component []
-  (if-let [photo (session/get-in [:movement-session :photo])]
+  (if-let [photo (session/get-in [:movement-session :photo?])]
     [:div.pure-g
      [:div.pure-u {:onClick    (fn [e] (.preventDefault e)
                                  (let [canvas (.getElementById js/document "session-image-canvas")
                                        ctx (.getContext canvas "2d")]
                                    (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
-                                   (session/update-in! [:movement-session] dissoc :photo)))
+                                   (session/update-in! [:movement-session] dissoc :photo?)))
                    :onTouchEnd (fn [e] (.preventDefault e)
                                  (let [canvas (.getElementById js/document "session-image-canvas")
                                        ctx (.getContext canvas "2d")]
                                    (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
-                                   (session/update-in! [:movement-session] dissoc :photo)))
+                                   (session/update-in! [:movement-session] dissoc :photo?)))
                    :style      {:color "red" :cursor 'pointer}} [:i.fa.fa-times.fa-2x]]]
     [:div.pure-g
      [:div.pure-u.pure-button.fileUpload
@@ -431,6 +431,7 @@
   (let [canvas (.getElementById js/document "session-image-canvas")
         image (.toDataURL canvas "image/jpeg" 0.6)
         session (session/get :movement-session)
+        session (if (:photo? session) (assoc session :photo image) session)
         session (if-not (:comment session) (assoc session :comment "") session)
         new-parts (mapv (fn [part]
                           (mapv (fn [m]
@@ -448,12 +449,11 @@
         date-time (str date "T" time)
         hash-tags (vec (re-seq #"#[\w]+" (:comment session)))
         session (assoc session :activity (:title (:activity session))
-                               :photo image
                                :parts new-parts
                                :date-time date-time
                                :tags hash-tags
                                :unique-movements (map #(dissoc % :image) (flatten unique-movements)))
-        session (dissoc session :date)]
+        session (dissoc session :date :photo?)]
     (POST "store-session"
           {:params        {:session session
                            :user-id (:user-id (session/get :user))}
