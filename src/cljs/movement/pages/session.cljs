@@ -261,26 +261,27 @@
            [:div.pure-g
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Repetisjoner"]
-             [:input {:style {:width 75}
+             [:input {:style {:margin-left 3 :width 75}
                       :id    (str "rep-input" id) :type "number" :defaultValue rep :min 0}]]
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Avstand"]
-             [:input {:style {:width 75}
+             [:input {:style {:margin-left 3 :margin-right 3 :width 75}
                       :id    (str "distance-input" id) :type "number" :defaultValue distance :min 0}]
-             [:span {:style {:margin-left 3}} "m"]]
+             [:span "m"]]
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Tid"]
-             [:input {:style {:width 75}
+             [:input {:style {:margin-left 3 :margin-right 3 :width 75}
                       :id    (str "duration-input" id) :type "number" :defaultValue duration :min 0}]
-             [:span {:style {:margin-left 3}} "sek"]]
+             [:span "sek"]]
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Vekt"]
-             [:input {:style {:width 75}
+             [:input {:style {:margin-left 3 :width 75}
                       :id    (str "weight-input" id) :type "number" :defaultValue weight :min 0 :step 0.5}]]
             [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
              [:label "Hvile"]
-             [:input {:style {:width 75}
-                      :id    (str "rest-input" id) :type "number" :defaultValue rest :min 0}]]
+             [:input {:style {:margin-left 3 :margin-right 3 :width 75}
+                      :id    (str "rest-input" id) :type "number" :defaultValue rest :min 0}]
+             [:span "sek"]]
             [:a.pure-u-1-3.pure-button.pure-button-primary {:style   {:margin "5px 5px 5px 5px"}
                                                             :onClick (fn [e] (.preventDefault e) (update-movement {:id id :m m :parts parts :part-number part-number :pos pos}))
                                                             :onTouchEnd (fn [e] (.preventDefault e) (update-movement {:id id :m m :parts parts :part-number part-number :pos pos}))}

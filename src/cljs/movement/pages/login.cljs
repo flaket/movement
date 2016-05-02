@@ -36,25 +36,25 @@
            {:href (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
                        "?referrer="
                        (:user @login-state))} "Purchase subscription"]])
-       [:div.pure-g {:style {:margin-bottom 5 :font-size "150%"}}
+       [:div.pure-g {:style {:margin-bottom 5 :font-size "200%"}}
         [:input {:type        "text"
                  :className   "pure-u-1"
                  :name        "email"
-                 :placeholder "email"
+                 :placeholder "epost"
                  :on-change   #(swap! login-state assoc :user (-> % .-target .-value))
                  :value       (:user @login-state)}]]
-       [:div.pure-g {:style {:margin-bottom 5 :font-size "150%"}}
+       [:div.pure-g {:style {:margin-bottom 5 :font-size "200%"}}
         [:input {:type        "password"
                  :className   "pure-u-1"
                  :name        "password"
-                 :placeholder "password"
+                 :placeholder "passord"
                  :on-change   #(swap! login-state assoc :password (-> % .-target .-value))
                  :value       (:password @login-state)}]]
        (when-let [e (:error @login-state)]
-         [:div.pure-g {:style {:font-size "150%"}}
+         [:div.pure-g {:style {:font-size "150%" :margin-bottom 5}}
           [:div.pure-u-1.notice.center e]])
        [:div.pure-g
-        [:button.pure-u-1.button.button-primary
+        [:button.pure-u-1.button.button-success.button-xlarge
          {:disabled   (when (:loading? @login-state) "disabled")
           :onClick    #(login-handler % login-state)
           :onTouchEnd #(login-handler % login-state)}
