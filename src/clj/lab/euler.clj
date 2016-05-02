@@ -3,7 +3,7 @@
 ; Problem 4 - Largest palindrome product
 ; A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
 ;Find the largest palindrome made from the product of two 3-digit numbers.
-(time
+#_(time
   ; Dette virker som en ålreit brute force løsning som finner løsningen på 250ms. Det finnes sikkert noen triks så man slipper å søke gjennom alle produktene.
   (let [results (for [x (range 1000) y (range 1000)
                       :let [product (* x y)]
@@ -24,7 +24,7 @@
 ; Andre forsøk: mer elegant kode, men fremdeles brute force og kjøre tid på > 30 sek.
 #_(time (->> (for [x (range) :let [y (map #(rem x %) (range 11 21))] :when (every? zero? y)] [x y]) (take 2) last first))
 
-(defn gcd
+#_(defn gcd
   "Euclid's algoritme for greatest common divisor, gitt at både a og b er positive.
   https://en.wikipedia.org/wiki/Greatest_common_divisor"
   [a b]
@@ -33,14 +33,14 @@
     (> a b) (recur (- a b) b)
     (< a b) (recur a (- b a))))
 
-(defn lcm
+#_(defn lcm
   "Least common multiple, ved reduksjon av gcd.
   https://en.wikipedia.org/wiki/Least_common_multiple#Computing_the_least_common_multiple"
   [a b]
   (/ (* a b) (gcd a b)))
 
 ; Tredje forsøk, finner løsning på 270ms.
-(defn smallest-multiple
+#_(defn smallest-multiple
   "Returns the smallest positive number that is evenly divisible by all the numbers from 1 to number"
   [number]
   (reduce #(lcm %2 %1) (range 1 number)))

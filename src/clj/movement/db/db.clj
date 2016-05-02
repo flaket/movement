@@ -24,13 +24,13 @@
 
 ;;-------------------- aws credentials --------------------
 
-(def local-creds {:access-key ""
-                  :secret-key ""
-                  :endpoint   "http://localhost:8080"})
-
 (def creds {:access-key "AKIAJG4MLZ7TON7BLNCQ"
             :secret-key "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"
-            :region :eu-central-1})
+            :region :eu-central-1
+            ;:access-key ""
+            ;:secret-key ""
+            ;:endpoint   "http://localhost:8080"
+            })
 
 ;;-------------------- get data --------------------
 
