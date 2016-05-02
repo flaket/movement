@@ -29,21 +29,21 @@
 (defn login []
   (let [login-state (atom {:user "" :password "" :error "" :loading? false :show-payment? false})]
     (fn []
-      [:div {:style {:font-size 24}}
+      [:form
        (when (:show-payment? @login-state)
          [:div.pure-g
           [:a.pure-u-1.button.button-primary
            {:href (str "http://sites.fastspring.com/roebucksoftware/product/movementsessionsubscription"
                        "?referrer="
                        (:user @login-state))} "Purchase subscription"]])
-       [:div.pure-g {:style {:padding 5}}
+       [:div.pure-g {:style {:margin-bottom 5 :font-size "150%"}}
         [:input {:type        "text"
                  :className   "pure-u-1"
                  :name        "email"
                  :placeholder "email"
                  :on-change   #(swap! login-state assoc :user (-> % .-target .-value))
                  :value       (:user @login-state)}]]
-       [:div.pure-g {:style {:padding 5}}
+       [:div.pure-g {:style {:margin-bottom 5 :font-size "150%"}}
         [:input {:type        "password"
                  :className   "pure-u-1"
                  :name        "password"
@@ -51,7 +51,7 @@
                  :on-change   #(swap! login-state assoc :password (-> % .-target .-value))
                  :value       (:password @login-state)}]]
        (when-let [e (:error @login-state)]
-         [:div.pure-g
+         [:div.pure-g {:style {:font-size "150%"}}
           [:div.pure-u-1.notice.center e]])
        [:div.pure-g
         [:button.pure-u-1.button.button-primary

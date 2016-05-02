@@ -482,96 +482,97 @@
       [:div
        [menu-component]
        (if-let [session (session/get :movement-session)]
-         [:div.content {:style {:margin-top 100}}
-          [:a {:style      {:float 'right :margin-right 20 :margin-top 20
-                            :color (:graphic (:activity session)) :opacity 1}
-               :onClick    #(remove-session %)
-               :onTouchEnd #(remove-session %)}
-           [:i.fa.fa-times.fa-4x]]
-          [:div.pure-g
-           (when (or (= "Naturlig bevegelse" (:title (:activity session)))
-                     (= "Styrketrening" (:title (:activity session)))
-                     (= "Mobilitet" (:title (:activity session))))
-             [:img.pure-u
-              {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
-               :style      {:height       250
-                            :margin-left  20
-                            :margin-right 20 :cursor 'pointer}
-               :onClick    #(generate-movement-session % (:activity session))
-               :onTouchEnd #(generate-movement-session % (:activity session))}])
-           (when-let [description (:description session)]
-             [:div.pure-u (first (shuffle description))])]
+         (let [session (assoc session :parts (vec (remove #(or (nil? %) (= nil (:name %))) (:parts session))))] ;remove nil movements or movements without a name (dukker av eller annen grunn noen ganger opp fra server)
+           [:div.content {:style {:margin-top 100}}
+            [:a {:style      {:float 'right :margin-right 20 :margin-top 20
+                              :color (:graphic (:activity session)) :opacity 1}
+                 :onClick    #(remove-session %)
+                 :onTouchEnd #(remove-session %)}
+             [:i.fa.fa-times.fa-4x]]
+            [:div.pure-g
+             (when (or (= "Naturlig bevegelse" (:title (:activity session)))
+                       (= "Styrketrening" (:title (:activity session)))
+                       (= "Mobilitet" (:title (:activity session))))
+               [:img.pure-u
+                {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
+                 :style      {:height       250
+                              :margin-left  20
+                              :margin-right 20 :cursor 'pointer}
+                 :onClick    #(generate-movement-session % (:activity session))
+                 :onTouchEnd #(generate-movement-session % (:activity session))}])
+             (when-let [description (:description session)]
+               [:div.pure-u (first (shuffle description))])]
 
-          [:div
-           (when-let [parts (:parts session)]
-             [:article.session
-              (doall
-                (for [i (range (count parts))]
-                  ^{:key i} [part-component (get parts i) i (:title session)]))])
-           [:div.pure-g
-            [:div.pure-u {:style {:font-size "200%"}} (str (:title (:activity session)) " i ")]
-            [:div.pure-u {:style {:font-size "200%" :margin-left 10 :margin-right 10 :margin-bottom 10}} (time-component)]]
-           (text-component (:activity session))
-           [:div.pure-g
-            [:div.pure-u-1-2
-             (add-photo-component)]
-            [:div.pure-u-1-2
-             (date-component)]]
-           [:canvas {:id "session-image-canvas"}]
-           (if-let [parts (:parts session)]
-             [(let [movements (flatten parts)
+            [:div
+             (when-let [parts (:parts session)]
+               [:article.session
+                (doall
+                  (for [i (range (count parts))]
+                    ^{:key i} [part-component (get parts i) i (:title session)]))])
+             [:div.pure-g
+              [:div.pure-u {:style {:font-size "200%"}} (str (:title (:activity session)) " i ")]
+              [:div.pure-u {:style {:font-size "200%" :margin-left 10 :margin-right 10 :margin-bottom 10}} (time-component)]]
+             (text-component (:activity session))
+             [:div.pure-g
+              [:div.pure-u-1-2
+               (add-photo-component)]
+              [:div.pure-u-1-2
+               (date-component)]]
+             [:canvas {:id "session-image-canvas"}]
+             (if-let [parts (:parts session)]
+               [(let [movements (flatten parts)
 
-                    unique-movements (-> (for [m movements]
-                                           (-> m
-                                               (#(if (= 0 (:zone %)) (assoc % :zone 1) %))
-                                               (dissoc :id :category :slot-category :measurement
-                                                       :set :distance :duration :rep :movement :rest :weight
-                                                       :natural-only? :performed-sets :next :previous)))
-                                         set
-                                         vec
-                                         atom)]
-                (fn []
-                  [:div
-                   (let [ms @unique-movements]
-                     [:div.pure-g
-                      (doall
-                        (for [m ms]
-                          ^{:key (rand-int 10000000)}
-                          [:div.pure-u {:id    (str "unique-movement-" (:name m))
-                                        :style {:border-bottom "1px solid"}}
-                           [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" (:image m)) :title (:name m) :alt (:name m)}]
-                           (let [m-pos (first (positions #{m} ms))]
-                             (cond
-                               (= 1 (:zone m))
-                               [:div.center.dim
-                                [:i.fa.fa-star.gold]
-                                [:i.fa.fa-star-o.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 2)))
-                                                       :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 2)))
-                                                       :style      {:cursor 'pointer}}]
-                                [:i.fa.fa-star-o.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 3)))
-                                                       :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 3)))
-                                                       :style   {:cursor 'pointer}}]]
+                      unique-movements (-> (for [m movements]
+                                             (-> m
+                                                 (#(if (= 0 (:zone %)) (assoc % :zone 1) %))
+                                                 (dissoc :id :category :slot-category :measurement
+                                                         :set :distance :duration :rep :movement :rest :weight
+                                                         :natural-only? :performed-sets :next :previous)))
+                                           set
+                                           vec
+                                           atom)]
+                  (fn []
+                    [:div
+                     (let [ms @unique-movements]
+                       [:div.pure-g
+                        (doall
+                          (for [m ms]
+                            ^{:key (rand-int 10000000)}
+                            [:div.pure-u {:id    (str "unique-movement-" (:name m))
+                                          :style {:border-bottom "1px solid"}}
+                             [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" (:image m)) :title (:name m) :alt (:name m)}]
+                             (let [m-pos (first (positions #{m} ms))]
+                               (cond
+                                 (= 1 (:zone m))
+                                 [:div.center.dim
+                                  [:i.fa.fa-star.gold]
+                                  [:i.fa.fa-star-o.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 2)))
+                                                         :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 2)))
+                                                         :style      {:cursor 'pointer}}]
+                                  [:i.fa.fa-star-o.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 3)))
+                                                         :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 3)))
+                                                         :style      {:cursor 'pointer}}]]
 
-                               (= 2 (:zone m))
-                               [:div.center.dim
-                                [:i.fa.fa-star.gold.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 1)))
-                                                          :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 1)))
-                                                          :style   {:cursor 'pointer}}]
-                                [:i.fa.fa-star.gold]
-                                [:i.fa.fa-star-o.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 3)))
-                                                       :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 3)))
-                                                       :style   {:cursor 'pointer}}]]
+                                 (= 2 (:zone m))
+                                 [:div.center.dim
+                                  [:i.fa.fa-star.gold.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 1)))
+                                                            :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 1)))
+                                                            :style      {:cursor 'pointer}}]
+                                  [:i.fa.fa-star.gold]
+                                  [:i.fa.fa-star-o.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 3)))
+                                                         :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 3)))
+                                                         :style      {:cursor 'pointer}}]]
 
-                               (= 3 (:zone m))
-                               [:div.center.dim
-                                [:i.fa.fa-star.gold.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 1)))
-                                                          :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 1)))
-                                                          :style   {:cursor 'pointer}}]
-                                [:i.fa.fa-star.gold.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 2)))
-                                                          :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 2)))
-                                                          :style   {:cursor 'pointer}}]
-                                [:i.fa.fa-star.gold]]))]))])
-                   [finish-session-component @unique-movements]]))]
-             [finish-session-component])]]
+                                 (= 3 (:zone m))
+                                 [:div.center.dim
+                                  [:i.fa.fa-star.gold.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 1)))
+                                                            :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 1)))
+                                                            :style      {:cursor 'pointer}}]
+                                  [:i.fa.fa-star.gold.star {:onClick    (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 2)))
+                                                            :onTouchEnd (fn [e] (.preventDefault e) (swap! unique-movements assoc m-pos (assoc m :zone 2)))
+                                                            :style      {:cursor 'pointer}}]
+                                  [:i.fa.fa-star.gold]]))]))])
+                     [finish-session-component @unique-movements]]))]
+               [finish-session-component])]])
          [:div.content
           [list-of-activities]])])))

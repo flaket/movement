@@ -206,5 +206,5 @@
      [:noscript
       [:p
        [:img {:alt "Clicky" :width 1 :height 1
-              :src "//in.getclicky.com/100920866ns.gif"}]]]]))
+              :src "//in.getclicky.com/100935519ns.gif"}]]]]))
 

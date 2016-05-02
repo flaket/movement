@@ -76,11 +76,15 @@ body {
     color: #111;
 }
 
-.pure-menu-item a:hover {
-    background: #fffff8;
-    color: lightgray;
-
+.pure-menu-item li {
+    color: #111;
 }
+
+.pure-menu-item li:hover {
+    background: #ffffff;
+}
+
+
 
 .splash {
     background: #fffff8;

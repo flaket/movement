@@ -19,7 +19,7 @@
      "/css/site.css"
      "/css/pricing.css")
    [:meta {:name    "description"
-           :content "Try Movement Session to learn functional and natural movement training through generated workouts."}]
+           :content "Med Mumrik har du en treningsdagbok og en personlige trener"}]
    [:meta {:name    "google-site-verification"
            :content "4dEA4Y9dvxAtlRBwuG5bwlmo9fEKfI7TTX5wo4bdj_M"}]
    [:meta {:name    "msvalidate.01"
