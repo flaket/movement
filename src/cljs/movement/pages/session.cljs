@@ -483,7 +483,10 @@
       [:div
        [menu-component]
        (if-let [session (session/get :movement-session)]
-         (let [session (assoc session :parts (vec (remove #(or (nil? %) (= nil (:name %))) (:parts session))))] ;remove nil movements or movements without a name (dukker av eller annen grunn noen ganger opp fra server)
+         ;remove nil movements or movements without a name (dukker av eller annen grunn noen ganger opp fra server)
+         (let [session (assoc session :parts
+                                      (vec (for [p (:parts session)]
+                                             (vec (remove #(or (nil? %) (= nil (:name %))) p)))))]
            [:div.content {:style {:margin-top 100}}
             [:a {:style      {:float 'right :margin-right 20 :margin-top 20
                               :color (:graphic (:activity session)) :opacity 1}
