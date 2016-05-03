@@ -48,14 +48,12 @@
            ^{:key (rand-int 10000000)}
            [movement-component m]))])))
 
-(defn like [e {:keys [likes user-id url]}]
-  (.preventDefault e)
-  (when-not ((set likes) user-id)
-    (POST "like" {:params        {:session-url url :user-id user-id}
-                  :handler       (fn [r]
-                                   (let [pos (first (positions #{url} (map :url (session/get :feed))))]
-                                     (session/update-in! [:feed pos :session :likes] conj user-id)))
-                  :error-handler (fn [r] nil)})))
+(defn like [{:keys [user-id url]}]
+  (POST "like" {:params        {:session-url url :user-id user-id}
+                :handler       (fn [r]
+                                 (let [pos (first (positions #{url} (map :url (session/get :feed))))]
+                                   (session/update-in! [:feed pos :session :likes] conj user-id)))
+                :error-handler (fn [r] nil)}))
 
 (defn add-comment [e adding-comment? params]
   (.preventDefault e)
@@ -188,9 +186,10 @@
                likes (:likes session)]
            [:div.pure-u-1
             (when-not (= user-id viewing-user-id)
-              [:i.fa.fa-thumbs-up.fa-2x {:style      {:cursor (when-not ((set likes) user-id) 'pointer) :color (if ((set likes) user-id) "#009900" 'lightgray)}
-                                         :onClick    #(like % {:likes likes :user-id user-id :url url})
-                                         :onTouchEnd #(like % {:likes likes :user-id user-id :url url})}])
+              [:i.fa.fa-thumbs-up.fa-2x {:style      {:cursor (when-not ((set likes) viewing-user-id) 'pointer)
+                                                      :color (if ((set likes) viewing-user-id) "#009900" 'lightgray)}
+                                         :onClick    (fn [e] (.preventDefault e) (like {:user-id viewing-user-id :url url}))
+                                         :onTouchEnd (fn [e] (.preventDefault e) (like {:user-id viewing-user-id :url url}))}])
 
             [:i.fa.fa-comment.fa-2x {:onClick (fn [e] (.preventDefault e) (reset! adding-comment? (not @adding-comment?)))
                                      :onTouchEnd (fn [e] (.preventDefault e) (reset! adding-comment? (not @adding-comment?)))
