@@ -151,11 +151,11 @@
            (GET "/" [] (landing-page :landing))
            #_(GET "/blog" [] (redirect "/blog/index.html"))
            #_(GET "/contact" [] (contact-page))
-           #_(GET "/terms" [] (render-file "privacypolicy.htm" {}))
            #_(GET "/about" [] (about-page))
            #_(GET "/tour" [] (tour-page))
            #_(GET "/pricing" [] (pricing-page))
-           (GET "/signup" [] (landing-page :landing))
+           (GET "/signup" [] (landing-page :signup))
+
            #_(GET "/subscription-activated" req (update-subscription-status! (:params req) true))
            #_(GET "/subscription-deactivated" req (update-subscription-status! (:params req) false))
 

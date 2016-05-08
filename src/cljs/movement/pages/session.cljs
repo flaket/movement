@@ -498,7 +498,7 @@
                        (= "Styrketrening" (:title (:activity session)))
                        (= "Mobilitet" (:title (:activity session))))
                [:img.pure-u
-                {:src        (str "images/mumrik.png") :title "Lag økt" :alt "Lag økt"
+                {:src        (str "images/mumrik.jpg") :title "Lag økt" :alt "Lag økt"
                  :style      {:height       250
                               :margin-left  20
                               :margin-right 20 :cursor 'pointer}

@@ -30,23 +30,6 @@
                           :href   "/app"
                           :target "_self"} "Logg inn"]]]]])
 
-(defn splash []
-  [:div#splash
-   [:div.pure-g
-    [:div.pure-u-1.pure-u-lg-1-2
-     [:div.pure-g
-      [:h1.pure-u-1
-       "Interactive workouts for your movement practice"]]
-     [:div.pure-g
-      [:p.pure-u-1
-       "Create and log individually adapted workouts without the help of a personal trainer."]]
-     [:div.pure-g
-      [:div.pure-u-1.center
-       [:a.m-button.orange.x-large.upper
-        {:title "Sign Up" :href "/pricing" :target ""} "Create a workout now"]]]]
-    [:div.pure-u-1.pure-u-md-1-2
-     [:img.pure-img-responsive {:src "images/marketing/session-circuit.png"}]]]])
-
 (defn sell []
   [:div#sell
    [:h2.content-head.center "A new way to create workouts"]
@@ -139,7 +122,76 @@
         [:input {:type "text" :name "b_82d2cd810b5590723731dc9a0_e4ecd35054" :tab-index "-1" :value ""}]]
        [:div.clear [:input {:type "submit" :value "Subscribe" :name "subscribe" :id "mc-embedded-subscribe" :class "button"}]]]]]]])
 
+(defn landing []
+  [:div#splash
+   [:div.pure-g
+    [:div.pure-u-1-2
+     [:div.pure-g
+      [:h1.pure-u-1
+       "Digital treningsdagbok"]]
+     [:div.pure-g
+      [:h1.pure-u-1
+       "Mumrik lager tilpassede økter for nettopp deg"]]
+     [:div.pure-g
+      [:h1.pure-u-1
+       "Skryt av det du gjør gjennom et sosialt nettverk"]]
+     [:div.pure-g
+      [:p.pure-u-1
+       "Skap og loggfør tilpassede økter uten hjelp fra en personlig trener."]]
+     [:div.pure-g
+      [:div.pure-u-1.center
+       [:button.m-button.orange.x-large.upper
+        {:title "Sign Up" :href "/signup" :target ""} "Bli med helt gratis"]]]]
+    [:div.pure-u-1-2
+     [:img.pure-img-responsive {:src "images/mumrik.jpg"}]]]])
 
+(defn account-created [opts]
+  [:div.l-box
+   [:div.pure-g
+    [:p.pure-u-1
+     (str "For å bekrefte at eposten er din har vi sendt en epost til "
+          (:email (first opts)) " med en bekreftelseslenke.")]]])
+
+(defn account-exists [opts]
+  [:div.l-box
+   [:div.pure-g
+    [:p.pure-u-1
+     (str (:email (first opts)) " er allerede registrert.")]]])
+
+(defn account-activated []
+  [:div.l-box
+   [:div.pure-g [:h3.pure-u-1.information-head "Kontoen er aktivert!"]]
+   [:div.pure-g
+    [:p.pure-u-1 "Du kan nå logge inn."]]])
+
+(defn signup []
+  [:div.pure-g
+   [:div.pure-u.pure-u-md-1-5]
+   [:div.pure-u-1.pure-u-md-3-5
+    [:form.pure-form.pure-form-stacked
+     {:method "POST"
+      :action "/signup"}
+     [:fieldset
+      [:input#email.pure-input-1
+       {:type        "email"
+        :name        "email"
+        :required    "required"
+        :placeholder "Epost"}]
+      [:input#username.pure-input-1
+       {:type        "text"
+        :name        "username"
+        :required    "required"
+        :placeholder "Brukernavn"}]
+      [:input#password.pure-input-1
+       {:type        "password"
+        :name        "password"
+        :placeholder "Passord"
+        :required    "required"}]
+      [:input.button.pure-input-1
+       {:type  "submit"
+        :value "Bli med"}]
+      (anti-forgery-field)]]]
+   [:div.pure-u.pure-u-md-1-5]])
 
 (defn landing-page [state & opts]
   (html5
@@ -147,59 +199,22 @@
     [:body
      (landing-header)
      [:div.content
-
       (case state
         :account-exists
-        [:div.l-box
-         [:div.pure-g
-          [:p.pure-u-1
-           (str (:email (first opts)) " er allerede registrert.")]]]
-
+        (account-exists opts)
         :account-created
-        [:div.l-box
-         [:div.pure-g
-          [:p.pure-u-1
-           (str "For å bekrefte at eposten er din har vi sendt en epost til "
-                (:email (first opts)) " med en bekreftelseslenke.")]]]
-
+        (account-created opts)
         :account-activated
-        [:div.l-box
-         [:div.pure-g [:h3.pure-u-1.information-head "Kontoen er aktivert!"]]
-         [:div.pure-g
-          [:p.pure-u-1 "Du kan nå logge inn."]]]
-
+        (account-activated)
+        :landing
+        (landing)
+        :signup
+        (signup)
         ; default
-        [:form.pure-form.pure-form-stacked
-         {:method "POST"
-          :action "/signup"}
-         [:fieldset
-          [:input#email.pure-input-1
-           {:type        "email"
-            :name        "email"
-            :required    "required"
-            :placeholder "Epost"}]
-          [:input#username.pure-input-1
-           {:type        "text"
-            :name        "username"
-            :required    "required"
-            :placeholder "Brukernavn (kan bytte senere)"}]
-          [:input#password.pure-input-1
-           {:type        "password"
-            :name        "password"
-            :placeholder "Passord"
-            :required    "required"}]
-          [:input.button.pure-input-1
-           {:type  "submit"
-            :value "Bli med"}]
-          (anti-forgery-field)]])
+        [:div])]
 
-
-      #_(splash)
-      #_(carousel)
-      #_(sell)
-      #_(epilog)
-      #_(email-list)]
-     #_(footer-after-content)
+     (when (= :landing state)
+       (footer-after-content))
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]

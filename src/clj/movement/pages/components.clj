@@ -50,25 +50,14 @@
 
 (defn footer-after-content []
   [:div.footer.l-box.center
-   [:div#footer-links.pure-g
-    [:div.pure-u.pure-u-md-1-4]
-    [:div.pure-u.pure-u-md-1-2
-     [:div.pure-g
-      [:div.pure-u.pure-u-md-1-5 [:a {:title "About Movement Session" :href "/about" :target "_top"} "About"]]
-      [:div.pure-u.pure-u-md-1-5 [:a {:title "Contact Us" :href "/contact" :target "_top"} "Contact"]]
-      [:div.pure-u.pure-u-md-1-5 [:a {:title "Read our Blog" :href "/blog" :target "_top"} "Blog"]]
-      [:div.pure-u.pure-u-md-1-5 [:a {:title "Terms and agreement" :href "/terms" :target "_top"} "Terms/Privacy"]]
-      [:div.pure-u.pure-u-md-1-5 [:a {:title  "Follow Movement Session on Twitter" :href "https://twitter.com/SessionMovement"
-                                      :target "" :class "twitter-follow-button" :data-show-count "false"} "@SessionMovement"]]]]
-    [:div.pure-u.pure-u-md-1-4]]
-   [:div#footer-logo.pure-g
-    [:div.pure-u.pure-u-md-1-3]
-    [:div.pure-u.pure-u-md-1-3 [:img {:width 75 :height 75 :src "images/movements/static-air-baby.png"}]]
-    [:div.pure-u.pure-u-md-1-3]]
-   [:div#footer-copyright.pure-g
-    [:div.pure-u.pure-u-md-1-3]
-    [:div.pure-u.pure-u-md-1-3 [:i.fa.fa-copyright] "2016 Movement Session"]
-    [:div.pure-u.pure-u-md-1-3]]])
+   #_[:div#footer-links.center
+    [:a {:title "Om Mumrik" :href "/about" :target "_top"} "Om"]
+    [:a {:title "Kontakt oss" :href "/contact" :target "_top"} "Kontakt"]
+    [:a {:title "Les bloggen" :href "/blog" :target "_top"} "Blogg"]]
+   [:div#footer-logo.pure-g.center
+    [:div.pure-u-1 [:img {:width 75 :height 75 :src "http://s3.amazonaws.com/mumrik-movement-images/static-air-baby.png"}]]]
+   [:div#footer-copyright.pure-g.center
+    [:div.pure-u-1 [:i.fa.fa-copyright] "2016 Mumrik"]]])
 
 (defn footer-always-bottom []
   [:div#footer.l-box.center

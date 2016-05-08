@@ -40,10 +40,6 @@ body {
           border: 1px solid #b56d02;
           color: #fffff2;}
 
-
-.orange:hover { background: yellow; }
-
-
 .gray { background: gray;
         border: 1px solid #b56d02;
         color: #111; }
@@ -121,6 +117,7 @@ body {
 #footer-links a {
     color: rgb(200, 200, 200);
     text-decoration: none;
+    margin-left: 20px;
 }
 
 #footer-links a:hover {
