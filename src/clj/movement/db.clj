@@ -1,4 +1,4 @@
-(ns movement.db.db
+(ns movement.db
       (:require [clojure.core.async :as async :refer [<!! <! go]]
                 [hildebrand.core :as h]
                 [aws.sdk.s3 :as s3]
@@ -12,6 +12,8 @@
                 [clj-time.local :as l])
   (:import (java.util UUID)
            datomic.Util))
+
+;;-------------------- helpful functions --------------------
 
 (defn vec-remove
   [coll pos]
@@ -32,7 +34,7 @@
             ;:endpoint   "http://localhost:8080"
             })
 
-;;-------------------- get data --------------------
+;;-------------------- getting data --------------------
 
 (defn user [user-id]
   (<!! (h/get-item! creds :users {:user-id user-id})))

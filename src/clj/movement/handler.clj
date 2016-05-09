@@ -24,14 +24,8 @@
             [datomic.api :as d]
             [hiccup.core :refer [html]]
             [taoensso.timbre :refer [info error]]
-            [movement.db.db :as db]
-            [movement.pages.landing :refer [landing-page]]
-            [movement.pages.signup :refer [signup-page payment-page activation-page]]
-            [movement.pages.contact :refer [contact-page]]
-            [movement.pages.pricing :refer [pricing-page]]
-            [movement.pages.about :refer [about-page]]
-            [movement.pages.tour :refer [tour-page]]
-            [movement.pages.session :refer [view-session-page view-sub-activated-page]]
+            [movement.db :as db]
+            [movement.webpages :refer [web-page]]
             [movement.activation :refer [generate-activation-id send-email send-activation-email]])
   (:import java.security.MessageDigest
            java.math.BigInteger
@@ -62,7 +56,7 @@
   (let [user (db/user-by-email email)]
     (cond
       (nil? user) (response {:message "Ukjent epost"} 400)
-      (false? (:activated? user)) (response {:message "Du er registrert, men eposten har ikke blitt bekreftet. Sjekk om du har fått en bekreftelseslenke i på epost."} 400)
+      (false? (:activated? user)) (response {:message "Du er registrert, men eposten har ikke blitt bekreftet. Sjekk om du har fått en bekreftelseslenke på epost."} 400)
       ;(false? (:valid-subscription? user)) (response {:message "This account does not have a valid subscription." :update-payment? true} 400)
       (valid-user? user password) (let [claims {:user (keyword (:user-id user))
                                                 :exp  (-> 72 hours from-now)}
@@ -85,25 +79,14 @@
       (db/add-user! email username password activation-id)
       (send-activation-email email username activation-id)
       (send-email "andreas@mumrik.no" "En ny bruker registrerte" (str "Epost: " email "\nNavn: " username))
-      (landing-page :account-created {:email email}))
-    (landing-page :account-exists {:email email})))
+      (web-page :account-created {:email email}))
+    (web-page :account-exists {:email email})))
 
 (defn like [params]
   (try
     (db/like! params)
     (catch Exception e
       (response (str "Exception: " e)))))
-
-(defn activate-user! [id]
-  #_(let [user (old-db/entity-by-lookup-ref :user/activation-id id)]
-    (if-not (nil? (:db/id user))
-      (let []
-        (old-db/transact-activated-user! (:user/email user))
-        #_(old-db/add-standard-templates-to-user! (:user/email user))
-        {:status  302
-         :headers {"Location" (str "/activated/" (:user/email user))}
-         :body    ""})
-      "<h1>This activation-id is invalid.</h1>")))
 
 (defn change-password! [{:keys [user-id password new-password]}]
   (if (valid-user? (db/user user-id) password)
@@ -148,21 +131,21 @@
 
 (defroutes routes
            (HEAD "/" [] "")
-           (GET "/" [] (landing-page :landing))
+           (GET "/" [] (web-page :landing))
            #_(GET "/blog" [] (redirect "/blog/index.html"))
            #_(GET "/contact" [] (contact-page))
            #_(GET "/about" [] (about-page))
            #_(GET "/tour" [] (tour-page))
            #_(GET "/pricing" [] (pricing-page))
-           (GET "/signup" [] (landing-page :signup))
+           (GET "/signup" [] (web-page :signup))
 
            #_(GET "/subscription-activated" req (update-subscription-status! (:params req) true))
            #_(GET "/subscription-deactivated" req (update-subscription-status! (:params req) false))
 
            (POST "/signup" [email username password] (add-user! email username password))
-           (GET "/activated/:user" [user] (landing-page :account-activated))
+           (GET "/activated/:user" [user] (web-page :account-activated))
            (GET "/activate/:id" [id] (do (db/activate-user! id)
-                                         (landing-page :account-activated)))
+                                         (web-page :account-activated)))
 
            (GET "/app" [] (render-file "app.html" {:dev (env :dev?) :csrf-token *anti-forgery-token*}))
            (POST "/login" [email password] (jws-login email password))
