@@ -26,7 +26,7 @@
    [:meta {:name    "msvalidate.01"
            :content "2B704D213DB4E877B4F06C35F4FADFC4"}]])
 
-(defn footer-after-content []
+(defn footer []
   [:div.footer.l-box.center
    #_[:div#footer-links.center
       [:a {:title "Om Mumrik" :href "/about" :target "_top"} "Om"]
@@ -226,7 +226,7 @@
         [:div])]
 
      (when (= :landing state)
-       (footer-after-content))
+       (footer))
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]
@@ -338,7 +338,7 @@
       [:div.pure-g
        [:p.pure-u-1.center
         [:a.m-button.orange.x-large.upper {:title  "Sign Up" :href   "/signup" :target ""} "Try Movement Session"]]]]
-     (footer-after-content)
+     (footer)
 
      [:script {:src "//static.getclicky.com/js" :type "text/javascript"}]
      [:script {:type "text/javascript" :src "clicky.js"}]
