@@ -31,7 +31,7 @@
   (let []
     (fn [{:keys [name image rep performed-sets set distance duration weight rest]}]
       [:div.pure-u
-       [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" image)  :title name :alt name}]
+       [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" image) :title name :alt name}]
        (when (pos? weight) [:div.center {:style {:font-size "100%"}} (str weight " kg")])
        (when (pos? rep) [:div.center {:style {:font-size "100%"}} (str rep " reps")])
        (when (pos? distance) [:div.center {:style {:font-size "100%"}} (str distance " m")])
@@ -90,7 +90,7 @@
         [:div.pure-u
          (if user-image
            [:img {:src        (str "http://s3.amazonaws.com/mumrik-user-profile-images/" user-id ".jpg")
-                  :width 80 :height 80
+                  :width      80 :height 80
                   :style      {:margin-top 15 :margin-left 40
                                :cursor     'pointer :border-radius "50% 50% 50% 50%"}
                   :onClick    #(load-user % user-id)
@@ -103,7 +103,7 @@
                   :onTouchEnd #(load-user % user-id)
                   }])]
         [:div.pure-u {:style {:margin-left 20}}
-         [:div.pure-g [:h2 [:a.pure-u {:onClick #(load-user % user-id)
+         [:div.pure-g [:h2 [:a.pure-u {:onClick    #(load-user % user-id)
                                        :onTouchEnd #(load-user % user-id)} user-name]]]
          [:div.pure-g [:div.pure-u {:style {:margin-bottom 25}} (:date-time session)]]]]
 
@@ -119,21 +119,21 @@
          [:h2.pure-u-5-6 (str (:activity session)
                               (when-let [time (:time session)]
                                 (let [time-string (str/split time #":")
-                                               [h m s] (map #(read-string %) time-string)]
-                                           (str " i "
-                                                (cond
-                                                  (= h 0) ""
-                                                  (= h 1) (str h " time ")
-                                                  :else (str h " timer "))
-                                                (cond
-                                                  (= m 0) ""
-                                                  (= m 1) (str m " minutt ")
-                                                  :else (str m " minutter "))
-                                                (cond
-                                                  (= s nil) ""
-                                                  (= s 0) ""
-                                                  (= s 1) (str s " sekund ")
-                                                  :else (str s " sekunder "))))))]
+                                      [h m s] (map #(read-string %) time-string)]
+                                  (str " i "
+                                       (cond
+                                         (= h 0) ""
+                                         (= h 1) (str h " time ")
+                                         :else (str h " timer "))
+                                       (cond
+                                         (= m 0) ""
+                                         (= m 1) (str m " minutt ")
+                                         :else (str m " minutter "))
+                                       (cond
+                                         (= s nil) ""
+                                         (= s 0) ""
+                                         (= s 1) (str s " sekund ")
+                                         :else (str s " sekunder "))))))]
 
          (when-not (empty? (flatten (:parts session)))
            (if @show-session-data?
@@ -187,15 +187,15 @@
            [:div.pure-u-1
             (when-not (= user-id viewing-user-id)
               [:i.fa.fa-thumbs-up.fa-2x {:style      {:cursor (when-not ((set likes) viewing-user-id) 'pointer)
-                                                      :color (if ((set likes) viewing-user-id) "#009900" 'lightgray)}
+                                                      :color  (if ((set likes) viewing-user-id) "#009900" 'lightgray)}
                                          :onClick    (fn [e] (.preventDefault e) (like {:user-id viewing-user-id :url url}))
                                          :onTouchEnd (fn [e] (.preventDefault e) (like {:user-id viewing-user-id :url url}))}])
 
-            [:i.fa.fa-comment.fa-2x {:onClick (fn [e] (.preventDefault e) (reset! adding-comment? (not @adding-comment?)))
+            [:i.fa.fa-comment.fa-2x {:onClick    (fn [e] (.preventDefault e) (reset! adding-comment? (not @adding-comment?)))
                                      :onTouchEnd (fn [e] (.preventDefault e) (reset! adding-comment? (not @adding-comment?)))
-                                     :style   {:margin-left (when-not (= user-id viewing-user-id) 40)
-                                               :cursor      'pointer
-                                               :color       'lightgray}}]])]
+                                     :style      {:margin-left (when-not (= user-id viewing-user-id) 40)
+                                                  :cursor      'pointer
+                                                  :color       'lightgray}}]])]
 
         ; Possible additional comments from user or other users
         [:div
