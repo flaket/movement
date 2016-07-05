@@ -13,6 +13,10 @@
     [ajax.edn :refer [edn-request-format edn-response-format]]
     [clojure.string :as str]))
 
+(defn vec-remove
+  [coll pos]
+  (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
+
 (def csrf-token
   (dommy/attr (sel1 :#anti-forgery-token) "value"))
 

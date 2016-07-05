@@ -1460,176 +1460,173 @@
                      :measurement "duration",
                      :category #{:l-sit :core},
                      :name "L-sit"}
-                    {:name "Tåstrekk", :image "toes-stretch.png", :measurement "duration", :category #{:hip-mobility :mobility}}]
+                    {:name "Tåstrekk", :image "toes-stretch.png", :measurement "duration", :category #{:hip-mobility :mobility}}])
 
-  (def templates [{:parts [[{:set 5N, :movement "Hopp opp", :natural-only? true, :slot-category #{:jump}, :rep 1N}
-                            {:set 5N, :movement "Hopp ned", :natural-only? true, :slot-category #{:jump}, :rep 1N}
-                            {:distance 10N, :set 5N, :natural-only? true, :slot-category #{:balance}, :rep 6N}
-                            {:duration 20N, :set 5N, :natural-only? true, :slot-category #{:climb}, :rep 8N}
-                            {:distance 10N, :set 5N, :natural-only? true, :slot-category #{:crawl}}]],
-                   :title "Naturlige Bevegelser 3",
-                   :description ["Gå gjennom 4-6 runder av disse øvelsene. Finn et tempo så du ikke behøver pauser."]}
-                  {:title "Gymnastic Strength 2",
-                   :parts [[{:duration 10N, :set 4N, :slot-category #{:planche :back-lever}, :rest 10N}
-                            {:set 4N, :slot-category #{:push}, :rest 60N, :rep 5N}]
-                           [{:duration 10N, :set 4N, :slot-category #{:front-lever :side-lever}, :rest 10N}
-                            {:set 4N, :slot-category #{:pull}, :rest 60N, :rep 5N}]
-                           [{:duration 10N, :set 4N, :slot-category #{:l-sit}, :rest 10N, :rep 10N}
-                            {:set 4N, :slot-category #{:single-leg :jump}, :rest 60N, :rep 6N}]]}
-                  {:title "Mobility 1",
-                   :parts [[{:set 1N, :movement "Dynamisk ankelfleksjon", :slot-category #{:ankle-mobility}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}]
-                           [{:set 1N, :movement "Tøye håndledd", :slot-category #{:wrist-mobility}, :rep 10N}
-                            {:duration 30N,
-                             :distance 15N,
-                             :set 2N,
-                             :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
-                             :rep 10N}
-                            {:duration 30N,
-                             :distance 15N,
-                             :set 2N,
-                             :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
-                             :rep 10N}
-                            {:duration 30N,
-                             :distance 15N,
-                             :set 2N,
-                             :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
-                             :rep 10N}
-                            {:duration 30N,
-                             :distance 15N,
-                             :set 2N,
-                             :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
-                             :rep 10N}
-                            {:duration 30N,
-                             :distance 15N,
-                             :set 2N,
-                             :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
-                             :rep 10N}
-                            {:duration 30N,
-                             :distance 15N,
-                             :set 2N,
-                             :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
-                             :rep 10N}]]}
-                  {:parts [[{:duration 30N,
-                             :distance 15N,
-                             :set 3N,
-                             :natural-only? true,
-                             :slot-category #{:crawl :sit-stand-transition :balance :mobility :roll},
-                             :rep 10N}
-                            {:duration 30N,
-                             :distance 15N,
-                             :set 3N,
-                             :natural-only? true,
-                             :slot-category #{:crawl :sit-stand-transition :balance :mobility :roll},
-                             :rep 10N}
-                            {:duration 30N,
-                             :distance 15N,
-                             :set 3N,
-                             :natural-only? true,
-                             :slot-category #{:crawl :sit-stand-transition :balance :mobility :roll},
-                             :rep 10N}
-                            {:duration 30N,
-                             :distance 15N,
-                             :set 3N,
-                             :natural-only? true,
-                             :slot-category #{:crawl :sit-stand-transition :balance :mobility :roll},
-                             :rep 10N}]
-                           [{:duration 240N,
-                             :distance 50N,
-                             :set 1N,
-                             :natural-only? true,
-                             :slot-category #{:lift :run :crawl :sit-stand-transition :balance :mobility :roll},
-                             :rep 50N}]
-                           [{:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}
-                            {:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}]],
-                   :title "Naturlige Bevegelser 1",
-                   :description ["Varm opp med mobilitetsøvelser. Velg så en øvelse å trene teknikk på. Avslutt med 4-6 runder sirkeltrening uten pauser."
-                                 "Oppvarming, teknikktrening og svetting!"]}
-                  {:title "Gymnastic Strength 1",
-                   :parts [[{:duration 30N, :set 4N, :slot-category #{:straight-arm-strength}, :rest 60N, :rep 10N}
-                            {:duration 30N, :set 4N, :slot-category #{:straight-arm-strength}, :rest 60N, :rep 10N}]
-                           [{:set 3N, :slot-category #{:bent-arm-strength}, :rest 60N, :rep 5N}
-                            {:set 3N, :slot-category #{:bent-arm-strength}, :rest 60N, :rep 5N}
-                            {:set 3N, :slot-category #{:bent-arm-strength}, :rest 60N, :rep 5N}]
-                           [{:set 3N, :slot-category #{:single-leg :jump}, :rest 60N, :rep 10N}
-                            {:set 3N, :slot-category #{:single-leg :jump}, :rest 60N, :rep 10N}
-                            {:set 3N, :slot-category #{:single-leg :jump}, :rest 60N, :rep 10N}]
-                           [{:duration 60N, :set 2N, :slot-category #{:core}, :rest 30N, :rep 10N}
-                            {:duration 60N, :set 2N, :slot-category #{:core}, :rest 30N, :rep 10N}]]}
-                  {:title "Naturlige Bevegelser 4",
-                   :parts [[{:duration 15N, :distance 6N, :set 5N, :natural-only? true, :slot-category #{:brachiate}}
-                            {:distance 10N, :set 5N, :natural-only? true, :slot-category #{:balance}}
-                            {:set 5N, :natural-only? true, :slot-category #{:sit-stand-transition}, :rep 8N}
-                            {:set 5N, :natural-only? true, :slot-category #{:jump}, :rep 8N}
-                            {:distance 20N, :set 5N, :natural-only? true, :slot-category #{:balance}}]]}
-                  {:title "Mobility 3",
-                   :parts [[{:set 1N, :movement "Dynamisk soleus-strekk", :slot-category #{:hip-mobility}, :rep 10N}
-                            {:set 1N, :movement "Hofterotasjoner på gulvet", :slot-category #{:hip-mobility}, :rep 10N}
-                            {:set 1N, :movement "Knebøy hofterotasjon", :slot-category #{:hip-mobility}, :rep 10N}
-                            {:set 1N, :movement "Tåstrekk", :slot-category #{:hip-mobility}, :rep 10N}
-                            {:set 1N, :movement "Dynamisk tåstrekk", :slot-category #{:hip-mobility}, :rep 10N}
-                            {:set 1N, :movement "Knebøy hvile", :slot-category #{:hip-mobility}, :rep 10N}
-                            {:set 1N, :movement "Knebøy", :slot-category #{:hip-mobility}, :rep 10N}]]}
-                  {:title "Locomotion 1",
-                   :parts [[{:set 1N, :movement "Tøye håndledd", :slot-category #{:wrist-mobility}, :rep 10N}
-                            {:set 1N, :movement "Dynamisk ankelfleksjon", :slot-category #{:ankle-mobility}, :rep 10N}
-                            {:set 1N, :slot-category #{:mobility}, :rep 10N}
-                            {:set 1N, :slot-category #{:mobility}, :rep 10N}
-                            {:set 1N, :slot-category #{:mobility}, :rep 10N}
-                            {:set 1N, :slot-category #{:mobility}, :rep 10N}]
-                           [{:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
-                            {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
-                            {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
-                            {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
-                            {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
-                            {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}]]}
-                  {:title "Mobility 2",
-                   :parts [[{:set 1N, :movement "Dytt kneet vekk", :slot-category #{:hip-mobility}, :rep 20N}
-                            {:set 1N, :movement "Knebøy strekk mot taket", :slot-category #{:hip-mobility}, :rep 20N}
-                            {:duration 20N, :set 1N, :movement "Knebøy hold mot taket", :slot-category #{:hip-mobility}}
-                            {:set 1N, :movement "Knebøy bønn", :slot-category #{:hip-mobility}, :rep 20N}
-                            {:set 1N, :movement "Knebøy bukk", :slot-category #{:hip-mobility}, :rep 20N}]]}
-                  {:parts [[{:duration 30N,
-                             :distance 12N,
-                             :set 4N,
-                             :natural-only? true,
-                             :slot-category #{:crawl :sit-stand-transition},
-                             :rep 8N}
-                            {:duration 30N,
-                             :distance 12N,
-                             :set 4N,
-                             :natural-only? true,
-                             :slot-category #{:crawl :sit-stand-transition},
-                             :rep 8N}
-                            {:duration 30N,
-                             :distance 12N,
-                             :set 4N,
-                             :natural-only? true,
-                             :slot-category #{:crawl :sit-stand-transition},
-                             :rep 8N}
-                            {:set 4N, :natural-only? true, :slot-category #{:jump}, :rep 4N}
-                            {:set 4N, :natural-only? true, :slot-category #{:jump}, :rep 4N}
-                            {:duration 30N, :set 4N, :natural-only? true, :slot-category #{:hang}, :rep 1N}]],
-                   :title "Naturlige Bevegelser 2",
-                   :description ["Gjør 4+ runder i et jevnt tempo"]}
-                  {:title "Mobility 4",
-                   :parts [[{:set 1N, :movement "Utvendig rotasjon med strikk", :slot-category #{:shoulder-mobility}, :rep 15N}
-                            {:set 1N, :movement "Heve sideveis med strikk", :slot-category #{:shoulder-mobility}, :rep 15N}
-                            {:set 1N, :movement "Rotasjon med strikk over hodet", :slot-category #{:shoulder-mobility}, :rep 10N}
-                            {:set 1N, :movement "Rotasjon med strikk", :slot-category #{:shoulder-mobility}, :rep 10N}
-                            {:set 1N, :movement "Lav rotasjon med strikk", :slot-category #{:shoulder-mobility}, :rep 10N}
-                            {:set 1N, :movement "Flies med strikk over hodet", :slot-category #{:shoulder-mobility}, :rep 10N}
-                            {:set 1N, :movement "Flies med strikk", :slot-category #{:shoulder-mobility}, :rep 10N}
-                            {:set 1N, :movement "Lave flies med strikk", :slot-category #{:shoulder-mobility}, :rep 10N}]]}]
-    )
-
-
+(def templates [{:parts [[{:set 5N, :movement "Hopp opp", :natural-only? true, :slot-category #{:jump}, :rep 1N}
+                          {:set 5N, :movement "Hopp ned", :natural-only? true, :slot-category #{:jump}, :rep 1N}
+                          {:distance 10N, :set 5N, :natural-only? true, :slot-category #{:balance}, :rep 6N}
+                          {:duration 20N, :set 5N, :natural-only? true, :slot-category #{:climb}, :rep 8N}
+                          {:distance 10N, :set 5N, :natural-only? true, :slot-category #{:crawl}}]],
+                 :title "Naturlige Bevegelser 3",
+                 :description ["Gå gjennom 4-6 runder av disse øvelsene. Finn et tempo så du ikke behøver pauser."]}
+                {:title "Gymnastic Strength 2",
+                 :parts [[{:duration 10N, :set 4N, :slot-category #{:planche :back-lever}, :rest 10N}
+                          {:set 4N, :slot-category #{:push}, :rest 60N, :rep 5N}]
+                         [{:duration 10N, :set 4N, :slot-category #{:front-lever :side-lever}, :rest 10N}
+                          {:set 4N, :slot-category #{:pull}, :rest 60N, :rep 5N}]
+                         [{:duration 10N, :set 4N, :slot-category #{:l-sit}, :rest 10N, :rep 10N}
+                          {:set 4N, :slot-category #{:single-leg :jump}, :rest 60N, :rep 6N}]]}
+                {:title "Mobility 1",
+                 :parts [[{:set 1N, :movement "Dynamisk ankelfleksjon", :slot-category #{:ankle-mobility}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 2N, :slot-category #{:hip-mobility :ankle-mobility}, :rep 10N}]
+                         [{:set 1N, :movement "Tøye håndledd", :slot-category #{:wrist-mobility}, :rep 10N}
+                          {:duration 30N,
+                           :distance 15N,
+                           :set 2N,
+                           :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
+                           :rep 10N}
+                          {:duration 30N,
+                           :distance 15N,
+                           :set 2N,
+                           :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
+                           :rep 10N}
+                          {:duration 30N,
+                           :distance 15N,
+                           :set 2N,
+                           :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
+                           :rep 10N}
+                          {:duration 30N,
+                           :distance 15N,
+                           :set 2N,
+                           :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
+                           :rep 10N}
+                          {:duration 30N,
+                           :distance 15N,
+                           :set 2N,
+                           :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
+                           :rep 10N}
+                          {:duration 30N,
+                           :distance 15N,
+                           :set 2N,
+                           :slot-category #{:shoulder-mobility :wrist-mobility :spine-mobility},
+                           :rep 10N}]]}
+                {:parts [[{:duration 30N,
+                           :distance 15N,
+                           :set 3N,
+                           :natural-only? true,
+                           :slot-category #{:crawl :sit-stand-transition :balance :mobility :roll},
+                           :rep 10N}
+                          {:duration 30N,
+                           :distance 15N,
+                           :set 3N,
+                           :natural-only? true,
+                           :slot-category #{:crawl :sit-stand-transition :balance :mobility :roll},
+                           :rep 10N}
+                          {:duration 30N,
+                           :distance 15N,
+                           :set 3N,
+                           :natural-only? true,
+                           :slot-category #{:crawl :sit-stand-transition :balance :mobility :roll},
+                           :rep 10N}
+                          {:duration 30N,
+                           :distance 15N,
+                           :set 3N,
+                           :natural-only? true,
+                           :slot-category #{:crawl :sit-stand-transition :balance :mobility :roll},
+                           :rep 10N}]
+                         [{:duration 240N,
+                           :distance 50N,
+                           :set 1N,
+                           :natural-only? true,
+                           :slot-category #{:lift :run :crawl :sit-stand-transition :balance :mobility :roll},
+                           :rep 50N}]
+                         [{:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}
+                          {:duration 30N, :distance 15N, :set 4N, :natural-only? true, :slot-category #{:natural}, :rep 10N}]],
+                 :title "Naturlige Bevegelser 1",
+                 :description ["Varm opp med mobilitetsøvelser. Velg så en øvelse å trene teknikk på. Avslutt med 4-6 runder sirkeltrening uten pauser."
+                               "Oppvarming, teknikktrening og svetting!"]}
+                {:title "Gymnastic Strength 1",
+                 :parts [[{:duration 30N, :set 4N, :slot-category #{:straight-arm-strength}, :rest 60N, :rep 10N}
+                          {:duration 30N, :set 4N, :slot-category #{:straight-arm-strength}, :rest 60N, :rep 10N}]
+                         [{:set 3N, :slot-category #{:bent-arm-strength}, :rest 60N, :rep 5N}
+                          {:set 3N, :slot-category #{:bent-arm-strength}, :rest 60N, :rep 5N}
+                          {:set 3N, :slot-category #{:bent-arm-strength}, :rest 60N, :rep 5N}]
+                         [{:set 3N, :slot-category #{:single-leg :jump}, :rest 60N, :rep 10N}
+                          {:set 3N, :slot-category #{:single-leg :jump}, :rest 60N, :rep 10N}
+                          {:set 3N, :slot-category #{:single-leg :jump}, :rest 60N, :rep 10N}]
+                         [{:duration 60N, :set 2N, :slot-category #{:core}, :rest 30N, :rep 10N}
+                          {:duration 60N, :set 2N, :slot-category #{:core}, :rest 30N, :rep 10N}]]}
+                {:title "Naturlige Bevegelser 4",
+                 :parts [[{:duration 15N, :distance 6N, :set 5N, :natural-only? true, :slot-category #{:brachiate}}
+                          {:distance 10N, :set 5N, :natural-only? true, :slot-category #{:balance}}
+                          {:set 5N, :natural-only? true, :slot-category #{:sit-stand-transition}, :rep 8N}
+                          {:set 5N, :natural-only? true, :slot-category #{:jump}, :rep 8N}
+                          {:distance 20N, :set 5N, :natural-only? true, :slot-category #{:balance}}]]}
+                {:title "Mobility 3",
+                 :parts [[{:set 1N, :movement "Dynamisk soleus-strekk", :slot-category #{:hip-mobility}, :rep 10N}
+                          {:set 1N, :movement "Hofterotasjoner på gulvet", :slot-category #{:hip-mobility}, :rep 10N}
+                          {:set 1N, :movement "Knebøy hofterotasjon", :slot-category #{:hip-mobility}, :rep 10N}
+                          {:set 1N, :movement "Tåstrekk", :slot-category #{:hip-mobility}, :rep 10N}
+                          {:set 1N, :movement "Dynamisk tåstrekk", :slot-category #{:hip-mobility}, :rep 10N}
+                          {:set 1N, :movement "Knebøy hvile", :slot-category #{:hip-mobility}, :rep 10N}
+                          {:set 1N, :movement "Knebøy", :slot-category #{:hip-mobility}, :rep 10N}]]}
+                {:title "Locomotion 1",
+                 :parts [[{:set 1N, :movement "Tøye håndledd", :slot-category #{:wrist-mobility}, :rep 10N}
+                          {:set 1N, :movement "Dynamisk ankelfleksjon", :slot-category #{:ankle-mobility}, :rep 10N}
+                          {:set 1N, :slot-category #{:mobility}, :rep 10N}
+                          {:set 1N, :slot-category #{:mobility}, :rep 10N}
+                          {:set 1N, :slot-category #{:mobility}, :rep 10N}
+                          {:set 1N, :slot-category #{:mobility}, :rep 10N}]
+                         [{:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
+                          {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
+                          {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
+                          {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
+                          {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}
+                          {:distance 15N, :set 4N, :slot-category #{:walk :crawl}, :rep 10N}]]}
+                {:title "Mobility 2",
+                 :parts [[{:set 1N, :movement "Dytt kneet vekk", :slot-category #{:hip-mobility}, :rep 20N}
+                          {:set 1N, :movement "Knebøy strekk mot taket", :slot-category #{:hip-mobility}, :rep 20N}
+                          {:duration 20N, :set 1N, :movement "Knebøy hold mot taket", :slot-category #{:hip-mobility}}
+                          {:set 1N, :movement "Knebøy bønn", :slot-category #{:hip-mobility}, :rep 20N}
+                          {:set 1N, :movement "Knebøy bukk", :slot-category #{:hip-mobility}, :rep 20N}]]}
+                {:parts [[{:duration 30N,
+                           :distance 12N,
+                           :set 4N,
+                           :natural-only? true,
+                           :slot-category #{:crawl :sit-stand-transition},
+                           :rep 8N}
+                          {:duration 30N,
+                           :distance 12N,
+                           :set 4N,
+                           :natural-only? true,
+                           :slot-category #{:crawl :sit-stand-transition},
+                           :rep 8N}
+                          {:duration 30N,
+                           :distance 12N,
+                           :set 4N,
+                           :natural-only? true,
+                           :slot-category #{:crawl :sit-stand-transition},
+                           :rep 8N}
+                          {:set 4N, :natural-only? true, :slot-category #{:jump}, :rep 4N}
+                          {:set 4N, :natural-only? true, :slot-category #{:jump}, :rep 4N}
+                          {:duration 30N, :set 4N, :natural-only? true, :slot-category #{:hang}, :rep 1N}]],
+                 :title "Naturlige Bevegelser 2",
+                 :description ["Gjør 4+ runder i et jevnt tempo"]}
+                {:title "Mobility 4",
+                 :parts [[{:set 1N, :movement "Utvendig rotasjon med strikk", :slot-category #{:shoulder-mobility}, :rep 15N}
+                          {:set 1N, :movement "Heve sideveis med strikk", :slot-category #{:shoulder-mobility}, :rep 15N}
+                          {:set 1N, :movement "Rotasjon med strikk over hodet", :slot-category #{:shoulder-mobility}, :rep 10N}
+                          {:set 1N, :movement "Rotasjon med strikk", :slot-category #{:shoulder-mobility}, :rep 10N}
+                          {:set 1N, :movement "Lav rotasjon med strikk", :slot-category #{:shoulder-mobility}, :rep 10N}
+                          {:set 1N, :movement "Flies med strikk over hodet", :slot-category #{:shoulder-mobility}, :rep 10N}
+                          {:set 1N, :movement "Flies med strikk", :slot-category #{:shoulder-mobility}, :rep 10N}
+                          {:set 1N, :movement "Lave flies med strikk", :slot-category #{:shoulder-mobility}, :rep 10N}]]}]
   )
