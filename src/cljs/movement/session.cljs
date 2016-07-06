@@ -314,7 +314,7 @@
     (fn []
       [:div
        (if-let [session (session/get :movement-session)]
-         
+
          [:div.content {:style {:margin-top 0}}
           [:a {:style      {:float 'right :margin-right 20 :margin-top 20
                             :color (:graphic (:activity session)) :opacity 1}
