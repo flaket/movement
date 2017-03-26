@@ -9,10 +9,9 @@
     [cljs.core.async :as async :refer [timeout <!]]
     [cljs.reader :as reader]
     [clojure.string :as str]
+    [movement.data :as data]
     [movement.util :refer [vec-remove handler-fn positions GET POST get-stored-sessions]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]))
-
-
 
 #_(defn replace-movement [event {:keys [kw movement part-number]}]
   (.preventDefault event)
@@ -95,30 +94,13 @@
   (.preventDefault event)
   (session/remove! :movement-session))
 
-(defn generate-placeholder-text [activity]
-  (let [day (.getDay (DateTime.))
-        nor-day ({0 "søndag" 1 "mandag" 2 "tirsdag" 3 "onsdag" 4 "torsdag" 5 "fredag" 6 "lørdag"} day)
-        texts ["#du #kan #tagge #øktene #dine"
-               (str "#" (str/lower-case activity))
-               (str "Jeg liker lukten av bevegelse på " nor-day "er.")
-               (str "Er det noe bedre enn litt " (str/lower-case activity) " på en " nor-day "?")
-               "Hva tenker du om økta?"
-               "Hvordan gikk økta?"
-               "Det er her du skryter.."
-               "Skryt av hva du gjorde i dag."
-               (str "Hvordan gikk økta? #" nor-day "søkt")]]
-    (first (shuffle texts))))
-
-#_(defn generate-movement-session [event activity]
+(defn generate-movement-session [event activity]
   (.preventDefault event)
-  (GET "create-session"
-       {:params        {:type    (:title activity)
-                        :user-id (:user-id (session/get :user))}
-        :handler       (fn [session]
-                         (let [old-session (session/get :movement-session)]
-                           (session/put! :movement-session
-                                         (merge old-session session))))
-        :error-handler (fn [r] (pr r))}))
+  (let [type (:title activity)
+        old-session (session/get :movement-session)
+        movements (vec (take 3 data/all-movements))
+        new-session {:parts [movements] :activity type}]
+    (session/put! :movement-session new-session)))
 
 (defn create-session-from-activity [event activity]
   (.preventDefault event)
@@ -323,18 +305,12 @@
            [:i.fa.fa-times.fa-4x]]
 
           [:div.pure-g
-           (when (or (= "Naturlig bevegelse" (:title (:activity session)))
-                     (= "Styrketrening" (:title (:activity session)))
-                     (= "Mobilitet" (:title (:activity session))))
-             [:img.pure-u
-              {:src        (str "images/mumrik.jpg") :title "Lag økt" :alt "Lag økt"
-               :style      {:height       100
-                            :margin-left  20
-                            :margin-right 20 :cursor 'pointer}
-               :onClick    #(;generate-movement-session % (:activity session)
-                             )
-               :onTouchEnd #(;generate-movement-session % (:activity session)
-                             )}])
+           (when (or (= "Naturlig bevegelse" (:activity session))
+                     (= "Styrketrening" (:activity session))
+                     (= "Mobilitet" (:activity session)))
+             [:span.pure-u
+              {:onClick #(generate-movement-session % (:activity session))}
+              "LAG ØKT"])
            (when-let [description (:description session)]
              [:div.pure-u (first (shuffle description))])]
 
