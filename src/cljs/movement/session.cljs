@@ -14,60 +14,60 @@
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]))
 
 #_(defn replace-movement [event {:keys [kw movement part-number]}]
-  (.preventDefault event)
-  (cond
-    (= :swap kw) (let [slot-category (:slot-category movement)
-                       category (if slot-category
-                                  (name (first (shuffle slot-category)))
-                                  (name (first (shuffle (:category movement)))))]
-                   (GET "movement-from-category" {:params        {:user-id  (:user-id (session/get :user))
-                                                                  :category category}
-                                                  :handler       (fn [new-movement]
-                                                                   (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
-                                                                         part (session/get-in [:movement-session :parts part-number])
-                                                                         pos (first (positions #{movement} part))
-                                                                         new-part (assoc part pos (merge old-movement (first new-movement)))]
-                                                                     (session/assoc-in! [:movement-session :parts part-number] new-part)))
-                                                  :error-handler (fn [r] nil)}))
-    (or (= :next kw)
-        (= :previous kw)) (let [new-movement (first (shuffle (kw movement)))]
-                            (GET "movement" {:params        {:user-id  (:user-id (session/get :user))
-                                                             :name new-movement}
-                                             :handler       (fn [new-movement]
-                                                              (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
-                                                                    part (session/get-in [:movement-session :parts part-number])
-                                                                    pos (first (positions #{movement} part))
-                                                                    new-part (assoc part pos (merge old-movement new-movement))]
-                                                                (session/assoc-in! [:movement-session :parts part-number] new-part)))
-                                             :error-handler (fn [r] nil)}))
-    :else nil))
+    (.preventDefault event)
+    (cond
+      (= :swap kw) (let [slot-category (:slot-category movement)
+                         category (if slot-category
+                                    (name (first (shuffle slot-category)))
+                                    (name (first (shuffle (:category movement)))))]
+                     (GET "movement-from-category" {:params        {:user-id  (:user-id (session/get :user))
+                                                                    :category category}
+                                                    :handler       (fn [new-movement]
+                                                                     (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
+                                                                           part (session/get-in [:movement-session :parts part-number])
+                                                                           pos (first (positions #{movement} part))
+                                                                           new-part (assoc part pos (merge old-movement (first new-movement)))]
+                                                                       (session/assoc-in! [:movement-session :parts part-number] new-part)))
+                                                    :error-handler (fn [r] nil)}))
+      (or (= :next kw)
+          (= :previous kw)) (let [new-movement (first (shuffle (kw movement)))]
+                              (GET "movement" {:params        {:user-id (:user-id (session/get :user))
+                                                               :name    new-movement}
+                                               :handler       (fn [new-movement]
+                                                                (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
+                                                                      part (session/get-in [:movement-session :parts part-number])
+                                                                      pos (first (positions #{movement} part))
+                                                                      new-part (assoc part pos (merge old-movement new-movement))]
+                                                                  (session/assoc-in! [:movement-session :parts part-number] new-part)))
+                                               :error-handler (fn [r] nil)}))
+      :else nil))
 
 #_(defn add-movement [category part-number]
-  (GET "movement-from-category" {:params        {:user-id  (:user-id (session/get :user))
-                                                 :category (name category)}
-                                 :handler       (fn [[new-movement]]
-                                                  (let [part (session/get-in [:movement-session :parts part-number])
-                                                        new-part (conj part new-movement)]
-                                                    (session/assoc-in! [:movement-session :parts part-number] new-part)))
-                                 :error-handler (fn [r] nil)}))
+    (GET "movement-from-category" {:params        {:user-id  (:user-id (session/get :user))
+                                                   :category (name category)}
+                                   :handler       (fn [[new-movement]]
+                                                    (let [part (session/get-in [:movement-session :parts part-number])
+                                                          new-part (conj part new-movement)]
+                                                      (session/assoc-in! [:movement-session :parts part-number] new-part)))
+                                   :error-handler (fn [r] nil)}))
 
 #_(defn add-movement-from-search [name part-number]
-  (GET "movement" {:params        {:user-id  (:user-id (session/get :user))
-                                   :name name}
-                   :handler       (fn [new-movement]
-                                    (let [part (session/get-in [:movement-session :parts part-number])
-                                          new-part (conj part  new-movement)]
-                                      (session/assoc-in! [:movement-session :parts part-number] new-part)))
-                   :error-handler (fn [r] nil)}))
+    (GET "movement" {:params        {:user-id (:user-id (session/get :user))
+                                     :name    name}
+                     :handler       (fn [new-movement]
+                                      (let [part (session/get-in [:movement-session :parts part-number])
+                                            new-part (conj part new-movement)]
+                                        (session/assoc-in! [:movement-session :parts part-number] new-part)))
+                     :error-handler (fn [r] nil)}))
 
-#_(defn inc-set-completed [event m part-number]
+(defn inc-set-completed [event m part-number]
   (.preventDefault event)
   (let [part (session/get-in [:movement-session :parts part-number])
         pos (positions #{m} part)
         new-part (assoc part (first pos) (update m :performed-sets inc))]
     (session/assoc-in! [:movement-session :parts part-number] new-part)))
 
-#_(defn dec-set-completed [event m part-number]
+(defn dec-set-completed [event m part-number]
   (.preventDefault event)
   (let [part (session/get-in [:movement-session :parts part-number])
         pos (positions #{m} part)
@@ -135,36 +135,45 @@
       [:div.pure-g.movement {:id id}
        [:div.pure-u-1
         [:div.pure-g {:style {:cursor 'pointer}}
-         [:div.pure-u-1-5 {:onClick (fn [e] (.preventDefault e) (reset! expand (not @expand))) :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
-          [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" image) :title name :alt name}]]
-         [:div.pure-u-2-5 {:onClick (fn [e] (.preventDefault e) (reset! expand (not @expand))) :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))
-                           :style   {:display 'flex :text-align 'center}}
+         [:div.pure-u-1-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))
+                           :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
+          [:img.graphic {:src   (str "http://s3.amazonaws.com/mumrik-movement-images/" image)
+                         :title name :alt name}]]
+         [:div.pure-u-2-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))
+                           :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))
+                           :style      {:display 'flex :text-align 'center}}
           [:h3.title {:style {:margin 'auto}} name]]
-         [:div.pure-u-1-5 {:onClick (fn [e] (.preventDefault e) (reset! expand (not @expand))) :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
+         [:div.pure-u-1-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))
+                           :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
 
-          [:div.pure-g [:div.pure-u-1
-                        (if (pos? weight) (r-component {:data weight :name "kg"})
-                                          [:div.pure-g {:style {:opacity 0.0}} [:div.pure-u {:style {:font-size "200%"}} 0]])]]
-          [:div.pure-g [:div.pure-u-1
-                        (when (pos? rep) (r-component {:data rep :name "reps"}))
-                        (when (pos? distance) (r-component {:data distance :name "m"}))
-                        (when (pos? duration) (r-component {:data duration :name "s"}))]]
-          [:div.pure-g [:div.pure-u-1
-                        (when (pos? rest) (r-component {:data rest :name "s pause"}))]]]
+          [:div.pure-g
+           [:div.pure-u-1
+            (if (pos? weight)
+              (r-component {:data weight :name "kg"})
+              [:div.pure-g {:style {:opacity 0.0}}
+               [:div.pure-u {:style {:font-size "200%"}} 0]])]]
+          [:div.pure-g
+           [:div.pure-u-1
+            (when (pos? rep) (r-component {:data rep :name "reps"}))
+            (when (pos? distance) (r-component {:data distance :name "m"}))
+            (when (pos? duration) (r-component {:data duration :name "s"}))]]
+          [:div.pure-g
+           [:div.pure-u-1
+            (when (pos? rest) (r-component {:data rest :name "s pause"}))]]]
 
-         [:div.pure-u-1-5.set-area {;:onClick    #(inc-set-completed % m part-number)
-                                    ;:onTouchEnd #(inc-set-completed % m part-number)
+         [:div.pure-u-1-5.set-area {
+                                    :onClick    #(inc-set-completed % m part-number)
+                                    :onTouchEnd #(inc-set-completed % m part-number)
                                     }
           [:div.pure-g
            [:div.pure-u-1
-            [:i.fa.fa-minus {:onClick    #(;dec-set-completed % m part-number
-                                           )
-                             :onTouchEnd #(;dec-set-completed % m part-number
-                                           )
-                             :style      {:opacity    (when-not performed-sets 0)
-                                          :color      (when performed-sets 'red)
-                                          :margin-top 5 :margin-right 5
-                                          :float      'right}}]]]
+            [:i.fa.fa-minus
+             {:onClick    #(dec-set-completed % m part-number)
+              :onTouchEnd #(dec-set-completed % m part-number)
+              :style      {:opacity    (when-not performed-sets 0)
+                           :color      (when performed-sets 'red)
+                           :margin-top 5 :margin-right 5
+                           :float      'right}}]]]
           (if set
             [:div.pure-g {:style {:display 'flex}}
              [:div.pure-u {:style {:margin 'auto :margin-top 10 :opacity 0.05 :font-size "100%"}} set]]
@@ -205,8 +214,8 @@
              [:input {:style {:margin-left 3 :margin-right 3 :width 75}
                       :id    (str "rest-input" id) :type "number" :defaultValue rest :min 0}]
              [:span "sek"]]
-            [:a.pure-u-1-3.pure-button.pure-button-primary {:style   {:margin "5px 5px 5px 5px"}
-                                                            :onClick (fn [e] (.preventDefault e) (update-movement {:id id :m m :parts parts :part-number part-number :pos pos}))
+            [:a.pure-u-1-3.pure-button.pure-button-primary {:style      {:margin "5px 5px 5px 5px"}
+                                                            :onClick    (fn [e] (.preventDefault e) (update-movement {:id id :m m :parts parts :part-number part-number :pos pos}))
                                                             :onTouchEnd (fn [e] (.preventDefault e) (update-movement {:id id :m m :parts parts :part-number part-number :pos pos}))}
              "Oppdater"]]
            [:div.pure-g
@@ -262,9 +271,9 @@
                              ))
              :style      {:margin-right '50 :cursor 'pointer}}])
          [:i.fa.fa-search-plus.fa-3x
-          {:onClick #(all-movements % show-search-input?)
+          {:onClick    #(all-movements % show-search-input?)
            :onTouchEnd #(all-movements % show-search-input?)
-           :style {:cursor 'pointer}}]]
+           :style      {:cursor 'pointer}}]]
         (when @show-search-input?
           (let [id (str "mtags" part-number)
                 movements-ac-comp (with-meta text-input-component
