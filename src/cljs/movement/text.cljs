@@ -1,6 +1,5 @@
 (ns movement.text
-  (:require [reagent.core :refer [dom-node atom]]
-            [reagent.session :as session]))
+  (:require [reagent.core :refer [dom-node atom]]))
 
 (defn auto-complete-did-mount
   "Attaches the jQuery autocomplete functionality over param tags

@@ -28,8 +28,6 @@
                  [com.taoensso/timbre "4.3.1"]
 
                  [clj-aws-s3 "0.3.10" :exclusions [joda-time]]
-                 [io.nervous/hildebrand "0.4.3"]
-                 [com.taoensso/faraday "1.9.0-alpha3"]
 
                  [hiccup "1.0.5"]
                  [reagent "0.6.0-alpha"]
@@ -67,11 +65,6 @@
 
   :clean-targets ^{:protect false} ["resources/public/js" "resources/public/css/garden"]
 
-  :repositories {"my.datomic.com" {:url      "https://my.datomic.com/repo"
-                                   :username ~(System/getenv "DATOMIC_EMAIL")
-                                   :password ~(System/getenv "DATOMIC_KEY")
-                                   ;:creds :gpg
-                                   }}
   :minify-assets {:assets {"resources/public/css/site.min.css" "resources/public/css/site.css"}}
 
   :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
@@ -95,9 +88,6 @@
 
                    :source-paths ["env/dev/clj"]
                    :plugins [[lein-figwheel "0.5.0-6"]]
-
-                   ;:injections [(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)]
-
                    :figwheel {:http-server-root "public"
                               :server-port 3449
                               :css-dirs ["resources/public/css"]
