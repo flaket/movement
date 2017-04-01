@@ -48,14 +48,11 @@
                                                       (session/assoc-in! [:movement-session :parts part-number] new-part)))
                                    :error-handler (fn [r] nil)}))
 
-#_(defn add-movement-from-search [name part-number]
-    (GET "movement" {:params        {:user-id (:user-id (session/get :user))
-                                     :name    name}
-                     :handler       (fn [new-movement]
-                                      (let [part (session/get-in [:movement-session :parts part-number])
-                                            new-part (conj part new-movement)]
-                                        (session/assoc-in! [:movement-session :parts part-number] new-part)))
-                     :error-handler (fn [r] nil)}))
+(defn add-movement-from-search [name part-number]
+  (let [new-movement (get (data/get-movements-map) name)
+        part (session/get-in [:movement-session :parts part-number])
+        new-part (conj part new-movement)]
+    (session/assoc-in! [:movement-session :parts part-number] new-part)))
 
 (defn inc-set-completed [event m part-number]
   (.preventDefault event)
@@ -286,7 +283,7 @@
                                 :auto-focus  true
                                 :on-save     #(when (some #{%} all-movement-names)
                                                (reset! show-search-input? false)
-                                               ;(add-movement-from-search % part-number)
+                                               (add-movement-from-search % part-number)
                                                )}]))]])))
 
 (defn part-component []
