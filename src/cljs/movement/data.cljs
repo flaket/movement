@@ -57,6 +57,13 @@
 (defn get-movements-map []
   (into {} (map (fn [m] [(:name m) m]) all-movements)))
 
+(defn all-movements-english []
+  (mapv #(assoc % :name (-> (:image %)
+                            clojure.string/capitalize
+                            (clojure.string/replace "-" " ")
+                            (clojure.string/replace ".png" "")))
+        all-movements))
+
 (def all-movements [{:name "Beinsving sideveis",
                      :image "side-leg-swing.png",
                      :measurement "repetitions",
