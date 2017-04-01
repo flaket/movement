@@ -81,10 +81,10 @@
   (.preventDefault event)
   (let [part (session/get-in [:movement-session :parts part-number])
         pos (first (positions #{m} part))
-        new-part (vec-remove pos part)]
+        new-part (vec-remove part pos)]
     (if (empty? new-part)
       (let [parts (session/get-in [:movement-session :parts])
-            new-parts (vec-remove part-number parts)]
+            new-parts (vec-remove parts part-number)]
         (if (empty? new-parts)
           (session/assoc-in! [:movement-session :parts] [[]])
           (session/assoc-in! [:movement-session :parts] new-parts)))
