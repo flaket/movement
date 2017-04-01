@@ -55,7 +55,7 @@
                      :air-baby])
 
 (defn get-movements-map []
-  (into {} (map (fn [m] [(:name m) m]) all-movements)))
+  (into {} (map (fn [m] [(:name m) m]) (all-movements-english))))
 
 (defn all-movements-english []
   (mapv #(assoc % :name (-> (:image %)
