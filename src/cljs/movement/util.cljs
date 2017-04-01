@@ -8,7 +8,6 @@
     [reagent.session :as session]
     [secretary.core :as secretary
      :include-macros true :refer [dispatch!]]
-    [dommy.core :as dommy :refer-macros [sel1]]
     [ajax.core :as cljs-ajax :refer [to-interceptor]]
     [ajax.edn :refer [edn-request-format edn-response-format]]
     [clojure.string :as str]))
@@ -17,56 +16,11 @@
   [coll pos]
   (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
 
-(def csrf-token
-  (dommy/attr (sel1 :#anti-forgery-token) "value"))
-
 (defn positions
   "Finds the integer positions of the elements in the collection, that matches the predicate."
   [pred coll]
   (keep-indexed (fn [idx x]
                   (when (pred x) idx)) coll))
-
-(defn GET [url & [opts]]
-  (let [token (str/trim (str "Token " (:token (session/get :user))))
-        base-opts {:format          (edn-request-format)
-                   :response-format (edn-response-format)
-                   ;:with-credentials true
-                   :interceptors    [(to-interceptor {:name    "Token Interceptor"
-                                                      :request #(assoc-in % [:headers "authorization"] token)})]}]
-    (cljs-ajax/GET url (merge base-opts opts))))
-
-(defn POST [url & [opts]]
-  (let [token (str/trim (str "Token " (:token (session/get :user))))
-        base-opts {:format          (edn-request-format)
-                   :response-format (edn-response-format)
-                   ;:with-credentials true
-                   :interceptors    [(to-interceptor {:name    "Token Interceptor"
-                                                      :request #(assoc-in % [:headers "authorization"] token)})]
-                   :headers         {:x-csrf-token csrf-token}}]
-    (cljs-ajax/POST url (merge base-opts opts))))
-
-(defn get-user-info []
-  (GET "user" {:params        {:email (:email (session/get :user))}
-               :handler       #(session/put! :username (:username %))
-               :error-handler #(pr (str "error retrieving user information: " %))}))
-
-(defn get-templates []
-  (GET "templates" {:params        {:user (:email (session/get :user))}
-                    :handler       #(session/put! :templates %)
-                    :error-handler #(pr (str "error retrieving templates: " %))}))
-
-(defn get-movements []
-  (GET "movements" {:handler       #(session/put! :all-movements %)
-                    :error-handler #(pr (str "error retrieving movements: " %))}))
-
-(defn get-categories []
-  (GET "categories" {:handler       #(session/put! :all-categories %)
-                    :error-handler #(pr (str "error retrieving movements: " %))}))
-
-(defn get-stored-sessions []
-  (GET "sessions" {:params        {:user (session/get :user)}
-                   :handler       #(session/put! :stored-sessions %)
-                   :error-handler #(pr (str "error retrieving stored sessions: " %))}))
 
 (defn hook-browser-navigation! []
   (doto (History.)
@@ -93,4 +47,3 @@
   (fn [] func nil))
 
 (def temp-state (atom {}))
-
