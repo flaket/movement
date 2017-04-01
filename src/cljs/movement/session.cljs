@@ -39,14 +39,11 @@
                                                :error-handler (fn [r] nil)}))
       :else nil))
 
-#_(defn add-movement [category part-number]
-    (GET "movement-from-category" {:params        {:user-id  (:user-id (session/get :user))
-                                                   :category (name category)}
-                                   :handler       (fn [[new-movement]]
-                                                    (let [part (session/get-in [:movement-session :parts part-number])
-                                                          new-part (conj part new-movement)]
-                                                      (session/assoc-in! [:movement-session :parts part-number] new-part)))
-                                   :error-handler (fn [r] nil)}))
+(defn add-movement [category part-number]
+  (let [new-movement (first (shuffle (data/all-movements)))
+        part (session/get-in [:movement-session :parts part-number])
+        new-part (conj part new-movement)]
+    (session/assoc-in! [:movement-session :parts part-number] new-part)))
 
 (defn add-movement-from-search [name part-number]
   (let [new-movement (get (data/get-movements-map) name)
@@ -88,12 +85,14 @@
   (.preventDefault event)
   (session/remove! :movement-session))
 
-(defn generate-movement-session [event activity]
-  (.preventDefault event)
-  (let [type (:title activity)
-        old-session (session/get :movement-session)
-        movements (vec (take 3 data/all-movements))
-        new-session {:parts [movements] :activity type}]
+(defn reset-session [e]
+  (session/put! :movement-session {:title "ABC" :parts [[]] :activity "Styrketrening"}))
+
+(defn generate-session [e]
+  (.preventDefault e)
+  (let [n (inc (rand-int 8))
+        movements (vec (take n (shuffle data/all-movements)))
+        new-session {:title "ABC" :parts [movements] :activity "Styrketrening"}]
     (session/put! :movement-session new-session)))
 
 (defn create-session-from-activity [event activity]
@@ -234,8 +233,8 @@
               [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
                                       :onClick #(;replace-movement % {:kw :next :movement m :part-number part-number}
                                                  )
-                                      :onTouchEnd #(;replace-movement % {:kw :next :movement m :part-number part-number}
-                                                    ) :title "Bytt med vanskeligere"}
+                                      ;:onTouchEnd #(;replace-movement % {:kw :next :movement m :part-number part-number}) :title "Bytt med vanskeligere"
+                                    }
                [:i.fa.fa-arrow-up {:style {:color "#99cc99" :opacity 0.8}}]
                "Bytt med vanskeligere"])]])]])))
 
@@ -255,26 +254,16 @@
                            (.preventDefault e)
                            (let [part (session/get-in [:movement-session :parts part-number])
                                  categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
-                             ;(add-movement (first categories) part-number)
-                             ))
-             :onTouchEnd (fn [e]
-                           (.preventDefault e)
-                           (let [part (session/get-in [:movement-session :parts part-number])
-                                 categories (shuffle (seq (apply clojure.set/union (map :slot-category part))))]
-                             ;(add-movement (first categories) part-number)
-                             ))
+                             (add-movement (first categories) part-number)))
              :style      {:margin-right '50 :cursor 'pointer}}])
          [:i.fa.fa-search-plus.fa-3x
           {:onClick    #(all-movements % show-search-input?)
-           :onTouchEnd #(all-movements % show-search-input?)
            :style      {:cursor 'pointer}}]]
         (when @show-search-input?
           (let [id (str "mtags" part-number)
                 all-movement-names (mapv :name data/all-movements)
                 movements-ac-comp (with-meta text-input-component
-                                             {:component-did-mount #(auto-complete-did-mount
-                                                                     (str "#" id)
-                                                                     all-movement-names)})]
+                                             {:component-did-mount #(auto-complete-did-mount (str "#" id) all-movement-names)})]
             [movements-ac-comp {:style       {:font-size "100%" :margin-top 20}
                                 :id          id
                                 :class       "edit"
@@ -283,8 +272,8 @@
                                 :auto-focus  true
                                 :on-save     #(when (some #{%} all-movement-names)
                                                (reset! show-search-input? false)
-                                               (add-movement-from-search % part-number)
-                                               )}]))]])))
+                                               (add-movement-from-search % part-number))
+                                }]))]])))
 
 (defn part-component []
   (let []
@@ -296,35 +285,19 @@
         [add-movement-component movements i title]]])))
 
 (defn session-page []
-  (let []
+  (let [_ (session/put! :movement-session {:parts [[]] :activity "Styrketrening"})]
     (fn []
       [:div
        (if-let [session (session/get :movement-session)]
-
          [:div.content {:style {:margin-top 0}}
-          [:a {:style      {:float 'right :margin-right 20 :margin-top 20
-                            :color (:graphic (:activity session)) :opacity 1}
-               :onClick    #(remove-session %)
-               :onTouchEnd #(remove-session %)}
-           [:i.fa.fa-times.fa-4x]]
-
           [:div.pure-g
-           (when (or (= "Naturlig bevegelse" (:activity session))
-                     (= "Styrketrening" (:activity session))
-                     (= "Mobilitet" (:activity session)))
-             [:span.pure-u
-              {:onClick #(generate-movement-session % (:activity session))}
-              "LAG ØKT"])
-           (when-let [description (:description session)]
-             [:div.pure-u (first (shuffle description))])]
-
+            [:span.pure-u {:onClick #(generate-session %)} "Lag økt"]
+            [:span.pure-u {:onClick #(reset-session %)} "Fjern økt"]
+            (when-let [description (:description session)]
+              [:div.pure-u (first (shuffle description))])]
           [:div
            (when-let [parts (:parts session)]
              [:article.session
               (doall
                 (for [i (range (count parts))]
-                  ^{:key i} [part-component (get parts i) i (:title session)]))])]]
-
-
-         [:div.content {:style {:margin-top 0}}
-          [:a {:on-click #(session/put! :movement-session {:parts [[]] :activity "Styrketrening"})} "Klikk!"]])])))
+                  ^{:key i} [part-component (get parts i) i (:title session)]))])]])])))
