@@ -10,25 +10,22 @@
     [movement.util :refer [vec-remove handler-fn positions]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]))
 
-#_(defn replace-movement [event {:keys [kw movement part-number]}]
-    (.preventDefault event)
+(defn replace-movement [e {:keys [kw movement part-number]}]
+    (.preventDefault e)
     (cond
-      (= :swap kw) (let [slot-category (:slot-category movement)
-                         category (if slot-category
-                                    (name (first (shuffle slot-category)))
-                                    (name (first (shuffle (:category movement)))))]
-                     (GET "movement-from-category" {:params        {:user-id  (:user-id (session/get :user))
-                                                                    :category category}
-                                                    :handler       (fn [new-movement]
-                                                                     (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
-                                                                           part (session/get-in [:movement-session :parts part-number])
-                                                                           pos (first (positions #{movement} part))
-                                                                           new-part (assoc part pos (merge old-movement (first new-movement)))]
-                                                                       (session/assoc-in! [:movement-session :parts part-number] new-part)))
-                                                    :error-handler (fn [r] nil)}))
+      (= :swap kw) (let [ slot-category (:slot-category movement)
+                          category (if slot-category ; movement has slot-category if it has been created from a template
+                                      (first (shuffle slot-category))
+                                      (first (shuffle (:category movement))))
+                          old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
+                          part (session/get-in [:movement-session :parts part-number])
+                          pos (first (positions #{movement} part))
+                          new-movement (-> (filter #(contains? (:category %) category) data/all-movements) shuffle first)
+                          new-part (assoc part pos (merge old-movement new-movement))]
+                      (session/assoc-in! [:movement-session :parts part-number] new-part))
       (or (= :next kw)
           (= :previous kw)) (let [new-movement (first (shuffle (kw movement)))]
-                              (GET "movement" {:params        {:user-id (:user-id (session/get :user))
+                              #_(GET "movement" {:params        {:user-id (:user-id (session/get :user))
                                                                :name    new-movement}
                                                :handler       (fn [new-movement]
                                                                 (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
@@ -217,11 +214,11 @@
                                     :title   "Fjern øvelse"}
              [:i.fa.fa-remove {:style {:color "#CC9999" :opacity 0.8}}]
              "Fjern øvelse"]
-            [:a.pure-u.pure-button {:style      {:margin "5px 5px 5px 5px"} :title "Bytt øvelse"
-                                    :onClick    #(;replace-movement % {:kw :swap :movement m :part-number part-number}
-                                                  )
-                                    :onTouchEnd #(;replace-movement % {:kw :swap :movement m :part-number part-number}
-                                                  )} [:i.fa.fa-random {:style {:color "#99cc99" :opacity 0.8}}] "Bytt ut øvelse"]
+            [:a.pure-u.pure-button {
+                :style      {:margin "5px 5px 5px 5px"} :title "Bytt øvelse"
+                :onClick    #(replace-movement % {:kw :swap :movement m :part-number part-number})
+              }
+              [:i.fa.fa-random {:style {:color "#99cc99" :opacity 0.8}}] "Bytt ut øvelse"]
             (when previous
               [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
                                       :onClick #(;replace-movement % {:kw :previous :movement m :part-number part-number}
