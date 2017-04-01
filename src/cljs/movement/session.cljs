@@ -10,7 +10,7 @@
     [cljs.reader :as reader]
     [clojure.string :as str]
     [movement.data :as data]
-    [movement.util :refer [vec-remove handler-fn positions GET POST get-stored-sessions]]
+    [movement.util :refer [vec-remove handler-fn positions]]
     [movement.text :refer [text-edit-component text-input-component auto-complete-did-mount]]))
 
 #_(defn replace-movement [event {:keys [kw movement part-number]}]
