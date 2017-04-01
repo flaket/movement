@@ -24,16 +24,14 @@
                           new-part (assoc part pos (merge old-movement new-movement))]
                       (session/assoc-in! [:movement-session :parts part-number] new-part))
       (or (= :next kw)
-          (= :previous kw)) (let [new-movement (first (shuffle (kw movement)))]
-                              #_(GET "movement" {:params        {:user-id (:user-id (session/get :user))
-                                                               :name    new-movement}
-                                               :handler       (fn [new-movement]
-                                                                (let [old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
-                                                                      part (session/get-in [:movement-session :parts part-number])
-                                                                      pos (first (positions #{movement} part))
-                                                                      new-part (assoc part pos (merge old-movement new-movement))]
-                                                                  (session/assoc-in! [:movement-session :parts part-number] new-part)))
-                                               :error-handler (fn [r] nil)}))
+          (= :previous kw))
+          (let [new-movement-name (first (shuffle (kw movement)))
+                old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
+                part (session/get-in [:movement-session :parts part-number])
+                pos (first (positions #{movement} part))
+                new-movement (get (data/get-movements-map) new-movement-name)
+                new-part (assoc part pos (merge old-movement new-movement))]
+            (session/assoc-in! [:movement-session :parts part-number] new-part))
       :else nil))
 
 (defn add-movement [category part-number]
@@ -125,16 +123,13 @@
       [:div.pure-g.movement {:id id}
        [:div.pure-u-1
         [:div.pure-g {:style {:cursor 'pointer}}
-         [:div.pure-u-1-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))
-                           :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
+         [:div.pure-u-1-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
           [:img.graphic {:src   (str "http://s3.amazonaws.com/mumrik-movement-images/" image)
                          :title name :alt name}]]
          [:div.pure-u-2-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))
-                           :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))
                            :style      {:display 'flex :text-align 'center}}
           [:h3.title {:style {:margin 'auto}} name]]
-         [:div.pure-u-1-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))
-                           :onTouchEnd (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
+         [:div.pure-u-1-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
 
           [:div.pure-g
            [:div.pure-u-1
@@ -151,15 +146,11 @@
            [:div.pure-u-1
             (when (pos? rest) (r-component {:data rest :name "s pause"}))]]]
 
-         [:div.pure-u-1-5.set-area {
-                                    :onClick    #(inc-set-completed % m part-number)
-                                    :onTouchEnd #(inc-set-completed % m part-number)
-                                    }
+         [:div.pure-u-1-5.set-area {:onClick    #(inc-set-completed % m part-number)}
           [:div.pure-g
            [:div.pure-u-1
             [:i.fa.fa-minus
              {:onClick    #(dec-set-completed % m part-number)
-              :onTouchEnd #(dec-set-completed % m part-number)
               :style      {:opacity    (when-not performed-sets 0)
                            :color      (when performed-sets 'red)
                            :margin-top 5 :margin-right 5
@@ -204,13 +195,13 @@
              [:input {:style {:margin-left 3 :margin-right 3 :width 75}
                       :id    (str "rest-input" id) :type "number" :defaultValue rest :min 0}]
              [:span "sek"]]
-            [:a.pure-u-1-3.pure-button.pure-button-primary {:style      {:margin "5px 5px 5px 5px"}
-                                                            :onClick    (fn [e] (.preventDefault e) (update-movement {:id id :m m :parts parts :part-number part-number :pos pos}))
-                                                            :onTouchEnd (fn [e] (.preventDefault e) (update-movement {:id id :m m :parts parts :part-number part-number :pos pos}))}
-             "Oppdater"]]
+            [:a.pure-u-1-3.pure-button.pure-button-primary {
+                :style {:margin "5px 5px 5px 5px"}
+                :onClick #(update-movement {:id id :m m :parts parts :part-number part-number :pos pos})
+              } "Oppdater"]]
            [:div.pure-g
             [:a.pure-u.pure-button {:style   {:margin "5px 5px 5px 5px"}
-                                    :onClick #(remove-movement % m part-number) :onTouchEnd #(remove-movement % m part-number)
+                                    :onClick #(remove-movement % m part-number)
                                     :title   "Fjern øvelse"}
              [:i.fa.fa-remove {:style {:color "#CC9999" :opacity 0.8}}]
              "Fjern øvelse"]
@@ -221,17 +212,12 @@
               [:i.fa.fa-random {:style {:color "#99cc99" :opacity 0.8}}] "Bytt ut øvelse"]
             (when previous
               [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
-                                      :onClick #(;replace-movement % {:kw :previous :movement m :part-number part-number}
-                                                 )
-                                      :onTouchEnd #(;replace-movement % {:kw :previous :movement m :part-number part-number}
-                                                    ) :title "Bytt med enklere"}
+                                      :onClick #(replace-movement % {:kw :previous :movement m :part-number part-number})
+                                      :title "Bytt med enklere"}
                [:i.fa.fa-arrow-down {:style {:color "#99cc99" :opacity 0.8}}] "Bytt med enklere"])
             (when next
               [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
-                                      :onClick #(;replace-movement % {:kw :next :movement m :part-number part-number}
-                                                 )
-                                      ;:onTouchEnd #(;replace-movement % {:kw :next :movement m :part-number part-number}) :title "Bytt med vanskeligere"
-                                    }
+                                      :onClick #(replace-movement % {:kw :next :movement m :part-number part-number})}
                [:i.fa.fa-arrow-up {:style {:color "#99cc99" :opacity 0.8}}]
                "Bytt med vanskeligere"])]])]])))
 
