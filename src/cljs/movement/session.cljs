@@ -76,23 +76,17 @@
           (session/assoc-in! [:movement-session :parts] new-parts)))
       (session/assoc-in! [:movement-session :parts part-number] new-part))))
 
-(defn remove-session [event]
-  (.preventDefault event)
+(defn remove-session [e]
   (session/remove! :movement-session))
 
 (defn reset-session [e]
-  (session/put! :movement-session {:title "ABC" :parts [[]] :activity "Styrketrening"}))
+  (session/put! :movement-session {:title "ABC" :parts [[]]}))
 
 (defn generate-session [e]
-  (.preventDefault e)
   (let [n (inc (rand-int 8))
         movements (vec (take n (shuffle (data/all-movements-english))))
-        new-session {:title "ABC" :parts [movements] :activity "Styrketrening"}]
+        new-session {:title "ABC" :parts [movements]}]
     (session/put! :movement-session new-session)))
-
-(defn create-session-from-activity [event activity]
-  (.preventDefault event)
-  (session/put! :movement-session {:parts [[]] :activity activity}))
 
 (defn update-movement [{:keys [id m parts part-number pos]}]
   (let [rep-input (-> (.getElementById js/document (str "rep-input" id)) .-value int)
@@ -112,114 +106,94 @@
    [:div.pure-u {:style {:color "#9999cc" :font-size "100%" :text-align 'center}} data]
    [:span.pure-u {:style {:padding-top 10}} name]])
 
+(defn m-title [{:keys [name]}]
+  [:div.pure-g
+    [:div.pure-u-1 {:style {:display 'flex :text-align 'center}}
+      [:h3.title {:style {:margin 'auto}} name]]])
+
+(defn m-image [{:keys [name image]}]
+  [:div.pure-u-1
+    [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" image)
+                  :title name :alt name}]])
+
+(defn m-spec [{:keys [weight rep distance duration rest]}]
+  [:div.pure-g
+    [:div.pure-u-1
+      [:div.pure-g
+       [:div.pure-u-1
+        (if (pos? weight)
+          (r-component {:data weight :name "kg"})
+          [:div.pure-g {:style {:opacity 0.0}}
+           [:div.pure-u {:style {:font-size "200%"}} 0]])]]
+      [:div.pure-g
+       [:div.pure-u-1
+        (when (pos? rep) (r-component {:data rep :name "reps"}))
+        (when (pos? distance) (r-component {:data distance :name "m"}))
+        (when (pos? duration) (r-component {:data duration :name "s"}))]]
+      [:div.pure-g
+       [:div.pure-u-1
+        (when (pos? rest) (r-component {:data rest :name "s pause"}))]]]])
+
+#_(defn m-adjust [{:keys [id rep distance duration weight rest] parts pos}]
+  [:div.pure-g
+   [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+    [:label "Reps"]
+    [:input {:style {:margin-left 3 :width 75}
+             :id    (str "rep-input" id) :type "number" :defaultValue rep :min 0}]]
+   [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+    [:label "Distance"]
+    [:input {:style {:margin-left 3 :margin-right 3 :width 75}
+             :id    (str "distance-input" id) :type "number" :defaultValue distance :min 0}]
+    [:span "m"]]
+   [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+    [:label "Time"]
+    [:input {:style {:margin-left 3 :margin-right 3 :width 75}
+             :id    (str "duration-input" id) :type "number" :defaultValue duration :min 0}]
+    [:span "sec"]]
+   [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+    [:label "Weight"]
+    [:input {:style {:margin-left 3 :width 75}
+             :id    (str "weight-input" id) :type "number" :defaultValue weight :min 0 :step 0.5}]]
+   [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
+    [:label "Rest"]
+    [:input {:style {:margin-left 3 :margin-right 3 :width 75}
+             :id    (str "rest-input" id) :type "number" :defaultValue rest :min 0}]
+    [:span "sec"]]
+   [:a.pure-u-1-3.pure-button.pure-button-primary {
+       :style {:margin "5px 5px 5px 5px"}
+       :onClick #(update-movement {:id id :m m :parts parts :part-number part-number :pos pos})
+     } "Update"]])
+
+(defn m-adjust [m kw part-number text]
+  [:a.pure-u {:style {:margin "5px 5px 5px 5px"
+                      :opacity 0.6}
+              :onClick #(if (= kw :remove)
+                          (remove-movement % m part-number)
+                          (replace-movement % {:kw kw :movement m :part-number part-number}))}
+    text])
+
 (defn movement-component
   [{:keys [id name image slot-category measurement previous next
            rep set performed-sets distance duration weight rest] :as m}
    part-number]
   (let [parts (session/get-in [:movement-session :parts])
         pos (positions #{m} (get parts part-number))
-        expand (atom false)]
+        expand (atom true)]
     (fn []
       [:div.pure-g.movement {:id id}
-       [:div.pure-u-1
-        [:div.pure-g {:style {:cursor 'pointer}}
-         [:div.pure-u-1-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
-          [:img.graphic {:src   (str "http://s3.amazonaws.com/mumrik-movement-images/" image)
-                         :title name :alt name}]]
-         [:div.pure-u-2-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))
-                           :style      {:display 'flex :text-align 'center}}
-          [:h3.title {:style {:margin 'auto}} name]]
-         [:div.pure-u-1-5 {:onClick    (fn [e] (.preventDefault e) (reset! expand (not @expand)))}
-
+        [:div.pure-u-2-3
           [:div.pure-g
-           [:div.pure-u-1
-            (if (pos? weight)
-              (r-component {:data weight :name "kg"})
-              [:div.pure-g {:style {:opacity 0.0}}
-               [:div.pure-u {:style {:font-size "200%"}} 0]])]]
+            [m-title m]]
           [:div.pure-g
-           [:div.pure-u-1
-            (when (pos? rep) (r-component {:data rep :name "reps"}))
-            (when (pos? distance) (r-component {:data distance :name "m"}))
-            (when (pos? duration) (r-component {:data duration :name "s"}))]]
+            [m-spec m]]
           [:div.pure-g
-           [:div.pure-u-1
-            (when (pos? rest) (r-component {:data rest :name "s pause"}))]]]
-
-         [:div.pure-u-1-5.set-area {:onClick    #(inc-set-completed % m part-number)}
+            [m-adjust m :remove part-number "Remove"]
+            [m-adjust m :swap part-number "Swap"]
+            (when previous [m-adjust m :previous part-number "Easier"])
+            (when next [m-adjust m :next part-number "Harder"])]]
+        [:div.pure-u-1-3
           [:div.pure-g
-           [:div.pure-u-1
-            [:i.fa.fa-minus
-             {:onClick    #(dec-set-completed % m part-number)
-              :style      {:opacity    (when-not performed-sets 0)
-                           :color      (when performed-sets 'red)
-                           :margin-top 5 :margin-right 5
-                           :float      'right}}]]]
-          (if set
-            [:div.pure-g {:style {:display 'flex}}
-             [:div.pure-u {:style {:margin 'auto :margin-top 10 :opacity 0.05 :font-size "100%"}} set]]
-            [:div.pure-g {:style {:display 'flex}}
-             [:div.pure-u {:style {:margin 'auto :margin-top 10 :opacity 0 :font-size "100%"}} 1]])
-          (when performed-sets
-            [:div.pure-g
-             [:div.pure-u-1 [:h1.center {:style {:color 'red :margin-top -70 :font-size "150%"}} performed-sets]
-              ]])
-          (when (or performed-sets (> set 0))
-            [:div.pure-g
-             [:div.pure-u-1 [:div.center {:style {:margin-top (if performed-sets -24 -6)
-                                                  :opacity    0.15}} "set"]]])]]
-
-        (when @expand
-          [:div
-           [:div.pure-g
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Repetisjoner"]
-             [:input {:style {:margin-left 3 :width 75}
-                      :id    (str "rep-input" id) :type "number" :defaultValue rep :min 0}]]
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Avstand"]
-             [:input {:style {:margin-left 3 :margin-right 3 :width 75}
-                      :id    (str "distance-input" id) :type "number" :defaultValue distance :min 0}]
-             [:span "m"]]
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Tid"]
-             [:input {:style {:margin-left 3 :margin-right 3 :width 75}
-                      :id    (str "duration-input" id) :type "number" :defaultValue duration :min 0}]
-             [:span "sek"]]
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Vekt"]
-             [:input {:style {:margin-left 3 :width 75}
-                      :id    (str "weight-input" id) :type "number" :defaultValue weight :min 0 :step 0.5}]]
-            [:div.pure-u {:style {:margin "5px 5px 5px 5px"}}
-             [:label "Hvile"]
-             [:input {:style {:margin-left 3 :margin-right 3 :width 75}
-                      :id    (str "rest-input" id) :type "number" :defaultValue rest :min 0}]
-             [:span "sek"]]
-            [:a.pure-u-1-3.pure-button.pure-button-primary {
-                :style {:margin "5px 5px 5px 5px"}
-                :onClick #(update-movement {:id id :m m :parts parts :part-number part-number :pos pos})
-              } "Oppdater"]]
-           [:div.pure-g
-            [:a.pure-u.pure-button {:style   {:margin "5px 5px 5px 5px"}
-                                    :onClick #(remove-movement % m part-number)
-                                    :title   "Fjern øvelse"}
-             [:i.fa.fa-remove {:style {:color "#CC9999" :opacity 0.8}}]
-             "Fjern øvelse"]
-            [:a.pure-u.pure-button {
-                :style      {:margin "5px 5px 5px 5px"} :title "Bytt øvelse"
-                :onClick    #(replace-movement % {:kw :swap :movement m :part-number part-number})
-              }
-              [:i.fa.fa-random {:style {:color "#99cc99" :opacity 0.8}}] "Bytt ut øvelse"]
-            (when previous
-              [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
-                                      :onClick #(replace-movement % {:kw :previous :movement m :part-number part-number})
-                                      :title "Bytt med enklere"}
-               [:i.fa.fa-arrow-down {:style {:color "#99cc99" :opacity 0.8}}] "Bytt med enklere"])
-            (when next
-              [:a.pure-u.pure-button {:style {:margin "5px 5px 5px 5px"}
-                                      :onClick #(replace-movement % {:kw :next :movement m :part-number part-number})}
-               [:i.fa.fa-arrow-up {:style {:color "#99cc99" :opacity 0.8}}]
-               "Bytt med vanskeligere"])]])]])))
+            [m-image m]]]])))
 
 (defn all-movements [e show-search-input?]
   (.preventDefault e)
