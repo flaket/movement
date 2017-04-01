@@ -1,6 +1,6 @@
 (defproject movement "0.1.0-SNAPSHOT"
   :description "Generating your next movement session."
-  :url "http://www.movementsession.com"
+  :url "http://www.andreasflakstad.no/movementsession"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
@@ -8,10 +8,6 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.7.228"]
-
-                 [org.clojure/core.async "0.2.374"]
-                 [com.datomic/datomic-pro "0.9.5201" :exclusions [joda-time]]
-                 [org.clojure/core.match "0.3.0-alpha4"]
                  [clj-time "0.11.0"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
                  [org.clojure/data.codec "0.1.0"]
@@ -26,9 +22,7 @@
 
                  [prone "1.0.2"]
                  [com.taoensso/timbre "4.3.1"]
-
-                 [clj-aws-s3 "0.3.10" :exclusions [joda-time]]
-
+            
                  [hiccup "1.0.5"]
                  [reagent "0.6.0-alpha"]
                  [reagent-forms "0.5.21"]
@@ -40,11 +34,6 @@
 
                  [selmer "1.0.2"]
                  [environ "1.0.2"]
-                 [com.draines/postal "1.11.4"]
-
-                 [buddy/buddy-auth "0.9.0"]
-                 [buddy/buddy-hashers "0.11.0"]
-                 [buddy/buddy-sign "0.9.0"]
 
                  [slingshot "0.12.2"]]
 
@@ -81,24 +70,18 @@
 
   :profiles {:dev {:repl-options {:init-ns movement.repl
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
-
                    :dependencies [[leiningen "2.6.1" :exclusions [org.codehaus.plexus/plexus-utils]]
                                   [weasel "0.7.0"]
                                   [com.cemerick/piggieback "0.2.1"]]
-
                    :source-paths ["env/dev/clj"]
                    :plugins [[lein-figwheel "0.5.0-6"]]
                    :figwheel {:http-server-root "public"
                               :server-port 3449
                               :css-dirs ["resources/public/css"]
                               :ring-handler movement.handler/app}
-
                    :env {:dev? true}
-
                    :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
-                                              :compiler {
-                                                         :main "movement.dev"}}}}}
-
+                                              :compiler {:main "movement.dev"}}}}}
              :uberjar {:hooks [leiningen.cljsbuild minify-assets.plugin/hooks]
                        :env {:production true}
                        :aot :all
