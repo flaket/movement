@@ -2,25 +2,21 @@
   (:import goog.History)
   (:require
     [goog.events :as events]
-    [goog.dom :as gdom]
-    [goog.crypt.base64 :as b64]
     [goog.history.EventType :as EventType]
     [reagent.session :as session]
-    [secretary.core :as secretary
-     :include-macros true :refer [dispatch!]]
-    [ajax.core :as cljs-ajax :refer [to-interceptor]]
-    [ajax.edn :refer [edn-request-format edn-response-format]]
-    [clojure.string :as str]))
+    [secretary.core :as secretary :include-macros true]))
 
 (defn vec-remove
-  [coll pos]
+  [pos coll]
   (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
 
 (defn positions
   "Finds the integer positions of the elements in the collection, that matches the predicate."
   [pred coll]
-  (keep-indexed (fn [idx x]
-                  (when (pred x) idx)) coll))
+  (keep-indexed
+    (fn [idx x]
+      (when (pred x) idx))
+    coll))
 
 (defn hook-browser-navigation! []
   (doto (History.)
@@ -45,5 +41,3 @@
   This is a React requirement."
   [func]
   (fn [] func nil))
-
-(def temp-state (atom {}))

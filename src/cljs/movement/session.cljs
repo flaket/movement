@@ -1,12 +1,9 @@
 (ns movement.session
   (:import [goog.events EventType]
            [goog.date Date DateTime])
-  (:require-macros
-    [cljs.core.async.macros :refer [go]])
   (:require
     [reagent.session :as session]
     [reagent.core :refer [atom]]
-    [cljs.core.async :as async :refer [timeout <!]]
     [cljs.reader :as reader]
     [clojure.string :as str]
     [movement.data :as data]
@@ -81,10 +78,10 @@
   (.preventDefault event)
   (let [part (session/get-in [:movement-session :parts part-number])
         pos (first (positions #{m} part))
-        new-part (vec-remove part pos)]
+        new-part (vec-remove pos part)]
     (if (empty? new-part)
       (let [parts (session/get-in [:movement-session :parts])
-            new-parts (vec-remove parts part-number)]
+            new-parts (vec-remove part-number parts)]
         (if (empty? new-parts)
           (session/assoc-in! [:movement-session :parts] [[]])
           (session/assoc-in! [:movement-session :parts] new-parts)))
@@ -255,7 +252,7 @@
       [:div.pure-g.movement.search
        [:div.pure-u-1.add-movement.center
         [:div
-         (when-not (nil? title)                             ; when the session has no title (no session has been created from template): dont show +
+         (when-not (nil? title) ; when the session has no title (no session has been created from template): dont show +
            [:i.fa.fa-plus.fa-3x
             {:onClick    (fn [e]
                            (.preventDefault e)
@@ -276,17 +273,18 @@
            :style      {:cursor 'pointer}}]]
         (when @show-search-input?
           (let [id (str "mtags" part-number)
+                all-movement-names (mapv :name data/all-movements)
                 movements-ac-comp (with-meta text-input-component
                                              {:component-did-mount #(auto-complete-did-mount
                                                                      (str "#" id)
-                                                                     (vec (session/get :all-movements)))})]
+                                                                     all-movement-names)})]
             [movements-ac-comp {:style       {:font-size "100%" :margin-top 20}
                                 :id          id
                                 :class       "edit"
                                 :placeholder "type to find and add movement.."
                                 :size        32
                                 :auto-focus  true
-                                :on-save     #(when (some #{%} (session/get :all-movements))
+                                :on-save     #(when (some #{%} all-movement-names)
                                                (reset! show-search-input? false)
                                                ;(add-movement-from-search % part-number)
                                                )}]))]])))
