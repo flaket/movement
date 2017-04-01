@@ -54,7 +54,11 @@
                      :headstand
                      :air-baby])
 
-(def all-movements [{:name "Beinsving sideveis",
+(defn get-movements-map []
+  (into {} (map (fn [m] [(:name m) m]) all-movements)))
+
+(def all-movements
+  [{:name "Beinsving sideveis",
                      :image "side-leg-swing.png",
                      :measurement "repetitions",
                      :category #{:hip-mobility :mobility}}
