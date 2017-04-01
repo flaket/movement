@@ -20,7 +20,7 @@
                           old-movement (dissoc movement :next :previous) ; remove data that may not be overwritten by merging with the new movement
                           part (session/get-in [:movement-session :parts part-number])
                           pos (first (positions #{movement} part))
-                          new-movement (-> (filter #(contains? (:category %) category) data/all-movements) shuffle first)
+                          new-movement (-> (filter #(contains? (:category %) category) (data/all-movements-english)) shuffle first)
                           new-part (assoc part pos (merge old-movement new-movement))]
                       (session/assoc-in! [:movement-session :parts part-number] new-part))
       (or (= :next kw)
@@ -35,7 +35,7 @@
       :else nil))
 
 (defn add-movement [category part-number]
-  (let [new-movement (first (shuffle (data/all-movements)))
+  (let [new-movement (first (shuffle (data/all-movements-english)))
         part (session/get-in [:movement-session :parts part-number])
         new-part (conj part new-movement)]
     (session/assoc-in! [:movement-session :parts part-number] new-part)))
@@ -86,7 +86,7 @@
 (defn generate-session [e]
   (.preventDefault e)
   (let [n (inc (rand-int 8))
-        movements (vec (take n (shuffle data/all-movements)))
+        movements (vec (take n (shuffle (data/all-movements-english))))
         new-session {:title "ABC" :parts [movements] :activity "Styrketrening"}]
     (session/put! :movement-session new-session)))
 
@@ -244,7 +244,7 @@
            :style      {:cursor 'pointer}}]]
         (when @show-search-input?
           (let [id (str "mtags" part-number)
-                all-movement-names (mapv :name data/all-movements)
+                all-movement-names (mapv :name (data/all-movements-english))
                 movements-ac-comp (with-meta text-input-component
                                              {:component-did-mount #(auto-complete-did-mount (str "#" id) all-movement-names)})]
             [movements-ac-comp {:style       {:font-size "100%" :margin-top 20}
