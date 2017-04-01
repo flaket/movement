@@ -107,17 +107,15 @@
    [:span.pure-u {:style {:padding-top 10}} name]])
 
 (defn m-title [{:keys [name]}]
-  [:div.pure-g
-    [:div.pure-u-1 {:style {:display 'flex :text-align 'center}}
-      [:h3.title {:style {:margin 'auto}} name]]])
+  [:div.pure-u-1 {:style {:display 'flex}}
+    [:h3.title name]])
 
 (defn m-image [{:keys [name image]}]
-  [:div.pure-u-1
     [:img.graphic {:src (str "http://s3.amazonaws.com/mumrik-movement-images/" image)
-                  :title name :alt name}]])
+                   :title name
+                   :alt name}])
 
 (defn m-spec [{:keys [weight rep distance duration rest]}]
-  [:div.pure-g
     [:div.pure-u-1
       [:div.pure-g
        [:div.pure-u-1
@@ -132,7 +130,7 @@
         (when (pos? duration) (r-component {:data duration :name "s"}))]]
       [:div.pure-g
        [:div.pure-u-1
-        (when (pos? rest) (r-component {:data rest :name "s pause"}))]]]])
+        (when (pos? rest) (r-component {:data rest :name "s pause"}))]]])
 
 #_(defn m-adjust [{:keys [id rep distance duration weight rest] parts pos}]
   [:div.pure-g
@@ -173,27 +171,26 @@
     text])
 
 (defn movement-component
-  [{:keys [id name image slot-category measurement previous next
-           rep set performed-sets distance duration weight rest] :as m}
-   part-number]
+  [{:keys [id previous next] :as m} part-number]
   (let [parts (session/get-in [:movement-session :parts])
         pos (positions #{m} (get parts part-number))
         expand (atom true)]
     (fn []
       [:div.pure-g.movement {:id id}
-        [:div.pure-u-2-3
-          [:div.pure-g
-            [m-title m]]
-          [:div.pure-g
-            [m-spec m]]
+
+        [:div.pure-u-1-2
           [:div.pure-g
             [m-adjust m :remove part-number "Remove"]
             [m-adjust m :swap part-number "Swap"]
             (when previous [m-adjust m :previous part-number "Easier"])
-            (when next [m-adjust m :next part-number "Harder"])]]
-        [:div.pure-u-1-3
+            (when next [m-adjust m :next part-number "Harder"])]
           [:div.pure-g
-            [m-image m]]]])))
+            [m-title m]]
+          [:div.pure-g
+            [m-spec m]]]
+
+        [:div.pure-u-1-2
+          [m-image m]]])))
 
 (defn all-movements [e show-search-input?]
   (.preventDefault e)
